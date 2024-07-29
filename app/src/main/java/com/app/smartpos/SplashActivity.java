@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.app.smartpos.auth.AuthActivity;
+
+import org.apache.http.auth.AUTH;
+
 public class SplashActivity extends AppCompatActivity {
 
 
@@ -24,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                 startActivity(intent);
                 finish();
             }

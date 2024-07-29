@@ -13,7 +13,15 @@
     <color name="grey_5">#f2f2f2</color>
     <color name="grey_60">#666666</color>
     <color name="grey_10">#e6e6e6</color>
+    <color name="grey_f9">#f9f9f9</color>
+    <color name="grey_d8">#D8D8D8</color>
+
 
     <color name="colorTextIcons">#FFFFFF</color>
+
+    <color name="black">#272424</color>
+    <color name="light_purple">#72788E</color>
+    <color name="purple">#7259FF</color>
+
 
 </resources>

@@ -16,5 +16,9 @@
         <item name="mrl_rippleAlpha">0.2</item>
     </style>
 
+    <style name="AlertDialog.AppCompat.Light.">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 
 </resources>

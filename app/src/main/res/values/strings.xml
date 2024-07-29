@@ -285,5 +285,13 @@
     <string name="update_unit">Update Unit</string>
     <string name="add_order_type">Add Order Type</string>
     <string name="add_unit">Add Unit</string>
+    
+    
+    <string name="welcome_to_qaema">Welcome to qaema ECR</string>
+    <string name="Please_enter_your_login_info">Please enter your login info</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login">Login</string>
 
 </resources>
