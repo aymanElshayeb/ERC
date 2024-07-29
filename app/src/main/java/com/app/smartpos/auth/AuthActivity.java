@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.app.smartpos.R;
+import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.utils.BaseActivity;
 
 public class AuthActivity extends BaseActivity {
@@ -23,5 +24,8 @@ public class AuthActivity extends BaseActivity {
 //        );
 
         setContentView(R.layout.activity_auth);
+
+        DownloadDataDialog dialog=new DownloadDataDialog();
+        dialog.show(getSupportFragmentManager(),"dialog");
     }
 }

@@ -294,4 +294,9 @@
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
 
+    <string name="admin">Admin</string>
+    <string name="admin_email">Admin Email</string>
+    <string name="admin_password">Admin Password</string>
+    <string name="download_data">Download Data</string>
+
 </resources>
