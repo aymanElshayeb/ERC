@@ -10,15 +10,18 @@ import android.util.Log;
 import com.app.smartpos.Constant;
 import com.app.smartpos.auth.LoginUser;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
+import com.app.smartpos.settings.end_shift.ShiftDifferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Locale;
 
 
@@ -177,34 +180,56 @@ public class DatabaseAccess {
         }
     }
 
-    public boolean addShift(EndShiftModel endShiftModel) {
+    public int addShift(EndShiftModel endShiftModel) {
 
         ContentValues values = new ContentValues();
         LoginUser loginUser=new LoginUser();
-        Date date=new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
-        values.put("real_cash", endShiftModel.getReal_cash());
-        values.put("employee_cash", endShiftModel.getEmployee_cash());
-        values.put("differences", endShiftModel.getDifferences());
+
         values.put("user_name", loginUser.getName());
         values.put("user_id", loginUser.getId());
-        values.put("shift_id", "1223456789");
-        values.put("total_number_of_transactions", endShiftModel.getTotal_transactions());
-        values.put("total_amount", endShiftModel.getTotal_amount());
-        values.put("total_tax", endShiftModel.getTotal_tax());
-        values.put("time_stamp", df.format(date));
+        //values.put("shift_id", "1223456789");
+        values.put("total_transaction", Double.parseDouble(endShiftModel.getTotal_transactions()));
+        values.put("total_transaction_number", Double.parseDouble(endShiftModel.getTotal_transactions()));
+        values.put("total_amount", Double.parseDouble(endShiftModel.getTotal_amount()));
+        values.put("total_tax", Double.parseDouble(endShiftModel.getTotal_tax()));
+        values.put("shift_timestamp", endShiftModel.getDate());
+        long check=0;
+        try {
+         check=database.insertOrThrow("shifts", null, values);
+        }catch (Exception e){
+            Log.i("datadata",e.getMessage()+"");
+        }
 
-
-        long check = database.insert("shift", null, values);
-        database.close();
 
         //if data insert success, its return 1, if failed return -1
         if (check == -1) {
-            return false;
+            database.close();
+            return -1;
         } else {
-            return true;
+            return getShiftWithTimestamp(endShiftModel.getDate());
         }
+
+    }
+
+    public boolean addShiftDifferences(int id,LinkedList<ShiftDifferences> shiftDifferences) {
+        for(int i=0;i<shiftDifferences.size();i++) {
+            ContentValues values = new ContentValues();
+
+            values.put("shift_id", id);
+            values.put("real", shiftDifferences.get(i).getReal());
+            values.put("input", shiftDifferences.get(i).getInput());
+            values.put("difference", shiftDifferences.get(i).getDiff());
+            values.put("type", shiftDifferences.get(i).getType());
+
+
+            long check = database.insert("shift_difference", null, values);
+            Log.i("datadata_check",check+"");
+        }
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return true;
     }
 
 
@@ -538,6 +563,52 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return image;
+    }
+
+    public int getShiftWithTimestamp(String timeStamp) {
+
+        int id = 0;
+        Cursor cursor = database.rawQuery("SELECT * FROM shifts WHERE shift_timestamp='" + timeStamp + "'", null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+
+
+                id = cursor.getInt(0);
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        database.close();
+        return id;
+    }
+
+    public int getUserWithEmailPassword(String email,String password) {
+
+        int id = 0;
+        Cursor cursor = database.rawQuery("SELECT * FROM users WHERE email='" + email + "' and password='"+password+"'", null);
+
+        Log.i("datadata",""+cursor.moveToFirst());
+        if (cursor.moveToFirst()) {
+            do {
+
+                for (int i=0;i<3;i++){
+                    Log.i("datadata",cursor.getColumnName(i));
+                }
+                id = cursor.getInt(0);
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        database.close();
+        return id;
     }
 
 
@@ -1644,6 +1715,29 @@ public class DatabaseAccess {
     }
 
 
+    public int getAllUser() {
+
+        int id = 0;
+        Cursor cursor = database.rawQuery("SELECT * FROM users", null);
+
+        Log.i("datadata",""+cursor.moveToFirst());
+        if (cursor.moveToFirst()) {
+            do {
+
+                for (int i=0;i<3;i++){
+                    Log.i("datadata",cursor.getColumnName(i));
+                }
+                id = cursor.getInt(0);
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        database.close();
+        return id;
+    }
 
     //get customer data
     public ArrayList<HashMap<String, String>> getCustomers() {

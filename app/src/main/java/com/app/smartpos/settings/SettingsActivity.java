@@ -15,6 +15,8 @@ import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.categories.CategoriesActivity;
 import com.app.smartpos.settings.end_shift.EndShiftDialog;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
+import com.app.smartpos.settings.end_shift.EndShiftReportDialog;
 import com.app.smartpos.settings.order_type.OrderTypeActivity;
 import com.app.smartpos.settings.payment_method.PaymentMethodActivity;
 import com.app.smartpos.settings.shop.ShopInformationActivity;
@@ -158,6 +160,12 @@ public class SettingsActivity extends BaseActivity {
         });
 
 
+    }
+
+    public void openReport(EndShiftModel model){
+        EndShiftReportDialog reportDialog=new EndShiftReportDialog();
+        reportDialog.setEndShiftModel(model);
+        reportDialog.show(getSupportFragmentManager(),"dialog");
     }
 
 

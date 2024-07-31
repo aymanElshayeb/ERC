@@ -1,5 +1,6 @@
 package com.app.smartpos.settings.end_shift;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,10 +19,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.settings.SettingsActivity;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +37,9 @@ public class EndShiftDialog extends DialogFragment {
     double total_amount=0;
     double total_tax=0;
     EndShiftModel endShiftModel;
+
+    DatabaseAccess databaseAccess;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,8 +54,7 @@ public class EndShiftDialog extends DialogFragment {
             LinearLayout endCashTypesLl = root.findViewById(R.id.end_cash_types_ll);
             LinearLayout errorLl = root.findViewById(R.id.error_ll);
 
-
-            final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
+            databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
 
 
@@ -116,21 +122,18 @@ public class EndShiftDialog extends DialogFragment {
 
             }
 
-
+            LinkedList<ShiftDifferences>shiftDifferences=new LinkedList<>();
 
             submitBtn.setOnClickListener(view -> {
-                String real_cash="";
-                String employee_cash="";
-                String differences="";
+
                 double total_transactions = orderList.size();
 
                 for (int i = 0; i < models.size(); i++) {
                     String cash = models.get(i).inputPaymentCashEt.getText().toString();
                     double employeeCash = Double.parseDouble(cash.isEmpty() ? "0" : cash);
                     models.get(i).setError(employeeCash != models.get(i).cash);
-                    real_cash+=models.get(i).type + ": +" + models.get(i).cash;
-                    employee_cash+=models.get(i).type + ": +" + employeeCash;
-                    differences+=models.get(i).type + ": +" + (employeeCash - models.get(i).cash);
+                    shiftDifferences.addLast(new ShiftDifferences(models.get(i).cash,employeeCash,(employeeCash - models.get(i).cash),models.get(i).type));
+
                     if (employeeCash != models.get(i).cash) {
 
                         if(employeeCash - models.get(i).cash > 0){
@@ -151,26 +154,34 @@ public class EndShiftDialog extends DialogFragment {
                     }
                 }
 
-                endShiftModel=new EndShiftModel(real_cash,employee_cash,differences,total_transactions+"", total_amount+"",total_tax+"");
+                endShiftModel=new EndShiftModel(shiftDifferences,total_transactions+"", total_amount+"",total_tax+"",new Timestamp(System.currentTimeMillis()).toString());
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 }else{
-                    databaseAccess.open();
-                    Log.i("datadata",""+databaseAccess.addShift(endShiftModel));
-                    dismissAllowingStateLoss();
+                    addToShift();
                 }
+
             });
 
             confirmBtn.setOnClickListener(view -> {
-                databaseAccess.open();
-                Log.i("datadata",""+databaseAccess.addShift(endShiftModel));
-                dismissAllowingStateLoss();
+                addToShift();
             });
 
             closeBtn.setOnClickListener(view -> dismissAllowingStateLoss());
         }
 
         return root;
+    }
+
+    private void addToShift(){
+        databaseAccess.open();
+        int id=databaseAccess.addShift(endShiftModel);
+        if(id>-1){
+            databaseAccess.open();
+            databaseAccess.addShiftDifferences(id,endShiftModel.getShiftDifferences());
+        }
+        ((SettingsActivity)requireActivity()).openReport(endShiftModel);
+        dismissAllowingStateLoss();
     }
 
     @Override
@@ -181,5 +192,4 @@ public class EndShiftDialog extends DialogFragment {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
-
 }

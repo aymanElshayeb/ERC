@@ -1,12 +1,12 @@
 package com.app.smartpos.auth;
 
 public class LoginUser {
-    String id = "1234";
+    int id = 1234;
     String name = "First Name";
     String email = "karimsaad687@gmail.com";
     String password = "123456789";
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

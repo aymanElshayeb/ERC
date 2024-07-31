@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
+import com.app.smartpos.database.DatabaseAccess;
 
 public class LoginFragment extends Fragment {
 
@@ -33,8 +34,12 @@ public class LoginFragment extends Fragment {
             Button loginBtn = root.findViewById(R.id.login_btn);
             emailEt.setText("karimsaad687@gmail.com");
             passwordEt.setText("123456789");
+            final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
+            databaseAccess.open();
+
             LoginUser loginUser = new LoginUser();
             loginBtn.setOnClickListener(view -> {
+                //databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(),passwordEt.getText().toString());
                 if (emailEt.getText().toString().equals(loginUser.email) && passwordEt.getText().toString().equals(loginUser.password)) {
                     Intent intent = new Intent(context, HomeActivity.class);
                     startActivity(intent);
