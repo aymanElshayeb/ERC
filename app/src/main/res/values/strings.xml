@@ -94,6 +94,7 @@
 
     <string name="shop_information">Shop Information</string>
     <string name="data_backup">Data Backup</string>
+    <string name="end_shift">End Shift</string>
     <string name="shop_name">Shop Name</string>
     <string name="shop_contact_number">Shop Contact Number</string>
     <string name="shop_email">Shop Email</string>
@@ -293,10 +294,12 @@
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
+    <string name="wrong_email_password">Wrong email or pasword</string>
 
     <string name="admin">Admin</string>
     <string name="admin_email">Admin Email</string>
     <string name="admin_password">Admin Password</string>
     <string name="download_data">Download Data</string>
 
+    <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
 </resources>

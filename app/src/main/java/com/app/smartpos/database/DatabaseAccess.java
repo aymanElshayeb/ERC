@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.auth.LoginUser;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -165,6 +167,36 @@ public class DatabaseAccess {
 
 
         long check = database.insert("order_type", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        if (check == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean addShift(EndShiftModel endShiftModel) {
+
+        ContentValues values = new ContentValues();
+        LoginUser loginUser=new LoginUser();
+        Date date=new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+
+        values.put("real_cash", endShiftModel.getReal_cash());
+        values.put("employee_cash", endShiftModel.getEmployee_cash());
+        values.put("differences", endShiftModel.getDifferences());
+        values.put("user_name", loginUser.getName());
+        values.put("user_id", loginUser.getId());
+        values.put("shift_id", "1223456789");
+        values.put("total_number_of_transactions", endShiftModel.getTotal_transactions());
+        values.put("total_amount", endShiftModel.getTotal_amount());
+        values.put("total_tax", endShiftModel.getTotal_tax());
+        values.put("time_stamp", df.format(date));
+
+
+        long check = database.insert("shift", null, values);
         database.close();
 
         //if data insert success, its return 1, if failed return -1
@@ -654,6 +686,7 @@ public class DatabaseAccess {
         try {
             String order_date = obj.getString("order_date");
             String order_time = obj.getString("order_time");
+            String order_timestamp = obj.getString("order_timestamp");
             String order_type = obj.getString("order_type");
             String order_payment_method = obj.getString("order_payment_method");
             String customer_name = obj.getString("customer_name");
@@ -664,6 +697,7 @@ public class DatabaseAccess {
             values.put("invoice_id", order_id);
             values.put("order_date", order_date);
             values.put("order_time", order_time);
+            values.put("order_timestamp", order_timestamp);
             values.put("order_type", order_type);
             values.put("order_payment_method", order_payment_method);
             values.put("customer_name", customer_name);
@@ -736,8 +770,7 @@ public class DatabaseAccess {
         Cursor cursor = database.rawQuery("SELECT * FROM order_list ORDER BY order_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
-                HashMap<String, String> map = new HashMap<String, String>();
-
+                HashMap<String, String> map = new HashMap<>();
 
                 map.put("invoice_id", cursor.getString(1));
                 map.put("order_date", cursor.getString(2));
@@ -748,6 +781,8 @@ public class DatabaseAccess {
 
                 map.put("tax", cursor.getString(7));
                 map.put("discount", cursor.getString(8));
+                map.put("order_status", cursor.getString(9));
+                map.put("order_timestamp", cursor.getString(10));
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
 
 

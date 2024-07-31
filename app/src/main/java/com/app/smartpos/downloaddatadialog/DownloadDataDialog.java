@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,11 @@ public class DownloadDataDialog extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             root=inflater.inflate(R.layout.dialog_download_data,container,false);
             setCancelable(false);
+
+            Button downloadBtn=root.findViewById(R.id.download_btn);
+            downloadBtn.setOnClickListener(view -> {
+                dismissAllowingStateLoss();
+            });
         }
 
         return root;

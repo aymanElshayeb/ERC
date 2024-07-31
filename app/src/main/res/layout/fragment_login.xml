@@ -84,6 +84,7 @@
         android:textColor="@color/purple"/>
 
     <Button
+        android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@drawable/rounded_button_6"

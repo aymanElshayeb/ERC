@@ -57,6 +57,7 @@
         android:inputType="textPassword" />
 
     <Button
+        android:id="@+id/download_btn"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@drawable/rounded_button_6"
