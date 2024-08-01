@@ -1,7 +1,6 @@
 
-package com.app.smartpos.settings.backup;
+package com.app.smartpos.settings.Synchronization;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.InputType;
@@ -20,11 +19,11 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class LocalBackup {
+public class UploadActivity {
 
-    private Activity activity;
+    private DownloadActivity activity;
 
-    public LocalBackup(Activity activity) {
+    public UploadActivity(DownloadActivity activity) {
         this.activity = activity;
     }
 
