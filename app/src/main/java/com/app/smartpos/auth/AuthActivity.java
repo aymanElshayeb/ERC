@@ -31,9 +31,6 @@ public class AuthActivity extends BaseActivity {
 
         setContentView(R.layout.activity_auth);
 
-        DownloadDataDialog dialog=new DownloadDataDialog();
-        dialog.show(getSupportFragmentManager(),"dialog");
-
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name),MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
 
@@ -43,6 +40,9 @@ public class AuthActivity extends BaseActivity {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm a", Locale.US);
             myEdit.putString("last_order", df.format(date));
             myEdit.putBoolean("first_open", false);
+
+            DownloadDataDialog dialog=new DownloadDataDialog();
+            dialog.show(getSupportFragmentManager(),"dialog");
         }
 
     }
