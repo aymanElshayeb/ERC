@@ -340,5 +340,11 @@
     <string name="search">Search</string>
     <string name="view_cart">View Cart</string>
     <string name="clear">Clear</string>
+    
+    <string name="receipt_details">Receipt Details</string>
+    <string name="receipt_number">Receipt Number</string>
+    <string name="view_receipt">View Receipt</string>
+    <string name="view_all_receipt">View All Receipt</string>
+    <string name="or">OR</string>
 
 </resources>
