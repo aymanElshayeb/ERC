@@ -29,6 +29,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".refund.Refund"
+            android:exported="false" />
+        <activity
             android:name=".cart.Cart"
             android:exported="false" />
         <activity

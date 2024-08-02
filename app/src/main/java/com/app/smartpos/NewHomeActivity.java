@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.profile.Profile;
+import com.app.smartpos.settings.end_shift.EndShiftDialog;
 import com.app.smartpos.utils.BaseActivity;
 
 public class NewHomeActivity extends BaseActivity {
@@ -27,6 +28,7 @@ public class NewHomeActivity extends BaseActivity {
 
         LinearLayout circleNameLl=findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL=findViewById(R.id.items_ll);
+        LinearLayout endOfShiftLl=findViewById(R.id.end_of_shift_ll);
 
         circleNameLl.setOnClickListener(view -> {
             startActivity(new Intent(this, Profile.class));
@@ -34,6 +36,11 @@ public class NewHomeActivity extends BaseActivity {
 
         itemsLL.setOnClickListener(view -> {
             startActivity(new Intent(this, Items.class));
+        });
+
+        endOfShiftLl.setOnClickListener(v -> {
+            EndShiftDialog dialog=new EndShiftDialog();
+            dialog.show(getSupportFragmentManager(),"end shift dialog");
         });
     }
 }
