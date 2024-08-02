@@ -38,6 +38,22 @@
     <string name="enter_customer_cell">Enter Customer Cell</string>
     <string name="enter_customer_address">Enter Customer Address</string>
     <string name="customer_successfully_added">Customer Successfully Added</string>
+    <string name="hello">Hello</string>
+    <string name="sync">Sync</string>
+    <string name="current_shift_sales">Current Shift Sales</string>
+    <string name="sar">SAR</string>
+    <string name="items">Items</string>
+    <string name="quick_bills">Quick Bills</string>
+    <string name="refund">Refund</string>
+    <string name="end_of_shift">End of Shift</string>
+
+    <string name="cart">Cart</string>
+    <string name="order_summary">Order Summary</string>
+    <string name="payment_summary">Payment Summary</string>
+    <string name="vat_exclusive">(VAT Exclusive)</string>
+    <string name="total_vat">Total Vat</string>
+    <string name="add_items">Add items</string>
+    <string name="confirm">Confirm</string>
 
     <string name="all_customer">All Customer</string>
     <string name="no_customer_found">No Customer Found!</string>
@@ -286,8 +302,8 @@
     <string name="update_unit">Update Unit</string>
     <string name="add_order_type">Add Order Type</string>
     <string name="add_unit">Add Unit</string>
-    
-    
+
+
     <string name="welcome_to_qaema">Welcome to qaema ECR</string>
     <string name="Please_enter_your_login_info">Please enter your login info</string>
     <string name="email">Email</string>
@@ -313,6 +329,16 @@
     <string name="user_name">User Name</string>
     <string name="shift_id">Shift ID</string>
 
+    <string name="profile">Profile</string>
+    <string name="mobile">Mobile</string>
+    <string name="app_settings">App Settings</string>
+    <string name="language">Language</string>
+    <string name="need_a_help">Need a help?</string>
+    <string name="contact_us_on">Contact us on</string>
+    <string name="logout">Logout</string>
 
+    <string name="search">Search</string>
+    <string name="view_cart">View Cart</string>
+    <string name="clear">Clear</string>
 
 </resources>

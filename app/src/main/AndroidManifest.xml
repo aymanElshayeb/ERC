@@ -29,6 +29,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".cart.Cart"
+            android:exported="false" />
+        <activity
+            android:name=".Items.Items"
+            android:exported="false" />
+        <activity
+            android:name=".profile.Profile"
+            android:exported="false" />
+        <activity
+            android:name=".NewHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.AuthActivity"
             android:exported="false" />
         <activity
