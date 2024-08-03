@@ -91,9 +91,9 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
                     imgNoProduct.setVisibility(View.GONE);
                     txtNoProducts.setVisibility(View.GONE);
 
-                   //PosProductAdapter productAdapter = new PosProductAdapter(activity, productList);
+                   PosProductAdapter productAdapter = new PosProductAdapter(context, productList);
 
-                   // recyclerView.setAdapter(productAdapter);
+                    recyclerView.setAdapter(productAdapter);
 
 
 

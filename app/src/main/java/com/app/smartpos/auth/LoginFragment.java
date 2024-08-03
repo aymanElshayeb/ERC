@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.HomeActivity;
-import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 
@@ -42,7 +41,7 @@ public class LoginFragment extends Fragment {
             loginBtn.setOnClickListener(view -> {
                 //databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(),passwordEt.getText().toString());
                 if (emailEt.getText().toString().equals(loginUser.email) && passwordEt.getText().toString().equals(loginUser.password)) {
-                    Intent intent = new Intent(context, NewHomeActivity.class);
+                    Intent intent = new Intent(context, HomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();
                 } else {
