@@ -1,6 +1,9 @@
 package com.app.smartpos.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
@@ -88,6 +91,36 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         } catch (Exception e) {
             Toasty.error(mContext, R.string.unable_to_import_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        }
+    }
+    public void mergeDatabases(String newDbFilePath) {
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
+
+        try {
+            existingDb.beginTransaction();
+
+            // Get tables from new database
+            // Assuming tables are the same; adapt if necessary
+            String[] tables = {"products"};
+            for (String table : tables) {
+                String query = "SELECT * FROM " + table;
+                try (Cursor cursor = newDb.rawQuery(query, null)) {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        int columnCount = cursor.getColumnCount();
+                        for (int i = 0; i < columnCount; i++) {
+                            values.put(cursor.getColumnName(i), cursor.getString(i));
+                        }
+                        existingDb.replace(table, null, values);
+                    }
+                }
+            }
+
+            existingDb.setTransactionSuccessful();
+        } finally {
+            existingDb.endTransaction();
+            newDb.close();
         }
     }
 

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.app.smartpos.R;
+import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
+import com.app.smartpos.settings.Synchronization.DownloadActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.settings.backup.BackupActivity;
@@ -39,7 +41,7 @@ import java.util.List;
 public class SettingsActivity extends BaseActivity {
 
 
-    CardView cardShopInfo, cardBackup,cardCategory,cardPaymentMethod,cardOrderType,cardUnit,cardLogout;
+    CardView cardShopInfo, cardBackup,cardCategory,cardPaymentMethod,cardOrderType,cardUnit,cardLogout,DBBackup;
 
     private InterstitialAd mInterstitialAd;
     @Override
@@ -54,6 +56,8 @@ public class SettingsActivity extends BaseActivity {
 
         cardShopInfo = findViewById(R.id.card_shop_info);
         cardBackup = findViewById(R.id.card_backup);
+        DBBackup = findViewById(R.id.db_backup);
+
         cardCategory=findViewById(R.id.card_category);
         cardPaymentMethod=findViewById(R.id.card_payment_method);
         cardOrderType=findViewById(R.id.card_order_type);
@@ -159,6 +163,11 @@ public class SettingsActivity extends BaseActivity {
             dialog.show(getSupportFragmentManager(),"end shift dialog");
         });
 
+        DBBackup.setOnClickListener(v -> {
+
+            Intent intent = new Intent(SettingsActivity.this, DataBaseBackupActivity.class);
+            startActivity(intent);
+        });
 
     }
 

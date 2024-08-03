@@ -65,6 +65,7 @@
         <activity android:name=".product.ScannerViewActivity" />
         <activity android:name=".product.EditProductActivity" />
         <activity android:name=".settings.backup.BackupActivity" />
+        <activity android:name=".settings.Synchronization.DataBaseBackupActivity" />
         <activity android:name=".settings.shop.ShopInformationActivity" />
         <activity android:name=".report.ExpenseGraphActivity" />
         <activity android:name=".report.ExpenseReportActivity" />
