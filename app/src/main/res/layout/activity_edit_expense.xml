@@ -139,7 +139,7 @@
             <TextView
                 android:id="@+id/txt_edit_expense"
                 android:layout_width="match_parent"
-
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="20dp"
@@ -158,7 +158,7 @@
             <TextView
                 android:id="@+id/txt_update_expense"
                 android:layout_width="match_parent"
-
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="20dp"

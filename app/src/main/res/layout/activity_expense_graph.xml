@@ -22,7 +22,6 @@
             android:id="@+id/txt_select_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:drawableRight="@drawable/ic_arrow_down"
             android:fontFamily="@font/sailec_regular"
             android:gravity="center"
