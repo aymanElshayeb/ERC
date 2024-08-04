@@ -78,7 +78,8 @@ public class DataBaseBackupActivity extends BaseActivity {
             public void onClick(View v) {
 
                 DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-
+                DownloadActivity downloadActivity=new DownloadActivity();
+                downloadActivity.download(db);
                 localBackup.performRestore(db);
             }
         });
