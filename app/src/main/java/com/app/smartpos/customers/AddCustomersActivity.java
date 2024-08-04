@@ -82,7 +82,7 @@ public class AddCustomersActivity extends BaseActivity {
                     DatabaseAccess databaseAccess = DatabaseAccess.getInstance(AddCustomersActivity.this);
                     databaseAccess.open();
 
-                    boolean check = databaseAccess.addCustomer(customer_name, customer_cell, customer_email, customer_address);
+                    boolean check = databaseAccess.addCustomer(customer_name, customer_cell, customer_email, customer_address,true);
 
                     if (check) {
                         Toasty.success(AddCustomersActivity.this, R.string.customer_successfully_added, Toast.LENGTH_SHORT).show();
