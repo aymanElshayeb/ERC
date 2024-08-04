@@ -174,7 +174,7 @@ public class ProductCart extends BaseActivity {
 
                     obj.put("order_date", currentDate);
                     obj.put("order_time", currentTime);
-                    obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()));
+                    obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()).getTime());
                     obj.put("order_type", type);
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);

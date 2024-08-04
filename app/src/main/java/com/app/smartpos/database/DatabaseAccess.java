@@ -764,7 +764,7 @@ public class DatabaseAccess {
         try {
             String order_date = obj.getString("order_date");
             String order_time = obj.getString("order_time");
-            String order_timestamp = obj.getString("order_timestamp");
+            long order_timestamp = obj.getLong("order_timestamp");
             String order_type = obj.getString("order_type");
             String order_payment_method = obj.getString("order_payment_method");
             String customer_name = obj.getString("customer_name");
