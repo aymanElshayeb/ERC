@@ -26,7 +26,7 @@
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="150dp"
-                    app:srcCompat="@drawable/pos" />
+                    app:srcCompat="@drawable/ic_qaema_logo" />
 
                 <TextView
                     android:layout_width="match_parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Smart POS</string>
+    <string name="app_name" translatable="false">qaema</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>
@@ -94,6 +94,7 @@
 
     <string name="shop_information">Shop Information</string>
     <string name="data_backup">Data Backup</string>
+    <string name="end_shift">End Shift</string>
     <string name="shop_name">Shop Name</string>
     <string name="shop_contact_number">Shop Contact Number</string>
     <string name="shop_email">Shop Email</string>
@@ -285,5 +286,33 @@
     <string name="update_unit">Update Unit</string>
     <string name="add_order_type">Add Order Type</string>
     <string name="add_unit">Add Unit</string>
+    
+    
+    <string name="welcome_to_qaema">Welcome to qaema ECR</string>
+    <string name="Please_enter_your_login_info">Please enter your login info</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login">Login</string>
+    <string name="wrong_email_password">Wrong email or pasword</string>
+
+    <string name="admin">Admin</string>
+    <string name="admin_email">Admin Email</string>
+    <string name="admin_password">Admin Password</string>
+    <string name="download_data">Download Data</string>
+
+    <string name="end_shift_report">End Shift Report</string>
+    <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
+    <string name="real">Real</string>
+    <string name="input">Input</string>
+    <string name="diff">Diff</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="total_transactions_number">Total Transactions Number</string>
+    <string name="date_">Date</string>
+    <string name="user_id">User ID</string>
+    <string name="user_name">User Name</string>
+    <string name="shift_id">Shift ID</string>
+
+
 
 </resources>

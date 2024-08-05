@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -173,6 +174,7 @@ public class ProductCart extends BaseActivity {
 
                     obj.put("order_date", currentDate);
                     obj.put("order_time", currentTime);
+                    obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()));
                     obj.put("order_type", type);
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);
