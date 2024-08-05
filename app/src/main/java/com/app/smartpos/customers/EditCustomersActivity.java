@@ -108,7 +108,7 @@ public class EditCustomersActivity extends BaseActivity {
                     DatabaseAccess databaseAccess = DatabaseAccess.getInstance(EditCustomersActivity.this);
                     databaseAccess.open();
 
-                    boolean check = databaseAccess.updateCustomer(get_customer_id, customer_name, customer_cell, customer_email, customer_address,true);
+                    boolean check = databaseAccess.updateCustomer(get_customer_id, customer_name, customer_cell, customer_email, customer_address, true);
 
                     if (check) {
                         Toasty.success(EditCustomersActivity.this, R.string.update_successfully, Toast.LENGTH_SHORT).show();
