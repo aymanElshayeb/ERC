@@ -78,7 +78,7 @@ public class DownloadActivity extends BaseActivity {
             public void onClick(View v) {
 
                 DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-
+                download(db);
                 localBackup.performRestore(db);
             }
         });
@@ -287,18 +287,18 @@ public class DownloadActivity extends BaseActivity {
             startActivity(Intent.createChooser(intentShareFile, "Share File"));
         }
     }
-    private void download() {
+    public void download(final DatabaseOpenHelper db) {
        String filePath = getMasterDataFromServer(); // Rerurns file path
-        synchronizeDataBase(filePath);
+        synchronizeDataBase(db,"/storage/emulated/0/Download"+"/database.db");
     }
 
     private String getMasterDataFromServer() {
         return "";
     }
 
-    private void synchronizeDataBase(String filePath) {
+    private void synchronizeDataBase(final DatabaseOpenHelper db,String filePath) {
         DownloadSyncronization downloadSyncronization = new DownloadSyncronization();
-        downloadSyncronization.synchronizeDataBase(filePath);
+        downloadSyncronization.synchronizeDataBase(db,filePath);
     }
 
 }
