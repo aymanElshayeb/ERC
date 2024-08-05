@@ -106,7 +106,7 @@ public class OrderDetailsActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
-
+        Log.i("datadata_size",orderDetailsList.size()+"");
         if (orderDetailsList.isEmpty()) {
             //if no data in local db, then load data from server
             Toasty.info(OrderDetailsActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
@@ -127,17 +127,15 @@ public class OrderDetailsActivity extends BaseActivity {
         shop_address = shopData.get(0).get("shop_address");
         currency = shopData.get(0).get("shop_currency");
 
-
-        databaseAccess.open();
-        total_price = databaseAccess.totalOrderPrice(order_id);
-        getTax = Double.parseDouble(tax);
+        total_price = Double.parseDouble(orderDetailsList.get(0).get("ex_tax_total"));
+        getTax = Double.parseDouble(orderDetailsList.get(0).get("tax_amount"));
         getDiscount = Double.parseDouble(discount);
 
 
         txtTax.setText(getString(R.string.total_tax) + " : " + currency + f.format(getTax));
         txtDiscount.setText(getString(R.string.discount) + " : " + currency + f.format(getDiscount));
 
-        calculated_total_price = total_price + getTax - getDiscount;
+        calculated_total_price = Double.parseDouble(orderDetailsList.get(0).get("in_tax_total"));
         txtTotalPrice.setText(getString(R.string.sub_total) + currency + f.format(total_price));
         txtTotalCost.setText(getString(R.string.total_price) + currency + f.format(calculated_total_price));
 

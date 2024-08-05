@@ -4,13 +4,11 @@ public class ShiftDifferences {
     double real;
     double input;
     double diff;
-    String type;
 
-    public ShiftDifferences(double real, double input, double diff, String type) {
+    public ShiftDifferences(double real, double input, double diff) {
         this.real = real;
         this.input = input;
         this.diff = diff;
-        this.type = type;
     }
 
     public double getReal() {
@@ -23,9 +21,5 @@ public class ShiftDifferences {
 
     public double getDiff() {
         return diff;
-    }
-
-    public String getType() {
-        return type;
     }
 }

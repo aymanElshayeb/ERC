@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -180,6 +179,30 @@ public class ProductCart extends BaseActivity {
                     obj.put("order_type", type);
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);
+                    obj.put("order_status", "completed");
+                    obj.put("original_order_id", null);
+                    obj.put("card_details", -1);
+                    databaseAccess.open();
+                    String ecr_code=databaseAccess.getConfiguration().get("ecr_code").toString();
+                    obj.put("ecr_code", ecr_code);
+
+                    databaseAccess.open();
+                    double totalPriceWithTax=databaseAccess.getTotalPriceWithTax();
+                    obj.put("in_tax_total", totalPriceWithTax);
+
+                    databaseAccess.open();
+                    obj.put("ex_tax_total", databaseAccess.getTotalPriceWithoutTax());
+
+                    obj.put("paid_amount", totalPriceWithTax);
+                    obj.put("change_amount", 0);
+
+                    databaseAccess.open();
+                    String tax_number=databaseAccess.getConfiguration().get("merchant_tax_number").toString();
+                    obj.put("tax_number", tax_number);
+
+                    databaseAccess.open();
+                    String sequenceNumber=databaseAccess.getSequence(1,ecr_code);
+                    obj.put("sequence_text", sequenceNumber);
 
                     obj.put("tax", calculated_tax);
                     obj.put("discount", discount);
@@ -255,7 +278,7 @@ public class ProductCart extends BaseActivity {
         /*
         timestamp used for un sync order and make it unique id
          */
-        databaseAccess.insertOrder(timeStamp,obj);
+        databaseAccess.insertOrder(timeStamp,obj,ProductCart.this);
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
