@@ -1,21 +1,31 @@
 package com.app.smartpos.settings.Synchronization;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.ajts.androidmads.library.SQLiteToExcel;
@@ -52,7 +62,6 @@ public class DataBaseBackupActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
 
-
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.data_backup);
@@ -67,11 +76,8 @@ public class DataBaseBackupActivity extends BaseActivity {
         localBackup = new LocalBackup(this);
 
 
-        if (Build.VERSION.SDK_INT >= 23) //Android MarshMellow Version or above
-        {
-            requestPermission();
+        requestForStoragePermissions();
 
-        }
 
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +86,6 @@ public class DataBaseBackupActivity extends BaseActivity {
                 DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
                 DownloadActivity downloadActivity=new DownloadActivity();
                 downloadActivity.download(db);
-                localBackup.performRestore(db);
             }
         });
 
@@ -97,44 +102,35 @@ public class DataBaseBackupActivity extends BaseActivity {
     }
 
 
-    private void requestPermission() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            //  Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
-                        }
+    private static final int STORAGE_PERMISSION_CODE = 23;
 
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
+    private void requestForStoragePermissions() {
+        //Android is 11 (R) or above
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            try {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                storageActivityResultLauncher.launch(intent);
+            }catch (Exception e){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                storageActivityResultLauncher.launch(intent);
+            }
+        }else{
+            //Below android 11
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    },
+                    STORAGE_PERMISSION_CODE
+            );
+        }
 
-                        }
-                    }
-
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
     }
-
     //for back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -266,5 +262,38 @@ public class DataBaseBackupActivity extends BaseActivity {
             startActivity(Intent.createChooser(intentShareFile, "Share File"));
         }
     }
+    public boolean checkStoragePermissions(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            //Android is 11 (R) or above
+            return Environment.isExternalStorageManager();
+        }else {
+            //Below android 11
+            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
+        }
+    }
+    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>(){
+
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                                //Android is 11 (R) or above
+                                if(Environment.isExternalStorageManager()){
+                                    //Manage External Storage Permissions Granted
+                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
+                                }else{
+                                    Toast.makeText(DataBaseBackupActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                //Below android 11
+
+                            }
+                        }
+                    });
+
 
 }
