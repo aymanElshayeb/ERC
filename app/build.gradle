@@ -4,7 +4,7 @@ android {
     compileSdkVersion 34
     defaultConfig {
         applicationId "com.app.smartpos"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode 6
         versionName "7.6"
@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.7.7'

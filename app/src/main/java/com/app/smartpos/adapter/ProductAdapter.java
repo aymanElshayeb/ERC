@@ -54,7 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
 
         final String product_id = productData.get(position).get("product_id");
-        String name = productData.get(position).get("product_name_en");
+        String name = productData.get(position).get("product_name");
         String supplier_id = productData.get(position).get("product_supplier");
         String buy_price = productData.get(position).get("product_buy_price");
         String sell_price = productData.get(position).get("product_sell_price");
