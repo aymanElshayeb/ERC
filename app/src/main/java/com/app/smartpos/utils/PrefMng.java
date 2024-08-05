@@ -16,8 +16,9 @@ public class PrefMng {
     public static final int PRN_RONGTA_SELECTED = 4;
 
     public static int getActivePrinter(Context c) {
-        SharedPreferences pref = c.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        return pref.getInt(PREF_PRINTER, PRN_WOOSIM_SELECTED);
+//        SharedPreferences pref = c.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+//        return pref.getInt(PREF_PRINTER, PRN_WOOSIM_SELECTED);
+        return PRN_RONGTA_SELECTED;
     }
 
     public static void saveActivePrinter(Context context, int printerName) {
