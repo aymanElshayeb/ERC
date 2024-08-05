@@ -1189,6 +1189,7 @@ public class DatabaseAccess {
                 map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
                 map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
                 product.add(map);
@@ -1922,6 +1923,7 @@ public class DatabaseAccess {
                 map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
                 map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
 
@@ -1956,6 +1958,7 @@ public class DatabaseAccess {
                 map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
                 map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
 
@@ -2199,6 +2202,7 @@ public class DatabaseAccess {
                 map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
                 map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
                 product.add(map);
@@ -2213,13 +2217,13 @@ public class DatabaseAccess {
     //Add product into cart
     public int addToCart(String product_name, String price, String weight, int qty, String base64Image, String ref, String tva_tx, String product_id) {
 
-        Cursor result = database.rawQuery("SELECT * FROM cart WHERE product_name='" + product_name + "' AND price='" + price + "' AND weight='" + weight + "'", null);
+        Cursor result = database.rawQuery("SELECT * FROM cart WHERE product_name_en='" + product_name + "' AND price='" + price + "' AND weight='" + weight + "'", null);
         if (result.getCount() >= 1) {
 
             return 2;
         } else {
             ContentValues values = new ContentValues();
-            values.put("product_name", product_name);
+            values.put("product_name_en", product_name);
             values.put("price", price);
             values.put("weight", weight);
             values.put("qty", qty);

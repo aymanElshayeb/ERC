@@ -250,10 +250,14 @@ public class ProductCart extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
 
         databaseAccess.open();
-        /*
-        timestamp used for un sync order and make it unique id
-         */
-        databaseAccess.insertOrder(timeStamp,obj);
+        HashMap<String,String> configuration = databaseAccess.getConfiguration();
+        String ecrCode = configuration.get("ecr_code");
+
+        databaseAccess.open();
+        String sequence = databaseAccess.getSequence(1,ecrCode);
+
+        databaseAccess.open();
+        databaseAccess.insertOrder(sequence,obj);
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
