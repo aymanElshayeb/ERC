@@ -1,5 +1,6 @@
 package com.app.smartpos.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -1892,6 +1893,7 @@ public class DatabaseAccess {
 
 
     //get product data
+    @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getProducts() {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products ORDER BY product_id DESC", null);
@@ -1901,7 +1903,7 @@ public class DatabaseAccess {
 
 
                 map.put("product_id", cursor.getString(0));
-                map.put("product_name", cursor.getString(1));
+                map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name_en")));
                 map.put("product_code", cursor.getString(2));
                 map.put("product_category", cursor.getString(3));
                 map.put("product_description", cursor.getString(4));
@@ -2262,6 +2264,29 @@ public class DatabaseAccess {
         return supplier;
     }
 
+    public HashMap<String, String> getConfiguration(int configurationId) {
+        HashMap<String, String> configuration = new HashMap<>();
+        Cursor cursor = null;
+        try {
+            cursor = database.rawQuery("SELECT * FROM configuration WHERE id=" + configurationId, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                configuration.put("id", cursor.getString(0));
+                configuration.put("ecr_code", cursor.getString(1));
+                configuration.put("merchant_id", cursor.getString(2));
+                configuration.put("merchant_logo", cursor.getString(3));
+                configuration.put("merchant_tax_number", cursor.getString(4));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            database.close();
+        }
+        return configuration;
+    }
+
 
     //delete customer
     public boolean deleteCustomer(String customer_id) {
@@ -2423,5 +2448,9 @@ public class DatabaseAccess {
             return false;
         }
 
+    }
+
+    public String getDbPath(){
+        return openHelper.getWritableDatabase().getPath();
     }
 }
