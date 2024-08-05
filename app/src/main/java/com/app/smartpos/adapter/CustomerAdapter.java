@@ -54,12 +54,14 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.MyView
         String cell=customerData.get(position).get("customer_cell");
         String email=customerData.get(position).get("customer_email");
         String address=customerData.get(position).get("customer_address");
+        int status=Integer.parseInt(customerData.get(position).get("customer_active"));
 
         holder.txtCustomerName.setText(name);
         holder.txtCell.setText(cell);
         holder.txtEmail.setText(email);
         holder.txtAddress.setText(address);
 
+        holder.imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);
 
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +132,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView txtCustomerName, txtCell, txtEmail, txtAddress;
-        ImageView imgDelete,imgCall;
+        ImageView imgDelete,imgCall,imgStatus;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -142,6 +144,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.MyView
 
             imgDelete = itemView.findViewById(R.id.img_delete);
             imgCall = itemView.findViewById(R.id.img_call);
+            imgStatus = itemView.findViewById(R.id.img_status);
 
 
             itemView.setOnClickListener(this);

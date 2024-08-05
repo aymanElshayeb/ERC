@@ -1254,6 +1254,24 @@ public class DatabaseAccess {
         return product_name;
     }
 
+    @SuppressLint("Range")
+    public double getProductTax(String product_id) {
+
+        double product_Tax = 0;
+        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                product_Tax = cursor.getDouble(cursor.getColumnIndex("product_tax"));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+        return product_Tax;
+    }
+
 
     //get product name
     public String getCurrency() {
@@ -1280,7 +1298,7 @@ public class DatabaseAccess {
 
 
     //calculate total price of product
-    public double getTotalPrice() {
+    public double getTotalPriceWithoutTax() {
 
 
         double total_price = 0;
@@ -1288,9 +1306,10 @@ public class DatabaseAccess {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart", null);
         if (cursor.moveToFirst()) {
             do {
-
-                double price = Double.parseDouble(cursor.getString(4));
-                int qty = Integer.parseInt(cursor.getString(5));
+                String priceId=cursor.getString(cursor.getColumnIndex("product_id"));
+                double tax = 1+getProductTax(priceId);
+                double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price")))/tax;
+                int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
                 double sub_total = price * qty;
                 total_price = total_price + sub_total;
 
@@ -1304,6 +1323,28 @@ public class DatabaseAccess {
         return total_price;
     }
 
+    public double getTotalPriceWithTax() {
+
+
+        double total_price = 0;
+
+        Cursor cursor = database.rawQuery("SELECT * FROM product_cart", null);
+        if (cursor.moveToFirst()) {
+            do {
+                double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price")));
+                int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
+                double sub_total = price * qty;
+                total_price = total_price + sub_total;
+
+
+            } while (cursor.moveToNext());
+        } else {
+            total_price = 0;
+        }
+        cursor.close();
+        database.close();
+        return total_price;
+    }
 
     //calculate total discount of product
     public double getTotalDiscount(String type) {
@@ -1766,8 +1807,9 @@ public class DatabaseAccess {
         ArrayList<HashMap<String, String>> customer = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM customers ORDER BY customer_id DESC", null);
         if (cursor.moveToFirst()) {
+
             do {
-                HashMap<String, String> map = new HashMap<String, String>();
+                HashMap<String, String> map = new HashMap<>();
 
 
                 map.put("customer_id", cursor.getString(cursor.getColumnIndex("customer_id")));
@@ -1775,7 +1817,7 @@ public class DatabaseAccess {
                 map.put("customer_cell", cursor.getString(cursor.getColumnIndex("customer_cell")));
                 map.put("customer_email", cursor.getString(cursor.getColumnIndex("customer_email")));
                 map.put("customer_address", cursor.getString(cursor.getColumnIndex("customer_address")));
-                map.put("customer_active", cursor.getString(cursor.getColumnIndex("customer_active")));
+                map.put("customer_active", ""+cursor.getInt(cursor.getColumnIndex("customer_active")));
 
 
                 customer.add(map);
@@ -1821,7 +1863,7 @@ public class DatabaseAccess {
 
                 map.put("payment_method_id", cursor.getString(cursor.getColumnIndex("payment_method_id")));
                 map.put("payment_method_name", cursor.getString(cursor.getColumnIndex("payment_method_name")));
-
+                map.put("payment_method_active", cursor.getString(cursor.getColumnIndex("payment_method_active")));
 
                 payment_method.add(map);
             } while (cursor.moveToNext());
@@ -1829,6 +1871,20 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return payment_method;
+    }
+
+
+    public void getConfigurationTable() {
+        //ArrayList<HashMap<String, String>> payment_method = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM user", null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                //cursor.getString(cursor.getColumnIndex("payment_method_id"))
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
     }
 
 
@@ -1921,7 +1977,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
-
+                Log.i("datadata",""+cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));

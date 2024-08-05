@@ -50,10 +50,10 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
 
         final String payment_method_id = paymentMethodData.get(position).get("payment_method_id");
         String payment_method_name = paymentMethodData.get(position).get("payment_method_name");
-
+        int status=Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
 
         holder.txtPaymentMethodName.setText(payment_method_name);
-
+        holder.imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +105,7 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView txtPaymentMethodName;
-        ImageView imgDelete;
+        ImageView imgDelete,imgStatus;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +113,8 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
             txtPaymentMethodName = itemView.findViewById(R.id.txt_payment_method_name);
 
             imgDelete = itemView.findViewById(R.id.img_delete);
+
+            imgStatus = itemView.findViewById(R.id.img_status);
 
             itemView.setOnClickListener(this);
 

@@ -42,7 +42,7 @@ public class LoginFragment extends Fragment {
             loginBtn.setOnClickListener(view -> {
                 //databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(),passwordEt.getText().toString());
                 if (emailEt.getText().toString().equals(loginUser.email) && passwordEt.getText().toString().equals(loginUser.password)) {
-                    Intent intent = new Intent(context, NewHomeActivity.class);
+                    Intent intent = new Intent(context, HomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();
                 } else {

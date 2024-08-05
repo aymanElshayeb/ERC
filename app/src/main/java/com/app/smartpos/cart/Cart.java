@@ -55,8 +55,8 @@ public class Cart extends AppCompatActivity {
 
 
 
-        productCartAdapter = new CartAdapter(this, cartProductList);
-        recyclerView.setAdapter(productCartAdapter);
+//        productCartAdapter = new CartAdapter(this, cartProductList);
+//        recyclerView.setAdapter(productCartAdapter);
 
         calculatePrices();
 
