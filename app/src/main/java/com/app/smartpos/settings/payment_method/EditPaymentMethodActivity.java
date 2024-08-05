@@ -68,7 +68,7 @@ public class EditPaymentMethodActivity extends BaseActivity {
                     DatabaseAccess databaseAccess = DatabaseAccess.getInstance(EditPaymentMethodActivity.this);
                     databaseAccess.open();
 
-                    boolean check = databaseAccess.updatePaymentMethod(payment_method_id, payment_method_name);
+                    boolean check = databaseAccess.updatePaymentMethod(payment_method_id, payment_method_name,true);
 
                     if (check) {
                         Toasty.success(EditPaymentMethodActivity.this, R.string.successfully_updated, Toast.LENGTH_SHORT).show();
