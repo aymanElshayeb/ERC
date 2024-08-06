@@ -68,7 +68,7 @@ public class PosActivity extends BaseActivity {
         RecyclerView categoryRecyclerView = findViewById(R.id.category_recyclerview);
 
         databaseAccess = DatabaseAccess.getInstance(PosActivity.this);
-
+        databaseAccess.open();
 
 
         imgScanner.setOnClickListener(new View.OnClickListener() {

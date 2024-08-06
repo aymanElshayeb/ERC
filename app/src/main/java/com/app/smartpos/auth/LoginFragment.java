@@ -3,6 +3,7 @@ package com.app.smartpos.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.SharedPrefUtils;
+
+import java.util.HashMap;
 
 public class LoginFragment extends Fragment {
 
@@ -36,11 +40,10 @@ public class LoginFragment extends Fragment {
             passwordEt.setText("123456789");
             final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
-
-            LoginUser loginUser = new LoginUser();
             loginBtn.setOnClickListener(view -> {
-                //databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(),passwordEt.getText().toString());
-                if (emailEt.getText().toString().equals(loginUser.email) && passwordEt.getText().toString().equals(loginUser.password)) {
+                HashMap<String,String> map = databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(), passwordEt.getText().toString());
+                if (map!=null) {
+                    SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     Intent intent = new Intent(context, HomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();

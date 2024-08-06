@@ -4,14 +4,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.SurfaceControl;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,7 +58,8 @@ public class ProductCart extends BaseActivity {
     List<String> customerNames,orderTypeNames,paymentMethodNames;
     ArrayAdapter<String>  customerAdapter, orderTypeAdapter,paymentMethodAdapter;
 
-
+    String currency;
+    DatabaseAccess databaseAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,11 +87,12 @@ public class ProductCart extends BaseActivity {
         recyclerView.setHasFixedSize(true);
 
 
-        final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
+        databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
-
+        currency = databaseAccess.getCurrency();
 
         //get data from local database
+        databaseAccess.open();
         List<HashMap<String, String>> cartProductList;
         cartProductList = databaseAccess.getCartProduct();
 
@@ -176,10 +176,34 @@ public class ProductCart extends BaseActivity {
 
                     obj.put("order_date", currentDate);
                     obj.put("order_time", currentTime);
-                    obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()));
+                    obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()).getTime());
                     obj.put("order_type", type);
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);
+                    obj.put("order_status", "completed");
+                    obj.put("original_order_id", null);
+                    obj.put("card_details", -1);
+                    databaseAccess.open();
+                    String ecr_code=databaseAccess.getConfiguration().get("ecr_code").toString();
+                    obj.put("ecr_code", ecr_code);
+
+                    databaseAccess.open();
+                    double totalPriceWithTax=databaseAccess.getTotalPriceWithTax();
+                    obj.put("in_tax_total", totalPriceWithTax);
+
+                    databaseAccess.open();
+                    obj.put("ex_tax_total", databaseAccess.getTotalPriceWithoutTax());
+
+                    obj.put("paid_amount", totalPriceWithTax);
+                    obj.put("change_amount", 0);
+
+                    databaseAccess.open();
+                    String tax_number=databaseAccess.getConfiguration().get("merchant_tax_number").toString();
+                    obj.put("tax_number", tax_number);
+
+                    databaseAccess.open();
+                    String sequenceNumber=databaseAccess.getSequence(1,ecr_code);
+                    obj.put("sequence_text", sequenceNumber);
 
                     obj.put("tax", calculated_tax);
                     obj.put("discount", discount);
@@ -205,7 +229,7 @@ public class ProductCart extends BaseActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_id", product_id);
-                        objp.put("product_name_en", product_name);
+                        objp.put("product_name", product_name);
                         objp.put("product_weight", lines.get(i).get("product_weight")+" "+weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock"));
@@ -245,9 +269,17 @@ public class ProductCart extends BaseActivity {
     private void saveOrderInOfflineDb(final JSONObject obj)
     {
 
+        //get current timestamp
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String timeStamp = tsLong.toString();
+
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
 
         databaseAccess.open();
+        /*
+        timestamp used for un sync order and make it unique id
+         */
+        databaseAccess.insertOrder(timeStamp,obj,ProductCart.this);
         String ecrCode = databaseAccess.getConfiguration().get("ecr_code");
 
         databaseAccess.open();
@@ -283,9 +315,6 @@ public class ProductCart extends BaseActivity {
         List<HashMap<String, String>> shopData;
         shopData = databaseAccess.getShopInformation();
         String shop_currency = shopData.get(0).get("shop_currency");
-        String tax = shopData.get(0).get("tax");
-
-        double getTax=Double.parseDouble(tax);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(ProductCart.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_payment, null);
@@ -309,18 +338,18 @@ public class ProductCart extends BaseActivity {
         final ImageButton dialog_img_order_payment_method = dialogView.findViewById(R.id.img_order_payment_method);
         final ImageButton dialog_img_order_type = dialogView.findViewById(R.id.img_order_type);
 
+        databaseAccess.open();
+        double total_cost=databaseAccess.getTotalPriceWithTax();
+        databaseAccess.open();
+        double total_cost_without_tax=databaseAccess.getTotalPriceWithoutTax();
+        double total_tax= total_cost - total_cost_without_tax;
 
-        dialog_txt_level_tax.setText(getString(R.string.total_tax)+"( "+tax+"%) : ");
-        double total_cost=CartAdapter.total_price;
-        dialog_txt_total.setText(shop_currency+f.format(total_cost));
-
-        double calculated_tax=(total_cost*getTax)/100.0;
-        dialog_txt_total_tax.setText(shop_currency+f.format(calculated_tax));
-
+        dialog_txt_total.setText(shop_currency+f.format(total_cost_without_tax));
+        dialog_txt_total_tax.setText(shop_currency+f.format(total_tax));
+        //dialog_txt_level_tax.setText(getString(R.string.total_tax)+"( "+total_tax+") : ");
 
         double discount=0;
-        double calculated_total_cost=total_cost+calculated_tax-discount;
-        dialog_txt_total_cost.setText(shop_currency+f.format(calculated_total_cost));
+        dialog_txt_total_cost.setText(shop_currency+f.format(total_cost));
 
 
 
@@ -338,7 +367,7 @@ public class ProductCart extends BaseActivity {
                 String get_discount=s.toString();
                 if (!get_discount.isEmpty() && !get_discount.equals("."))
                 {
-                    double calculated_total_cost=total_cost+calculated_tax;
+                    double calculated_total_cost=total_cost+total_tax;
                     discount=Double.parseDouble(get_discount);
                     if(discount>calculated_total_cost)
                     {
@@ -350,14 +379,14 @@ public class ProductCart extends BaseActivity {
                     else {
 
                         dialog_btn_submit.setVisibility(View.VISIBLE);
-                        calculated_total_cost = total_cost + calculated_tax - discount;
+                        calculated_total_cost = total_cost + total_tax - discount;
                         dialog_txt_total_cost.setText(shop_currency + f.format(calculated_total_cost));
                     }
                 }
                 else
                 {
 
-                    double calculated_total_cost=total_cost+calculated_tax-discount;
+                    double calculated_total_cost=total_cost+total_tax-discount;
                     dialog_txt_total_cost.setText(shop_currency+f.format(calculated_total_cost));
                 }
 
@@ -644,7 +673,7 @@ public class ProductCart extends BaseActivity {
                 }
 
 
-                proceedOrder(order_type,order_payment_method,customer_name,calculated_tax,discount);
+                proceedOrder(order_type,order_payment_method,customer_name,total_tax,discount);
 
 
                 alertDialog.dismiss();
@@ -667,6 +696,12 @@ public class ProductCart extends BaseActivity {
 
     }
 
+    public void updateTotalPrice(){
+        databaseAccess.open();
+        double total_price = databaseAccess.getTotalPriceWithTax();
+        txt_total_price.setText(getString(R.string.total_price) + currency + f.format(total_price));
+
+    }
 
     //for back button
     @Override

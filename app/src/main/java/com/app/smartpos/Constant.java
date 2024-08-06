@@ -32,6 +32,9 @@ public class Constant {
     public static String orderList = "order_list";
     public static String orderDetails = "order_details";
 
+
     public static int INVOICE_SEQ_ID = 1;
     public static int SHIFT_SEQ_ID = 2;
+
+
 }

@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.app.smartpos.R;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,16 +32,11 @@ public class AuthActivity extends BaseActivity {
 
         setContentView(R.layout.activity_auth);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name),MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
 
-        boolean firstOpen=sharedPreferences.getBoolean("first_open",true);
+        boolean firstOpen= SharedPrefUtils.isFirstOpen(this);
         if(firstOpen) {
-            Date date = new Date();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm a", Locale.US);
-            myEdit.putString("last_order", df.format(date));
-            myEdit.putBoolean("first_open", false);
-
+            SharedPrefUtils.setFirstOpen(this,false);
+            SharedPrefUtils.setStartDateTime(this);
             DownloadDataDialog dialog=new DownloadDataDialog();
             dialog.show(getSupportFragmentManager(),"dialog");
         }

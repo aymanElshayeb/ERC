@@ -1,12 +1,14 @@
 package com.app.smartpos.settings.end_shift;
 
-import android.content.DialogInterface;
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +21,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.SettingsActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,14 +59,16 @@ public class EndShiftDialog extends DialogFragment {
 
             databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
-
-
+            String endDateString=databaseAccess.getLastShift("end_date_time");
+            long lastShiftDate=endDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()):Long.parseLong(endDateString);
+            databaseAccess.open();
             //get data from local database
             List<HashMap<String, String>> orderList;
-            orderList = databaseAccess.getOrderList();
+            orderList = databaseAccess.getOrderListWithTime(lastShiftDate);
             HashMap<String, String> paymentTypesCashMap = new HashMap<>();
             databaseAccess.open();
             for (int i = 0; i < orderList.size(); i++) {
+                databaseAccess.open();
                 double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
                 double tax = Double.parseDouble(orderList.get(i).get("tax"));
                 double discount = Double.parseDouble(orderList.get(i).get("discount"));
@@ -122,17 +127,17 @@ public class EndShiftDialog extends DialogFragment {
 
             }
 
-            LinkedList<ShiftDifferences>shiftDifferences=new LinkedList<>();
+            HashMap<String,ShiftDifferences>map=new HashMap<>();
 
             submitBtn.setOnClickListener(view -> {
 
-                double total_transactions = orderList.size();
+                int total_transactions = orderList.size();
 
                 for (int i = 0; i < models.size(); i++) {
                     String cash = models.get(i).inputPaymentCashEt.getText().toString();
                     double employeeCash = Double.parseDouble(cash.isEmpty() ? "0" : cash);
                     models.get(i).setError(employeeCash != models.get(i).cash);
-                    shiftDifferences.addLast(new ShiftDifferences(models.get(i).cash,employeeCash,(employeeCash - models.get(i).cash),models.get(i).type));
+                    map.put(models.get(i).type,new ShiftDifferences(models.get(i).cash,employeeCash,(employeeCash - models.get(i).cash)));
 
                     if (employeeCash != models.get(i).cash) {
 
@@ -153,8 +158,20 @@ public class EndShiftDialog extends DialogFragment {
                         errorLl.setVisibility(View.VISIBLE);
                     }
                 }
-
-                endShiftModel=new EndShiftModel(shiftDifferences,total_transactions+"", total_amount+"",total_tax+"",new Timestamp(System.currentTimeMillis()).toString());
+                String android_id = Settings.Secure.getString(getContext().getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                databaseAccess.open();
+                String ecr_code=databaseAccess.getConfiguration().get("ecr_code").toString();
+                databaseAccess.open();
+                String sequence=databaseAccess.getSequence(2,ecr_code);
+                databaseAccess.open();
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(getString(R.string.app_name),MODE_PRIVATE);
+                String startDateString=databaseAccess.getLastShift("start_date_time");
+                long startDate=startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()):Long.parseLong(startDateString);
+                databaseAccess.open();
+                String startCashString=databaseAccess.getLastShift("start_cash");
+                double startCash=startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
+                endShiftModel=new EndShiftModel(map,sequence, SharedPrefUtils.getUsername(requireContext()),total_transactions,0,0,total_amount,total_tax,android_id,startDate,new Date().getTime(),startCash,total_amount+startCash);
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 }else{
@@ -178,7 +195,7 @@ public class EndShiftDialog extends DialogFragment {
         int id=databaseAccess.addShift(endShiftModel);
         if(id>-1){
             databaseAccess.open();
-            databaseAccess.addShiftDifferences(id,endShiftModel.getShiftDifferences());
+            databaseAccess.addShiftCreditCalculations(id,endShiftModel.getShiftDifferences().get("CARD"));
         }
         ((SettingsActivity)requireActivity()).openReport(endShiftModel);
         dismissAllowingStateLoss();
