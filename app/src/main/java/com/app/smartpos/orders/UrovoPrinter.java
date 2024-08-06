@@ -48,10 +48,7 @@ public class UrovoPrinter extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(UrovoPrinter.this);
 
         databaseAccess.open();
-        String dbPath = databaseAccess.getDbPath();
-        log.info("Database path " +dbPath);
-        log.info("Database path " +dbPath);
-        configuration = databaseAccess.getConfiguration(CONFIGURATION_ID);
+        configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.get("merchant_tax_number");
 
         databaseAccess.open();

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.SurfaceControl;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.database.DatabaseAccess;
@@ -203,7 +205,7 @@ public class ProductCart extends BaseActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_id", product_id);
-                        objp.put("product_name", product_name);
+                        objp.put("product_name_en", product_name);
                         objp.put("product_weight", lines.get(i).get("product_weight")+" "+weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock"));
@@ -243,17 +245,20 @@ public class ProductCart extends BaseActivity {
     private void saveOrderInOfflineDb(final JSONObject obj)
     {
 
-        //get current timestamp
-        Long tsLong = System.currentTimeMillis() / 1000;
-        String timeStamp = tsLong.toString();
-
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
 
         databaseAccess.open();
-        /*
-        timestamp used for un sync order and make it unique id
-         */
-        databaseAccess.insertOrder(timeStamp,obj);
+        String ecrCode = databaseAccess.getConfiguration().get("ecr_code");
+
+        databaseAccess.open();
+        HashMap<String, String> sequenceMap = databaseAccess.getSequence(Constant.INVOICE_SEQ_ID, ecrCode);
+
+        databaseAccess.open();
+        databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
+
+        databaseAccess.open();
+        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj);
+
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
