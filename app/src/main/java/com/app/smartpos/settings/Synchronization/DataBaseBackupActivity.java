@@ -2,6 +2,8 @@ package com.app.smartpos.settings.Synchronization;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import static java.lang.Math.log;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -27,6 +29,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
@@ -34,15 +39,20 @@ import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.backup.LocalBackup;
 import com.app.smartpos.utils.BaseActivity;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.obsez.android.lib.filechooser.ChooserDialog;
-
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,16 +86,14 @@ public class DataBaseBackupActivity extends BaseActivity {
         localBackup = new LocalBackup(this);
 
 
-        requestForStoragePermissions();
+        checkPermissions();
 
 
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-                DownloadActivity downloadActivity=new DownloadActivity();
-                downloadActivity.download(db);
+                enqueueDownloadAndReadWorkers();
             }
         });
 
@@ -104,6 +112,12 @@ public class DataBaseBackupActivity extends BaseActivity {
 
     private static final int STORAGE_PERMISSION_CODE = 23;
 
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            requestForStoragePermissions();
+        }
+    }
     private void requestForStoragePermissions() {
         //Android is 11 (R) or above
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
@@ -295,5 +309,30 @@ public class DataBaseBackupActivity extends BaseActivity {
                         }
                     });
 
+
+    private void enqueueDownloadAndReadWorkers() {
+        String fileName = "download.db";
+        Data downloadInputData = new Data.Builder()
+                .putString("url", "http://10.0.2.2:8097/sync")
+                .putString("fileName", fileName)
+                .build();
+
+        Data readInputData = new Data.Builder()
+                .putString("fileName", fileName)
+                .build();
+
+        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .setInputData(downloadInputData)
+                .build();
+
+        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
+                .setInputData(readInputData)
+                .build();
+
+        WorkManager.getInstance(this)
+                .beginWith(downloadRequest)
+                .then(readRequest)
+                .enqueue();
+    }
 
 }
