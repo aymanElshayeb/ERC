@@ -36,5 +36,15 @@ public class Constant {
     public static int INVOICE_SEQ_ID = 1;
     public static int SHIFT_SEQ_ID = 2;
 
+    public static int LEFT_ALIGNED = 0;
+    public static int CENTER_ALIGNED = 1;
+    public static int RIGHT_ALIGNED = 2;
+    public static int FONT_SIZE_16 = 0;
+    public static int FONT_SIZE_24 = 1;
+    public static int FONT_SIZE_32 = 2;
+
+    public static final String REPORT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+
 
 }

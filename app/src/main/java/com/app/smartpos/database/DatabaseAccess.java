@@ -630,24 +630,27 @@ public class DatabaseAccess {
     //get product weight unit name
     @SuppressLint("Range")
     public String getWeightUnitName(String weight_unit_id) {
-
+        Cursor cursor = null;
         String weight_unit_name = "n/a";
-        Cursor cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id + "", null);
+        try {
+            cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id + "", null);
+            if (cursor.moveToFirst()) {
+                do {
 
 
-        if (cursor.moveToFirst()) {
-            do {
+                    weight_unit_name = cursor.getString(cursor.getColumnIndex("weight_unit"));
 
 
-                weight_unit_name = cursor.getString(cursor.getColumnIndex("weight_unit"));
-
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
         }
-
-
-        cursor.close();
-        database.close();
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            cursor.close();
+            database.close();
+        }
         return weight_unit_name;
     }
 
@@ -840,7 +843,8 @@ public class DatabaseAccess {
 
             for (int i = 0; i < result.length(); i++) {
                 JSONObject jo = result.getJSONObject(i);
-                String product_name = jo.getString("product_name"); //ref
+                String product_name_en = jo.getString("product_name_en");
+                String product_name_ar = jo.getString("product_name_ar"); //ref
                 String product_weight = jo.getString("product_weight");
                 String product_qty = jo.getString("product_qty");
                 String product_price = jo.getString("product_price");
@@ -849,6 +853,7 @@ public class DatabaseAccess {
 
 
                 String product_id = jo.getString("product_id");
+                String product_uid = jo.getString("product_uid");
                 String stock = jo.getString("stock");
                 double in_tax_total = obj.getDouble("in_tax_total");
                 double ex_tax_total = obj.getDouble("ex_tax_total");
@@ -856,7 +861,9 @@ public class DatabaseAccess {
 
 
                 values2.put("invoice_id", order_id);
-                values2.put("product_name", product_name);
+                values2.put("product_name_en", product_name_en);
+                values2.put("product_name_ar", product_name_ar);
+                values2.put("product_uid", product_uid);
                 values2.put("product_weight", product_weight);
                 values2.put("in_tax_total", in_tax_total);
                 values2.put("ex_tax_total", ex_tax_total);
@@ -1010,8 +1017,10 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
-                map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
                 map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
                 map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
@@ -1042,6 +1051,7 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
                 map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
@@ -1099,6 +1109,7 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
                 map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
@@ -1266,6 +1277,7 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2058,6 +2070,7 @@ public class DatabaseAccess {
                 HashMap<String, String> map = new HashMap<>();
 
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2094,6 +2107,7 @@ public class DatabaseAccess {
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2349,6 +2363,7 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uid", cursor.getString(cursor.getColumnIndex("product_uid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2474,15 +2489,12 @@ public class DatabaseAccess {
             e.printStackTrace();
         }
         sequence = ecrCode + " - 001 - " +  cursor.getString(cursor.getColumnIndex("type_perfix")) + String.format("%010d", nextValue);
-        boolean updated = updateSequence(nextValue,sequenceId);
-        if(!updated)
-            throw new RuntimeException("sequence is not updated");
         if (cursor != null) {
             cursor.close();
         }
         database.close();
         try {
-            sequence = ecrCode + " - 001 - " + prefix + String.format("%010d", nextValue);
+            sequence = ecrCode + "-001-" + prefix + String.format("%010d", nextValue);
             sequenceMap.put("sequence", sequence);
             sequenceMap.put("next_value",String.valueOf(nextValue));
             sequenceMap.put("sequence_id",String.valueOf(sequenceId));
