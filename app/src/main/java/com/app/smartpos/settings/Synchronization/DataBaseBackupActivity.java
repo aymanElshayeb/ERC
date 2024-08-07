@@ -31,10 +31,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkContinuation;
 import androidx.work.WorkManager;
 
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
+import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.backup.LocalBackup;
@@ -189,8 +191,15 @@ public class DataBaseBackupActivity extends BaseActivity {
 
 
     private void enqueueDownloadAndReadWorkers() {
+        Data login = new Data.Builder().
+                putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/auth/user").
+                putString("tenantId", "test").
+                putString("username", "admin").
+                putString("password", "01111Mm&").
+                build();
         Data downloadInputData = new Data.Builder()
                 .putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/sync")
+                .putString("tenantId", "test")
                 .putString("fileName", "download.db.gz")
                 .build();
 
@@ -202,6 +211,9 @@ public class DataBaseBackupActivity extends BaseActivity {
                 .putString("fileName", "download.db")
                 .build();
 
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class)
+                .setInputData(login)
+                .build();
         OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
                 .setInputData(downloadInputData)
                 .build();
@@ -214,11 +226,12 @@ public class DataBaseBackupActivity extends BaseActivity {
                 .setInputData(readInputData)
                 .build();
 
-        WorkManager.getInstance(this)
-                .beginWith(downloadRequest)
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(downloadRequest)
                 .then(decompressRequest)
-                .then(readRequest)
-                .enqueue();
+                .then(readRequest);
+        continuation.enqueue();
     }
 
 }

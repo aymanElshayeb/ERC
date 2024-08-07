@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
