@@ -84,4 +84,23 @@ public class EndShiftModel {
     public double getLeaveCash() {
         return leaveCash;
     }
+
+    @Override
+    public String toString() {
+        return "EndShiftModel{" +
+                "shiftDifferences=" + shiftDifferences +
+                ", num_successful_transaction=" + num_successful_transaction +
+                ", num_canceled_transaction=" + num_canceled_transaction +
+                ", num_returned_transaction=" + num_returned_transaction +
+                ", total_amount=" + total_amount +
+                ", total_tax=" + total_tax +
+                ", deviceID='" + deviceID + '\'' +
+                ", startDateTime=" + startDateTime +
+                ", endDateTime=" + endDateTime +
+                ", startCash=" + startCash +
+                ", leaveCash=" + leaveCash +
+                ", sequence='" + sequence + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
 }

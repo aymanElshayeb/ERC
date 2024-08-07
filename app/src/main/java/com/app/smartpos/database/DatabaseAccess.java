@@ -191,7 +191,7 @@ public class DatabaseAccess {
         return result;
     }
     public int addShift(EndShiftModel endShiftModel) {
-
+        Log.i("datadata",endShiftModel.toString());
         ContentValues values = new ContentValues();
 
         values.put("sequence", endShiftModel.getSequence());
@@ -2466,7 +2466,8 @@ public class DatabaseAccess {
         try {
             cursor = database.rawQuery("SELECT * FROM sequence_text WHERE id=" + sequenceId, null);
             if (cursor != null && cursor.moveToFirst()) {
-                nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")))+1;
+                nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value")))+1;
+                Log.i("datadata_seq",nextValue+"");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2478,6 +2479,7 @@ public class DatabaseAccess {
         if (cursor != null) {
             cursor.close();
         }
+        Log.i("datadata_seq",updated+"");
         database.close();
         return sequence;
     }
