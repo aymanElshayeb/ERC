@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,13 +73,13 @@ public class EndShiftDialog extends DialogFragment {
             for (int i = 0; i < orderList.size(); i++) {
                 databaseAccess.open();
                 double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
-                double tax = Double.parseDouble(orderList.get(i).get("tax"));
+                //double tax = Double.parseDouble(orderList.get(i).get("tax"));
                 double discount = Double.parseDouble(orderList.get(i).get("discount"));
 
                 total_amount+=total_price;
-                total_tax+=tax;
+               // total_tax+=tax;
 
-                double calculated_total_price = total_price + tax - discount;
+                double calculated_total_price = total_price - discount;
                 if (paymentTypesCashMap.containsKey(orderList.get(i).get("order_payment_method").toString())) {
                     double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("order_payment_method")));
                     double total = calculated_total_price + cash;
@@ -197,8 +198,11 @@ public class EndShiftDialog extends DialogFragment {
         int id=databaseAccess.addShift(endShiftModel);
         if(id>-1){
             databaseAccess.open();
-            databaseAccess.addShiftCreditCalculations(id,endShiftModel.getShiftDifferences().get("CARD"));
+            boolean added=databaseAccess.addShiftCreditCalculations(id,endShiftModel.getShiftDifferences().get("CARD"));
+            Log.i("datadata",added+"");
+
         }
+        Log.i("datadata",id+"");
         ((SettingsActivity)requireActivity()).openReport(endShiftModel);
         dismissAllowingStateLoss();
     }

@@ -37,9 +37,22 @@ public class SharedPrefUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_name","");
     }
+
+    public static String getUserId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("user_id","");
+    }
+
     public static void setUsername(Context context,String userName){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
         editor.putString("user_name", userName).commit();
     }
+
+    public static void setUserId(Context context,String userID){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("user_id", userID).commit();
+    }
+
+
 
 }

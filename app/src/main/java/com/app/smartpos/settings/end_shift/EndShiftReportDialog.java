@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginUser;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,9 +60,9 @@ public class EndShiftReportDialog extends DialogFragment {
             String date = formatter.format(new Date(endShiftModel.getEndDateTime()));
             addView(requireContext().getResources().getString(R.string.date_), date);
 
-            LoginUser loginUser = new LoginUser();
-            addView(requireContext().getResources().getString(R.string.user_id), loginUser.getId() + "");
-            addView(requireContext().getResources().getString(R.string.user_name), loginUser.getName());
+
+            addView(requireContext().getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(requireContext()));
+            addView(requireContext().getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(requireContext()));
             addView(requireContext().getResources().getString(R.string.shift_id), "123455");
 
 

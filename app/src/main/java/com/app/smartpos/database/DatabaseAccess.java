@@ -610,7 +610,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             hashMap=new HashMap<>();
             do {
-
+                hashMap.put("id",cursor.getString(cursor.getColumnIndex("id")));
                 hashMap.put("name_en",cursor.getString(cursor.getColumnIndex("name_en")));
                 hashMap.put("name_ar",cursor.getString(cursor.getColumnIndex("name_ar")));
                 hashMap.put("email",cursor.getString(cursor.getColumnIndex("email")));
