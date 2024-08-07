@@ -4,16 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
-import com.app.smartpos.settings.Synchronization.DownloadActivity;
-import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.categories.CategoriesActivity;
 import com.app.smartpos.settings.end_shift.EndShiftDialog;
@@ -24,19 +20,13 @@ import com.app.smartpos.settings.payment_method.PaymentMethodActivity;
 import com.app.smartpos.settings.shop.ShopInformationActivity;
 import com.app.smartpos.settings.unit.UnitActivity;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.Utils;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class SettingsActivity extends BaseActivity {
 

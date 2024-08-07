@@ -92,8 +92,6 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                enqueueDownloadAndReadWorkers();
             }
         });
 
@@ -101,9 +99,7 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalBackUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String outFileName = Environment.getExternalStorageDirectory() + File.separator + "SmartPos/";
-                localBackup.performBackup(db, outFileName);
+                enqueueDownloadAndReadWorkers();
             }
         });
 
@@ -112,10 +108,35 @@ public class DataBaseBackupActivity extends BaseActivity {
 
     private static final int STORAGE_PERMISSION_CODE = 23;
 
+    //for back button
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        if (checkStoragePermissions()) {
             requestForStoragePermissions();
+        }
+    }
+
+    public boolean checkStoragePermissions(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            //Android is 11 (R) or above
+            return Environment.isExternalStorageManager();
+        }else {
+            //Below android 11
+            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
         }
     }
     private void requestForStoragePermissions() {
@@ -145,149 +166,6 @@ public class DataBaseBackupActivity extends BaseActivity {
         }
 
     }
-    //for back button
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    public void folderChooser() {
-        new ChooserDialog(DataBaseBackupActivity.this)
-
-                .displayPath(true)
-                .withFilter(true, false)
-
-                // to handle the result(s)
-                .withChosenListener(new ChooserDialog.Result() {
-                    @Override
-                    public void onChoosePath(String path, File pathFile) {
-                        onExport(path);
-                        Log.d("path", path);
-
-                    }
-                })
-                .build()
-                .show();
-    }
-
-
-    public void onExport(String path) {
-
-
-        //get current timestamp
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(new Date());
-
-
-        String fileName = "SmartPOS" + "_Backup_" + currentDate + ".xls";
-
-
-        String directory_path = path;
-        File file = new File(directory_path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        // Export SQLite DB as EXCEL FILE
-        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, directory_path);
-        sqliteToExcel.exportAllTables(fileName, new SQLiteToExcel.ExportListener() {
-            @Override
-            public void onStart() {
-
-                loading = new ProgressDialog(DataBaseBackupActivity.this);
-                loading.setMessage(getString(R.string.data_exporting_please_wait));
-                loading.setCancelable(false);
-                loading.show();
-            }
-
-            @Override
-            public void onCompleted(String filePath) {
-
-                Handler mHand = new Handler();
-                mHand.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        loading.dismiss();
-                        Toasty.success(DataBaseBackupActivity.this, R.string.data_successfully_exported, Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }, 5000);
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-                loading.dismiss();
-                Toasty.error(DataBaseBackupActivity.this, R.string.data_export_fail, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-    public void fileChooser() {
-        new ChooserDialog(DataBaseBackupActivity.this)
-
-
-                .displayPath(true)
-                .withChosenListener(new ChooserDialog.Result() {
-                    @Override
-                    public void onChoosePath(String path, File pathFile) {
-                        shareFile(path);
-                    }
-                })
-                // to handle the back key pressed or clicked outside the dialog:
-                .withOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        dialog.cancel(); // MUST have
-                    }
-                })
-                .build()
-                .show();
-    }
-
-
-    private void shareFile(String filePath) {
-
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
-        Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-        File fileWithinMyDir = new File(filePath);
-
-        if (fileWithinMyDir.exists()) {
-
-            Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", fileWithinMyDir);
-
-            intentShareFile.setType("application/*");
-            intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intentShareFile.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(intentShareFile, "Share File"));
-        }
-    }
-    public boolean checkStoragePermissions(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-            //Android is 11 (R) or above
-            return Environment.isExternalStorageManager();
-        }else {
-            //Below android 11
-            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-
-            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
-        }
-    }
     private ActivityResultLauncher<Intent> storageActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     new ActivityResultCallback<ActivityResult>(){
@@ -311,18 +189,25 @@ public class DataBaseBackupActivity extends BaseActivity {
 
 
     private void enqueueDownloadAndReadWorkers() {
-        String fileName = "download.db";
         Data downloadInputData = new Data.Builder()
-                .putString("url", "http://10.0.2.2:8097/sync")
-                .putString("fileName", fileName)
+                .putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/sync")
+                .putString("fileName", "download.db.gz")
+                .build();
+
+        Data decompressInputData = new Data.Builder()
+                .putString("fileName", "download.db.gz")
                 .build();
 
         Data readInputData = new Data.Builder()
-                .putString("fileName", fileName)
+                .putString("fileName", "download.db")
                 .build();
 
         OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
                 .setInputData(downloadInputData)
+                .build();
+
+        OneTimeWorkRequest decompressRequest = new OneTimeWorkRequest.Builder(DecompressWorker.class)
+                .setInputData(decompressInputData)
                 .build();
 
         OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
@@ -331,6 +216,7 @@ public class DataBaseBackupActivity extends BaseActivity {
 
         WorkManager.getInstance(this)
                 .beginWith(downloadRequest)
+                .then(decompressRequest)
                 .then(readRequest)
                 .enqueue();
     }
