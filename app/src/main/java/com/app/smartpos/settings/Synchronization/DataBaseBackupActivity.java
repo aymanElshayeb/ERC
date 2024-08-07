@@ -1,38 +1,60 @@
 package com.app.smartpos.settings.Synchronization;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import static java.lang.Math.log;
+
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkContinuation;
+import androidx.work.WorkManager;
 
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
+import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.backup.LocalBackup;
 import com.app.smartpos.utils.BaseActivity;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.obsez.android.lib.filechooser.ChooserDialog;
-
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +74,6 @@ public class DataBaseBackupActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
 
-
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.data_backup);
@@ -67,19 +88,12 @@ public class DataBaseBackupActivity extends BaseActivity {
         localBackup = new LocalBackup(this);
 
 
-        if (Build.VERSION.SDK_INT >= 23) //Android MarshMellow Version or above
-        {
-            requestPermission();
+        checkPermissions();
 
-        }
 
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-
-                localBackup.performRestore(db);
             }
         });
 
@@ -87,52 +101,14 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalBackUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String outFileName = Environment.getExternalStorageDirectory() + File.separator + "SmartPos/";
-                localBackup.performBackup(db, outFileName);
+                enqueueDownloadAndReadWorkers();
             }
         });
 
     }
 
 
-    private void requestPermission() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            //  Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-
-                        }
-                    }
-
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
-    }
+    private static final int STORAGE_PERMISSION_CODE = 23;
 
     //for back button
     @Override
@@ -147,123 +123,115 @@ public class DataBaseBackupActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
-    public void folderChooser() {
-        new ChooserDialog(DataBaseBackupActivity.this)
-
-                .displayPath(true)
-                .withFilter(true, false)
-
-                // to handle the result(s)
-                .withChosenListener(new ChooserDialog.Result() {
-                    @Override
-                    public void onChoosePath(String path, File pathFile) {
-                        onExport(path);
-                        Log.d("path", path);
-
-                    }
-                })
-                .build()
-                .show();
-    }
-
-
-    public void onExport(String path) {
-
-
-        //get current timestamp
-        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(new Date());
-
-
-        String fileName = "SmartPOS" + "_Backup_" + currentDate + ".xls";
-
-
-        String directory_path = path;
-        File file = new File(directory_path);
-        if (!file.exists()) {
-            file.mkdirs();
+    private void checkPermissions() {
+        if (checkStoragePermissions()) {
+            requestForStoragePermissions();
         }
-        // Export SQLite DB as EXCEL FILE
-        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, directory_path);
-        sqliteToExcel.exportAllTables(fileName, new SQLiteToExcel.ExportListener() {
-            @Override
-            public void onStart() {
-
-                loading = new ProgressDialog(DataBaseBackupActivity.this);
-                loading.setMessage(getString(R.string.data_exporting_please_wait));
-                loading.setCancelable(false);
-                loading.show();
-            }
-
-            @Override
-            public void onCompleted(String filePath) {
-
-                Handler mHand = new Handler();
-                mHand.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        loading.dismiss();
-                        Toasty.success(DataBaseBackupActivity.this, R.string.data_successfully_exported, Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }, 5000);
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-                loading.dismiss();
-                Toasty.error(DataBaseBackupActivity.this, R.string.data_export_fail, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
+    public boolean checkStoragePermissions(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            //Android is 11 (R) or above
+            return Environment.isExternalStorageManager();
+        }else {
+            //Below android 11
+            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
 
-
-    public void fileChooser() {
-        new ChooserDialog(DataBaseBackupActivity.this)
-
-
-                .displayPath(true)
-                .withChosenListener(new ChooserDialog.Result() {
-                    @Override
-                    public void onChoosePath(String path, File pathFile) {
-                        shareFile(path);
-                    }
-                })
-                // to handle the back key pressed or clicked outside the dialog:
-                .withOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                        dialog.cancel(); // MUST have
-                    }
-                })
-                .build()
-                .show();
-    }
-
-
-    private void shareFile(String filePath) {
-
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
-        Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-        File fileWithinMyDir = new File(filePath);
-
-        if (fileWithinMyDir.exists()) {
-
-            Uri uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", fileWithinMyDir);
-
-            intentShareFile.setType("application/*");
-            intentShareFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intentShareFile.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(intentShareFile, "Share File"));
+            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
         }
+    }
+    private void requestForStoragePermissions() {
+        //Android is 11 (R) or above
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            try {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                storageActivityResultLauncher.launch(intent);
+            }catch (Exception e){
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                storageActivityResultLauncher.launch(intent);
+            }
+        }else{
+            //Below android 11
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    },
+                    STORAGE_PERMISSION_CODE
+            );
+        }
+
+    }
+    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>(){
+
+                        @Override
+                        public void onActivityResult(ActivityResult o) {
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+                                //Android is 11 (R) or above
+                                if(Environment.isExternalStorageManager()){
+                                    //Manage External Storage Permissions Granted
+                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
+                                }else{
+                                    Toast.makeText(DataBaseBackupActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                //Below android 11
+
+                            }
+                        }
+                    });
+
+
+    private void enqueueDownloadAndReadWorkers() {
+        Data login = new Data.Builder().
+                putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/auth/user").
+                putString("tenantId", "test").
+                putString("username", "admin").
+                putString("password", "01111Mm&").
+                build();
+        Data downloadInputData = new Data.Builder()
+                .putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/sync")
+                .putString("tenantId", "test")
+                .putString("fileName", "download.db.gz")
+                .build();
+
+        Data decompressInputData = new Data.Builder()
+                .putString("fileName", "download.db.gz")
+                .build();
+
+        Data readInputData = new Data.Builder()
+                .putString("fileName", "download.db")
+                .build();
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class)
+                .setInputData(login)
+                .build();
+        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .setInputData(downloadInputData)
+                .build();
+
+        OneTimeWorkRequest decompressRequest = new OneTimeWorkRequest.Builder(DecompressWorker.class)
+                .setInputData(decompressInputData)
+                .build();
+
+        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
+                .setInputData(readInputData)
+                .build();
+
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(downloadRequest)
+                .then(decompressRequest)
+                .then(readRequest);
+        continuation.enqueue();
     }
 
 }
