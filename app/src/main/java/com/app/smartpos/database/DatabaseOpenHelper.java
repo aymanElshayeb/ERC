@@ -102,9 +102,12 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             existingDb.beginTransaction();
 
             // Get tables from new database
-            // Assuming tables are the same; adapt if necessary
-            String[] tables = {"products"};
+            String[] tables = {"products","payment_method","card_type","user"};
             for (String table : tables) {
+                // Delete all rows in the existing table
+                existingDb.delete(table, null, null);
+
+                // Insert rows from the new database
                 String query = "SELECT * FROM " + table;
                 try (Cursor cursor = newDb.rawQuery(query, null)) {
                     while (cursor.moveToNext()) {
@@ -113,7 +116,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                         for (int i = 0; i < columnCount; i++) {
                             values.put(cursor.getColumnName(i), cursor.getString(i));
                         }
-                        existingDb.replace(table, null, values);
+                        existingDb.insert(table, null, values);
                     }
                 }
             }
@@ -124,6 +127,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             newDb.close();
         }
     }
+
 
 
 }

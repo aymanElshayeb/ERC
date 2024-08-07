@@ -22,4 +22,13 @@ public class ShiftDifferences {
     public double getDiff() {
         return diff;
     }
+
+    @Override
+    public String toString() {
+        return "ShiftDifferences{" +
+                "real=" + real +
+                ", input=" + input +
+                ", diff=" + diff +
+                '}';
+    }
 }

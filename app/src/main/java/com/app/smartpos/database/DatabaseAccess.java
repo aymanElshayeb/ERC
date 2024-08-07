@@ -191,7 +191,7 @@ public class DatabaseAccess {
         return result;
     }
     public int addShift(EndShiftModel endShiftModel) {
-
+        Log.i("datadata",endShiftModel.toString());
         ContentValues values = new ContentValues();
 
         values.put("sequence", endShiftModel.getSequence());
@@ -610,7 +610,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             hashMap=new HashMap<>();
             do {
-
+                hashMap.put("id",cursor.getString(cursor.getColumnIndex("id")));
                 hashMap.put("name_en",cursor.getString(cursor.getColumnIndex("name_en")));
                 hashMap.put("name_ar",cursor.getString(cursor.getColumnIndex("name_ar")));
                 hashMap.put("email",cursor.getString(cursor.getColumnIndex("email")));
@@ -2484,6 +2484,7 @@ public class DatabaseAccess {
             if (cursor != null && cursor.moveToFirst()) {
                 nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value")))+1;
                 prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
+                Log.i("datadata_seq",nextValue+"");
             }
         } catch (Exception e) {
             e.printStackTrace();

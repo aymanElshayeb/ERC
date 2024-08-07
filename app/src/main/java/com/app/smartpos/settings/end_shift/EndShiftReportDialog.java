@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.end_shift;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginUser;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,22 +47,22 @@ public class EndShiftReportDialog extends DialogFragment {
             LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
             for (int i = 0; i < keys.size(); i++) {
                 ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
-                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.real), shiftDifferences.getReal() + "");
-                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.input), shiftDifferences.getInput() + "");
-                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.diff), shiftDifferences.getDiff() + "");
+                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
+                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
+                addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
             }
             addView(requireContext().getResources().getString(R.string.total_transactions_number), endShiftModel.getNum_successful_transaction() + "");
-            addView(requireContext().getResources().getString(R.string.total_amount), endShiftModel.getTotal_amount()+"");
-            addView(requireContext().getResources().getString(R.string.total_tax), endShiftModel.getTotal_tax()+"");
+            addView(requireContext().getResources().getString(R.string.total_amount), trimLongDouble(endShiftModel.getTotal_amount()));
+            addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
 
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy'T'hh:mm a");
             String date = formatter.format(new Date(endShiftModel.getEndDateTime()));
             addView(requireContext().getResources().getString(R.string.date_), date);
 
-            LoginUser loginUser = new LoginUser();
-            addView(requireContext().getResources().getString(R.string.user_id), loginUser.getId() + "");
-            addView(requireContext().getResources().getString(R.string.user_name), loginUser.getName());
+
+            addView(requireContext().getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(requireContext()));
+            addView(requireContext().getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(requireContext()));
             addView(requireContext().getResources().getString(R.string.shift_id), "123455");
 
 

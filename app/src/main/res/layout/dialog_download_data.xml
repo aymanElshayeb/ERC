@@ -25,7 +25,7 @@
 
 
     <EditText
-        android:id="@+id/email_et"
+        android:id="@+id/username_et"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginHorizontal="24dp"
@@ -33,7 +33,7 @@
         android:background="@drawable/rounded_corners_login_edittext_light"
         android:fontFamily="@font/inter_regular"
         android:hint="@string/admin_email"
-        android:inputType="textEmailAddress"
+        android:inputType="text"
         android:paddingHorizontal="16dp"
         android:textColorHint="@color/light_purple"
         android:textColor="@color/black"
