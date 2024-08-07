@@ -2,6 +2,8 @@ package com.app.smartpos.settings.end_shift;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -140,12 +142,12 @@ public class EndShiftDialog extends DialogFragment {
                     map.put(models.get(i).type,new ShiftDifferences(models.get(i).cash,employeeCash,(employeeCash - models.get(i).cash)));
 
                     if (employeeCash != models.get(i).cash) {
-
+                        String value=trimLongDouble((employeeCash - models.get(i).cash));
                         if(employeeCash - models.get(i).cash > 0){
-                            models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": +" + (employeeCash - models.get(i).cash));
+                            models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": +" + value);
                             models.get(i).paymentCashErrorTv.setTextColor(requireContext().getResources().getColor(R.color.successColor));
                         }else{
-                            models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": " + (employeeCash - models.get(i).cash));
+                            models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": " + value);
                             models.get(i).paymentCashErrorTv.setTextColor(requireContext().getResources().getColor(R.color.errorColor));
                         }
                     }
