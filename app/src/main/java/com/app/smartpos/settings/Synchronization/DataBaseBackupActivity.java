@@ -38,6 +38,7 @@ import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseOpenHelper;
+import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.backup.LocalBackup;
 import com.app.smartpos.utils.BaseActivity;
@@ -88,8 +89,6 @@ public class DataBaseBackupActivity extends BaseActivity {
         localBackup = new LocalBackup(this);
 
 
-        checkPermissions();
-
 
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,14 +100,16 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalBackUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enqueueDownloadAndReadWorkers();
+                DownloadDataDialog dialog=new DownloadDataDialog();
+                dialog.show(getSupportFragmentManager(),"dialog");
+
             }
         });
 
     }
 
 
-    private static final int STORAGE_PERMISSION_CODE = 23;
+
 
     //for back button
     @Override
@@ -121,11 +122,6 @@ public class DataBaseBackupActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-    private void checkPermissions() {
-        if (checkStoragePermissions()) {
-            requestForStoragePermissions();
         }
     }
 
@@ -141,97 +137,9 @@ public class DataBaseBackupActivity extends BaseActivity {
             return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
         }
     }
-    private void requestForStoragePermissions() {
-        //Android is 11 (R) or above
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-            try {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-                intent.setData(uri);
-                storageActivityResultLauncher.launch(intent);
-            }catch (Exception e){
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                storageActivityResultLauncher.launch(intent);
-            }
-        }else{
-            //Below android 11
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                    },
-                    STORAGE_PERMISSION_CODE
-            );
-        }
-
-    }
-    private ActivityResultLauncher<Intent> storageActivityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>(){
-
-                        @Override
-                        public void onActivityResult(ActivityResult o) {
-                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
-                                //Android is 11 (R) or above
-                                if(Environment.isExternalStorageManager()){
-                                    //Manage External Storage Permissions Granted
-                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
-                                }else{
-                                    Toast.makeText(DataBaseBackupActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
-                                }
-                            }else{
-                                //Below android 11
-
-                            }
-                        }
-                    });
 
 
-    private void enqueueDownloadAndReadWorkers() {
-        Data login = new Data.Builder().
-                putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/auth/user").
-                putString("tenantId", "test").
-                putString("username", "admin").
-                putString("password", "01111Mm&").
-                build();
-        Data downloadInputData = new Data.Builder()
-                .putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/sync")
-                .putString("tenantId", "test")
-                .putString("fileName", "download.db.gz")
-                .build();
 
-        Data decompressInputData = new Data.Builder()
-                .putString("fileName", "download.db.gz")
-                .build();
 
-        Data readInputData = new Data.Builder()
-                .putString("fileName", "download.db")
-                .build();
-
-        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class)
-                .setInputData(login)
-                .build();
-        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                .setInputData(downloadInputData)
-                .build();
-
-        OneTimeWorkRequest decompressRequest = new OneTimeWorkRequest.Builder(DecompressWorker.class)
-                .setInputData(decompressInputData)
-                .build();
-
-        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
-                .setInputData(readInputData)
-                .build();
-
-        WorkContinuation continuation = WorkManager.getInstance(this)
-                .beginWith(loginRequest)
-                .then(downloadRequest)
-                .then(decompressRequest)
-                .then(readRequest);
-        continuation.enqueue();
-    }
 
 }
