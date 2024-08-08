@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -50,6 +51,8 @@ public class DownloadDataDialog extends DialogFragment {
     View root;
     EditText usernameEt;
     EditText passwordEt;
+    ProgressBar progressBar;
+    Button downloadBtn;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,13 +63,15 @@ public class DownloadDataDialog extends DialogFragment {
 
             usernameEt=root.findViewById(R.id.username_et);
             passwordEt=root.findViewById(R.id.password_et);
-            Button downloadBtn=root.findViewById(R.id.download_btn);
+            downloadBtn=root.findViewById(R.id.download_btn);
+            progressBar=root.findViewById(R.id.progress);
             downloadBtn.setOnClickListener(view -> {
                 if(usernameEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), "Email field is empty", Toast.LENGTH_SHORT).show();
                 }else if(passwordEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), "Password field is empty", Toast.LENGTH_SHORT).show();
                 }else {
+                    downloadBtn.setVisibility(View.GONE);
                     enqueueDownloadAndReadWorkers();
                 }
             });
@@ -166,6 +171,7 @@ public class DownloadDataDialog extends DialogFragment {
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
+            downloadBtn.setVisibility(View.VISIBLE);
             showError();
         }
     }

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@drawable/dialog_round_border"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_qaema_logo"
-        android:layout_marginTop="37dp"/>
+        android:layout_marginTop="37dp"
+        android:src="@drawable/ic_qaema_logo" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/admin"
-        app:layout_constraintTop_toBottomOf="@id/logo_im"
-        app:layout_constraintStart_toStartOf="@id/logo_im"
         android:layout_marginTop="52dp"
-        android:textSize="20dp"
         android:fontFamily="@font/inter_black"
         android:includeFontPadding="false"
-        android:textColor="@color/black"/>
+        android:text="@string/admin"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@id/logo_im"
+        app:layout_constraintTop_toBottomOf="@id/logo_im" />
 
 
     <EditText
@@ -35,8 +37,8 @@
         android:hint="@string/admin_email"
         android:inputType="text"
         android:paddingHorizontal="16dp"
-        android:textColorHint="@color/light_purple"
         android:textColor="@color/black"
+        android:textColorHint="@color/light_purple"
         android:textSize="17sp"
         app:layout_constraintTop_toBottomOf="@id/sub_title_tv" />
 
@@ -44,33 +46,49 @@
         android:id="@+id/password_et"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/email_et"
         android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_corners_login_edittext_light"
-        android:hint="@string/admin_password"
-        android:paddingHorizontal="16dp"
-        android:textSize="17sp"
         android:fontFamily="@font/inter_regular"
-        android:textColorHint="@color/light_purple"
+        android:hint="@string/admin_password"
+        android:inputType="textPassword"
+        android:paddingHorizontal="16dp"
         android:textColor="@color/black"
-        android:inputType="textPassword" />
+        android:textColorHint="@color/light_purple"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/email_et" />
 
-    <Button
-        android:id="@+id/download_btn"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/rounded_button_6"
-        android:backgroundTint="@color/purple"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="42dp"
-        android:layout_marginHorizontal="24dp"
-        android:textColor="@color/white"
-        android:text="@string/download_data"
-        android:textAllCaps="false"
-        android:textSize="17sp"
-        android:fontFamily="@font/inter_black"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/download_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_button_6"
+            android:backgroundTint="@color/purple"
+            android:fontFamily="@font/inter_black"
+            android:text="@string/download_data"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>
