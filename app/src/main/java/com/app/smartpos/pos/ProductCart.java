@@ -298,7 +298,7 @@ public class ProductCart extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> shopData;
         shopData = databaseAccess.getShopInformation();
-        String shop_currency = shopData.get(0).get("shop_currency");
+        String shop_currency = shopData.get(0).get("shop_currency")+" ";
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(ProductCart.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_payment, null);

@@ -1426,7 +1426,7 @@ public class DatabaseAccess {
             do {
 
 
-                currency = cursor.getString(cursor.getColumnIndex("shop_currency"));
+                currency = cursor.getString(cursor.getColumnIndex("shop_currency"))+" ";
 
 
             } while (cursor.moveToNext());
