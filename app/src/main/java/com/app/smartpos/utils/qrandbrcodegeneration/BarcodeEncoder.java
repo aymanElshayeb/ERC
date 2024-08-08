@@ -1,4 +1,4 @@
-package com.app.smartpos.orders.zatcaqrcodegeneration;
+package com.app.smartpos.utils.qrandbrcodegeneration;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,7 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class BarcodeEncoder {
-    public Bitmap encodeQr(String contents, BarcodeFormat format, int width, int height)
+    public Bitmap encodeQrOrBc(String contents, BarcodeFormat format, int width, int height)
             throws WriterException {
         Bitmap encodedQR = toBitmap(encode(contents, format, width, height));
         return encodedQR;

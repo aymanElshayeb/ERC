@@ -1,9 +1,8 @@
-package com.app.smartpos.orders.zatcaqrcodegeneration;
+package com.app.smartpos.utils.qrandbrcodegeneration;
 
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
-import java.util.logging.Logger;
 
 import kotlin.text.Charsets;
 

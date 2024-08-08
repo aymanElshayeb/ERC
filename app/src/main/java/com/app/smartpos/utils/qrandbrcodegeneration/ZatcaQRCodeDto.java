@@ -1,7 +1,5 @@
-package com.app.smartpos.orders.zatcaqrcodegeneration;
+package com.app.smartpos.utils.qrandbrcodegeneration;
 
-
-import java.sql.Timestamp;
 
 public class ZatcaQRCodeDto {
     private String sellerName;

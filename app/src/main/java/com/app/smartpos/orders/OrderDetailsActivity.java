@@ -175,7 +175,6 @@ public class OrderDetailsActivity extends BaseActivity {
         btnThermalPrinter.setOnClickListener(v -> {
             UrovoPrinter urovoPrinter = new UrovoPrinter();
 //            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
-//            databaseOpenHelper.importDB("smart_pos.db");
             boolean successfulPrint = urovoPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
             if(!successfulPrint){
                 //Check if the Bluetooth is available and on.

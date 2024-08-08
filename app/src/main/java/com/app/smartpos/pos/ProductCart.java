@@ -224,8 +224,7 @@ public class ProductCart extends BaseActivity {
 
 
                         JSONObject objp = new JSONObject();
-                        objp.put("product_id", product_id);
-                        objp.put("product_uid", product.get(0).get("product_uid"));
+                        objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_name_en", product.get(0).get("product_name_en"));
                         objp.put("product_name_ar", product.get(0).get("product_name_ar"));
                         objp.put("product_weight", lines.get(i).get("product_weight")+" "+weight_unit);
