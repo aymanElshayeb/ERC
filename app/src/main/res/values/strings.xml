@@ -312,7 +312,7 @@
     <string name="login">Login</string>
     <string name="wrong_email_password">Wrong email or pasword</string>
 
-    <string name="admin">Admin</string>
+    <string name="synchronization">Synchronization</string>
     <string name="admin_email">Admin Username</string>
     <string name="admin_password">Admin Password</string>
     <string name="download_data">Download Data</string>
@@ -346,5 +346,13 @@
     <string name="view_receipt">View Receipt</string>
     <string name="view_all_receipt">View All Receipt</string>
     <string name="or">OR</string>
+
+    <string name="registration">Registration</string>
+    <string name="merchant_id">Merchant ID</string>
+    <string name="register">Register</string>
+    <string name="demo">Demo</string>
+    <string name="user_name_empty">Username field is empty</string>
+    <string name="password_empty">password field is empty</string>
+    <string name="merchant_empty">Merchant ID field is empty</string>
 
 </resources>

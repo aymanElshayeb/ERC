@@ -1,19 +1,13 @@
-package com.app.smartpos.downloaddatadialog;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+package com.app.smartpos.Registration;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,62 +16,76 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
-import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 
-public class DownloadDataDialog extends DialogFragment {
+public class RegistrationDialog extends DialogFragment {
 
     private static final int STORAGE_PERMISSION_CODE = 23;
     View root;
     EditText usernameEt;
     EditText passwordEt;
+    EditText merchantEt;
     ProgressBar progressBar;
-    Button downloadBtn;
+    Button registerBtn;
+    Button demoBtn;
+
+    private String deviceId;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(root==null){
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            root=inflater.inflate(R.layout.dialog_download_data,container,false);
-            //setCancelable(false);
+            root=inflater.inflate(R.layout.dialog_registration,container,false);
+            setCancelable(false);
+
+            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
 
             usernameEt=root.findViewById(R.id.username_et);
             passwordEt=root.findViewById(R.id.password_et);
-            downloadBtn=root.findViewById(R.id.download_btn);
+            merchantEt=root.findViewById(R.id.merchant_id_et);
+            registerBtn =root.findViewById(R.id.register_btn);
+            demoBtn =root.findViewById(R.id.demo_btn);
             progressBar=root.findViewById(R.id.progress);
-            downloadBtn.setOnClickListener(view -> {
+            registerBtn.setOnClickListener(view -> {
                 if(usernameEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 }else if(passwordEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
+                }else if(merchantEt.getText().toString().isEmpty()){
+                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.merchant_empty), Toast.LENGTH_SHORT).show();
                 }else {
-                    downloadBtn.setVisibility(View.GONE);
+                    registerBtn.setVisibility(View.GONE);
                     enqueueDownloadAndReadWorkers();
                 }
             });
 
+            demoBtn.setOnClickListener(view -> {
+                requireActivity().finish();
+                requireActivity().startActivity(new Intent(requireActivity(), HomeActivity.class));
+            });
+
             requestForStoragePermissions();
         }
+
+        //SharedPrefUtils.setIsRegistered(this,true);
+        //SharedPrefUtils.setStartDateTime(this);
 
         return root;
     }
@@ -171,7 +179,7 @@ public class DownloadDataDialog extends DialogFragment {
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            downloadBtn.setVisibility(View.VISIBLE);
+            registerBtn.setVisibility(View.VISIBLE);
             showError();
         }
     }

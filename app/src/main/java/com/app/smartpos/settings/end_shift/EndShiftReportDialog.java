@@ -2,6 +2,7 @@ package com.app.smartpos.settings.end_shift;
 
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
+import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.auth.LoginUser;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -40,9 +42,12 @@ public class EndShiftReportDialog extends DialogFragment {
             setCancelable(false);
 
             Button submitBtn = root.findViewById(R.id.btn_submit);
-            ImageButton closeBtn = root.findViewById(R.id.btn_close);
+            //ImageButton closeBtn = root.findViewById(R.id.btn_close);
 
-            closeBtn.setOnClickListener(view -> dismissAllowingStateLoss());
+            submitBtn.setOnClickListener(view -> {
+                requireActivity().finish();
+                requireActivity().startActivity(new Intent(requireActivity(), AuthActivity.class));
+            });
 
             LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
             for (int i = 0; i < keys.size(); i++) {

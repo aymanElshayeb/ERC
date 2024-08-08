@@ -1,6 +1,5 @@
 package com.app.smartpos.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +18,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -191,30 +190,5 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    // Copy table schema from sourceDb to targetDb
-    public static void copyTableSchema(SQLiteDatabase sourceDb, SQLiteDatabase targetDb, String tableName) {
-        // Retrieve schema information from the source database
-        String schemaQuery = "PRAGMA table_info(" + tableName + ")";
-        Cursor cursor = sourceDb.rawQuery(schemaQuery, null);
 
-        // Build CREATE TABLE statement
-        StringBuilder createTableQuery = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " (");
-
-        while (cursor.moveToNext()) {
-            @SuppressLint("Range") String columnName = cursor.getString(cursor.getColumnIndex("name"));
-            @SuppressLint("Range") String columnType = cursor.getString(cursor.getColumnIndex("type"));
-            createTableQuery.append(columnName).append(" ").append(columnType).append(", ");
-        }
-
-        // Remove trailing comma and space
-        if (createTableQuery.length() > 0) {
-            createTableQuery.setLength(createTableQuery.length() - 2);
-        }
-        createTableQuery.append(");");
-
-        cursor.close();
-
-        // Execute CREATE TABLE statement in the target database
-        targetDb.execSQL(createTableQuery.toString());
-    }
 }

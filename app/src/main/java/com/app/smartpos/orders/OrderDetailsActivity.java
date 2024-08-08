@@ -107,7 +107,7 @@ public class OrderDetailsActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
-        Log.i("datadata_size",orderDetailsList.size()+"");
+        Log.i("datadata_size",order_id+" "+orderDetailsList.size()+"");
         if (orderDetailsList.isEmpty()) {
             //if no data in local db, then load data from server
             Toasty.info(OrderDetailsActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
