@@ -93,6 +93,7 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                enqueue();
             }
         });
 
@@ -138,8 +139,20 @@ public class DataBaseBackupActivity extends BaseActivity {
         }
     }
 
+    private void enqueue() {
+        //username Admin
+        //password 01111Mm&
+        Data writeFile  = new Data.Builder().
+                build();
 
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(WriteFileWorker.class)
+                .setInputData(writeFile)
+                .build();
 
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(workRequest);
+        continuation.enqueue();
+    }
 
 
 }
