@@ -68,6 +68,7 @@ public class EndShiftDialog extends DialogFragment {
             //get data from local database
             List<HashMap<String, String>> orderList;
             orderList = databaseAccess.getOrderListWithTime(lastShiftDate);
+            Log.i("datadata",orderList.size()+" "+lastShiftDate);
             HashMap<String, String> paymentTypesCashMap = new HashMap<>();
             databaseAccess.open();
             for (int i = 0; i < orderList.size(); i++) {

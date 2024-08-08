@@ -84,10 +84,11 @@ public class OrdersActivity extends BaseActivity {
             imgNoProduct.setImageResource(R.drawable.not_found);
             txtNoProducts.setVisibility(View.VISIBLE);
         } else {
-            LinkedList<String>keys=new LinkedList<>(orderList.get(0).keySet());
-            for(int i=0;i<keys.size();i++){
-                Log.i("datadata",keys.get(i)+" "+orderList.get(0).get(keys.get(i)));
-            }
+            Log.i("datadata",orderList.get(0).get("invoice_id").toString());
+//            LinkedList<String>keys=new LinkedList<>(orderList.get(0).keySet());
+//            for(int i=0;i<keys.size();i++){
+//
+//            }
 
             orderAdapter = new OrderAdapter(OrdersActivity.this, orderList);
 

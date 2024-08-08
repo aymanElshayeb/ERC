@@ -11,14 +11,14 @@ import java.util.Date;
 
 public class SharedPrefUtils {
 
-    public static boolean isFirstOpen(Context context){
+    public static boolean isRegistered(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
-        return sharedPreferences.getBoolean("first_open",true);
+        return sharedPreferences.getBoolean("isRegistered",false);
     }
 
-    public static void setFirstOpen(Context context,Boolean flag){
+    public static void setIsRegistered(Context context,Boolean flag){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putBoolean("first_open", flag).commit();
+        editor.putBoolean("isRegistered", flag).commit();
     }
 
     public static long getStartDateTime(Context context){

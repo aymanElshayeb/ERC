@@ -19,7 +19,7 @@
         android:layout_marginTop="52dp"
         android:fontFamily="@font/inter_black"
         android:includeFontPadding="false"
-        android:text="@string/synchronization"
+        android:text="@string/registration"
         android:textColor="@color/black"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="@id/logo_im"
@@ -58,37 +58,76 @@
         android:textSize="17sp"
         app:layout_constraintTop_toBottomOf="@id/email_et" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <EditText
+        android:id="@+id/merchant_id_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_corners_login_edittext_light"
+        android:fontFamily="@font/inter_regular"
+        android:hint="@string/merchant_id"
+        android:inputType="text"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/light_purple"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/email_et" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:orientation="horizontal"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="42dp"
         app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="48dp">
+
+            <Button
+                android:id="@+id/register_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_button_6"
+                android:backgroundTint="@color/purple"
+                android:fontFamily="@font/inter_black"
+                android:text="@string/register"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/download_btn"
-            android:layout_width="match_parent"
+            android:id="@+id/demo_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
             android:layout_height="match_parent"
             android:background="@drawable/rounded_button_6"
-            android:backgroundTint="@color/purple"
+            android:backgroundTint="@color/light_purple"
             android:fontFamily="@font/inter_black"
-            android:text="@string/sync"
+            android:text="@string/demo"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="17sp"
             android:visibility="visible" />
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 
 
 </LinearLayout>

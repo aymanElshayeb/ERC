@@ -873,7 +873,8 @@ public class DatabaseAccess {
                 //for stock update
                 values3.put("product_stock", updated_stock);
                 //for order insert
-                database.insert("order_details", null, values2);
+                long check = database.insert("order_details", null, values2);
+                Log.i("datadata", "insertOrder: "+check);
 
                 //updating stock
                 database.update("products", values3, "product_id=?", new String[]{product_id});
@@ -911,7 +912,6 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
-
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
                 map.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
@@ -1002,7 +1002,9 @@ public class DatabaseAccess {
                 map.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
-                map.put("sequence_text", cursor.getString(cursor.getColumnIndex("sequence_text")));
+                map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
+
 
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
 
@@ -1056,6 +1058,7 @@ public class DatabaseAccess {
     public ArrayList<HashMap<String, String>> getOrderDetailsList(String order_id) {
         ArrayList<HashMap<String, String>> orderDetailsList = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + order_id + "' ORDER BY order_details_id DESC", null);
+        Log.i("datadata_result",cursor.moveToFirst()+" "+"SELECT * FROM order_details WHERE invoice_id= "+ order_id + " ORDER BY order_details_id DESC");
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
