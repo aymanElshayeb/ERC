@@ -124,7 +124,10 @@
     <string name="payment">PAYMENT</string>
     <string name="submit">SUBMIT</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="product_status">Product Status</string>
     <string name="product_name">Product Name</string>
+    <string name="arabic_product_name">Arabic product Name</string>
+    <string name="product_uuid">Product UUID</string>
     <string name="weight">Weight:</string>
     <string name="price">Price</string>
 

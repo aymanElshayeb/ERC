@@ -76,11 +76,11 @@ public class EndShiftDialog extends DialogFragment {
             for (int i = 0; i < orderList.size(); i++) {
                 databaseAccess.open();
                 double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
-                //double tax = Double.parseDouble(orderList.get(i).get("tax"));
+                double tax = Double.parseDouble(orderList.get(i).get("tax"));
                 double discount = Double.parseDouble(orderList.get(i).get("discount"));
 
                 total_amount+=total_price;
-               // total_tax+=tax;
+                total_tax+=tax;
 
                 double calculated_total_price = total_price - discount;
                 if (paymentTypesCashMap.containsKey(orderList.get(i).get("order_payment_method").toString())) {
