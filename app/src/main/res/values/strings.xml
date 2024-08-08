@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">qaema</string>
+    <string name="app_name" translatable="false">ECR</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>

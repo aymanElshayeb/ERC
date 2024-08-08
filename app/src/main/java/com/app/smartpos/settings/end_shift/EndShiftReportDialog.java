@@ -41,10 +41,10 @@ public class EndShiftReportDialog extends DialogFragment {
             root = inflater.inflate(R.layout.dialog_end_shift_report, container, false);
             setCancelable(false);
 
-            Button submitBtn = root.findViewById(R.id.btn_submit);
+            Button logoutBtn = root.findViewById(R.id.btn_logout);
             //ImageButton closeBtn = root.findViewById(R.id.btn_close);
 
-            submitBtn.setOnClickListener(view -> {
+            logoutBtn.setOnClickListener(view -> {
                 requireActivity().finish();
                 requireActivity().startActivity(new Intent(requireActivity(), AuthActivity.class));
             });
