@@ -143,7 +143,7 @@ public class EditProductActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> productData;
         productData = databaseAccess.getProductsInfo(productID);
-        String product_name = productData.get(0).get("product_name");
+        String product_name = productData.get(0).get("product_name_en");
         String product_code = productData.get(0).get("product_code");
         String product_category_id = productData.get(0).get("product_category");
         String product_description = productData.get(0).get("product_description");

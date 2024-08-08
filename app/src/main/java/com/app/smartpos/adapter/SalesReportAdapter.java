@@ -44,7 +44,7 @@ public class SalesReportAdapter extends RecyclerView.Adapter<SalesReportAdapter.
         String currency = databaseAccess.getCurrency();
 
 
-        holder.txt_product_name.setText(orderData.get(position).get("product_name"));
+        holder.txt_product_name.setText(orderData.get(position).get("product_name_en"));
 
         holder.txt_product_qty.setText(context.getString(R.string.quantity) + orderData.get(position).get("product_qty"));
         holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));

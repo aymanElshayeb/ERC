@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderDetailsAdapter;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.pdf_report.BarCodeEncoder;
 import com.app.smartpos.pdf_report.TemplatePDF;
 import com.app.smartpos.utils.BaseActivity;
@@ -172,13 +173,17 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
         btnThermalPrinter.setOnClickListener(v -> {
-
-            //Check if the Bluetooth is available and on.
-            if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
-            PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
-            //Pick a Bluetooth device
-            Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
-            startActivityForResult(i, REQUEST_CONNECT);
+            UrovoPrinter urovoPrinter = new UrovoPrinter();
+//            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
+            boolean successfulPrint = urovoPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
+            if(!successfulPrint){
+                //Check if the Bluetooth is available and on.
+                if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
+                PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
+                //Pick a Bluetooth device
+                Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
+                startActivityForResult(i, REQUEST_CONNECT);
+            }
         });
 
     }
@@ -199,7 +204,7 @@ public class OrderDetailsActivity extends BaseActivity {
         double cost_total;
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
-            name = orderDetailsList.get(i).get("product_name");
+            name = orderDetailsList.get(i).get("product_name_en");
             price = orderDetailsList.get(i).get("product_price");
             qty = orderDetailsList.get(i).get("product_qty");
             weight = orderDetailsList.get(i).get("product_weight");

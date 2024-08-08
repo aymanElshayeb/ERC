@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
-import com.app.smartpos.auth.LoginUser;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
 
@@ -22,9 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Objects;
 
 
 public class DatabaseAccess {
@@ -396,7 +393,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
 
-        values.put("product_name", product_name);
+        values.put("product_name_en", product_name);
         values.put("product_code", product_code);
         values.put("product_category", product_category);
         values.put("product_description", product_description);
@@ -429,7 +426,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
 
-        values.put("product_name", product_name);
+        values.put("product_name_en", product_name);
         values.put("product_code", product_code);
         values.put("product_category", product_category);
         values.put("product_description", product_description);
@@ -630,24 +627,27 @@ public class DatabaseAccess {
     //get product weight unit name
     @SuppressLint("Range")
     public String getWeightUnitName(String weight_unit_id) {
-
+        Cursor cursor = null;
         String weight_unit_name = "n/a";
-        Cursor cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id + "", null);
+        try {
+            cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id + "", null);
+            if (cursor.moveToFirst()) {
+                do {
 
 
-        if (cursor.moveToFirst()) {
-            do {
+                    weight_unit_name = cursor.getString(cursor.getColumnIndex("weight_unit"));
 
 
-                weight_unit_name = cursor.getString(cursor.getColumnIndex("weight_unit"));
-
-
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            }
         }
-
-
-        cursor.close();
-        database.close();
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            cursor.close();
+            database.close();
+        }
         return weight_unit_name;
     }
 
@@ -820,7 +820,7 @@ public class DatabaseAccess {
             values.put("paid_amount", paid_amount);
             values.put("change_amount", change_amount);
             values.put("tax_number", tax_number);
-            values.put("sequence_text", sequence_text);
+            values.put("operation_type", "invoice");
             values.put(Constant.ORDER_STATUS, Constant.PENDING);
 
 
@@ -840,15 +840,15 @@ public class DatabaseAccess {
 
             for (int i = 0; i < result.length(); i++) {
                 JSONObject jo = result.getJSONObject(i);
-                String product_name = jo.getString("product_name"); //ref
+                String product_name_en = jo.getString("product_name_en");
+                String product_name_ar = jo.getString("product_name_ar"); //ref
                 String product_weight = jo.getString("product_weight");
                 String product_qty = jo.getString("product_qty");
                 String product_price = jo.getString("product_price");
                 String product_image = jo.getString("product_image");
                 String product_order_date = jo.getString("product_order_date");
-
-
-                String product_id = jo.getString("product_id");
+                String product_uuid = jo.getString("product_uuid");
+                String product_id = getProductIdByUuid(product_uuid);
                 String stock = jo.getString("stock");
                 double in_tax_total = obj.getDouble("in_tax_total");
                 double ex_tax_total = obj.getDouble("ex_tax_total");
@@ -856,7 +856,9 @@ public class DatabaseAccess {
 
 
                 values2.put("invoice_id", order_id);
-                values2.put("product_name", product_name);
+                values2.put("product_name_en", product_name_en);
+                values2.put("product_name_ar", product_name_ar);
+                values2.put("product_uuid", product_uuid);
                 values2.put("product_weight", product_weight);
                 values2.put("in_tax_total", in_tax_total);
                 values2.put("ex_tax_total", ex_tax_total);
@@ -885,6 +887,22 @@ public class DatabaseAccess {
         database.close();
     }
 
+    @SuppressLint("Range")
+    public String getProductIdByUuid(String productUuid) {
+        String product_id = "n/a";
+        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_uuid='" + productUuid + "'", null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                product_id = cursor.getString(cursor.getColumnIndex("product_id"));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return product_id;
+    }
+
 
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getOrderList() {
@@ -897,6 +915,7 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
                 map.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
+                map.put("order_timestamp", cursor.getString(cursor.getColumnIndex("order_timestamp")));
                 map.put("order_type", cursor.getString(cursor.getColumnIndex("order_type")));
                 map.put("order_payment_method", cursor.getString(cursor.getColumnIndex("order_payment_method")));
                 map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
@@ -910,7 +929,9 @@ public class DatabaseAccess {
                 map.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
-                map.put("sequence_text", cursor.getString(cursor.getColumnIndex("sequence_text")));
+                map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
+
 
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
 
@@ -924,6 +945,39 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
+    public HashMap<String, String> getOrderListByOrderId(String order_id) {
+        HashMap<String, String> orderListMap = new HashMap<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE invoice_id='" + order_id + "'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                orderListMap.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
+                orderListMap.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
+                orderListMap.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
+                orderListMap.put("order_timestamp", cursor.getString(cursor.getColumnIndex("order_timestamp")));
+                orderListMap.put("order_type", cursor.getString(cursor.getColumnIndex("order_type")));
+                orderListMap.put("order_payment_method", cursor.getString(cursor.getColumnIndex("order_payment_method")));
+                orderListMap.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
+                orderListMap.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
+                orderListMap.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
+                orderListMap.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                orderListMap.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
+                orderListMap.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
+                orderListMap.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
+                orderListMap.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
+                orderListMap.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
+                orderListMap.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
+                orderListMap.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
+                orderListMap.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                orderListMap.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
+                orderListMap.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return orderListMap;
+    }
+
+    @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getOrderListWithTime(long time) {
         ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE order_timestamp > "+time+"", null);
@@ -934,6 +988,7 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
                 map.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
+                map.put("order_timestamp", cursor.getString(cursor.getColumnIndex("order_timestamp")));
                 map.put("order_type", cursor.getString(cursor.getColumnIndex("order_type")));
                 map.put("order_payment_method", cursor.getString(cursor.getColumnIndex("order_payment_method")));
                 map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
@@ -968,25 +1023,25 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
-                map.put("order_id", cursor.getString(cursor.getColumnIndex("product_sell_price")));
-                map.put("card_details", cursor.getString(cursor.getColumnIndex("product_id")));
-                map.put("change_amount", cursor.getString(cursor.getColumnIndex("product_active")));
-                map.put("customer_name", cursor.getString(cursor.getColumnIndex("product_buy_price")));
-                map.put("discount", cursor.getString(cursor.getColumnIndex("product_category")));
-                map.put("ecr_code", cursor.getString(cursor.getColumnIndex("product_code")));
-                map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("product_description")));
-                map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("product_image")));
-                map.put("invoice_id", cursor.getString(cursor.getColumnIndex("product_name_en")));
-                map.put("order_date", cursor.getString(cursor.getColumnIndex("product_name_ar")));
-                map.put("order_payment_method", cursor.getString(cursor.getColumnIndex("product_stock")));
-                map.put("order_status", cursor.getString(cursor.getColumnIndex("product_supplier")));
-                map.put("order_time", cursor.getString(cursor.getColumnIndex("product_tax")));
-                map.put("order_type", cursor.getString(cursor.getColumnIndex("product_weight")));
-                map.put("original_order_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                map.put("paid_amount", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                map.put("sequence_text", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                map.put("tax", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                map.put("tax_number", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
+                map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
+                map.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
+                map.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
+                map.put("order_timestamp", cursor.getString(cursor.getColumnIndex("order_timestamp")));
+                map.put("order_type", cursor.getString(cursor.getColumnIndex("order_type")));
+                map.put("order_payment_method", cursor.getString(cursor.getColumnIndex("order_payment_method")));
+                map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
+                map.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
+                map.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
+                map.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                map.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
+                map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
+                map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
+                map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
+                map.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
+                map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
+                map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
+                map.put("sequence_text", cursor.getString(cursor.getColumnIndex("sequence_text")));
+                map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
                 orderList.add(map);
             } while (cursor.moveToNext());
         }
@@ -1009,9 +1064,10 @@ public class DatabaseAccess {
                 map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
-                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
-                map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
                 map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
                 map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
@@ -1041,9 +1097,10 @@ public class DatabaseAccess {
                 map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
-                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
-                map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
                 map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
                 map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
@@ -1098,9 +1155,10 @@ public class DatabaseAccess {
                 map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
-                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
-                map.put("product_name", cursor.getString(cursor.getColumnIndex("product_name")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
                 map.put("product_order_date", cursor.getString(cursor.getColumnIndex("product_order_date")));
                 map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
                 map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
@@ -1266,6 +1324,7 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2058,6 +2117,7 @@ public class DatabaseAccess {
                 HashMap<String, String> map = new HashMap<>();
 
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2094,6 +2154,7 @@ public class DatabaseAccess {
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2349,6 +2410,7 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
                 map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2458,7 +2520,8 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public String getSequence(int sequenceId, String ecrCode) {
+    public HashMap<String, String> getSequence(int sequenceId, String ecrCode) {
+        HashMap<String, String> sequenceMap = new HashMap<>();
         String sequence = "";
         Cursor cursor = null;
         int nextValue = -1;
@@ -2467,24 +2530,30 @@ public class DatabaseAccess {
             cursor = database.rawQuery("SELECT * FROM sequence_text WHERE id=" + sequenceId, null);
             if (cursor != null && cursor.moveToFirst()) {
                 nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value")))+1;
+                prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
                 Log.i("datadata_seq",nextValue+"");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         sequence = ecrCode + " - 001 - " +  cursor.getString(cursor.getColumnIndex("type_perfix")) + String.format("%010d", nextValue);
-        boolean updated = updateSequence(nextValue,sequenceId);
-        if(!updated)
-            throw new RuntimeException("sequence is not updated");
         if (cursor != null) {
             cursor.close();
         }
-        Log.i("datadata_seq",updated+"");
         database.close();
-        return sequence;
+        try {
+            sequence = ecrCode + "-001-" + prefix + String.format("%010d", nextValue);
+            sequenceMap.put("sequence", sequence);
+            sequenceMap.put("next_value",String.valueOf(nextValue));
+            sequenceMap.put("sequence_id",String.valueOf(sequenceId));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return sequenceMap;
     }
 
-    private boolean updateSequence(int nextValue, int sequenceId) {
+    public boolean updateSequence(int nextValue, int sequenceId) {
         ContentValues values = new ContentValues();
         values.put("current_value", nextValue);
         long check = database.update("sequence_text", values, "id=? ", new String[]{String.valueOf(sequenceId)});
@@ -2646,5 +2715,11 @@ public class DatabaseAccess {
             return false;
         }
 
+    }
+
+    public void addQrCodeToOrder(String orderId, String qrCodeBase64) {
+        ContentValues values = new ContentValues();
+        values.put("qr_code", qrCodeBase64);
+        database.update("order_list", values, "order_id=? ", new String[]{orderId});
     }
 }

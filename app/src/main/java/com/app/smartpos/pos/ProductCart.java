@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.database.DatabaseAccess;
@@ -135,8 +136,7 @@ public class ProductCart extends BaseActivity {
 
 
 
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount)
-    {
+    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -183,7 +183,8 @@ public class ProductCart extends BaseActivity {
                     obj.put("original_order_id", null);
                     obj.put("card_details", -1);
                     databaseAccess.open();
-                    String ecr_code=databaseAccess.getConfiguration().get("ecr_code").toString();
+                    HashMap<String,String> configuration = databaseAccess.getConfiguration();
+                    String ecr_code= configuration.get("ecr_code");
                     obj.put("ecr_code", ecr_code);
 
                     databaseAccess.open();
@@ -196,13 +197,12 @@ public class ProductCart extends BaseActivity {
                     obj.put("paid_amount", totalPriceWithTax);
                     obj.put("change_amount", 0);
 
-                    databaseAccess.open();
-                    String tax_number=databaseAccess.getConfiguration().get("merchant_tax_number").toString();
+                    String tax_number= configuration.get("merchant_tax_number");
                     obj.put("tax_number", tax_number);
 
                     databaseAccess.open();
-                    String sequenceNumber=databaseAccess.getSequence(1,ecr_code);
-                    obj.put("sequence_text", sequenceNumber);
+                    HashMap<String,String> sequenceMap = databaseAccess.getSequence(1,ecr_code);
+                    obj.put("sequence_text", sequenceMap.get("sequence_id"));
 
                     obj.put("tax", calculated_tax);
                     obj.put("discount", discount);
@@ -216,24 +216,22 @@ public class ProductCart extends BaseActivity {
 
                         databaseAccess.open();
                         String product_id=lines.get(i).get("product_id");
-                        String product_name=databaseAccess.getProductName(product_id);
+
+                        ArrayList<HashMap<String, String>> product =databaseAccess.getProductsInfo(product_id);
 
                         databaseAccess.open();
-                        String weight_unit_id=lines.get(i).get("product_weight_unit");
-                        String weight_unit=databaseAccess.getWeightUnitName(weight_unit_id);
+                        String weight_unit=databaseAccess.getWeightUnitName(product.get(0).get("product_weight_unit_id"));
 
-
-                        databaseAccess.open();
-                        String product_image=databaseAccess.getProductImage(product_id);
 
                         JSONObject objp = new JSONObject();
-                        objp.put("product_id", product_id);
-                        objp.put("product_name", product_name);
+                        objp.put("product_uuid", product.get(0).get("product_uuid"));
+                        objp.put("product_name_en", product.get(0).get("product_name_en"));
+                        objp.put("product_name_ar", product.get(0).get("product_name_ar"));
                         objp.put("product_weight", lines.get(i).get("product_weight")+" "+weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock"));
                         objp.put("product_price", lines.get(i).get("product_price"));
-                        objp.put("product_image", product_image);
+                        objp.put("product_image", product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
 
                         array.put(objp);
@@ -265,20 +263,18 @@ public class ProductCart extends BaseActivity {
 
 
     //for save data in offline
-    private void saveOrderInOfflineDb(final JSONObject obj)
-    {
-
-        //get current timestamp
-        Long tsLong = System.currentTimeMillis() / 1000;
-        String timeStamp = tsLong.toString();
-
+    private void saveOrderInOfflineDb(final JSONObject obj) throws JSONException {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
 
         databaseAccess.open();
-        /*
-        timestamp used for un sync order and make it unique id
-         */
-        databaseAccess.insertOrder(timeStamp,obj,ProductCart.this);
+        HashMap<String, String> sequenceMap = databaseAccess.getSequence(Constant.INVOICE_SEQ_ID, obj.getString("ecr_code"));
+
+        databaseAccess.open();
+        databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
+
+        databaseAccess.open();
+        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj,ProductCart.this);
+
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
@@ -661,7 +657,11 @@ public class ProductCart extends BaseActivity {
                 }
 
 
-                proceedOrder(order_type,order_payment_method,customer_name,total_tax,discount);
+                try {
+                    proceedOrder(order_type,order_payment_method,customer_name,total_tax,discount);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 
                 alertDialog.dismiss();
