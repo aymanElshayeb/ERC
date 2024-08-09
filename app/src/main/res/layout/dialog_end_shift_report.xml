@@ -25,6 +25,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:backgroundTint="@android:color/white"
                 app:srcCompat="@drawable/ic_close"
+                android:visibility="gone"
                 tools:ignore="VectorDrawableCompat" />
 
             <TextView
@@ -37,33 +38,30 @@
                 android:textColor="@android:color/white" />
 
             <Button
-                android:id="@+id/btn_submit"
+                android:id="@+id/btn_logout"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/submit"
+                android:text="@string/logout"
                 android:textColor="@android:color/white" />
 
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:scrollingCache="true">
-
+        android:layout_height="match_parent"
+        android:scrollbars="none">
         <LinearLayout
+            android:id="@+id/views_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
         </LinearLayout>
-
-
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 </LinearLayout>

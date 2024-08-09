@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="3dp"
         android:layout_marginRight="5dp"
@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -44,7 +45,6 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
@@ -65,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sailec_regular"
                     android:padding="2dp"
+                    android:visibility="gone"
                     android:text="Product Supplier"
                     android:textColor="#EA1D2C" />
 
@@ -74,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sailec_regular"
                     android:padding="2dp"
+                    android:visibility="gone"
                     android:text="Buy Price"
                     android:textColor="#EA1D2C" />
 
@@ -116,4 +118,16 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/img_status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
+        app:srcCompat="@drawable/disable_oval"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:elevation="16dp"
+        tools:ignore="VectorDrawableCompat" />
 </RelativeLayout>

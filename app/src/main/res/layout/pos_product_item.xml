@@ -65,6 +65,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="2dp"
+                        android:visibility="gone"
                         android:text="@string/weight"
                         app:fontFamily="@font/sailec_regular" />
 
@@ -73,6 +74,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:text="@string/product_stock"
                         app:fontFamily="@font/sailec_regular" />
 

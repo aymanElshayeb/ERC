@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +55,7 @@ public class EndShiftDialog extends DialogFragment {
             root = inflater.inflate(R.layout.dialog_end_shift, container, false);
             setCancelable(false);
 
+            EditText leaveCashEt = root.findViewById(R.id.leave_cash_et);
             Button submitBtn = root.findViewById(R.id.btn_submit);
             Button confirmBtn = root.findViewById(R.id.confirm_btn);
             ImageButton closeBtn = root.findViewById(R.id.btn_close);
@@ -74,11 +76,11 @@ public class EndShiftDialog extends DialogFragment {
             for (int i = 0; i < orderList.size(); i++) {
                 databaseAccess.open();
                 double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
-                //double tax = Double.parseDouble(orderList.get(i).get("tax"));
+                double tax = Double.parseDouble(orderList.get(i).get("tax"));
                 double discount = Double.parseDouble(orderList.get(i).get("discount"));
 
                 total_amount+=total_price;
-               // total_tax+=tax;
+                total_tax+=tax;
 
                 double calculated_total_price = total_price - discount;
                 if (paymentTypesCashMap.containsKey(orderList.get(i).get("order_payment_method").toString())) {
@@ -134,6 +136,10 @@ public class EndShiftDialog extends DialogFragment {
             HashMap<String,ShiftDifferences>map=new HashMap<>();
 
             submitBtn.setOnClickListener(view -> {
+                if(leaveCashEt.getText().toString().isEmpty()){
+                    Toast.makeText(requireContext(), "please add leave cash", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 int total_transactions = orderList.size();
 
@@ -170,12 +176,12 @@ public class EndShiftDialog extends DialogFragment {
                 HashMap<String,String> sequenceMap = databaseAccess.getSequence(2,ecr_code);
                 databaseAccess.open();
                 SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(getString(R.string.app_name),MODE_PRIVATE);
-                String startDateString=databaseAccess.getLastShift("start_date_time");
+                String startDateString=databaseAccess.getLastShift("end_date_time");
                 long startDate=startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()):Long.parseLong(startDateString);
                 databaseAccess.open();
-                String startCashString=databaseAccess.getLastShift("start_cash");
+                String startCashString=databaseAccess.getLastShift("leave_cash");
                 double startCash=startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
-                endShiftModel=new EndShiftModel(map,sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()),total_transactions,0,0,total_amount,total_tax,android_id,startDate,new Date().getTime(),startCash,total_amount+startCash);
+                endShiftModel=new EndShiftModel(map,sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()),total_transactions,0,0,total_amount,total_tax,android_id,startDate,new Date().getTime(),startCash,Double.parseDouble(leaveCashEt.getText().toString()));
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 }else{

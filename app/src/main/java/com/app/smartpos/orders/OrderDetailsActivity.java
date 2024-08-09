@@ -126,7 +126,7 @@ public class OrderDetailsActivity extends BaseActivity {
         shop_contact = shopData.get(0).get("shop_contact");
         shop_email = shopData.get(0).get("shop_email");
         shop_address = shopData.get(0).get("shop_address");
-        currency = shopData.get(0).get("shop_currency");
+        currency = " "+shopData.get(0).get("shop_currency")+" ";
 
         total_price = Double.parseDouble(orderDetailsList.get(0).get("ex_tax_total"));
         getTax = Double.parseDouble(orderDetailsList.get(0).get("tax_amount"));

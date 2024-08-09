@@ -32,6 +32,7 @@ public class EndShiftReportDialog extends DialogFragment {
     View root;
 
     EndShiftModel endShiftModel;
+    LinearLayout viewLl;
 
     @Nullable
     @Override
@@ -41,10 +42,11 @@ public class EndShiftReportDialog extends DialogFragment {
             root = inflater.inflate(R.layout.dialog_end_shift_report, container, false);
             setCancelable(false);
 
-            Button submitBtn = root.findViewById(R.id.btn_submit);
+            Button logoutBtn = root.findViewById(R.id.btn_logout);
             //ImageButton closeBtn = root.findViewById(R.id.btn_close);
+            viewLl=root.findViewById(R.id.views_ll);
 
-            submitBtn.setOnClickListener(view -> {
+            logoutBtn.setOnClickListener(view -> {
                 requireActivity().finish();
                 requireActivity().startActivity(new Intent(requireActivity(), AuthActivity.class));
             });
@@ -84,7 +86,7 @@ public class EndShiftReportDialog extends DialogFragment {
 
         textTv.setText(text);
         valueTv.setText(value);
-        ((LinearLayout) root).addView(root_view);
+        viewLl.addView(root_view);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class EndShiftReportDialog extends DialogFragment {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
         params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        params.height = (int) (getContext().getResources().getDisplayMetrics().heightPixels * 0.8);
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
 

@@ -32,4 +32,9 @@ public class AuthActivity extends BaseActivity {
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }

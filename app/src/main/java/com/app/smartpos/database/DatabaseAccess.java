@@ -1426,7 +1426,7 @@ public class DatabaseAccess {
             do {
 
 
-                currency = cursor.getString(cursor.getColumnIndex("shop_currency"));
+                currency = cursor.getString(cursor.getColumnIndex("shop_currency"))+" ";
 
 
             } while (cursor.moveToNext());
@@ -2408,7 +2408,7 @@ public class DatabaseAccess {
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getSearchProducts(String s) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name LIKE '%" + s + "%' OR product_code LIKE '%" + s + "%' ORDER BY product_id DESC", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name_en LIKE '%" + s + "%' OR product_name_ar LIKE '%\" + s + \"%' OR product_uuid LIKE '%" + s + "%' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
