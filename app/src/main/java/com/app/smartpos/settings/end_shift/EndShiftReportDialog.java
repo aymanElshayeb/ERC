@@ -58,14 +58,16 @@ public class EndShiftReportDialog extends DialogFragment {
                 addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
                 addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
             }
-            addView(requireContext().getResources().getString(R.string.total_transactions_number), endShiftModel.getNum_successful_transaction() + "");
-            addView(requireContext().getResources().getString(R.string.total_amount), trimLongDouble(endShiftModel.getTotal_amount()));
-            addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
+            addView(requireContext().getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
+            //addView(requireContext().getResources().getString(R.string.total_amount), trimLongDouble(endShiftModel.getTotal_amount()));
+            //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy'T'hh:mm a");
-            String date = formatter.format(new Date(endShiftModel.getEndDateTime()));
-            addView(requireContext().getResources().getString(R.string.date_), date);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy\nhh:mm aa");
+            String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
+            addView(requireContext().getResources().getString(R.string.start_shift_date), start_date);
+            String end_date = formatter.format(new Date(endShiftModel.getEndDateTime()));
+            addView(requireContext().getResources().getString(R.string.end_shift_date), end_date);
 
 
             addView(requireContext().getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(requireContext()));

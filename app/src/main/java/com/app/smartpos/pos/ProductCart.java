@@ -179,7 +179,7 @@ public class ProductCart extends BaseActivity {
                     obj.put("order_type", type);
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);
-                    obj.put("order_status", "completed");
+                    obj.put("order_status", Constant.COMPLETED);
                     obj.put("original_order_id", null);
                     obj.put("card_details", -1);
                     databaseAccess.open();

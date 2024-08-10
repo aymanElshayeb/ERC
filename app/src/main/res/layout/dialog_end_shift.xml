@@ -84,7 +84,22 @@
             app:layout_constraintWidth_percent="0.45" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <TextView
+        android:id="@+id/leave_cash_error_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/inter_black"
+        android:gravity="start|center_vertical"
+        android:paddingStart="8dp"
+        android:text=""
+        android:visibility="gone"
+        android:textColor="@color/errorColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_type_amount_et"
+        />
     <LinearLayout
         android:id="@+id/end_cash_types_ll"
         android:layout_width="match_parent"

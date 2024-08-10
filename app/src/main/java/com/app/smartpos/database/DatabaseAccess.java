@@ -785,12 +785,13 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
         ContentValues values3 = new ContentValues();
-
+        String order_status = null;
         try {
             String order_date = obj.getString("order_date");
             String order_time = obj.getString("order_time");
             long order_timestamp = obj.getLong("order_timestamp");
             String order_type = obj.getString("order_type");
+            order_status = obj.getString("order_status");
             String order_payment_method = obj.getString("order_payment_method");
             String customer_name = obj.getString("customer_name");
             String tax = obj.getString("tax");
@@ -821,7 +822,7 @@ public class DatabaseAccess {
             values.put("change_amount", change_amount);
             values.put("tax_number", tax_number);
             values.put("operation_type", "invoice");
-            values.put(Constant.ORDER_STATUS, Constant.PENDING);
+            values.put("order_status", order_status);
             values.put("qr_code","");
 
 
@@ -869,7 +870,7 @@ public class DatabaseAccess {
                 values2.put("tax_percentage", getProductTax(product_id));
                 values2.put("product_image", product_image);
                 values2.put("product_order_date", product_order_date);
-                values2.put(Constant.ORDER_STATUS, Constant.PENDING);
+                values2.put("order_status", order_status);
 
                 //for stock update
                 values3.put("product_stock", updated_stock);
