@@ -78,6 +78,7 @@ public class RegistrationDialog extends DialogFragment {
             });
 
             demoBtn.setOnClickListener(view -> {
+                SharedPrefUtils.setStartDateTime(requireActivity());
                 SharedPrefUtils.setDemoPressed(requireActivity(),true);
                 requireActivity().finish();
                 requireActivity().startActivity(new Intent(requireActivity(), HomeActivity.class));
