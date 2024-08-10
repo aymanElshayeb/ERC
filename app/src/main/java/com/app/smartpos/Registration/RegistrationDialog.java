@@ -33,6 +33,7 @@ import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
 
@@ -71,12 +72,13 @@ public class RegistrationDialog extends DialogFragment {
                 }else if(merchantEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.merchant_empty), Toast.LENGTH_SHORT).show();
                 }else {
-                    registerBtn.setVisibility(View.GONE);
-                    enqueueDownloadAndReadWorkers();
+                    //registerBtn.setVisibility(View.GONE);
+                    //enqueueDownloadAndReadWorkers();
                 }
             });
 
             demoBtn.setOnClickListener(view -> {
+                SharedPrefUtils.setDemoPressed(requireActivity(),true);
                 requireActivity().finish();
                 requireActivity().startActivity(new Intent(requireActivity(), HomeActivity.class));
             });

@@ -21,6 +21,16 @@ public class SharedPrefUtils {
         editor.putBoolean("isRegistered", flag).commit();
     }
 
+    public static boolean isDemoPressed(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isDemoPressed",false);
+    }
+
+    public static void setDemoPressed(Context context,Boolean flag){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putBoolean("isDemoPressed", flag).commit();
+    }
+
     public static long getStartDateTime(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         Date date = new Date();
