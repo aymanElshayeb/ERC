@@ -2269,7 +2269,7 @@ public class DatabaseAccess {
 
                 map.put("payment_method_id", cursor.getString(cursor.getColumnIndex("payment_method_id")));
                 map.put("payment_method_name", cursor.getString(cursor.getColumnIndex("payment_method_name")));
-
+                map.put("payment_method_active", cursor.getString(cursor.getColumnIndex("payment_method_active")));
 
 
                 payment_method.add(map);
