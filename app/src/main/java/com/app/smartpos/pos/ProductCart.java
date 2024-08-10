@@ -184,7 +184,7 @@ public class ProductCart extends BaseActivity {
                     obj.put("card_details", -1);
                     databaseAccess.open();
                     HashMap<String,String> configuration = databaseAccess.getConfiguration();
-                    String ecr_code= configuration.get("ecr_code");
+                    String ecr_code= configuration.isEmpty() ? "" :configuration.get("ecr_code");
                     obj.put("ecr_code", ecr_code);
 
                     databaseAccess.open();

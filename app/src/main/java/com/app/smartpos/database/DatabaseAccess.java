@@ -1042,7 +1042,6 @@ public class DatabaseAccess {
                 map.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
-                map.put("sequence_text", cursor.getString(cursor.getColumnIndex("sequence_text")));
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
                 orderList.add(map);
             } while (cursor.moveToNext());

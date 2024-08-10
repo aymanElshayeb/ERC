@@ -43,8 +43,8 @@ public class UrovoPrinter extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(UrovoPrinter.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.get("merchant_tax_number");
-        merchantId = configuration.get("merchant_id");
+        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
+        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
@@ -52,7 +52,7 @@ public class UrovoPrinter extends BaseActivity {
         f = new DecimalFormat();
         try {
             mPrintManager.initPrint();
-            mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.get("merchant_logo")));
+            mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo")));
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);
             mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
