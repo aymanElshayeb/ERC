@@ -135,7 +135,7 @@ public class EndShiftDialog extends DialogFragment {
 
             submitBtn.setOnClickListener(view -> {
                 if (leaveCashEt.getText().toString().isEmpty()) {
-                    Toast.makeText(requireContext(), "please add leave cash", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), requireContext().getResources().getString(R.string.leave_cash_empty), Toast.LENGTH_SHORT).show();
                     return;
                 }
 

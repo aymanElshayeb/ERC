@@ -357,5 +357,6 @@
     <string name="user_name_empty">Username field is empty</string>
     <string name="password_empty">password field is empty</string>
     <string name="merchant_empty">Merchant ID field is empty</string>
+    <string name="leave_cash_empty">Please add leave cash</string>
 
 </resources>
