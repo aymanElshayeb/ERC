@@ -180,7 +180,7 @@ public class EndShiftDialog extends DialogFragment {
                 databaseAccess.open();
                 String startCashString = databaseAccess.getLastShift("leave_cash");
                 double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString())+startCash);
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {
