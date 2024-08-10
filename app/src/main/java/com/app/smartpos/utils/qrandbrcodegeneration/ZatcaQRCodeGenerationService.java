@@ -6,14 +6,14 @@ import com.google.zxing.BarcodeFormat;
 
 public class ZatcaQRCodeGenerationService {
 
-    public Bitmap createZatcaQrCode(ZatcaQRCodeDto zatcaQRCodeDto, String qrCodeBase64) {
+    public Bitmap createZatcaQrCode(ZatcaQRCodeDto zatcaQRCodeDto, StringBuilder qrCodeBase64) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
         Bitmap bitmap = null;
 
         try {
-            qrCodeBase64 = zatcaQRCodeGeneration.getBase64(zatcaQRCodeDto);
-            bitmap = barcodeEncoder.encodeQrOrBc(qrCodeBase64, BarcodeFormat.QR_CODE, 600, 600);
+            qrCodeBase64.append(zatcaQRCodeGeneration.getBase64(zatcaQRCodeDto));
+            bitmap = barcodeEncoder.encodeQrOrBc(qrCodeBase64.toString(), BarcodeFormat.QR_CODE, 600, 600);
 
         } catch (Exception e) {
             e.printStackTrace();

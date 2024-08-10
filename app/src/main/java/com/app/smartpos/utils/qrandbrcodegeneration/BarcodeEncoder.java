@@ -1,6 +1,7 @@
 package com.app.smartpos.utils.qrandbrcodegeneration;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
 import com.google.zxing.BarcodeFormat;
@@ -14,9 +15,13 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayOutputStream;
 
 public class BarcodeEncoder {
-    public Bitmap encodeQrOrBc(String contents, BarcodeFormat format, int width, int height)
-            throws WriterException {
-        Bitmap encodedQR = toBitmap(encode(contents, format, width, height));
+    public Bitmap encodeQrOrBc(String contents, BarcodeFormat format, int width, int height) {
+        Bitmap encodedQR = null;
+        try {
+            encodedQR = toBitmap(encode(contents, format, width, height));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return encodedQR;
     }
 
@@ -42,6 +47,20 @@ public class BarcodeEncoder {
             }
         }
         return bmp;
+    }
+
+    public Bitmap base64ToBitmap(String base64){
+        Bitmap bitmap = null;
+        try {
+            // Decode Base64 string to byte array
+            byte[] decodedBytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+            // Convert byte array to Bitmap
+            bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return bitmap;
+
     }
 
     private BitMatrix encode(String contents, BarcodeFormat format, int width, int height)

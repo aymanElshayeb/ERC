@@ -6,14 +6,13 @@ import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
-import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeDto;
+import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.urovo.sdk.print.PrinterProviderImpl;
 
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class UrovoPrinter extends BaseActivity {
         f = new DecimalFormat();
         try {
             mPrintManager.initPrint();
-            mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo")));
+                mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo")));
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);
             mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
@@ -71,7 +70,7 @@ public class UrovoPrinter extends BaseActivity {
 //        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
         //Todo remaining
 //        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
-            printZatcaQrCode(orderDetailsList,merchantId,merchantTaxNumber,orderList,databaseAccess);
+            printZatcaQrCode(databaseAccess);
             mPrintManager.startPrint();
         }
         catch (Exception e){
@@ -82,17 +81,9 @@ public class UrovoPrinter extends BaseActivity {
 
     }
 
-    private void printZatcaQrCode(List<HashMap<String, String>> orderDetailsList, String merchantId, String merchantTaxNumber, HashMap<String, String> orderList, DatabaseAccess databaseAccess) {
-        ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
-        zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
-        zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
-        zatcaQRCodeDto.setSellerName(merchantId);
-        zatcaQRCodeDto.setTaxNumber(merchantTaxNumber);
-        zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
-        String qrCodeBase64 = "";
-        mPrintManager.addBitmap(PrintingHelper.resizeBitmap(zatcaQRCodeGenerationService.createZatcaQrCode(zatcaQRCodeDto,qrCodeBase64),200,200),70);
-        databaseAccess.open();
-        databaseAccess.addQrCodeToOrder(orderList.get("order_id"),qrCodeBase64);
+    private void printZatcaQrCode(DatabaseAccess databaseAccess) {
+        ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
+        mPrintManager.addBitmap(zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration),70);
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {

@@ -822,6 +822,7 @@ public class DatabaseAccess {
             values.put("tax_number", tax_number);
             values.put("operation_type", "invoice");
             values.put(Constant.ORDER_STATUS, Constant.PENDING);
+            values.put("qr_code","");
 
 
             database.insert("order_list", null, values);
@@ -2722,6 +2723,6 @@ public class DatabaseAccess {
     public void addQrCodeToOrder(String orderId, String qrCodeBase64) {
         ContentValues values = new ContentValues();
         values.put("qr_code", qrCodeBase64);
-        database.update("order_list", values, "order_id=? ", new String[]{orderId});
+        database.update("order_list", values, "invoice_id=? ", new String[]{orderId});
     }
 }

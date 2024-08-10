@@ -1,8 +1,20 @@
 package com.app.smartpos.utils.qrandbrcodegeneration;
 
 
+import android.graphics.Bitmap;
+
+import com.app.smartpos.Constant;
+import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.printing.PrintingHelper;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
 
 import kotlin.text.Charsets;
 
@@ -12,6 +24,7 @@ public class ZatcaQRCodeGeneration {
     String INVOICE_DATE_TAG = "3";
     String TOTAL_AMOUNT_TAG = "4";
     String TAX_AMOUNT_TAG = "5";
+    SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
 
     private byte[] convertTagsAndLengthToHexValues(String tag, String value) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -61,6 +74,28 @@ public class ZatcaQRCodeGeneration {
         } catch (Exception ex) {
         }
         return base64QRCode;
+    }
+
+    public Bitmap getQrCodeBitmap(HashMap<String, String> orderList, DatabaseAccess databaseAccess, List<HashMap<String, String>> orderDetailsList, HashMap<String, String> configuration) {
+        Bitmap qrCodeBitmap;
+        StringBuilder qrCode = new StringBuilder(orderList.get("qr_code"));
+        if (qrCode.toString().isEmpty()){
+            ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
+            zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
+            zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("merchant_id"));
+            zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
+            zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
+            ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
+            qrCodeBitmap = PrintingHelper.resizeBitmap(zatcaQRCodeGenerationService.createZatcaQrCode(zatcaQRCodeDto,qrCode),200,200);
+            databaseAccess.open();
+            databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"),qrCode.toString());
+        }
+        else {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            qrCodeBitmap = PrintingHelper.resizeBitmap(barcodeEncoder.encodeQrOrBc(qrCode.toString(), BarcodeFormat.QR_CODE, 600, 600),200,200);
+        }
+        return qrCodeBitmap;
     }
 
 }

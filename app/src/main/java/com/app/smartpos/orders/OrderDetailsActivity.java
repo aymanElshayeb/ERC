@@ -2,7 +2,9 @@ package com.app.smartpos.orders;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,9 @@ import com.app.smartpos.utils.PrefMng;
 import com.app.smartpos.utils.Tools;
 import com.app.smartpos.utils.WoosimPrnMng;
 import com.app.smartpos.utils.printerFactory;
+import com.app.smartpos.utils.printing.PrintingHelper;
+import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
+import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
@@ -61,6 +66,8 @@ public class OrderDetailsActivity extends BaseActivity {
     private static final int REQUEST_CONNECT = 100;
     private WoosimPrnMng mPrnMng = null;
     DecimalFormat f;
+    private HashMap<String, String> configuration;
+    HashMap<String, String> orderList;
 
 
     @Override
@@ -102,8 +109,6 @@ public class OrderDetailsActivity extends BaseActivity {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderDetailsActivity.this);
         databaseAccess.open();
-
-
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
@@ -145,13 +150,23 @@ public class OrderDetailsActivity extends BaseActivity {
         shortText = "Customer Name: Mr/Mrs. " + customer_name;
         longText = "Thanks for purchase. Visit again";
 
+        databaseAccess.open();
+        configuration = databaseAccess.getConfiguration();
+
+        String logoBase64 = configuration.isEmpty() ? "" : configuration.get("merchant_logo");
+        com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder barCodeEncoder = new BarcodeEncoder();
+        Bitmap logoBitmap = barCodeEncoder.base64ToBitmap(logoBase64);
+
+        databaseAccess.open();
+        orderList = databaseAccess.getOrderListByOrderId(order_id);
+        ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
+        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration);
 
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
-        templatePDF.addMetaData("Order Receipt", "Order Receipt", "Smart POS");
-        templatePDF.addTitle(shop_name, shop_address + "\n Email: " + shop_email + "\nContact: " + shop_contact + "\nInvoice ID:" + order_id, order_time + " " + order_date);
-        templatePDF.addParagraph(shortText);
-
+        templatePDF.addMetaData("Order Receipt", "Order Receipt", "ECR");
+        templatePDF.addImage(logoBitmap,80f,60f);
+        templatePDF.addTitle("","Merchant ID : " + (configuration.isEmpty() ? "" : configuration.get("merchant_id")) + "\n Merchant tax number : " + (configuration.isEmpty() ? "" : configuration.get("merchant_tax_number")) + "\nInvoice ID:" + order_id, order_date + "  " +order_time);
 
         BarCodeEncoder qrCodeEncoder = new BarCodeEncoder();
         try {
@@ -162,10 +177,10 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
         btnPdfReceipt.setOnClickListener(v -> {
-
+            templatePDF.addImage(bm,80f,20f);
             templatePDF.createTable(header, getOrdersData());
+            templatePDF.addImage(qrCodeBitmap,60f,60f);
             templatePDF.addRightParagraph(longText);
-            templatePDF.addImage(bm);
             templatePDF.closeDocument();
             templatePDF.viewPDF();
 
@@ -207,11 +222,11 @@ public class OrderDetailsActivity extends BaseActivity {
             name = orderDetailsList.get(i).get("product_name_en");
             price = orderDetailsList.get(i).get("product_price");
             qty = orderDetailsList.get(i).get("product_qty");
-            weight = orderDetailsList.get(i).get("product_weight");
+            //weight = orderDetailsList.get(i).get("product_weight");
 
             cost_total = Integer.parseInt(qty) * Double.parseDouble(price);
 
-            rows.add(new String[]{name + "\n" + weight + "\n" + "(" + qty + "x" + currency + price + ")", currency + f.format(cost_total)});
+            rows.add(new String[]{name + "\n" + "(" + qty + "x" + currency + price + ")", currency + f.format(cost_total)});
 
 
         }
