@@ -1,12 +1,16 @@
 package com.app.smartpos.pos;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,12 +27,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.Param;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.utils.BaseActivity;
 
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +53,7 @@ import es.dmoral.toasty.Toasty;
 public class ProductCart extends BaseActivity {
 
 
-
+    private static final org.apache.commons.logging.Log log = LogFactory.getLog(ProductCart.class);
     private RecyclerView recyclerView;
     CartAdapter productCartAdapter;
     ImageView imgNoProduct;
@@ -287,6 +293,48 @@ public class ProductCart extends BaseActivity {
     }
 
 
+
+    public void processReqForUrovo() {
+        Intent intent = new Intent();
+        databaseAccess.open();
+        double totalAmount =databaseAccess.getTotalPriceWithTax();
+        String etAmount = Double.toString(totalAmount);
+        if (etAmount.length() > 0) {
+
+            intent.setPackage(Constant.PACKAGE_UROVO);
+            intent.setAction(Constant.CARD_ACTION_UROVO_PURCHASE);
+            intent.putExtra(Param.TRANS_TYPE, "2");
+            intent.putExtra(Param.AMOUNT, etAmount);
+        } else {
+//            etAmount.setError("enter valid amount");
+            return;
+        }
+
+//        if (!TextUtils.isEmpty(editECRRRN.getText().toString())) {
+//            String ecrRRNTxt = editECRRRN.getText().toString();
+//            intent.putExtra(Param.ECR_RRN, ecrRRNTxt);
+//        }
+        intent.putExtra(Param.IS_APP_2_APP, true);
+        launcher.launch(intent);
+
+    }
+
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            // Handle the result
+            if (result.getData() != null) {
+                String response = result.getData().getStringExtra("result");
+                Log.d("*** RESULT:    ", response);
+                new AlertDialog.Builder(ProductCart.this)
+                        .setTitle("Sale Response: ")
+                        .setMessage(response)
+                        .setCancelable(false)
+                        .setPositiveButton("ok", (dialog, which) -> {
+
+                        }).show();
+            }
+        }
+    });
 
 
     //dialog for taking otp code
@@ -658,8 +706,10 @@ public class ProductCart extends BaseActivity {
 
 
                 try {
+                    processReqForUrovo();
                     proceedOrder(order_type,order_payment_method,customer_name,total_tax,discount);
-                } catch (JSONException e) {
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 }
 
