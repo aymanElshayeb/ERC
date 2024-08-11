@@ -1,5 +1,6 @@
 package com.app.smartpos.pos;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
+import com.app.smartpos.common.Consts;
+import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -60,6 +63,14 @@ public class ProductCart extends BaseActivity {
 
     String currency;
     DatabaseAccess databaseAccess;
+
+
+    String dialogOrderType;
+    String dialogOrderPaymentMethod;
+    String customerName;
+    String dialogDiscount;
+    double total_tax;
+    AlertDialog alertDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +147,7 @@ public class ProductCart extends BaseActivity {
 
 
 
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount) throws JSONException {
+    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,long order_details) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -181,7 +192,7 @@ public class ProductCart extends BaseActivity {
                     obj.put("customer_name", customer_name);
                     obj.put("order_status", Constant.COMPLETED);
                     obj.put("original_order_id", null);
-                    obj.put("card_details", -1);
+                    obj.put("card_details", order_details);
                     databaseAccess.open();
                     HashMap<String,String> configuration = databaseAccess.getConfiguration();
                     String ecr_code= configuration.isEmpty() ? "" :configuration.get("ecr_code");
@@ -326,7 +337,7 @@ public class ProductCart extends BaseActivity {
         double total_cost=databaseAccess.getTotalPriceWithTax();
         databaseAccess.open();
         double total_cost_without_tax=databaseAccess.getTotalPriceWithoutTax();
-        double total_tax= total_cost - total_cost_without_tax;
+        total_tax= total_cost - total_cost_without_tax;
 
         dialog_txt_total.setText(shop_currency+f.format(total_cost_without_tax));
         dialog_txt_total_tax.setText(shop_currency+f.format(total_tax));
@@ -637,34 +648,49 @@ public class ProductCart extends BaseActivity {
         });
 
 
-        final AlertDialog alertDialog = dialog.create();
+        alertDialog = dialog.create();
         alertDialog.show();
-
-
 
         dialog_btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String order_type = dialog_order_type.getText().toString().trim();
-                String order_payment_method = dialog_order_payment_method.getText().toString().trim();
-                String customer_name = dialog_customer.getText().toString().trim();
+                dialogOrderType = dialog_order_type.getText().toString().trim();
+                dialogOrderPaymentMethod = dialog_order_payment_method.getText().toString().trim();
+                customerName = dialog_customer.getText().toString().trim();
 
-                String discount = dialog_etxt_discount.getText().toString().trim();
-                if (discount.isEmpty())
+                dialogDiscount = dialog_etxt_discount.getText().toString().trim();
+                if (dialogDiscount.isEmpty())
                 {
-                    discount="0.00";
+                    dialogDiscount="0.00";
                 }
 
+                Log.i("datadata",dialogOrderPaymentMethod);
 
-                try {
-                    proceedOrder(order_type,order_payment_method,customer_name,total_tax,discount);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(dialogOrderPaymentMethod.equals("CARD")) {
+                    databaseAccess.open();
+                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
+
+                    Intent intent = new Intent();
+                    intent.setPackage(Consts.PACKAGE);
+                    intent.setAction(Consts.CARD_ACTION);
+                    intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
+                    intent.putExtra(ThirdTag.TRANS_TYPE, 2);
+                    intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
+                    intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
+                    intent.putExtra(ThirdTag.INSERT_SALE, true);
+                    intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
+                    startActivityForResult(intent, 12);
+                }else {
+                    try {
+                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,-1);
+                        alertDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
-
-                alertDialog.dismiss();
             }
 
 
@@ -706,5 +732,36 @@ public class ProductCart extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        data.getStringExtra("123");
+        Log.d("DEBUG","11111111111111111111111111111111111");
+        Log.i("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
+
+        //tvResponse.setText("Sale Response："+data.getStringExtra(ThirdTag.JSON_DATA));
+        // tvResponse.setText("Response："+data.getExtras().toString());
+
+        try {
+            JSONObject json=new JSONObject(data.getStringExtra(ThirdTag.JSON_DATA));
+            String result=json.getJSONObject("madaTransactionResult").getJSONObject("Result").getString("English");
+            if(result.equals("APPROVED")) {
+                String name=json.getJSONObject("madaTransactionResult").getString("ApplicationLabel");
+                String code=json.getJSONObject("madaTransactionResult").getString("PAN");
+                Log.i("datadata",name+" "+code);
+                databaseAccess.open();
+                long id=databaseAccess.insertCardDetails(name,code);
+                Log.i("datadata",id+"");
+                if(id>0) {
+                    proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, id);
+                    alertDialog.dismiss();
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

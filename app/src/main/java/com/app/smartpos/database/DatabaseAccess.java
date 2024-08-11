@@ -779,6 +779,24 @@ public class DatabaseAccess {
     }
 
 
+    public long insertCardDetails(String name, String code) {
+        long id=0;
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("code", code);
+        values.put("active", 1);
+
+        try {
+            id = database.insertOrThrow("card_type", null, values);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.i("datadata",id+"");
+
+
+
+        return id;
+    }
     //insert order in order list
     public void insertOrder(String order_id, JSONObject obj,Context context) {
 
@@ -792,6 +810,7 @@ public class DatabaseAccess {
             long order_timestamp = obj.getLong("order_timestamp");
             String order_type = obj.getString("order_type");
             order_status = obj.getString("order_status");
+            long card_details = obj.getLong("card_details");
             String order_payment_method = obj.getString("order_payment_method");
             String customer_name = obj.getString("customer_name");
             String tax = obj.getString("tax");
@@ -812,7 +831,7 @@ public class DatabaseAccess {
             values.put("order_payment_method", order_payment_method);
             values.put("customer_name", customer_name);
             values.put("original_order_id", "");
-            values.put("card_details", -1);
+            values.put("card_details", card_details);
             values.put("ecr_code", ecr_code);
             values.put("tax", tax);
             values.put("discount", discount);
