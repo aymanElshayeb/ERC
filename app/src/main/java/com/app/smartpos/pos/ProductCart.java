@@ -757,6 +757,8 @@ public class ProductCart extends BaseActivity {
                     proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, id);
                     alertDialog.dismiss();
                 }
+            }else{
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
