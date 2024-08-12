@@ -674,7 +674,7 @@ public class ProductCart extends BaseActivity {
 
                 Log.i("datadata",dialogOrderPaymentMethod);
 
-                if(dialogOrderPaymentMethod.equals("CARD")&&isPackageExisted(Consts.PACKAGE)) {
+                if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
                     long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
                     startActivityForResult(device.pay(totalPriceWithTax), 12);
