@@ -147,7 +147,7 @@ public class ProductCart extends BaseActivity {
 
 
 
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,long order_details) throws JSONException {
+    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String order_details) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -683,7 +683,7 @@ public class ProductCart extends BaseActivity {
                     startActivityForResult(intent, 12);
                 }else {
                     try {
-                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,-1);
+                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,"");
                         alertDialog.dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -747,16 +747,17 @@ public class ProductCart extends BaseActivity {
             JSONObject json=new JSONObject(data.getStringExtra(ThirdTag.JSON_DATA));
             String result=json.getJSONObject("madaTransactionResult").getJSONObject("Result").getString("English");
             if(result.equals("APPROVED")) {
-                String name=json.getJSONObject("madaTransactionResult").getString("ApplicationLabel");
-                String code=json.getJSONObject("madaTransactionResult").getString("PAN");
+                String code=json.getJSONObject("madaTransactionResult").getJSONObject("CardScheme").getString("ID");
+                String name=json.getJSONObject("madaTransactionResult").getJSONObject("CardScheme").getString("English");
+
+                String PurchaseAmount=json.getJSONObject("madaTransactionResult").getJSONObject("Amounts").getString("PurchaseAmount");
+                String ApprovalCode=json.getJSONObject("madaTransactionResult").getString("ApprovalCode");
                 Log.i("datadata",name+" "+code);
                 databaseAccess.open();
-                long id=databaseAccess.insertCardDetails(name,code);
-                Log.i("datadata",id+"");
-                if(id>0) {
-                    proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, id);
-                    alertDialog.dismiss();
-                }
+                //long id=databaseAccess.insertCardDetails(name,code);
+                //Log.i("datadata",id+"");
+                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code);
+                alertDialog.dismiss();
             }else{
                 Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
             }
