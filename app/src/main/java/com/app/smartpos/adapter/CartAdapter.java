@@ -74,8 +74,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         final String qty = cart_product.get(position).get("product_qty");
         final String stock = cart_product.get(position).get("stock");
 
-        int getStock = Integer.parseInt(stock);
-
+        int getStock=(stock==null || stock.isEmpty())?
+                Integer.MAX_VALUE:Integer.parseInt(stock);
 
         //  Log.d("unit_ID ", weight_unit_id);
 

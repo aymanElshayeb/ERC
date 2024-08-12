@@ -79,7 +79,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         holder.txtProductName.setText(name);
 
         //Low stock marked as RED color
-        int getStock=(product_stock.isEmpty()||product_stock.isBlank())?
+        int getStock=(product_stock==null || product_stock.isEmpty())?
                 Integer.MAX_VALUE:Integer.parseInt(product_stock);
         if (getStock>5) {
             holder.txtStock.setText(context.getString(R.string.stock) + " : " + product_stock);
@@ -134,7 +134,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
                 }
                 else {
 
-                    Log.d("w_id", weight_unit_id);
+                    Log.d("w_id", "");
                     databaseAccess.open();
 
                     int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock);

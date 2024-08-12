@@ -10,7 +10,7 @@ public class Constant {
     public static final String BASE_URL = "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1";
     public static final String LOGIN_URL = BASE_URL + "/auth/user";
     public static final String SYNC_URL=BASE_URL + "/sync";
-    public static final String LAST_SYNC_URL=BASE_URL + "/last";
+    public static final String LAST_SYNC_URL=BASE_URL + "/sync/last";
     public static final String REGISTER_DEVICE_URL=BASE_URL + "/organization/unit/device/register";
 
     //File names
