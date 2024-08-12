@@ -1,10 +1,7 @@
 package com.app.smartpos.settings.end_shift;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,7 +28,6 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.SettingsActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -41,8 +37,8 @@ public class EndShiftDialog extends DialogFragment {
 
     View root;
 
-    double total_amount=0;
-    double total_tax=0;
+    double total_amount = 0;
+    double total_tax = 0;
     EndShiftModel endShiftModel;
 
     DatabaseAccess databaseAccess;
@@ -64,14 +60,20 @@ public class EndShiftDialog extends DialogFragment {
 
             databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
-            String endDateString=databaseAccess.getLastShift("end_date_time");
-            long lastShiftDate=endDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()):Long.parseLong(endDateString);
+            String endDateString = databaseAccess.getLastShift("end_date_time");
+            long lastShiftDate = endDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()) : Long.parseLong(endDateString);
             databaseAccess.open();
             //get data from local database
             List<HashMap<String, String>> orderList;
             orderList = databaseAccess.getOrderListWithTime(lastShiftDate);
-            Log.i("datadata",orderList.size()+" "+lastShiftDate);
+            Log.i("datadata", orderList.size() + " " + lastShiftDate);
             HashMap<String, String> paymentTypesCashMap = new HashMap<>();
+
+            databaseAccess.open();
+            String startCashString = databaseAccess.getLastShift("leave_cash");
+            double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
+
+            paymentTypesCashMap.put("CASH",startCash+"");
             databaseAccess.open();
             for (int i = 0; i < orderList.size(); i++) {
                 databaseAccess.open();
@@ -79,8 +81,8 @@ public class EndShiftDialog extends DialogFragment {
                 double tax = Double.parseDouble(orderList.get(i).get("tax"));
                 double discount = Double.parseDouble(orderList.get(i).get("discount"));
 
-                total_amount+=total_price;
-                total_tax+=tax;
+                total_amount += total_price;
+                total_tax += tax;
 
                 double calculated_total_price = total_price - discount;
                 if (paymentTypesCashMap.containsKey(orderList.get(i).get("order_payment_method").toString())) {
@@ -133,58 +135,64 @@ public class EndShiftDialog extends DialogFragment {
 
             }
 
-            HashMap<String,ShiftDifferences>map=new HashMap<>();
+            HashMap<String, ShiftDifferences> map = new HashMap<>();
 
             submitBtn.setOnClickListener(view -> {
-                if(leaveCashEt.getText().toString().isEmpty()){
-                    Toast.makeText(requireContext(), "please add leave cash", Toast.LENGTH_SHORT).show();
+                if (leaveCashEt.getText().toString().isEmpty()) {
+                    Toast.makeText(requireContext(), requireContext().getResources().getString(R.string.leave_cash_empty), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 int total_transactions = orderList.size();
 
                 for (int i = 0; i < models.size(); i++) {
-                    String cash = models.get(i).inputPaymentCashEt.getText().toString();
-                    double employeeCash = Double.parseDouble(cash.isEmpty() ? "0" : cash);
-                    models.get(i).setError(employeeCash != models.get(i).cash);
-                    map.put(models.get(i).type,new ShiftDifferences(models.get(i).cash,employeeCash,(employeeCash - models.get(i).cash)));
+                    String real = models.get(i).inputPaymentCashEt.getText().toString();
+                    double employeeCash = Double.parseDouble(real.isEmpty() ? "0" : real);
+                    models.get(i).setError(employeeCash != models.get(i).real);
+                    map.put(models.get(i).type, new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real)));
 
-                    if (employeeCash != models.get(i).cash) {
-                        String value=trimLongDouble((employeeCash - models.get(i).cash));
-                        if(employeeCash - models.get(i).cash > 0){
+                    if (employeeCash != models.get(i).real) {
+                        String value = trimLongDouble((employeeCash - models.get(i).real));
+                        if (employeeCash - models.get(i).real > 0) {
                             models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": +" + value);
                             models.get(i).paymentCashErrorTv.setTextColor(requireContext().getResources().getColor(R.color.successColor));
-                        }else{
+                        } else {
                             models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": " + value);
                             models.get(i).paymentCashErrorTv.setTextColor(requireContext().getResources().getColor(R.color.errorColor));
                         }
                     }
                 }
+
+
                 errorLl.setVisibility(View.GONE);
-                boolean hasError=false;
+                boolean hasError = false;
                 for (int i = 0; i < models.size(); i++) {
                     if (models.get(i).isError()) {
-                        hasError=true;
+                        hasError = true;
                         errorLl.setVisibility(View.VISIBLE);
                     }
                 }
                 String android_id = Settings.Secure.getString(getContext().getContentResolver(),
                         Settings.Secure.ANDROID_ID);
                 databaseAccess.open();
-                String ecr_code=databaseAccess.getConfiguration().get("ecr_code").toString();
+                HashMap<String, String> configuration = databaseAccess.getConfiguration();
+                String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code").toString();
                 databaseAccess.open();
-                HashMap<String,String> sequenceMap = databaseAccess.getSequence(2,ecr_code);
+                HashMap<String, String> sequenceMap = databaseAccess.getSequence(2, ecr_code);
                 databaseAccess.open();
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(getString(R.string.app_name),MODE_PRIVATE);
-                String startDateString=databaseAccess.getLastShift("end_date_time");
-                long startDate=startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()):Long.parseLong(startDateString);
-                databaseAccess.open();
-                String startCashString=databaseAccess.getLastShift("leave_cash");
-                double startCash=startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
-                endShiftModel=new EndShiftModel(map,sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()),total_transactions,0,0,total_amount,total_tax,android_id,startDate,new Date().getTime(),startCash,Double.parseDouble(leaveCashEt.getText().toString()));
+                String startDateString = databaseAccess.getLastShift("end_date_time");
+                long startDate = startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()) : Long.parseLong(startDateString);
+
+//                ShiftDifferences shiftDifferencesForLeaveCash = map.get("CASH");
+//                double realCash=0;
+//                if(shiftDifferencesForLeaveCash!=null){
+//                    realCash=shiftDifferencesForLeaveCash.real;
+//                }
+
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     addToShift();
                 }
 
@@ -200,17 +208,17 @@ public class EndShiftDialog extends DialogFragment {
         return root;
     }
 
-    private void addToShift(){
+    private void addToShift() {
         databaseAccess.open();
-        int id=databaseAccess.addShift(endShiftModel);
-        if(id>-1){
+        int id = databaseAccess.addShift(endShiftModel);
+        if (id > -1) {
             databaseAccess.open();
-            boolean added=databaseAccess.addShiftCreditCalculations(id,endShiftModel.getShiftDifferences().get("CARD"));
-            Log.i("datadata",added+"");
+            boolean added = databaseAccess.addShiftCreditCalculations(id, endShiftModel.getShiftDifferences().get("CARD"));
+            Log.i("datadata", added + "");
 
         }
-        Log.i("datadata",id+"");
-        ((SettingsActivity)requireActivity()).openReport(endShiftModel);
+        Log.i("datadata", id + "");
+        ((SettingsActivity) requireActivity()).openReport(endShiftModel);
         dismissAllowingStateLoss();
     }
 
@@ -218,7 +226,7 @@ public class EndShiftDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = (int)(getContext().getResources().getDisplayMetrics().widthPixels*0.9);
+        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }

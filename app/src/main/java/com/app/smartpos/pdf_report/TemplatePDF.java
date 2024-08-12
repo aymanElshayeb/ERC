@@ -102,7 +102,7 @@ public class TemplatePDF {
             paragraph = new Paragraph();
             addChildP(new Paragraph(title, fTitle));
             addChildP(new Paragraph(subTitle, fSubTitle));
-            addChildP(new Paragraph("Order Date:" + date, fHighText));
+            addChildP(new Paragraph("Order Date: " + date, fHighText));
            // paragraph.setSpacingAfter(30);
             document.add(paragraph);
         }
@@ -115,7 +115,7 @@ public class TemplatePDF {
 
 
 
-    public void addImage(Bitmap bm) {
+    public void addImage(Bitmap bm, float width, float height) {
 
         try {
 
@@ -132,7 +132,9 @@ public class TemplatePDF {
 
             img.setAlignment(Image.ALIGN_BOTTOM);
             img.setAlignment(Image.ALIGN_CENTER);
-            img.scaleAbsolute(80f, 20f);
+//            img.scaleAbsolute(80f, 20f);
+            img.scaleAbsolute(width, height);
+
             //img.setAbsolutePosition(imageStartX, imageStartY); // Adding Image
 
             document.add(img);

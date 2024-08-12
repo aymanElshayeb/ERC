@@ -21,7 +21,7 @@
 
     <application
         android:name=".utils.MultiLanguageApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
         <activity
             android:name=".refund.Refund"
             android:exported="false" />
@@ -47,7 +48,8 @@
             android:exported="false" />
         <activity
             android:name=".auth.AuthActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".settings.unit.EditUnitActivity"
             android:exported="false" />
@@ -93,11 +95,15 @@
         <activity android:name=".report.SalesReportActivity" />
         <activity android:name=".report.ReportActivity" />
         <activity android:name=".orders.OrderDetailsActivity" />
-        <activity android:name=".orders.OrdersActivity" />
-        <activity android:name=".pos.ProductCart" />
-        <activity android:name=".pos.PosActivity" />
+        <activity android:name=".orders.OrdersActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".pos.ProductCart"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".pos.PosActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".product.AddProductActivity" />
-        <activity android:name=".product.ProductActivity" />
+        <activity android:name=".product.ProductActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".suppliers.AddSuppliersActivity" />
         <activity android:name=".suppliers.SuppliersActivity" />
         <activity android:name=".customers.AddCustomersActivity" />

@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Consts;
+import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.SharedPrefUtils;
 
