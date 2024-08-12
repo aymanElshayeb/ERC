@@ -79,7 +79,8 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         holder.txtProductName.setText(name);
 
         //Low stock marked as RED color
-        int getStock=Integer.parseInt(product_stock);
+        int getStock=(product_stock.isEmpty()||product_stock.isBlank())?
+                Integer.MAX_VALUE:Integer.parseInt(product_stock);
         if (getStock>5) {
             holder.txtStock.setText(context.getString(R.string.stock) + " : " + product_stock);
         }

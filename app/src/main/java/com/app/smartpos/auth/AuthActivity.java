@@ -13,11 +13,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-<<<<<<< HEAD
 import java.util.HashMap;
-=======
-import java.util.List;
->>>>>>> dev
 
 public class AuthActivity extends BaseActivity {
 

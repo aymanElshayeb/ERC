@@ -77,8 +77,8 @@ public class RegistrationDialog extends DialogFragment {
                 }else if(merchantEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.merchant_empty), Toast.LENGTH_SHORT).show();
                 }else {
-                    //registerBtn.setVisibility(View.GONE);
-                    //enqueueDownloadAndReadWorkers();
+                    registerBtn.setVisibility(View.GONE);
+                    enqueueDownloadAndReadWorkers();
                 }
             });
 
