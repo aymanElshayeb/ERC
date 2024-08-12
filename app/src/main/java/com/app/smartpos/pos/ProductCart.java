@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -147,7 +149,7 @@ public class ProductCart extends BaseActivity {
 
 
 
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String order_details) throws JSONException {
+    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String card_type_code,String approval_code,double total) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -192,7 +194,8 @@ public class ProductCart extends BaseActivity {
                     obj.put("customer_name", customer_name);
                     obj.put("order_status", Constant.COMPLETED);
                     obj.put("original_order_id", null);
-                    obj.put("card_details", order_details);
+                    obj.put("card_type_code", card_type_code);
+                    obj.put("approval_code", approval_code);
                     databaseAccess.open();
                     HashMap<String,String> configuration = databaseAccess.getConfiguration();
                     String ecr_code= configuration.isEmpty() ? "" :configuration.get("ecr_code");
@@ -205,7 +208,7 @@ public class ProductCart extends BaseActivity {
                     databaseAccess.open();
                     obj.put("ex_tax_total", databaseAccess.getTotalPriceWithoutTax());
 
-                    obj.put("paid_amount", totalPriceWithTax);
+                    obj.put("paid_amount", total==0?totalPriceWithTax:total);
                     obj.put("change_amount", 0);
 
                     String tax_number= configuration.get("merchant_tax_number");
@@ -667,10 +670,9 @@ public class ProductCart extends BaseActivity {
 
                 Log.i("datadata",dialogOrderPaymentMethod);
 
-                if(dialogOrderPaymentMethod.equals("CARD")) {
+                if(dialogOrderPaymentMethod.equals("CARD")&&isPackageExisted(Consts.PACKAGE)) {
                     databaseAccess.open();
                     long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
-
                     Intent intent = new Intent();
                     intent.setPackage(Consts.PACKAGE);
                     intent.setAction(Consts.CARD_ACTION);
@@ -683,7 +685,7 @@ public class ProductCart extends BaseActivity {
                     startActivityForResult(intent, 12);
                 }else {
                     try {
-                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,"");
+                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,"","",0);
                         alertDialog.dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -708,6 +710,16 @@ public class ProductCart extends BaseActivity {
 
 
 
+    }
+
+    public boolean isPackageExisted(String targetPackage){
+        PackageManager pm=getPackageManager();
+        try {
+            PackageInfo info=pm.getPackageInfo(targetPackage,PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     public void updateTotalPrice(){
@@ -756,7 +768,7 @@ public class ProductCart extends BaseActivity {
                 databaseAccess.open();
                 //long id=databaseAccess.insertCardDetails(name,code);
                 //Log.i("datadata",id+"");
-                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code);
+                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code,ApprovalCode,Double.parseDouble(PurchaseAmount));
                 alertDialog.dismiss();
             }else{
                 Toast.makeText(this, result, Toast.LENGTH_SHORT).show();

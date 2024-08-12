@@ -4,8 +4,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.app.smartpos.auth.AuthActivity;
@@ -40,6 +42,10 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, splashTimeOut);
+        String build_Number = Build.DISPLAY;
+        String deviceId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Log.i("datadata_id",build_Number+" "+deviceId);
     }
 }
 

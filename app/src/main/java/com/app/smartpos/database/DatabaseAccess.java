@@ -810,7 +810,8 @@ public class DatabaseAccess {
             long order_timestamp = obj.getLong("order_timestamp");
             String order_type = obj.getString("order_type");
             order_status = obj.getString("order_status");
-            long card_details = obj.getLong("card_details");
+            String card_type_code = obj.getString("card_type_code");
+            String approval_code = obj.getString("approval_code");
             String order_payment_method = obj.getString("order_payment_method");
             String customer_name = obj.getString("customer_name");
             String tax = obj.getString("tax");
@@ -831,7 +832,8 @@ public class DatabaseAccess {
             values.put("order_payment_method", order_payment_method);
             values.put("customer_name", customer_name);
             values.put("original_order_id", "");
-            values.put("card_details", card_details);
+            values.put("card_type_code", card_type_code);
+            values.put("approval_code", approval_code);
             values.put("ecr_code", ecr_code);
             values.put("tax", tax);
             values.put("discount", discount);
@@ -942,7 +944,8 @@ public class DatabaseAccess {
                 map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
                 map.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
                 map.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
-                map.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                map.put("card_type_code", cursor.getString(cursor.getColumnIndex("card_type_code")));
+                map.put("approval_code", cursor.getString(cursor.getColumnIndex("approval_code")));
                 map.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
                 map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
                 map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
@@ -980,7 +983,8 @@ public class DatabaseAccess {
                 orderListMap.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
                 orderListMap.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
                 orderListMap.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
-                orderListMap.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                orderListMap.put("card_type_code", cursor.getString(cursor.getColumnIndex("card_type_code")));
+                orderListMap.put("approval_code", cursor.getString(cursor.getColumnIndex("approval_code")));
                 orderListMap.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
                 orderListMap.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
                 orderListMap.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
@@ -1015,7 +1019,8 @@ public class DatabaseAccess {
                 map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
                 map.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
                 map.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
-                map.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                map.put("card_type_code", cursor.getString(cursor.getColumnIndex("card_type_code")));
+                map.put("approval_code", cursor.getString(cursor.getColumnIndex("approval_code")));
                 map.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
                 map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
                 map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
@@ -1055,7 +1060,8 @@ public class DatabaseAccess {
                 map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
                 map.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
                 map.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
-                map.put("card_details", cursor.getString(cursor.getColumnIndex("card_details")));
+                map.put("card_type_code", cursor.getString(cursor.getColumnIndex("card_type_code")));
+                map.put("approval_code", cursor.getString(cursor.getColumnIndex("approval_code")));
                 map.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
                 map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
                 map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
