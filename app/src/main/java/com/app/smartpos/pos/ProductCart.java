@@ -29,6 +29,9 @@ import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.common.Consts;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.DeviceFactory.DeviceInterface;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
@@ -73,11 +76,12 @@ public class ProductCart extends BaseActivity {
     String dialogDiscount;
     double total_tax;
     AlertDialog alertDialog;
+    Device device;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_cart);
-
+        device=DeviceFactory.getDevice();
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.product_cart);
@@ -673,16 +677,7 @@ public class ProductCart extends BaseActivity {
                 if(dialogOrderPaymentMethod.equals("CARD")&&isPackageExisted(Consts.PACKAGE)) {
                     databaseAccess.open();
                     long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
-                    Intent intent = new Intent();
-                    intent.setPackage(Consts.PACKAGE);
-                    intent.setAction(Consts.CARD_ACTION);
-                    intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
-                    intent.putExtra(ThirdTag.TRANS_TYPE, 2);
-                    intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
-                    intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
-                    intent.putExtra(ThirdTag.INSERT_SALE, true);
-                    intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
-                    startActivityForResult(intent, 12);
+                    startActivityForResult(device.pay(totalPriceWithTax), 12);
                 }else {
                     try {
                         proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,"","",0);
@@ -757,13 +752,14 @@ public class ProductCart extends BaseActivity {
 
         try {
             JSONObject json=new JSONObject(data.getStringExtra(ThirdTag.JSON_DATA));
-            String result=json.getJSONObject("madaTransactionResult").getJSONObject("Result").getString("English");
-            if(result.equals("APPROVED")) {
-                String code=json.getJSONObject("madaTransactionResult").getJSONObject("CardScheme").getString("ID");
-                String name=json.getJSONObject("madaTransactionResult").getJSONObject("CardScheme").getString("English");
+            JSONObject result=json.getJSONObject(device.resultHeader());
+            String resultStatus=result.getJSONObject("Result").getString("English");
+            if(resultStatus.equals("APPROVED")) {
+                String code=result.getJSONObject("CardScheme").getString("ID");
+                String name=result.getJSONObject("CardScheme").getString("English");
 
-                String PurchaseAmount=json.getJSONObject("madaTransactionResult").getJSONObject("Amounts").getString("PurchaseAmount");
-                String ApprovalCode=json.getJSONObject("madaTransactionResult").getString("ApprovalCode");
+                String PurchaseAmount=result.getJSONObject("Amounts").getString("PurchaseAmount");
+                String ApprovalCode=result.getString("ApprovalCode");
                 Log.i("datadata",name+" "+code);
                 databaseAccess.open();
                 //long id=databaseAccess.insertCardDetails(name,code);
@@ -771,7 +767,7 @@ public class ProductCart extends BaseActivity {
                 proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code,ApprovalCode,Double.parseDouble(PurchaseAmount));
                 alertDialog.dismiss();
             }else{
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, resultStatus, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
