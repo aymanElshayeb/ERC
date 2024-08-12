@@ -1,5 +1,8 @@
 package com.app.smartpos.auth;
 
+
+import static com.app.smartpos.utils.PasswordUtils.isValid;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,13 +39,11 @@ public class LoginFragment extends Fragment {
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            emailEt.setText("karimsaad687@gmail.com");
-            passwordEt.setText("123456789");
-            final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
-            databaseAccess.open();
             loginBtn.setOnClickListener(view -> {
-                HashMap<String,String> map = databaseAccess.getUserWithEmailPassword(emailEt.getText().toString(), passwordEt.getText().toString());
-                if (map!=null) {
+                final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
+                databaseAccess.open();
+                HashMap<String,String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString());
+                if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
                     SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
                     Intent intent = new Intent(context, HomeActivity.class);

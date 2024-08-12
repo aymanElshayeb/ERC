@@ -1,5 +1,10 @@
 package com.app.smartpos.Registration;
 
+import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
+import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
+import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
+import static com.app.smartpos.Constant.SYNC_URL;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,6 +38,7 @@ import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
 
@@ -122,28 +128,29 @@ public class RegistrationDialog extends DialogFragment {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
-        Data login = new Data.Builder().
-                putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/auth/user").
-                putString("tenantId", "test").
+        Data register = new Data.Builder().
+                putString("url", REGISTER_DEVICE_URL).
+                putString("tenantId", merchantEt.getText().toString()).
                 putString("username", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
+                putString("deviceId", deviceId).
                 build();
         Data downloadInputData = new Data.Builder()
-                .putString("url", "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1/sync")
-                .putString("tenantId", "test")
-                .putString("fileName", "download.db.gz")
+                .putString("url", SYNC_URL)
+                .putString("tenantId", merchantEt.getText().toString())
+                .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 
         Data decompressInputData = new Data.Builder()
-                .putString("fileName", "download.db.gz")
+                .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 
         Data readInputData = new Data.Builder()
-                .putString("fileName", "download.db")
+                .putString("fileName", DOWNLOAD_FILE_NAME)
                 .build();
 
-        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class)
-                .setInputData(login)
+        OneTimeWorkRequest registerRequest = new OneTimeWorkRequest.Builder(RegistrationWorker.class)
+                .setInputData(register)
                 .build();
         OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
                 .setInputData(downloadInputData)
@@ -158,7 +165,7 @@ public class RegistrationDialog extends DialogFragment {
                 .build();
 
         WorkContinuation continuation = WorkManager.getInstance(requireActivity())
-                .beginWith(loginRequest)
+                .beginWith(registerRequest)
                 .then(downloadRequest)
                 .then(decompressRequest)
                 .then(readRequest);

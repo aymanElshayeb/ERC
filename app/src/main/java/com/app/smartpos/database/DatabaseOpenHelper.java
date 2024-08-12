@@ -19,7 +19,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 32;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -139,7 +139,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
-            exportShift(existingDb,newDb,"S000");
+            exportShift(existingDb,newDb,lastSync[0]);
+            exportInvoice(existingDb,newDb,lastSync[1]);
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
@@ -190,6 +191,52 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
              e.printStackTrace();
         }
     }
+
+    private void exportInvoice(SQLiteDatabase existingDb, SQLiteDatabase newDb,String lastSync){
+        try {
+            copyTableSchema(existingDb, newDb, "order_list");
+            copyTableSchema(existingDb, newDb, "order_details");
+            String lastSyncOrderList=String.format("SELECT MAX(order_id)  FROM order_list WHERE invoice_id = '%s'", lastSync);
+            Cursor cursor = existingDb.rawQuery(lastSyncOrderList, null);
+            Integer lastSyncId=-1;
+            // Check if the cursor has any results
+            if (cursor.moveToFirst()) {
+                // Retrieve the first column value as a string
+                String result = cursor.getString(0);
+
+                // Check if the result is not null
+                if (result != null) {
+                    lastSyncId = Integer.valueOf(result); // Assign the result to lastSyncId
+                }
+            }
+
+            // Copy rows from the existing database table to the new one
+            String shiftQuery = "SELECT * FROM order_list WHERE order_id >"+ lastSyncId+";";
+            try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
+                while (shiftCursor.moveToNext()) {
+                    ContentValues orderListValues = new ContentValues();
+                    for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
+                        orderListValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
+                    }
+                    newDb.insert("shift", null, orderListValues);
+                    @SuppressLint("Range") String orderListId = shiftCursor.getString(shiftCursor.getColumnIndex("invoice_id"));
+                    String orderDetails = "SELECT * FROM order_details WHERE invoice_id = " + orderListId + ";";
+                    try (Cursor creditCursor = existingDb.rawQuery(orderDetails, null)) {
+                        while (creditCursor.moveToNext()) {
+                            ContentValues detailsValues = new ContentValues();
+                            for (int i = 0; i < creditCursor.getColumnCount(); i++) {
+                                detailsValues.put(creditCursor.getColumnName(i), creditCursor.getString(i));
+                            }
+                            newDb.insert("order_details", null, detailsValues);
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public  void copyTableSchema(SQLiteDatabase sourceDb, SQLiteDatabase targetDb, String tableName) {
         // Retrieve schema information from the source database
         String schemaQuery = "PRAGMA table_info(" + tableName + ")";
