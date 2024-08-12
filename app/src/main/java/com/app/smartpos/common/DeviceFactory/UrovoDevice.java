@@ -21,4 +21,9 @@ public class UrovoDevice extends Device implements DeviceInterface{
     public String resultHeader() {
         return "TransactionResult";
     }
+
+    @Override
+    public String jsonActivityResult() {
+        return "result";
+    }
 }

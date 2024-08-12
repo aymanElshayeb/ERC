@@ -24,4 +24,9 @@ public class NewLandDevice extends Device implements DeviceInterface{
     public String resultHeader() {
         return "madaTransactionResult";
     }
+
+    @Override
+    public String jsonActivityResult() {
+        return ThirdTag.JSON_DATA;
+    }
 }
