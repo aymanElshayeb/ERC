@@ -250,7 +250,7 @@ public class ProductCart extends BaseActivity {
                         objp.put("product_name_ar", product.get(0).get("product_name_ar"));
                         objp.put("product_weight", lines.get(i).get("product_weight")+" "+weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
-                        objp.put("stock", lines.get(i).get("stock"));
+                        objp.put("stock", lines.get(i).get("stock")==null ? Integer.MAX_VALUE:lines.get(i).get("stock"));
                         objp.put("product_price", lines.get(i).get("product_price"));
                         objp.put("product_image", product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);

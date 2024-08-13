@@ -79,7 +79,8 @@ public class RegistrationWorker extends Worker {
                         build();
                 return Result.success(outputData);
             } else {
-                return Result.failure();
+                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                return Result.failure(outputData);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -73,7 +73,8 @@ public class LoginWithServerWorker extends Worker {
                 Data outputData = new Data.Builder().putString("Authorization", authorization).build();
                 return Result.success(outputData);
             } else {
-                return Result.failure();
+                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                return Result.failure(outputData);
             }
         } catch (IOException e) {
             e.printStackTrace();

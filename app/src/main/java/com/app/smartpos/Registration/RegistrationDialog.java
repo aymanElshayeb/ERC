@@ -176,7 +176,7 @@ public class RegistrationDialog extends DialogFragment {
                 .then(decompressRequest)
                 .then(readRequest);
         continuation.enqueue();
-
+        observeWorker(registerRequest);
         WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(readRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
@@ -189,20 +189,33 @@ public class RegistrationDialog extends DialogFragment {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
+            showMessage("Registration Successful");
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
+            showMessage("Error in Syncing data");
             registerBtn.setVisibility(View.VISIBLE);
-            showError();
+
         }
     }
 
     private void closePendingScreen() {
         dismissAllowingStateLoss();
     }
+    private void observeWorker(OneTimeWorkRequest workRequest) {
+        WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(workRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        if (workInfo.getState() == WorkInfo.State.FAILED) {
+                            String errorMessage = workInfo.getOutputData().getString("errorMessage");
+                            showMessage( (errorMessage != null ? errorMessage : "Unknown error occurred"));
+                        }
+                    }
+                });
+    }
 
-    private void showError() {
-        Toast.makeText(requireActivity(), "Error in download data", Toast.LENGTH_SHORT).show();
+    private void showMessage(String message) {
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
 }
