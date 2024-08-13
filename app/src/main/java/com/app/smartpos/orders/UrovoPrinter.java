@@ -48,7 +48,7 @@ public class UrovoPrinter extends BaseActivity {
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat();
+        f = new DecimalFormat("#.00");
         try {
             mPrintManager.initPrint();
                 mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo")));
@@ -104,7 +104,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printDiscount(String discount) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(discount))));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?f.format(Double.parseDouble(discount)) : String.valueOf(0)));
         bitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,70),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -131,7 +131,7 @@ public class UrovoPrinter extends BaseActivity {
         for (int i = 0; i < orderDetailsList.size(); i++) {
             productCode = orderDetailsList.get(i).get("product_uuid");
             name = orderDetailsList.get(i).get("product_name_ar");
-            price = orderDetailsList.get(i).get("product_price");
+            price = f.format(Double.parseDouble(orderDetailsList.get(i).get("product_price")));
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             bitmaps = new ArrayList<>();
@@ -139,7 +139,7 @@ public class UrovoPrinter extends BaseActivity {
             bitmaps.add(PrintingHelper.createBitmapFromText(price));
             bitmaps.add(PrintingHelper.createBitmapFromText(qty));
             bitmaps.add(PrintingHelper.createBitmapFromText(productCode));
-            mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,60),0);
+            mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,50),0);
             mPrintManager.addBitmap(PrintingHelper.createBitmapFromText(name),250);
             mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
         }

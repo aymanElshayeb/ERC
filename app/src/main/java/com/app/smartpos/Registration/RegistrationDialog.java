@@ -96,9 +96,6 @@ public class RegistrationDialog extends DialogFragment {
             requestForStoragePermissions();
         }
 
-        //SharedPrefUtils.setIsRegistered(this,true);
-        //SharedPrefUtils.setStartDateTime(this);
-
         return root;
     }
 
@@ -189,6 +186,8 @@ public class RegistrationDialog extends DialogFragment {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
+            SharedPrefUtils.setIsRegistered(requireContext(),true);
+            SharedPrefUtils.setStartDateTime(requireContext());
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure

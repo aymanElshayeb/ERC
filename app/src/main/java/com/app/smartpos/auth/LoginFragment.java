@@ -38,7 +38,7 @@ public class LoginFragment extends Fragment {
         if (root == null) {
             root = inflater.inflate(R.layout.fragment_login, container, false);
             context = requireContext();
-            EditText emailEt = root.findViewById(R.id.email_et);
+            EditText usernameEt = root.findViewById(R.id.username_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
             emailEt.setText("karimsaad687@gmail.com");
@@ -46,7 +46,7 @@ public class LoginFragment extends Fragment {
             loginBtn.setOnClickListener(view -> {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
                 databaseAccess.open();
-                HashMap<String,String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString());
+                HashMap<String,String> map = databaseAccess.getUserWithUserName(usernameEt.getText().toString());
                 if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
                     SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
                     startActivity(intent);
                     requireActivity().finish();
                 } else {
-                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.wrong_username_password), Toast.LENGTH_SHORT).show();
                 }
             });
         }
