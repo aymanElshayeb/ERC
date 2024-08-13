@@ -19,7 +19,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 37;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -211,16 +211,16 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             }
 
             // Copy rows from the existing database table to the new one
-            String shiftQuery = "SELECT * FROM order_list WHERE order_id >"+ lastSyncId+";";
+            String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > '%s'", lastSyncId);
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
                 while (shiftCursor.moveToNext()) {
                     ContentValues orderListValues = new ContentValues();
                     for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
                         orderListValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
                     }
-                    newDb.insert("shift", null, orderListValues);
+                    newDb.insert("order_list", null, orderListValues);
                     @SuppressLint("Range") String orderListId = shiftCursor.getString(shiftCursor.getColumnIndex("invoice_id"));
-                    String orderDetails = "SELECT * FROM order_details WHERE invoice_id = " + orderListId + ";";
+                    String orderDetails = String.format("SELECT * FROM order_details WHERE invoice_id = '%s'", orderListId);
                     try (Cursor creditCursor = existingDb.rawQuery(orderDetails, null)) {
                         while (creditCursor.moveToNext()) {
                             ContentValues detailsValues = new ContentValues();
