@@ -238,12 +238,12 @@ public class DatabaseAccess {
 
         values.put("shift_id", id);
         values.put("total", shiftDifference.getReal());
-        values.put("credit_code", type);
+        values.put("credit_code", shiftDifference.getCode());
         values.put("difference", shiftDifference.getDiff());
 
+        Log.i("datadata_shift_diff",values.toString());
 
-
-        long check = database.insert("shift_difference", null, values);
+        long check = database.insert("credit_calculations", null, values);
         database.close();
 
         //if data insert success, its return 1, if failed return -1
