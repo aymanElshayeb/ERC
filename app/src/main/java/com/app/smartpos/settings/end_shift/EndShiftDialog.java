@@ -28,6 +28,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.SettingsActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -85,33 +86,42 @@ public class EndShiftDialog extends DialogFragment {
                 total_tax += tax;
 
                 double calculated_total_price = total_price - discount;
-                if (paymentTypesCashMap.containsKey(orderList.get(i).get("order_payment_method").toString())) {
-                    double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("order_payment_method")));
+                if (orderList.get(i).get("order_payment_method").equals("CASH")) {
+                    double cash = Double.parseDouble(paymentTypesCashMap.get("CASH"));
                     double total = calculated_total_price + cash;
-                    paymentTypesCashMap.put(orderList.get(i).get("order_payment_method"), total + "");
+                    paymentTypesCashMap.put("CASH", total + "");
+                }else if (orderList.get(i).get("order_payment_method").equals("CARD") && paymentTypesCashMap.containsKey(orderList.get(i).get("card_type_code").toString())) {
+                    double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
+                    double total = calculated_total_price + cash;
+                    paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), total + "");
                 } else {
-                    paymentTypesCashMap.put(orderList.get(i).get("order_payment_method"), calculated_total_price + "");
+                    paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
                 }
             }
             databaseAccess.open();
-            List<HashMap<String, String>> paymentMethods;
-            paymentMethods = databaseAccess.getPaymentMethod();
+            List<HashMap<String, String>> cardTypes=new ArrayList<>();
+            HashMap<String, String> cash_map = new HashMap<>();
+            cash_map.put("active", "1");
+            cash_map.put("CASH", paymentTypesCashMap.get("CASH").toString());
+            cash_map.put("name", "CASH");
+            cardTypes.add(cash_map);
+            cardTypes.addAll(databaseAccess.getCardTypes());
+            Log.i("datadata",paymentTypesCashMap.get("CASH").toString());
             LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
-            for (int i = 0; i < paymentMethods.size(); i++) {
+            for (int i = 0; i < cardTypes.size(); i++) {
                 View root_view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_end_shift_payment_method, null);
 
                 TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
                 EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);
                 TextView paymentTypeAmountErrorTv = root_view.findViewById(R.id.payment_type_amount_error_tv);
+                paymentTypeTv.setText(cardTypes.get(i).get("name"));
 
-                paymentTypeTv.setText(paymentMethods.get(i).get("payment_method_name"));
-
-                String cash = paymentTypesCashMap.get(paymentMethods.get(i).get("payment_method_name"));
+                String cash = cardTypes.get(i).get("CASH");
                 if (cash == null) {
                     cash = "0";
                 }
-
-                models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, paymentMethods.get(i).get("payment_method_name"), Double.parseDouble(cash)));
+                Log.i("datadata",cardTypes.get(i).get("name")+" "+cash);
+                models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, cardTypes.get(i).get("name"), Double.parseDouble(cash)));
 
                 endCashTypesLl.addView(root_view);
 
@@ -150,7 +160,7 @@ public class EndShiftDialog extends DialogFragment {
                     double employeeCash = Double.parseDouble(real.isEmpty() ? "0" : real);
                     models.get(i).setError(employeeCash != models.get(i).real);
                     map.put(models.get(i).type, new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real)));
-
+                    Log.i("datadata_type",models.get(i).type);
                     if (employeeCash != models.get(i).real) {
                         String value = trimLongDouble((employeeCash - models.get(i).real));
                         if (employeeCash - models.get(i).real > 0) {
@@ -212,9 +222,15 @@ public class EndShiftDialog extends DialogFragment {
         databaseAccess.open();
         int id = databaseAccess.addShift(endShiftModel);
         if (id > -1) {
-            databaseAccess.open();
-            boolean added = databaseAccess.addShiftCreditCalculations(id, endShiftModel.getShiftDifferences().get("CARD"));
-            Log.i("datadata", added + "");
+            LinkedList<String>keys=new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
+            for(int i=0;i<keys.size();i++) {
+                if(!keys.get(i).equals("CASH")) {
+                    Log.i("datadata",keys.get(i));
+                    databaseAccess.open();
+                    boolean added = databaseAccess.addShiftCreditCalculations(id, endShiftModel.getShiftDifferences().get(keys.get(i)), keys.get(i));
+                    Log.i("datadata", added + "");
+                }
+            }
 
         }
         Log.i("datadata", id + "");
@@ -227,7 +243,7 @@ public class EndShiftDialog extends DialogFragment {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
         params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        params.height = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.8);
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
 }

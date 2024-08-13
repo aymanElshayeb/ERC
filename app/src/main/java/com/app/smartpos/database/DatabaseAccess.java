@@ -232,12 +232,12 @@ public class DatabaseAccess {
 
     }
 
-    public boolean addShiftCreditCalculations(int id, ShiftDifferences shiftDifference) {
+    public boolean addShiftCreditCalculations(int id, ShiftDifferences shiftDifference,String type) {
         ContentValues values = new ContentValues();
 
         values.put("shift_id", id);
         values.put("total", shiftDifference.getReal());
-        //values.put("input", shiftDifferences.get(i).getInput());
+        values.put("credit_code", type);
         values.put("difference", shiftDifference.getDiff());
 
 
@@ -2030,6 +2030,26 @@ public class DatabaseAccess {
                 map.put("payment_method_id", cursor.getString(cursor.getColumnIndex("payment_method_id")));
                 map.put("payment_method_name", cursor.getString(cursor.getColumnIndex("payment_method_name")));
                 map.put("payment_method_active", cursor.getString(cursor.getColumnIndex("payment_method_active")));
+
+                payment_method.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return payment_method;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<HashMap<String, String>> getCardTypes() {
+        ArrayList<HashMap<String, String>> payment_method = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM card_type ORDER BY id DESC", null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("active", cursor.getString(cursor.getColumnIndex("active")));
+                map.put("code", cursor.getString(cursor.getColumnIndex("code")));
+                map.put("name", cursor.getString(cursor.getColumnIndex("name")));
+                map.put("CASH", "0");
 
                 payment_method.add(map);
             } while (cursor.moveToNext());
