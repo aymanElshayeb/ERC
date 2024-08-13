@@ -12,4 +12,9 @@ public class Device implements DeviceInterface{
     public String resultHeader() {
         return null;
     }
+
+    @Override
+    public String jsonActivityResult() {
+        return "";
+    }
 }

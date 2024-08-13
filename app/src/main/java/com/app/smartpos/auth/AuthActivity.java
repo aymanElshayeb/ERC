@@ -32,7 +32,7 @@ public class AuthActivity extends BaseActivity {
 
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
-        if (databaseAccess.getConfiguration().isEmpty() || !SharedPrefUtils.isDemoPressed(this)) {
+        if (databaseAccess.getConfiguration().isEmpty()) {
             RegistrationDialog dialog = new RegistrationDialog();
             dialog.show(getSupportFragmentManager(), "register dialog");
         }

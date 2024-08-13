@@ -7,4 +7,5 @@ public interface DeviceInterface {
     Intent pay(double total);
 
     String resultHeader();
+    String jsonActivityResult();
 }
