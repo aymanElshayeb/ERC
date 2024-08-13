@@ -19,7 +19,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 37;
+    private static final int DATABASE_VERSION = 42;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -139,8 +139,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
-            exportShift(existingDb,newDb,lastSync[0]);
-            exportInvoice(existingDb,newDb,lastSync[1]);
+            exportInvoice(existingDb,newDb,lastSync[0]);
+            exportShift(existingDb,newDb,lastSync[1]);
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
@@ -211,7 +211,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             }
 
             // Copy rows from the existing database table to the new one
-            String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > '%s'", lastSyncId);
+            String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > %s", lastSyncId);
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
                 while (shiftCursor.moveToNext()) {
                     ContentValues orderListValues = new ContentValues();
