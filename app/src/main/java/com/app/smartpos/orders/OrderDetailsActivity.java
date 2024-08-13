@@ -191,8 +191,8 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
             UrovoPrinter urovoPrinter = new UrovoPrinter();
-            NewLandPrinter newLandPrinter=new NewLandPrinter();
-            boolean successfulPrint = urovoPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
+            NewLandEnhancedPrinter newLandPrinter=new NewLandEnhancedPrinter();
+            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
 //            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
 //            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
             if(!successfulPrint){

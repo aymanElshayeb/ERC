@@ -41,7 +41,7 @@ public class LoginFragment extends Fragment {
             EditText usernameEt = root.findViewById(R.id.username_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            emailEt.setText("karimsaad687@gmail.com");
+            usernameEt.setText("karimsaad687");
             passwordEt.setText("123456789");
             loginBtn.setOnClickListener(view -> {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
