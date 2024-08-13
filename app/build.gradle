@@ -72,6 +72,8 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation "androidx.work:work-runtime:2.7.1"
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'de.svenkubiak:jBCrypt:0.4.1'
 
 
     implementation 'com.makeramen:roundedimageview:2.3.0'

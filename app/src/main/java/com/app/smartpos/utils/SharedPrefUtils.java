@@ -63,6 +63,25 @@ public class SharedPrefUtils {
         editor.putString("user_id", userID).commit();
     }
 
+    public static void setMerchantId(Context context,String tenantId){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("merchant_id", tenantId).commit();
+    }
+
+    public static String getMerchantId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("merchant_id","");
+    }
+    public static void setEcrCode(Context context,String ecrCode){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("ecr_code", ecrCode).commit();
+    }
+
+    public static String getEcrCode(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_code","");
+    }
+
 
 
 }

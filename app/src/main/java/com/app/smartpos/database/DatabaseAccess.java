@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.Registration.RegistrationResponseDto;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
 
@@ -599,9 +600,9 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public HashMap<String,String> getUserWithEmailPassword(String email, String password) {
+    public HashMap<String,String> getUserWithEmail(String email) {
 
-        Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "' and password='" + password + "'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "'", null);
 
         HashMap<String,String> hashMap=null;
         if (cursor.moveToFirst()) {
@@ -682,6 +683,7 @@ public class DatabaseAccess {
     public String getCategoryName(String category_id) {
 
         String product_category = "n/a";
+        if(category_id.isEmpty() || category_id.isBlank()) return product_category;
         Cursor cursor = database.rawQuery("SELECT * FROM product_category WHERE category_id=" + category_id + "", null);
 
 
@@ -2566,6 +2568,26 @@ public class DatabaseAccess {
             database.close();
         }
         return configuration;
+    }
+    @SuppressLint("Range")
+    public Boolean addConfiguration(RegistrationResponseDto registrationResponseDto) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("ecr_code", registrationResponseDto.getEcrCode());
+        values.put("merchant_id", registrationResponseDto.getMerchantId());
+        values.put("merchant_logo", registrationResponseDto.getMerchantLogo());
+        values.put("merchant_tax_number", registrationResponseDto.getTaxnumber());
+
+        long check = database.insert("configuration", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        if (check == -1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @SuppressLint("Range")
