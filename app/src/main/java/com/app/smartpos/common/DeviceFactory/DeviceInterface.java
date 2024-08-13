@@ -8,4 +8,5 @@ public interface DeviceInterface {
 
     String resultHeader();
     String jsonActivityResult();
+    String amountString();
 }

@@ -17,4 +17,9 @@ public class Device implements DeviceInterface{
     public String jsonActivityResult() {
         return "";
     }
+
+    @Override
+    public String amountString() {
+        return null;
+    }
 }

@@ -29,4 +29,9 @@ public class NewLandDevice extends Device implements DeviceInterface{
     public String jsonActivityResult() {
         return ThirdTag.JSON_DATA;
     }
+
+    @Override
+    public String amountString() {
+        return "Amounts";
+    }
 }
