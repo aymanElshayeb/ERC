@@ -35,6 +35,7 @@ import androidx.work.WorkManager;
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
+import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
@@ -83,6 +84,9 @@ public class RegistrationDialog extends DialogFragment {
             });
 
             demoBtn.setOnClickListener(view -> {
+                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
+                databaseAccess.open();
+                databaseAccess.addDemoConfiguration();
                 SharedPrefUtils.setStartDateTime(requireActivity());
                 SharedPrefUtils.setDemoPressed(requireActivity(),true);
                 requireActivity().finish();

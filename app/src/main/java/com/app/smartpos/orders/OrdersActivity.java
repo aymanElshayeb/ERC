@@ -85,11 +85,7 @@ public class OrdersActivity extends BaseActivity {
             txtNoProducts.setVisibility(View.VISIBLE);
         } else {
             Log.i("datadata",orderList.get(0).get("invoice_id").toString());
-            LinkedList<String>keys=new LinkedList<>(orderList.get(0).keySet());
-            for(int i=0;i<orderList.size();i++){
-                Log.i("datadata",orderList.get(i).get("card_details").toString());
-            }
-
+            Log.i("datadata",orderList.get(0).get("card_type_code").toString());
             orderAdapter = new OrderAdapter(OrdersActivity.this, orderList);
 
             recyclerView.setAdapter(orderAdapter);

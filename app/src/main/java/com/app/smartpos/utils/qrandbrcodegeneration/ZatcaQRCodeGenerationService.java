@@ -20,4 +20,19 @@ public class ZatcaQRCodeGenerationService {
         }
         return bitmap;
     }
+
+    public String createZatcaQrCodeString(ZatcaQRCodeDto zatcaQRCodeDto, StringBuilder qrCodeBase64) {
+        ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
+        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+        String data = null;
+
+        try {
+            qrCodeBase64.append(zatcaQRCodeGeneration.getBase64(zatcaQRCodeDto));
+            data=qrCodeBase64.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 }
