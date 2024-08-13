@@ -1,11 +1,16 @@
 package com.app.smartpos.pos;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +32,9 @@ import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.common.Consts;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.DeviceFactory.DeviceInterface;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
@@ -71,11 +79,12 @@ public class ProductCart extends BaseActivity {
     String dialogDiscount;
     double total_tax;
     AlertDialog alertDialog;
+    Device device;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_cart);
-
+        device=DeviceFactory.getDevice();
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.product_cart);
@@ -147,7 +156,7 @@ public class ProductCart extends BaseActivity {
 
 
 
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,long order_details) throws JSONException {
+    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String card_type_code,String approval_code,double total) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -192,7 +201,8 @@ public class ProductCart extends BaseActivity {
                     obj.put("customer_name", customer_name);
                     obj.put("order_status", Constant.COMPLETED);
                     obj.put("original_order_id", null);
-                    obj.put("card_details", order_details);
+                    obj.put("card_type_code", card_type_code);
+                    obj.put("approval_code", approval_code);
                     databaseAccess.open();
                     HashMap<String,String> configuration = databaseAccess.getConfiguration();
                     String ecr_code= configuration.isEmpty() ? "" :configuration.get("ecr_code");
@@ -205,7 +215,7 @@ public class ProductCart extends BaseActivity {
                     databaseAccess.open();
                     obj.put("ex_tax_total", databaseAccess.getTotalPriceWithoutTax());
 
-                    obj.put("paid_amount", totalPriceWithTax);
+                    obj.put("paid_amount", total==0?totalPriceWithTax:total);
                     obj.put("change_amount", 0);
 
                     String tax_number= configuration.get("merchant_tax_number");
@@ -670,20 +680,35 @@ public class ProductCart extends BaseActivity {
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
                     long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
-
                     Intent intent = new Intent();
-                    intent.setPackage(Consts.PACKAGE);
-                    intent.setAction(Consts.CARD_ACTION);
-                    intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
-                    intent.putExtra(ThirdTag.TRANS_TYPE, 2);
-                    intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
-                    intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
-                    intent.putExtra(ThirdTag.INSERT_SALE, true);
-                    intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
-                    startActivityForResult(intent, 12);
+//                    if(1==0){
+                        intent.setPackage(Consts.PACKAGE);
+                        intent.setAction(Consts.CARD_ACTION);
+                        intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
+                        intent.putExtra(ThirdTag.TRANS_TYPE, 2);
+                        intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
+                        intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
+                        intent.putExtra(ThirdTag.INSERT_SALE, true);
+                        intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
+//                    }
+//                    else {
+//                        intent.setPackage(Consts.PACKAGE_UROVO);
+//                        intent.setAction(Consts.CARD_ACTION_UROVO_PURCHASE);
+//                        intent.putExtra(ThirdTag.TRANS_TYPE, "2");
+//                        intent.putExtra(ThirdTag.AMOUNT, String.valueOf(totalPriceWithTax));
+//                        intent.putExtra(ThirdTag.IS_APP_2_APP, true);
+//                    }
+//                    intent.setPackage(Consts.PACKAGE_UROVO);
+//                    intent.setAction(Consts.CARD_ACTION_UROVO_PURCHASE);
+//                    intent.putExtra(ThirdTag.TRANS_TYPE, "2");
+//                    intent.putExtra(ThirdTag.AMOUNT, String.valueOf(totalPriceWithTax/100));
+//                    intent.putExtra(ThirdTag.IS_APP_2_APP, true);
+
+//                    startActivityForResult(intent, 12);
+                    launcher.launch(intent);
                 }else {
                     try {
-                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,-1);
+                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount,"","",0);
                         alertDialog.dismiss();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -710,6 +735,16 @@ public class ProductCart extends BaseActivity {
 
     }
 
+    public boolean isPackageExisted(String targetPackage){
+        PackageManager pm=getPackageManager();
+        try {
+            PackageInfo info=pm.getPackageInfo(targetPackage,PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
     public void updateTotalPrice(){
         databaseAccess.open();
         double total_price = databaseAccess.getTotalPriceWithTax();
@@ -733,37 +768,76 @@ public class ProductCart extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        data.getStringExtra("123");
-        Log.d("DEBUG","11111111111111111111111111111111111");
-        Log.i("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+////        data.getStringExtra("123");
+////        Log.d("DEBUG","11111111111111111111111111111111111");
+////        Log.i("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
+//
+//        //tvResponse.setText("Sale Response："+data.getStringExtra(ThirdTag.JSON_DATA));
+//        // tvResponse.setText("Response："+data.getExtras().toString());
+//
+//        try {
+//            String jsonActivityResult = "";
+//            if(Consts.MANUFACTURER.equalsIgnoreCase("newland"))
+//                jsonActivityResult = ThirdTag.JSON_DATA;
+//            else
+//                jsonActivityResult = "result";
+//            JSONObject json=new JSONObject(data.getStringExtra(jsonActivityResult));
+//            JSONObject result=json.getJSONObject(data.getStringExtra(device.resultHeader()));
+//            String resultStatus=result.getJSONObject("Result").getString("English");
+//            if(resultStatus.equals("APPROVED")) {
+//                String code=result.getJSONObject("CardScheme").getString("ID");
+//                String name=result.getJSONObject("CardScheme").getString("English");
+//
+//                String PurchaseAmount=result.getJSONObject("Amounts").getString("PurchaseAmount");
+//                String ApprovalCode=result.getString("ApprovalCode");
+//                Log.i("datadata",name+" "+code);
+//                databaseAccess.open();
+//                //long id=databaseAccess.insertCardDetails(name,code);
+//                //Log.i("datadata",id+"");
+//                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code,ApprovalCode,Double.parseDouble(PurchaseAmount));
+//                alertDialog.dismiss();
+//            }else{
+//                Toast.makeText(this, resultStatus, Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        //tvResponse.setText("Sale Response："+data.getStringExtra(ThirdTag.JSON_DATA));
-        // tvResponse.setText("Response："+data.getExtras().toString());
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), launcherResult -> {
+        if (launcherResult.getResultCode() == Activity.RESULT_OK) {
+            if (launcherResult.getData() != null) {
+                try {
+                    String jsonActivityResult = device.jsonActivityResult();
+                    String amountString = device.amountString();
 
-        try {
-            JSONObject json=new JSONObject(data.getStringExtra(ThirdTag.JSON_DATA));
-            String result=json.getJSONObject("madaTransactionResult").getJSONObject("Result").getString("English");
-            if(result.equals("APPROVED")) {
-                String name=json.getJSONObject("madaTransactionResult").getString("ApplicationLabel");
-                String code=json.getJSONObject("madaTransactionResult").getString("PAN");
-                Log.i("datadata",name+" "+code);
-                databaseAccess.open();
-                long id=databaseAccess.insertCardDetails(name,code);
-                Log.i("datadata",id+"");
-                if(id>0) {
-                    proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, id);
-                    alertDialog.dismiss();
+                    JSONObject response = new JSONObject(launcherResult.getData().getStringExtra(jsonActivityResult));
+                    JSONObject result = response.getJSONObject(device.resultHeader());
+                    String resultStatus = result.getJSONObject("Result").getString("English");
+                    if (resultStatus.equals("APPROVED")) {
+                        String code = result.getJSONObject("CardScheme").getString("ID");
+                        String name = result.getJSONObject("CardScheme").getString("English");
+
+                        String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
+                        String ApprovalCode = result.getString("ApprovalCode");
+                        Log.i("datadata", name + " " + code);
+                        databaseAccess.open();
+                        //long id=databaseAccess.insertCardDetails(name,code);
+                        //Log.i("datadata",id+"");
+                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
+                        alertDialog.dismiss();
+                    } else {
+                        Toast.makeText(this, resultStatus, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }else{
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-    }
+    });
 
 }
 

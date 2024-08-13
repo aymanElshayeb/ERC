@@ -12,7 +12,7 @@ import com.google.zxing.WriterException;
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
+import android.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class ZatcaQRCodeGeneration {
             outputStream1.write(tlTotalAmountWithTax);
             outputStream1.write(tlTaxAmount);
 
-            base64QRCode = Base64.getEncoder().encodeToString(outputStream1.toByteArray());
+            base64QRCode = Base64.encodeToString(outputStream1.toByteArray(),Base64.DEFAULT);
         } catch (Exception ex) {
         }
         return base64QRCode;
@@ -96,6 +96,27 @@ public class ZatcaQRCodeGeneration {
             qrCodeBitmap = PrintingHelper.resizeBitmap(barcodeEncoder.encodeQrOrBc(qrCode.toString(), BarcodeFormat.QR_CODE, 600, 600),200,200);
         }
         return qrCodeBitmap;
+    }
+
+    public String getQrCodeString(HashMap<String, String> orderList, DatabaseAccess databaseAccess, List<HashMap<String, String>> orderDetailsList, HashMap<String, String> configuration) {
+        String data;
+        StringBuilder qrCode = new StringBuilder(orderList.get("qr_code"));
+        if (qrCode.toString().isEmpty()){
+            ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
+            zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
+            zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("merchant_id"));
+            zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
+            zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
+            ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
+            data = zatcaQRCodeGenerationService.createZatcaQrCodeString(zatcaQRCodeDto,qrCode);
+            databaseAccess.open();
+            databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"),qrCode.toString());
+        }
+        else {
+            data=qrCode.toString();
+        }
+        return data;
     }
 
 }

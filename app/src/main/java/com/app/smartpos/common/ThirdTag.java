@@ -38,6 +38,8 @@ public class ThirdTag {
      */
     public final static String TRANS_TYPE = "transType";
 
+    public static final String IS_APP_2_APP = "isApp2App";
+
     /**
      * Bitmap
      */
@@ -193,5 +195,6 @@ public class ThirdTag {
 
     //CR# 15.09.2021
     public final static  String XML_DATA="XML_DATA";
+
     //========================
 }
