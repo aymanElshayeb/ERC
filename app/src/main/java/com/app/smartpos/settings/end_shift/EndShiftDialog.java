@@ -84,7 +84,7 @@ public class EndShiftDialog extends DialogFragment {
 
                 total_amount += total_price;
                 total_tax += tax;
-
+                Log.i("datadata_card",orderList.get(i).get("order_payment_method")+" "+orderList.get(i).get("card_type_code"));
                 double calculated_total_price = total_price - discount;
                 if (orderList.get(i).get("order_payment_method").equals("CASH")) {
                     double cash = Double.parseDouble(paymentTypesCashMap.get("CASH"));
@@ -94,6 +94,7 @@ public class EndShiftDialog extends DialogFragment {
                     double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
                     double total = calculated_total_price + cash;
                     paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), total + "");
+                    Log.i("datadata_card",cash+" "+total+" "+paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
                 } else {
                     paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
                 }
@@ -104,8 +105,14 @@ public class EndShiftDialog extends DialogFragment {
             cash_map.put("active", "1");
             cash_map.put("CASH", paymentTypesCashMap.get("CASH").toString());
             cash_map.put("name", "CASH");
+            cash_map.put("code", "CASH");
             cardTypes.add(cash_map);
             cardTypes.addAll(databaseAccess.getCardTypes());
+            for(int i=0;i<cardTypes.size();i++){
+                String code=cardTypes.get(i).get("code");
+                String cash=paymentTypesCashMap.get(code);
+                cardTypes.get(i).put("CASH",cash);
+            }
             Log.i("datadata",paymentTypesCashMap.get("CASH").toString());
             LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
             for (int i = 0; i < cardTypes.size(); i++) {
@@ -121,7 +128,7 @@ public class EndShiftDialog extends DialogFragment {
                     cash = "0";
                 }
                 Log.i("datadata",cardTypes.get(i).get("name")+" "+cash);
-                models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, cardTypes.get(i).get("name"), Double.parseDouble(cash)));
+                models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, cardTypes.get(i).get("name"),cardTypes.get(i).get("code"), Double.parseDouble(cash)));
 
                 endCashTypesLl.addView(root_view);
 
