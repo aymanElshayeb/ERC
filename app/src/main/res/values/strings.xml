@@ -92,7 +92,7 @@
     <string name="select_supplier">Select Supplier</string>
     <string name="product_supplier">Product Supplier</string>
     <string name="choose_product_image">Choose Product Image</string>
-    <string name="database_backup">Database Backup</string>
+    <string name="database_backup">Database Synchronization</string>
     <string name="database_import">Database Import</string>
 
 
@@ -109,7 +109,7 @@
     <string name="no_data_found">No Data Found</string>
 
     <string name="shop_information">Shop Information</string>
-    <string name="data_backup">Data Backup</string>
+    <string name="data_backup">Data Synchronization</string>
     <string name="end_shift">End Shift</string>
     <string name="shop_name">Shop Name</string>
     <string name="shop_contact_number">Shop Contact Number</string>
@@ -153,13 +153,13 @@
     <string name="shop_address_cannot_be_empty">Shop address can\'t be empty</string>
     <string name="shop_currency_cannot_be_empty">Shop currency can\'t be empty</string>
     <string name="shop_information_updated_successfully">Shop Information Updated Successfully</string>
-    <string name="enter_local_database_backup_name">Enter Local Database Backup Name</string>
+    <string name="enter_local_database_backup_name">Enter Local Database Synchronization Name</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="unable_to_create_directory_retry">Unable to create directory. Retry</string>
     <string name="database_restore">Database Restore:</string>
     <string name="unable_to_restore_retry">Unable to restore. Retry</string>
-    <string name="backup_folder_not_present">Backup folder not present</string>
+    <string name="backup_folder_not_present">Synchronization folder not present</string>
     <string name="all_product">All Product</string>
     <string name="product_cart">Product Cart</string>
     <string name="no_product_in_cart">No Product in Cart</string>
@@ -173,8 +173,8 @@
     <string name="add_expense">Add Expense</string>
     <string name="hi_welcome">Hello! Welcome</string>
     <string name="product_removed_from_cart">Product removed from cart</string>
-    <string name="backup_completed_successfully">Backup Completed Successfully</string>
-    <string name="unable_to_backup_database_retry">Unable to backup database. Retry</string>
+    <string name="backup_completed_successfully">Synchronization Completed Successfully</string>
+    <string name="unable_to_backup_database_retry">Unable to Synchronization database. Retry</string>
     <string name="database_Import_completed">Database Import Completed</string>
     <string name="unable_to_import_database_retry">Unable to import database. Retry</string>
     <string name="want_to_delete_customer">Want to Delete Customer ?</string>
@@ -292,7 +292,7 @@
     <string name="cancel_order">Cancel Order</string>
     <string name="order_completed">Order Completed</string>
     <string name="order_updated">Order Updated</string>
-    <string name="backup_to_google_drive">Backup to Google Drive/Others</string>
+    <string name="backup_to_google_drive">Synchronization to Google Drive/Others</string>
     <string name="order_status">Order Status</string>
     <string name="select_year">Select Year</string>
     <string name="order_type_deleted">Order type deleted</string>

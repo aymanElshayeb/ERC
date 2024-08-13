@@ -60,5 +60,8 @@ public class Constant {
     public static final String REPORT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
 
+    public static final String ACCEPTED_STATUS_CODE = "00";
+    public static final String DECLINED_STATUS_CODE = "01";
+    public static final String REJECTED_STATUS_CODE = "02";
 
 }
