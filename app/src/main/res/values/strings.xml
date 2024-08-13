@@ -333,6 +333,7 @@
     <string name="user_id">User ID</string>
     <string name="user_name">User Name</string>
     <string name="shift_id">Shift ID</string>
+    <string name="shift_sequence">Shift Sequence</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>
