@@ -125,6 +125,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     // Calculate Cart's Total Price Again
                     //  setCartTotal();
 
+                    productCart.updateTotalPrice();
 
                     player.start();
 
