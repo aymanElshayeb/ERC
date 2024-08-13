@@ -7,13 +7,15 @@ public class EndShiftPaymentModels {
     EditText inputPaymentCashEt;
     TextView paymentCashErrorTv;
     String type;
+    String code;
     double real;
 
     boolean error=false;
 
-    public EndShiftPaymentModels(EditText inputPaymentCashEt, TextView paymentCashErrorTv, String type, double real) {
+    public EndShiftPaymentModels(EditText inputPaymentCashEt, TextView paymentCashErrorTv, String type,String code, double real) {
         this.inputPaymentCashEt = inputPaymentCashEt;
         this.paymentCashErrorTv = paymentCashErrorTv;
+        this.code = code;
         this.type = type;
         this.real = real;
     }
