@@ -16,13 +16,13 @@ public class Utils {
 
         DecimalFormat f;
         f = new DecimalFormat("#.00");
-        return value == 0 ? "0" : f.format(value);
+        return value == 0 ? "0.0" : f.format(value);
     }
 
     public static String trimLongDouble(String value){
         double doubleValue=Double.parseDouble(value);
         DecimalFormat f;
         f = new DecimalFormat("#.00");
-        return value.equals("0") ? "0" : f.format(doubleValue);
+        return value.equals("0") ? "0.0" : f.format(doubleValue);
     }
 }
