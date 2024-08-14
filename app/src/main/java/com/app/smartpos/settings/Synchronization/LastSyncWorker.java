@@ -33,7 +33,8 @@ public class LastSyncWorker extends Worker  {
         String urL = getInputData().getString("url");
         String tenantId= getInputData().getString("tenantId");
         String authorization= getInputData().getString("Authorization");
-        if (urL==null || tenantId==null || authorization==null) {
+        String ecrCode= getInputData().getString("ecrCode");
+        if (urL==null || tenantId==null || authorization==null||ecrCode==null) {
             return Result.failure();
         }
         OkHttpClient client = getUnsafeOkHttpClient();
@@ -41,6 +42,7 @@ public class LastSyncWorker extends Worker  {
                 add("tenantId", tenantId).
                 add("Authorization",authorization).
                 add("apikey",API_KEY).
+                add("ecrCode",ecrCode).
                 build();
         Request request = new Request.Builder()
                 .url(urL) // Replace with your server's upload endpoint
