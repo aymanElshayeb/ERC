@@ -12,7 +12,7 @@ public class UrovoDevice extends Device implements DeviceInterface{
         intent.setPackage(Consts.PACKAGE_UROVO);
         intent.setAction(Consts.CARD_ACTION_UROVO_PURCHASE);
         intent.putExtra(ThirdTag.TRANS_TYPE, "2");
-        intent.putExtra(ThirdTag.AMOUNT, total);
+        intent.putExtra(ThirdTag.AMOUNT, String.valueOf(Long.valueOf(total)));
         intent.putExtra(ThirdTag.IS_APP_2_APP, true);
         return intent;
     }

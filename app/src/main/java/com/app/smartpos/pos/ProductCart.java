@@ -816,25 +816,32 @@ public class ProductCart extends BaseActivity {
                     String amountString = device.amountString();
 
                     JSONObject response = new JSONObject(launcherResult.getData().getStringExtra(jsonActivityResult));
-                    JSONObject result = response.getJSONObject(device.resultHeader());
-                    String resultStatus = result.getJSONObject("Result").getString("English");
-                    String StatusCode = response.getString("StatusCode");
-                    if (resultStatus.equals("APPROVED")) {
-                        String code = result.getJSONObject("CardScheme").getString("ID");
-                        String name = result.getJSONObject("CardScheme").getString("English");
+                    String statusCode = "";
+                    try {
+                        JSONObject result = response.getJSONObject(device.resultHeader());
+                        statusCode = result.getString("StatusCode");
+                        String resultStatus = result.getJSONObject("Result").getString("English");
+                        if (resultStatus.equals("APPROVED")) {
+                            String code = result.getJSONObject("CardScheme").getString("ID");
+                            String name = result.getJSONObject("CardScheme").getString("English");
 
-                        String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
-                        String ApprovalCode = result.getString("ApprovalCode");
-                        Log.i("datadata", name + " " + code);
-                        databaseAccess.open();
-                        //long id=databaseAccess.insertCardDetails(name,code);
-                        //Log.i("datadata",id+"");
-                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
-                        alertDialog.dismiss();
-                    } else if(resultStatus.equals("Declined")) {
-                        Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
-                    } else if(StatusCode.equals(Constant.REJECTED_STATUS_CODE)) {
-                        Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
+                            String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
+                            String ApprovalCode = result.getString("ApprovalCode");
+                            Log.i("datadata", name + " " + code);
+//                            databaseAccess.open();
+                            //long id=databaseAccess.insertCardDetails(name,code);
+                            //Log.i("datadata",id+"");
+                            proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
+                            alertDialog.dismiss();
+                        } else if(resultStatus.equals("Declined")) {
+                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    catch (Exception e){
+                        if(statusCode.equals(Constant.REJECTED_STATUS_CODE))
+                            Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
+                        else
+                            e.printStackTrace();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

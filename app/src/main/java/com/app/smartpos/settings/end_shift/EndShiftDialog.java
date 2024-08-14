@@ -198,6 +198,8 @@ public class EndShiftDialog extends DialogFragment {
                 databaseAccess.open();
                 HashMap<String, String> sequenceMap = databaseAccess.getSequence(2, ecr_code);
                 databaseAccess.open();
+                databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
+                databaseAccess.open();
                 String startDateString = databaseAccess.getLastShift("end_date_time");
                 long startDate = startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()) : Long.parseLong(startDateString);
 
@@ -207,7 +209,7 @@ public class EndShiftDialog extends DialogFragment {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {

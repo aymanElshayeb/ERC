@@ -2607,7 +2607,6 @@ public class DatabaseAccess {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sequence = ecrCode + " - 001 - " +  cursor.getString(cursor.getColumnIndex("type_perfix")) + String.format("%010d", nextValue);
         if (cursor != null) {
             cursor.close();
         }
