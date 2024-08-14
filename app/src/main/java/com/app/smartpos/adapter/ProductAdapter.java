@@ -69,8 +69,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         String supplier_name = databaseAccess.getSupplierName(supplier_id);
 
         holder.txtProductName.setText(name);
-        holder.txtSupplierName.setText(context.getString(R.string.supplier) + supplier_name);
-        holder.txtBuyPrice.setText(context.getString(R.string.buy_price) + " "+currency + trimLongDouble(buy_price));
+//        holder.txtSupplierName.setText(context.getString(R.string.supplier) + supplier_name);
+//        holder.txtBuyPrice.setText(context.getString(R.string.buy_price) + " "+currency + trimLongDouble(buy_price));
         holder.txtSellPrice.setText(context.getString(R.string.sell_price) + " "+currency + trimLongDouble(sell_price));
 
         holder.imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);

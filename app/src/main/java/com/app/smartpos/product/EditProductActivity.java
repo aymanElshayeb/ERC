@@ -179,22 +179,22 @@ public class EditProductActivity extends BaseActivity {
         etxtProductCategory.setText(category_name);
 
         etxtProductDescription.setText(product_description);
-        etxtProductBuyPrice.setText(trimLongDouble(product_buy_price));
+//        etxtProductBuyPrice.setText(trimLongDouble(product_buy_price));
         etxtProductSellPrice.setText(trimLongDouble(product_sell_price));
 
 
-        databaseAccess.open();
-        String supplier_name = databaseAccess.getSupplierName(product_supplier_id);
-        etxtProductSupplier.setText(supplier_name);
-
-        etxtProductStock.setText(product_stock);
-
-
-        databaseAccess.open();
-        String weight_unit_name = databaseAccess.getWeightUnitName(product_weight_unit_id);
-        etxtProdcutWeightUnit.setText(weight_unit_name);
-
-        etxtProductWeight.setText(product_weight);
+//        databaseAccess.open();
+//        String supplier_name = databaseAccess.getSupplierName(product_supplier_id);
+//        etxtProductSupplier.setText(supplier_name);
+//
+//        etxtProductStock.setText(product_stock);
+//
+//
+//        databaseAccess.open();
+//        String weight_unit_name = databaseAccess.getWeightUnitName(product_weight_unit_id);
+//        etxtProdcutWeightUnit.setText(weight_unit_name);
+//
+//        etxtProductWeight.setText(product_weight);
 
         if (product_image != null) {
             if (product_image.length() < 6) {
