@@ -4,7 +4,7 @@ import android.content.Intent;
 
 public class Device implements DeviceInterface{
     @Override
-    public Intent pay(double total) {
+    public Intent pay(long total) {
         return null;
     }
 

@@ -252,7 +252,7 @@ public class ProductCart extends BaseActivity {
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock")==null ? Integer.MAX_VALUE:lines.get(i).get("stock"));
                         objp.put("product_price", lines.get(i).get("product_price"));
-                        objp.put("product_image", product.get(0).get("product_image"));
+                        objp.put("product_image", product.get(0).get("product_image") == null? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
 
                         array.put(objp);
@@ -679,17 +679,18 @@ public class ProductCart extends BaseActivity {
 
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
-                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
-                    Intent intent = new Intent();
-//                    if(1==0){
-                        intent.setPackage(Consts.PACKAGE);
-                        intent.setAction(Consts.CARD_ACTION);
-                        intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
-                        intent.putExtra(ThirdTag.TRANS_TYPE, 2);
-                        intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
-                        intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
-                        intent.putExtra(ThirdTag.INSERT_SALE, true);
-                        intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
+                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax();
+
+                    Intent intent=device.pay(totalPriceWithTax);
+//                    if(){
+//                        intent.setPackage(Consts.PACKAGE);
+//                        intent.setAction(Consts.CARD_ACTION);
+//                        intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
+//                        intent.putExtra(ThirdTag.TRANS_TYPE, 2);
+//                        intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
+//                        intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
+//                        intent.putExtra(ThirdTag.INSERT_SALE, true);
+//                        intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
 //                    }
 //                    else {
 //                        intent.setPackage(Consts.PACKAGE_UROVO);
@@ -815,22 +816,32 @@ public class ProductCart extends BaseActivity {
                     String amountString = device.amountString();
 
                     JSONObject response = new JSONObject(launcherResult.getData().getStringExtra(jsonActivityResult));
-                    JSONObject result = response.getJSONObject(device.resultHeader());
-                    String resultStatus = result.getJSONObject("Result").getString("English");
-                    if (resultStatus.equals("APPROVED")) {
-                        String code = result.getJSONObject("CardScheme").getString("ID");
-                        String name = result.getJSONObject("CardScheme").getString("English");
+                    String statusCode = "";
+                    try {
+                        JSONObject result = response.getJSONObject(device.resultHeader());
+                        statusCode = result.getString("StatusCode");
+                        String resultStatus = result.getJSONObject("Result").getString("English");
+                        if (resultStatus.equals("APPROVED")) {
+                            String code = result.getJSONObject("CardScheme").getString("ID");
+                            String name = result.getJSONObject("CardScheme").getString("English");
 
-                        String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
-                        String ApprovalCode = result.getString("ApprovalCode");
-                        Log.i("datadata", name + " " + code);
-                        databaseAccess.open();
-                        //long id=databaseAccess.insertCardDetails(name,code);
-                        //Log.i("datadata",id+"");
-                        proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
-                        alertDialog.dismiss();
-                    } else {
-                        Toast.makeText(this, resultStatus, Toast.LENGTH_SHORT).show();
+                            String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
+                            String ApprovalCode = result.getString("ApprovalCode");
+                            Log.i("datadata", name + " " + code);
+//                            databaseAccess.open();
+                            //long id=databaseAccess.insertCardDetails(name,code);
+                            //Log.i("datadata",id+"");
+                            proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
+                            alertDialog.dismiss();
+                        } else if(resultStatus.equals("Declined")) {
+                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    catch (Exception e){
+                        if(statusCode.equals(Constant.REJECTED_STATUS_CODE))
+                            Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
+                        else
+                            e.printStackTrace();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

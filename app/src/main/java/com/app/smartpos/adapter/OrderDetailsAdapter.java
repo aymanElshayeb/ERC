@@ -47,7 +47,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         holder.txt_product_name.setText(orderData.get(position).get("product_name_en"));
 
         holder.txt_product_qty.setText(context.getString(R.string.quantity) + orderData.get(position).get("product_qty"));
-        holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
+//        holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
 
         String base64Image = orderData.get(position).get("product_image");
 
@@ -94,7 +94,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             txt_product_name = itemView.findViewById(R.id.txt_product_name);
             txt_product_price = itemView.findViewById(R.id.txt_price);
             txt_product_qty = itemView.findViewById(R.id.txt_qty);
-            txt_product_Weight = itemView.findViewById(R.id.txt_weight);
+//            txt_product_Weight = itemView.findViewById(R.id.txt_weight);
             imgProduct = itemView.findViewById(R.id.img_product);
             txt_total_cost = itemView.findViewById(R.id.txt_total_cost);
 

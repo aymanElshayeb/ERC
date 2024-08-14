@@ -166,8 +166,9 @@ public class EndShiftDialog extends DialogFragment {
                     String real = models.get(i).inputPaymentCashEt.getText().toString();
                     double employeeCash = Double.parseDouble(real.isEmpty() ? "0" : real);
                     models.get(i).setError(employeeCash != models.get(i).real);
-                    map.put(models.get(i).type, new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real)));
-                    Log.i("datadata_type",models.get(i).type);
+                    ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real),models.get(i).code);
+                    map.put(models.get(i).type, shiftDifferences);
+                    Log.i("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
                     if (employeeCash != models.get(i).real) {
                         String value = trimLongDouble((employeeCash - models.get(i).real));
                         if (employeeCash - models.get(i).real > 0) {
@@ -197,6 +198,8 @@ public class EndShiftDialog extends DialogFragment {
                 databaseAccess.open();
                 HashMap<String, String> sequenceMap = databaseAccess.getSequence(2, ecr_code);
                 databaseAccess.open();
+                databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
+                databaseAccess.open();
                 String startDateString = databaseAccess.getLastShift("end_date_time");
                 long startDate = startDateString.equals("") ? SharedPrefUtils.getStartDateTime(requireContext()) : Long.parseLong(startDateString);
 
@@ -206,7 +209,7 @@ public class EndShiftDialog extends DialogFragment {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("next_value"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, android_id, startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {

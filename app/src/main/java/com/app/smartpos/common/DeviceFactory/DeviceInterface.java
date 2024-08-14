@@ -4,7 +4,7 @@ import android.content.Intent;
 
 public interface DeviceInterface {
 
-    Intent pay(double total);
+    Intent pay(long total);
 
     String resultHeader();
     String jsonActivityResult();

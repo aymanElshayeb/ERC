@@ -44,7 +44,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
@@ -59,15 +59,10 @@
                     android:textColor="#000000"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/txt_weight"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/sailec_regular"
-                    android:padding="2dp"
-                    android:text="1 kg"
-                    android:textColor="#EA1D2C" />
-
+                    android:layout_height="26dp"
+                    />
                 <TextView
                     android:id="@+id/txt_price"
                     android:layout_width="wrap_content"
@@ -98,7 +93,7 @@
                         android:id="@+id/img_delete"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/ic_delete"
                         tools:ignore="VectorDrawableCompat" />
                 </LinearLayout>

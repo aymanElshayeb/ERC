@@ -40,12 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.newland.sdk.me.module.printer.ErrorCode;
-import com.newland.sdk.me.module.printer.ModuleManage;
-import com.newland.sdk.me.module.printer.PrintListener;
-import com.newland.sdk.me.module.printer.PrinterModule;
-import com.newland.sdk.me.module.printer.PrinterStatus;
-
 import es.dmoral.toasty.Toasty;
 
 public class OrderDetailsActivity extends BaseActivity {
@@ -197,9 +191,10 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
             UrovoPrinter urovoPrinter = new UrovoPrinter();
-            NewLandPrinter newLandPrinter=new NewLandPrinter();
+            NewLandEnhancedPrinter newLandPrinter=new NewLandEnhancedPrinter();
+            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
 //            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
-            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
+//            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
             if(!successfulPrint){
                 //Check if the Bluetooth is available and on.
                 if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;

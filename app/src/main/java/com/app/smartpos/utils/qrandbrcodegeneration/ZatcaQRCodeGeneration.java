@@ -1,7 +1,9 @@
 package com.app.smartpos.utils.qrandbrcodegeneration;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.util.Base64;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
@@ -12,7 +14,6 @@ import com.google.zxing.WriterException;
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import android.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class ZatcaQRCodeGeneration {
         return outputStream.toByteArray();
     }
 
+    @SuppressLint("NewApi")
     public String getBase64(ZatcaQRCodeDto zatcaQRCodeDto) {
         ByteArrayOutputStream outputStream1 = new ByteArrayOutputStream();
         String base64QRCode = null;
@@ -69,7 +71,7 @@ public class ZatcaQRCodeGeneration {
             outputStream1.write(tlInvoiceDate);
             outputStream1.write(tlTotalAmountWithTax);
             outputStream1.write(tlTaxAmount);
-
+//            base64QRCode = Base64.getEncoder().encodeToString(outputStream1.toByteArray());
             base64QRCode = Base64.encodeToString(outputStream1.toByteArray(),Base64.DEFAULT);
         } catch (Exception ex) {
         }
