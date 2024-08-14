@@ -67,7 +67,10 @@ public class RegistrationWorker extends Worker {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 ServiceResult<RegistrationResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<RegistrationResponseDto>>(){}.getType());
-                if(result.getCode()!=200) return Result.failure();
+                if(result.getCode()!=200){
+                    Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                    return Result.failure(outputData);
+                }
                 RegistrationResponseDto registrationResponseDto=result.getData().getReturnedObj().get(0);
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
