@@ -818,6 +818,7 @@ public class ProductCart extends BaseActivity {
                     JSONObject response = new JSONObject(launcherResult.getData().getStringExtra(jsonActivityResult));
                     JSONObject result = response.getJSONObject(device.resultHeader());
                     String resultStatus = result.getJSONObject("Result").getString("English");
+                    String StatusCode = response.getString("StatusCode");
                     if (resultStatus.equals("APPROVED")) {
                         String code = result.getJSONObject("CardScheme").getString("ID");
                         String name = result.getJSONObject("CardScheme").getString("English");
@@ -830,8 +831,10 @@ public class ProductCart extends BaseActivity {
                         //Log.i("datadata",id+"");
                         proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
                         alertDialog.dismiss();
-                    } else {
-                        Toast.makeText(this, resultStatus, Toast.LENGTH_SHORT).show();
+                    } else if(resultStatus.equals("Declined")) {
+                        Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                    } else if(StatusCode.equals(Constant.REJECTED_STATUS_CODE)) {
+                        Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
