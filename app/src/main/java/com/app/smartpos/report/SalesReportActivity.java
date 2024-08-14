@@ -1,5 +1,7 @@
 package com.app.smartpos.report;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +41,6 @@ public class SalesReportActivity extends BaseActivity {
     ImageView imgNoProduct;
     TextView txtNoProducts, txtTotalPrice,txtTotalTax,txtTotalDiscount,txtNetSales;
     List<HashMap<String, String>> orderDetailsList;
-    DecimalFormat f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,6 @@ public class SalesReportActivity extends BaseActivity {
         txtTotalTax=findViewById(R.id.txt_total_tax);
         txtTotalDiscount=findViewById(R.id.txt_total_discount);
         txtNetSales=findViewById(R.id.txt_net_sales);
-        f = new DecimalFormat("#0.00");
 
         imgNoProduct.setVisibility(View.GONE);
         txtNoProducts.setVisibility(View.GONE);
@@ -102,19 +102,19 @@ public class SalesReportActivity extends BaseActivity {
 
         databaseAccess.open();
         double sub_total=databaseAccess.getTotalOrderPrice("all");
-        txtTotalPrice.setText(getString(R.string.total_sales)+ currency + f.format(sub_total));
+        txtTotalPrice.setText(getString(R.string.total_sales)+ currency + trimLongDouble(sub_total));
 
         databaseAccess.open();
         double get_tax=databaseAccess.getTotalTax("all");
-        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+f.format(get_tax));
+        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+trimLongDouble(get_tax));
 
 
         databaseAccess.open();
         double get_discount=databaseAccess.getTotalDiscount("all");
-        txtTotalDiscount.setText(getString(R.string.tatal_discount)+"(-) : "+currency+f.format(get_discount));
+        txtTotalDiscount.setText(getString(R.string.tatal_discount)+"(-) : "+currency+trimLongDouble(get_discount));
 
         double net_sales=sub_total+get_tax-get_discount;
-        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+f.format(net_sales));
+        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+trimLongDouble(net_sales));
 
     }
 
@@ -211,19 +211,19 @@ public class SalesReportActivity extends BaseActivity {
 
         databaseAccess.open();
         double sub_total=databaseAccess.getTotalOrderPrice(type);
-        txtTotalPrice.setText(getString(R.string.total_sales)+ currency + f.format(sub_total));
+        txtTotalPrice.setText(getString(R.string.total_sales)+ currency + trimLongDouble(sub_total));
 
         databaseAccess.open();
         double get_tax=databaseAccess.getTotalTax(type);
-        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+f.format(get_tax));
+        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+trimLongDouble(get_tax));
 
 
         databaseAccess.open();
         double get_discount=databaseAccess.getTotalDiscount(type);
-        txtTotalDiscount.setText(getString(R.string.total_discount)+"(-) : "+currency+f.format(get_discount));
+        txtTotalDiscount.setText(getString(R.string.total_discount)+"(-) : "+currency+trimLongDouble(get_discount));
 
         double net_sales=sub_total+get_tax-get_discount;
-        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+f.format(net_sales));
+        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+trimLongDouble(net_sales));
     }
 
 

@@ -1,5 +1,7 @@
 package com.app.smartpos.report;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,8 +35,6 @@ public class ExpenseGraphActivity extends BaseActivity {
     TextView txtTotalSales, txtSelectYear;
     LinearLayout layoutYear;
 
-    DecimalFormat f;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,6 @@ public class ExpenseGraphActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.monthly_expense_in_graph);
 
-        f = new DecimalFormat("#0.00");
         barChart = findViewById(R.id.barchart);
         txtTotalSales = findViewById(R.id.txt_total_sales);
         txtSelectYear = findViewById(R.id.txt_select_year);
@@ -119,7 +118,7 @@ public class ExpenseGraphActivity extends BaseActivity {
 
         databaseAccess.open();
         double totalExpense=databaseAccess.getTotalExpenseForGraph("yearly",mYear);
-        txtTotalSales.setText(getString(R.string.total_expense) + currency + f.format(totalExpense));
+        txtTotalSales.setText(getString(R.string.total_expense) + currency + trimLongDouble(totalExpense));
 
 
 

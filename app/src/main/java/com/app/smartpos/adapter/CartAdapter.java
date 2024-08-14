@@ -1,5 +1,7 @@
 package com.app.smartpos.adapter;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.util.Base64;
@@ -31,7 +33,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     TextView txt_total_price, txt_no_product;
     Button btnSubmitOrder;
     ImageView imgNoProduct;
-    DecimalFormat f;
     private List<HashMap<String, String>> cart_product;
     private ProductCart productCart;
 
@@ -44,7 +45,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         this.btnSubmitOrder = btnSubmitOrder;
         this.imgNoProduct = imgNoProduct;
         this.txt_no_product = txt_no_product;
-        f = new DecimalFormat("#0.00");
 
     }
 
@@ -108,7 +108,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
         holder.txtItemName.setText(product_name);
-        holder.txtPrice.setText(currency + f.format(getPrice));
+        holder.txtPrice.setText(currency + trimLongDouble(getPrice));
 //        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
@@ -175,7 +175,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     double cost = Double.parseDouble(price) * get_qty;
 
 
-                    holder.txtPrice.setText(currency + f.format(cost));
+                    holder.txtPrice.setText(currency + trimLongDouble(cost));
                     holder.txtQtyNumber.setText("" + get_qty);
 
 
@@ -203,7 +203,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
                     double cost = Double.parseDouble(price) * get_qty;
 
-                    holder.txtPrice.setText(currency + f.format(cost));
+                    holder.txtPrice.setText(currency + trimLongDouble(cost));
                     holder.txtQtyNumber.setText("" + get_qty);
 
 

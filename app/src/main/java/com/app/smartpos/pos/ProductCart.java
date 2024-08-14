@@ -1,5 +1,7 @@
 package com.app.smartpos.pos;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
@@ -65,7 +67,6 @@ public class ProductCart extends BaseActivity {
     Button btnSubmitOrder;
     TextView txt_no_product,txt_total_price;
     LinearLayout linearLayout;
-    DecimalFormat f;
     List<String> customerNames,orderTypeNames,paymentMethodNames;
     ArrayAdapter<String>  customerAdapter, orderTypeAdapter,paymentMethodAdapter;
 
@@ -88,7 +89,6 @@ public class ProductCart extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.product_cart);
-        f = new DecimalFormat("#0.00");
         recyclerView = findViewById(R.id.cart_recyclerview);
         imgNoProduct = findViewById(R.id.image_no_product);
         btnSubmitOrder=findViewById(R.id.btn_submit_order);
@@ -349,12 +349,12 @@ public class ProductCart extends BaseActivity {
         double total_cost_without_tax=databaseAccess.getTotalPriceWithoutTax();
         total_tax= total_cost - total_cost_without_tax;
 
-        dialog_txt_total.setText(shop_currency+f.format(total_cost_without_tax));
-        dialog_txt_total_tax.setText(shop_currency+f.format(total_tax));
+        dialog_txt_total.setText(shop_currency+trimLongDouble(total_cost_without_tax));
+        dialog_txt_total_tax.setText(shop_currency+trimLongDouble(total_tax));
         //dialog_txt_level_tax.setText(getString(R.string.total_tax)+"( "+total_tax+") : ");
 
         double discount=0;
-        dialog_txt_total_cost.setText(shop_currency+f.format(total_cost));
+        dialog_txt_total_cost.setText(shop_currency+trimLongDouble(total_cost));
 
 
 
@@ -385,14 +385,14 @@ public class ProductCart extends BaseActivity {
 
                         dialog_btn_submit.setVisibility(View.VISIBLE);
                         calculated_total_cost = total_cost + total_tax - discount;
-                        dialog_txt_total_cost.setText(shop_currency + f.format(calculated_total_cost));
+                        dialog_txt_total_cost.setText(shop_currency + trimLongDouble(calculated_total_cost));
                     }
                 }
                 else
                 {
 
                     double calculated_total_cost=total_cost+total_tax-discount;
-                    dialog_txt_total_cost.setText(shop_currency+f.format(calculated_total_cost));
+                    dialog_txt_total_cost.setText(shop_currency+trimLongDouble(calculated_total_cost));
                 }
 
 
@@ -465,7 +465,7 @@ public class ProductCart extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-               paymentMethodAdapter = new ArrayAdapter<String>(ProductCart.this, android.R.layout.simple_list_item_1);
+               paymentMethodAdapter = new ArrayAdapter<>(ProductCart.this, android.R.layout.simple_list_item_1);
                paymentMethodAdapter.addAll(paymentMethodNames);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(ProductCart.this);
@@ -675,8 +675,6 @@ public class ProductCart extends BaseActivity {
                     dialogDiscount="0.00";
                 }
 
-                Log.i("datadata",dialogOrderPaymentMethod);
-
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
                     long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax();
@@ -736,20 +734,10 @@ public class ProductCart extends BaseActivity {
 
     }
 
-    public boolean isPackageExisted(String targetPackage){
-        PackageManager pm=getPackageManager();
-        try {
-            PackageInfo info=pm.getPackageInfo(targetPackage,PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
-    }
-
     public void updateTotalPrice(){
         databaseAccess.open();
         double total_price = databaseAccess.getTotalPriceWithTax();
-        txt_total_price.setText(getString(R.string.total_price) + currency + f.format(total_price));
+        txt_total_price.setText(getString(R.string.total_price) + currency + trimLongDouble(total_price));
 
     }
 

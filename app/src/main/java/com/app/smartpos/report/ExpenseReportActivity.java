@@ -1,8 +1,6 @@
 package com.app.smartpos.report;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -15,17 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.ExpenseAdapter;
-import com.app.smartpos.adapter.SalesReportAdapter;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.utils.BaseActivity;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,15 +34,12 @@ public class ExpenseReportActivity extends BaseActivity {
 
 
     ProgressDialog loading;
-    private RecyclerView recyclerView;
-    private ExpenseAdapter expenseAdapter;
-
     ImageView imgNoProduct;
     TextView txtNoProducts, txtTotalPrice;
     List<HashMap<String, String>> expenseList;
     double total_price;
-    DecimalFormat f;
-
+    private RecyclerView recyclerView;
+    private ExpenseAdapter expenseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +52,6 @@ public class ExpenseReportActivity extends BaseActivity {
         txtNoProducts = findViewById(R.id.txt_no_products);
         txtTotalPrice = findViewById(R.id.txt_total_price);
 
-        f = new DecimalFormat("#0.00");
         imgNoProduct.setVisibility(View.GONE);
         txtNoProducts.setVisibility(View.GONE);
 
@@ -99,11 +94,11 @@ public class ExpenseReportActivity extends BaseActivity {
         }
 
         databaseAccess.open();
-        String currency=databaseAccess.getCurrency();
+        String currency = databaseAccess.getCurrency();
 
         databaseAccess.open();
         total_price = databaseAccess.getTotalExpense("all");
-        txtTotalPrice.setText(getString(R.string.total_expense)+currency + f.format(total_price));
+        txtTotalPrice.setText(getString(R.string.total_expense) + currency + trimLongDouble(total_price));
 
 
     }
@@ -193,13 +188,12 @@ public class ExpenseReportActivity extends BaseActivity {
         }
 
         databaseAccess.open();
-        String currency=databaseAccess.getCurrency();
+        String currency = databaseAccess.getCurrency();
 
         databaseAccess.open();
         total_price = databaseAccess.getTotalExpense(type);
-        txtTotalPrice.setText(getString(R.string.total_expense)+currency + f.format(total_price));
+        txtTotalPrice.setText(getString(R.string.total_expense) + currency + trimLongDouble(total_price));
     }
-
 
 
     public void folderChooser() {
@@ -213,17 +207,13 @@ public class ExpenseReportActivity extends BaseActivity {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
                         onExport(path);
-                        Log.d("path",path);
+                        Log.d("path", path);
 
                     }
                 })
                 .build()
                 .show();
     }
-
-
-
-
 
 
     public void onExport(String path) {
@@ -256,7 +246,6 @@ public class ExpenseReportActivity extends BaseActivity {
 
                         loading.dismiss();
                         Toasty.success(ExpenseReportActivity.this, R.string.data_successfully_exported, Toast.LENGTH_SHORT).show();
-
 
 
                     }
