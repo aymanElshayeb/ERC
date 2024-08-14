@@ -93,6 +93,7 @@
                     android:background="@color/colorAccent"
                     android:gravity="right"
                     android:padding="5dp"
+                    android:visibility="gone"
                     android:text="@string/discount"
                     android:textColor="#fff"
                     android:textSize="24sp"
