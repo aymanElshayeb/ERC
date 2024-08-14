@@ -313,7 +313,7 @@
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
-    <string name="wrong_email_password">Wrong email or pasword</string>
+    <string name="wrong_username_password">Wrong username or pasword</string>
 
     <string name="synchronization">Synchronization</string>
     <string name="admin_email">Admin Username</string>
@@ -331,8 +331,9 @@
     <string name="start_shift_date">Start Shift Date</string>
     <string name="end_shift_date">End Shift Date</string>
     <string name="user_id">User ID</string>
-    <string name="user_name">User Name</string>
+    <string name="user_name">Username</string>
     <string name="shift_id">Shift ID</string>
+    <string name="shift_sequence">Shift Sequence</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>

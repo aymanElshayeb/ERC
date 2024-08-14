@@ -252,7 +252,7 @@ public class ProductCart extends BaseActivity {
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock"));
                         objp.put("product_price", lines.get(i).get("product_price"));
-                        objp.put("product_image", product.get(0).get("product_image"));
+                        objp.put("product_image", product.get(0).get("product_image") == null? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
 
                         array.put(objp);
@@ -679,17 +679,18 @@ public class ProductCart extends BaseActivity {
 
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
-                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax() * 100;
-                    Intent intent = new Intent();
-//                    if(1==0){
-                        intent.setPackage(Consts.PACKAGE);
-                        intent.setAction(Consts.CARD_ACTION);
-                        intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
-                        intent.putExtra(ThirdTag.TRANS_TYPE, 2);
-                        intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
-                        intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
-                        intent.putExtra(ThirdTag.INSERT_SALE, true);
-                        intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
+                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax();
+
+                    Intent intent=device.pay(totalPriceWithTax);
+//                    if(){
+//                        intent.setPackage(Consts.PACKAGE);
+//                        intent.setAction(Consts.CARD_ACTION);
+//                        intent.putExtra(ThirdTag.CHANNEL_ID, "acquire");
+//                        intent.putExtra(ThirdTag.TRANS_TYPE, 2);
+//                        intent.putExtra(ThirdTag.OUT_ORDERNO, "12345");
+//                        intent.putExtra(ThirdTag.AMOUNT, totalPriceWithTax);
+//                        intent.putExtra(ThirdTag.INSERT_SALE, true);
+//                        intent.putExtra(ThirdTag.RF_FORCE_PSW, true);
 //                    }
 //                    else {
 //                        intent.setPackage(Consts.PACKAGE_UROVO);

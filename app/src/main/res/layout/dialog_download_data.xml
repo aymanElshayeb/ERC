@@ -56,7 +56,7 @@
         android:textColor="@color/black"
         android:textColorHint="@color/light_purple"
         android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@id/email_et" />
+        app:layout_constraintTop_toBottomOf="@id/username_et" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

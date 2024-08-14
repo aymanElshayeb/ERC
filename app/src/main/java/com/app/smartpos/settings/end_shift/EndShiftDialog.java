@@ -166,8 +166,9 @@ public class EndShiftDialog extends DialogFragment {
                     String real = models.get(i).inputPaymentCashEt.getText().toString();
                     double employeeCash = Double.parseDouble(real.isEmpty() ? "0" : real);
                     models.get(i).setError(employeeCash != models.get(i).real);
-                    map.put(models.get(i).type, new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real)));
-                    Log.i("datadata_type",models.get(i).type);
+                    ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real),models.get(i).code);
+                    map.put(models.get(i).type, shiftDifferences);
+                    Log.i("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
                     if (employeeCash != models.get(i).real) {
                         String value = trimLongDouble((employeeCash - models.get(i).real));
                         if (employeeCash - models.get(i).real > 0) {

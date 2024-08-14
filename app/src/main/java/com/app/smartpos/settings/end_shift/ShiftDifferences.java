@@ -4,11 +4,13 @@ public class ShiftDifferences {
     double real;
     double input;
     double diff;
+    String code;
 
-    public ShiftDifferences(double real, double input, double diff) {
+    public ShiftDifferences(double real, double input, double diff,String code) {
         this.real = real;
         this.input = input;
         this.diff = diff;
+        this.code=code;
     }
 
     public double getReal() {
@@ -23,12 +25,17 @@ public class ShiftDifferences {
         return diff;
     }
 
+    public String getCode() {
+        return code;
+    }
+
     @Override
     public String toString() {
         return "ShiftDifferences{" +
                 "real=" + real +
                 ", input=" + input +
                 ", diff=" + diff +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

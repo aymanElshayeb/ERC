@@ -1,11 +1,19 @@
 package com.app.smartpos.orders;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrintingHelper;
@@ -44,7 +52,7 @@ public class NewLandPrinter extends BaseActivity {
     }
 
 
-    public boolean printReceipt(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReceipt(Context context,String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandPrinter.this);
         databaseAccess.open();
         this.currency=currency;
@@ -60,17 +68,26 @@ public class NewLandPrinter extends BaseActivity {
         try {
             printDara = new StringBuffer();
             //String fontsPath = mPrinterModule.setFont(this, "simsun.ttc");
+
+
             Map<String, Bitmap> bitmaps = new HashMap<>();
             byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             String bitmapName1 = "logo";
-            bitmaps.put(bitmapName1, decodedByte);
 
-            printDara.append("*image c 370*120 path:" + bitmapName1 + "\n");
+
+
+            Bitmap bitmapMerchant=printMerchantId(merchantId);
+            Log.i("datadata_size",bitmapMerchant.getWidth()+" "+bitmapMerchant.getHeight());
+
+            Bitmap bitmap=loadBitmapFromView(decodedByte,bitmapMerchant);
+            bitmaps.put(bitmapName1, bitmap);
+
+            printDara.append("*image c 293*400 path:" + bitmapName1 + "\n");
             //Set Font Size,small
             printDara.append("!hz s\n!asc s\n");
 
-            printMerchantId(merchantId);
+
             printMerchantTaxNumber(merchantTaxNumber);
             printDara.append("!NLFONT 15 15 3\n*text c Order Date: " + orderDate + " " + orderTime + "\n");
             printReceiptNo(invoiceId);
@@ -106,6 +123,16 @@ public class NewLandPrinter extends BaseActivity {
 
         return true;
 
+    }
+
+    public Bitmap loadBitmapFromView(Bitmap logo,Bitmap bitmap){
+        Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
+        Bitmap bmp = Bitmap.createBitmap(293, 200, conf); // this creates a MUTABLE bitmap
+        Canvas canvas = new Canvas(bmp);
+        //canvas.drawBi
+        canvas.drawBitmap(logo,0,0,new Paint());
+        canvas.drawBitmap(bitmap,0,logo.getHeight()+40,new Paint());
+        return bmp;
     }
 
     private void printZatcaQrCode(DatabaseAccess databaseAccess) {
@@ -182,11 +209,15 @@ public class NewLandPrinter extends BaseActivity {
         printDara.append("!NLFONT 15 15 3\n*text c " + printString + "\n");
     }
 
-    private void printMerchantId(String merchantId) {
-        String text = "Merchant ID:";
-        String printString = text +" "+merchantId;
-        printDara.append("!NLFONT 15 15 3\n*text c " + printString + "\n");
+    private Bitmap printMerchantId(String merchantId) {
+//        String text = "Merchant ID:";
+//        String printString = text +" "+merchantId;
+//        printDara.append("!NLFONT 15 15 3\n*text c " + printString + "\n");
 
+        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+        bitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
+        bitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
+        return PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,45);
 
     }
 

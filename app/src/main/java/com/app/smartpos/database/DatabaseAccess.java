@@ -238,12 +238,12 @@ public class DatabaseAccess {
 
         values.put("shift_id", id);
         values.put("total", shiftDifference.getReal());
-        values.put("credit_code", type);
+        values.put("credit_code", shiftDifference.getCode());
         values.put("difference", shiftDifference.getDiff());
 
+        Log.i("datadata_shift_diff",values.toString());
 
-
-        long check = database.insert("shift_difference", null, values);
+        long check = database.insert("credit_calculations", null, values);
         database.close();
 
         //if data insert success, its return 1, if failed return -1
@@ -600,9 +600,9 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public HashMap<String,String> getUserWithEmail(String email) {
+    public HashMap<String,String> getUserWithUserName(String userName) {
 
-        Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM user WHERE username='" + userName + "'", null);
 
         HashMap<String,String> hashMap=null;
         if (cursor.moveToFirst()) {
@@ -874,10 +874,10 @@ public class DatabaseAccess {
                 String product_order_date = jo.getString("product_order_date");
                 String product_uuid = jo.getString("product_uuid");
                 String product_id = getProductIdByUuid(product_uuid);
-                String stock = jo.getString("stock");
+//                String stock = jo.getString("stock");
                 double in_tax_total = obj.getDouble("in_tax_total");
                 double ex_tax_total = obj.getDouble("ex_tax_total");
-                int updated_stock = Integer.parseInt(stock) - Integer.parseInt(product_qty);
+                int updated_stock = Integer.MAX_VALUE - Integer.parseInt(product_qty);
 
 
                 values2.put("invoice_id", order_id);

@@ -69,7 +69,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
         final String price = cart_product.get(position).get("product_price");
-        final String weight_unit_id = cart_product.get(position).get("product_weight_unit");
+//        final String weight_unit_id = cart_product.get(position).get("product_weight_unit");
         final String weight = cart_product.get(position).get("product_weight");
         final String qty = cart_product.get(position).get("product_qty");
         final String stock = cart_product.get(position).get("stock");
@@ -82,8 +82,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         databaseAccess.open();
         String base64Image = databaseAccess.getProductImage(product_id);
 
-        databaseAccess.open();
-        String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);
+//        databaseAccess.open();
+//        String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);
 
 
         databaseAccess.open();
@@ -109,7 +109,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         holder.txtItemName.setText(product_name);
         holder.txtPrice.setText(currency + f.format(getPrice));
-        holder.txtWeight.setText(weight + " " + weight_unit_name);
+//        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +125,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     // Calculate Cart's Total Price Again
                     //  setCartTotal();
 
+                    productCart.updateTotalPrice();
 
                     player.start();
 
@@ -235,7 +236,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             super(itemView);
             txtItemName = itemView.findViewById(R.id.txt_item_name);
             txtPrice = itemView.findViewById(R.id.txt_price);
-            txtWeight = itemView.findViewById(R.id.txt_weight);
+//            txtWeight = itemView.findViewById(R.id.txt_weight);
             txtQtyNumber = itemView.findViewById(R.id.txt_number);
             imgProduct = itemView.findViewById(R.id.cart_product_image);
             imgDelete = itemView.findViewById(R.id.img_delete);
