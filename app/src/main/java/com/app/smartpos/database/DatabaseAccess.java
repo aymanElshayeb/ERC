@@ -1348,15 +1348,16 @@ public class DatabaseAccess {
 
     //get product data
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getTabProducts(String category_id) {
+    public ArrayList<HashMap<String, String>> getTabProducts(String category_id,boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_category = '" + category_id + "' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
+                String active = cursor.getString(cursor.getColumnIndex("product_active"));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
                 map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
-                map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
+                map.put("product_active", active);
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
                 map.put("product_code", cursor.getString(cursor.getColumnIndex("product_code")));
@@ -1370,7 +1371,9 @@ public class DatabaseAccess {
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                product.add(map);
+                if(!showActiveOnly || active.equals("1")) {
+                    product.add(map);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -2023,17 +2026,19 @@ public class DatabaseAccess {
 
     //get order type data
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getPaymentMethod() {
+    public ArrayList<HashMap<String, String>> getPaymentMethod(boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> payment_method = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM payment_method ORDER BY payment_method_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
+                String active = cursor.getString(cursor.getColumnIndex("payment_method_active"));
                 map.put("payment_method_id", cursor.getString(cursor.getColumnIndex("payment_method_id")));
                 map.put("payment_method_name", cursor.getString(cursor.getColumnIndex("payment_method_name")));
-                map.put("payment_method_active", cursor.getString(cursor.getColumnIndex("payment_method_active")));
-
-                payment_method.add(map);
+                map.put("payment_method_active", active);
+                if(!showActiveOnly || active.equals("1")) {
+                    payment_method.add(map);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();

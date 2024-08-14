@@ -172,7 +172,7 @@ public class PosActivity extends BaseActivity {
         } else {
 
 
-            categoryAdapter = new ProductCategoryAdapter(PosActivity.this, categoryData,recyclerView,imgNoProduct,txtNoProducts);
+            categoryAdapter = new ProductCategoryAdapter(PosActivity.this, categoryData,recyclerView,imgNoProduct,txtNoProducts,true);
 
             categoryRecyclerView.setAdapter(categoryAdapter);
 

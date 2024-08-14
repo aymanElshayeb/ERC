@@ -65,7 +65,7 @@ public class PaymentMethodActivity extends BaseActivity {
 
         //get data from local database
         List<HashMap<String, String>> paymentMethodData;
-        paymentMethodData = databaseAccess.getPaymentMethod();
+        paymentMethodData = databaseAccess.getPaymentMethod(false);
 
         Log.d("data", "" + paymentMethodData.size());
 
