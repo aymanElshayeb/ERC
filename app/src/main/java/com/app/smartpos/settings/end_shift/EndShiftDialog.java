@@ -209,7 +209,7 @@ public class EndShiftDialog extends DialogFragment {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, SharedPrefUtils.getEcrCode(requireContext()), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()));
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {
