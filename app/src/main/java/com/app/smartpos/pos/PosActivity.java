@@ -257,7 +257,7 @@ public class PosActivity extends BaseActivity {
                 //get data from local database
                 List<HashMap<String, String>> searchProductList;
 
-                searchProductList = databaseAccess.getSearchProducts(s.toString());
+                searchProductList = databaseAccess.getSearchProducts(s.toString(),true);
 
 
                 if (searchProductList.size() <= 0) {

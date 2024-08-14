@@ -2456,15 +2456,16 @@ public class DatabaseAccess {
 
     //get product data
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getSearchProducts(String s) {
+    public ArrayList<HashMap<String, String>> getSearchProducts(String s,boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name_en LIKE '%" + s + "%' OR product_name_ar LIKE '%\" + s + \"%' OR product_uuid LIKE '%" + s + "%' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
-                HashMap<String, String> map = new HashMap<String, String>();
+                String active = cursor.getString(cursor.getColumnIndex("product_active"));
+                HashMap<String, String> map = new HashMap<>();
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
                 map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
-                map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
+                map.put("product_active", active);
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
                 map.put("product_code", cursor.getString(cursor.getColumnIndex("product_code")));
@@ -2478,7 +2479,9 @@ public class DatabaseAccess {
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                product.add(map);
+                if(!showActiveOnly || active.equals("1")) {
+                    product.add(map);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();

@@ -118,7 +118,7 @@ public class ProductActivity extends BaseActivity {
                 //get data from local database
                 List<HashMap<String, String>> searchProductList;
 
-                searchProductList = databaseAccess.getSearchProducts(s.toString());
+                searchProductList = databaseAccess.getSearchProducts(s.toString(),false);
 
 
                 if (searchProductList.size() <= 0) {
