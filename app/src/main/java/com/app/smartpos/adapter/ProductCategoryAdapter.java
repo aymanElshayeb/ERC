@@ -32,8 +32,9 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
     ImageView imgNoProduct;
     TextView txtNoProducts;
 
+    boolean showActiveOnly;
 
-    public ProductCategoryAdapter(Context context, List<HashMap<String, String>> categoryData, RecyclerView recyclerView,ImageView imgNoProduct,TextView txtNoProducts) {
+    public ProductCategoryAdapter(Context context, List<HashMap<String, String>> categoryData, RecyclerView recyclerView,ImageView imgNoProduct,TextView txtNoProducts,boolean showActiveOnly) {
         this.context = context;
         this.categoryData = categoryData;
         this.recyclerView=recyclerView;
@@ -42,6 +43,7 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
         this.imgNoProduct=imgNoProduct;
         this.txtNoProducts=txtNoProducts;
 
+        this.showActiveOnly=showActiveOnly;
     }
 
 
@@ -71,7 +73,7 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
 
                 //get data from local database
                 List<HashMap<String, String>> productList;
-                productList = databaseAccess.getTabProducts(category_id);
+                productList = databaseAccess.getTabProducts(category_id,showActiveOnly);
 
                 if (productList.isEmpty()) {
 
