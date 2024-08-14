@@ -174,8 +174,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                         shiftValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
                     }
                     newDb.insert("shift", null, shiftValues);
-                    @SuppressLint("Range") String shiftId = shiftCursor.getString(shiftCursor.getColumnIndex("id"));
-                    String creditCalculations = "SELECT * FROM credit_calculations WHERE shift_id = " + shiftId + ";";
+                    @SuppressLint("Range") String shiftId = shiftCursor.getString(shiftCursor.getColumnIndex("sequence"));
+                    String creditCalculations = String.format("SELECT * FROM credit_calculations WHERE shift_id = '%s'", shiftId);
                     try (Cursor creditCursor = existingDb.rawQuery(creditCalculations, null)) {
                         while (creditCursor.moveToNext()) {
                             ContentValues creditValues = new ContentValues();

@@ -237,7 +237,7 @@ public class EndShiftDialog extends DialogFragment {
                 if(!keys.get(i).equals("CASH")) {
                     Log.i("datadata",keys.get(i));
                     databaseAccess.open();
-                    boolean added = databaseAccess.addShiftCreditCalculations(id, endShiftModel.getShiftDifferences().get(keys.get(i)), keys.get(i));
+                    boolean added = databaseAccess.addShiftCreditCalculations(endShiftModel.getSequence(), endShiftModel.getShiftDifferences().get(keys.get(i)), keys.get(i));
                     Log.i("datadata", added + "");
                 }
             }

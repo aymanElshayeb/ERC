@@ -233,7 +233,7 @@ public class DatabaseAccess {
 
     }
 
-    public boolean addShiftCreditCalculations(int id, ShiftDifferences shiftDifference,String type) {
+    public boolean addShiftCreditCalculations(String id, ShiftDifferences shiftDifference,String type) {
         ContentValues values = new ContentValues();
 
         values.put("shift_id", id);
