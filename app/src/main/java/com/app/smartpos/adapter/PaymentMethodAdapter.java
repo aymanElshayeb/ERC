@@ -116,7 +116,7 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
 
             imgStatus = itemView.findViewById(R.id.img_status);
 
-            itemView.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
 
         }
 
