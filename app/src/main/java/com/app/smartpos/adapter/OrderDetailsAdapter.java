@@ -1,5 +1,7 @@
 package com.app.smartpos.adapter;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -23,13 +25,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     Context context;
     private List<HashMap<String, String>> orderData;
-    DecimalFormat f;
 
 
     public OrderDetailsAdapter(Context context, List<HashMap<String, String>> orderData) {
         this.context = context;
         this.orderData = orderData;
-        f = new DecimalFormat("#0.00");
     }
 
     @Override
@@ -61,7 +61,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
 
-        holder.txt_total_cost.setText(currency + unit_price + " x " + qty + " = "+currency + f.format(cost));
+        holder.txt_total_cost.setText(currency + unit_price + " x " + qty + " = "+currency + trimLongDouble(cost));
 
         if (base64Image != null) {
             if (base64Image.isEmpty() || base64Image.length() < 6) {

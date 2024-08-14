@@ -118,7 +118,7 @@ public class PosActivity extends BaseActivity {
 
                 //get data from local database
                 List<HashMap<String, String>> productList;
-                productList = databaseAccess.getProducts();
+                productList = databaseAccess.getProducts(true);
 
                 if (productList.isEmpty()) {
 
@@ -218,7 +218,7 @@ public class PosActivity extends BaseActivity {
 
         //get data from local database
         List<HashMap<String, String>> productList;
-        productList = databaseAccess.getProducts();
+        productList = databaseAccess.getProducts(true);
 
         if (productList.isEmpty()) {
 

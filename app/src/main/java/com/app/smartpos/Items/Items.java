@@ -70,7 +70,7 @@ public class Items extends AppCompatActivity {
 
         //get data from local database
 
-        productList = databaseAccess.getProducts();
+        productList = databaseAccess.getProducts(false);
 
         Log.i("datadata",productList.size()+"");
         productCartAdapter = new PosProductAdapter(this, productList);

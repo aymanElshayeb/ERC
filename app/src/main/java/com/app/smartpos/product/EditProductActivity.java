@@ -1,5 +1,7 @@
 package com.app.smartpos.product;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -177,8 +179,8 @@ public class EditProductActivity extends BaseActivity {
         etxtProductCategory.setText(category_name);
 
         etxtProductDescription.setText(product_description);
-        etxtProductBuyPrice.setText(product_buy_price);
-        etxtProductSellPrice.setText(product_sell_price);
+        etxtProductBuyPrice.setText(trimLongDouble(product_buy_price));
+        etxtProductSellPrice.setText(trimLongDouble(product_sell_price));
 
 
         databaseAccess.open();

@@ -1,5 +1,7 @@
 package com.app.smartpos.report;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +33,6 @@ public class GraphReportActivity extends BaseActivity {
     int mYear;
     BarChart barChart;
     TextView txtTotalSales, txtSelectYear,txtTotalTax,txtTotalDiscount,txtNetSales;;
-    DecimalFormat f;
     LinearLayout layoutYear;
 
     @Override
@@ -43,8 +44,6 @@ public class GraphReportActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.monthly_sales_graph);
         layoutYear=findViewById(R.id.layout_year);
-
-        f = new DecimalFormat("#0.00");
 
         barChart = findViewById(R.id.barchart);
         txtTotalSales = findViewById(R.id.txt_total_sales);
@@ -126,19 +125,19 @@ public class GraphReportActivity extends BaseActivity {
         String currency=databaseAccess.getCurrency();
         databaseAccess.open();
         double sub_total=databaseAccess.getTotalOrderPriceForGraph("yearly",mYear);
-        txtTotalSales.setText(getString(R.string.total_sales)+ currency + f.format(sub_total));
+        txtTotalSales.setText(getString(R.string.total_sales)+ currency + trimLongDouble(sub_total));
 
         databaseAccess.open();
         double get_tax=databaseAccess.getTotalTaxForGraph("yearly",mYear);
-        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+f.format(get_tax));
+        txtTotalTax.setText(getString(R.string.total_tax)+"(+) : "+currency+trimLongDouble(get_tax));
 
 
         databaseAccess.open();
         double get_discount=databaseAccess.getTotalDiscountForGraph("yearly",mYear);
-        txtTotalDiscount.setText(getString(R.string.total_discount)+"(-) : "+currency+f.format(get_discount));
+        txtTotalDiscount.setText(getString(R.string.total_discount)+"(-) : "+currency+trimLongDouble(get_discount));
 
         double net_sales=sub_total+get_tax-get_discount;
-        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+f.format(net_sales));
+        txtNetSales.setText(getString(R.string.net_sales)+": "+currency+trimLongDouble(net_sales));
 
     }
 

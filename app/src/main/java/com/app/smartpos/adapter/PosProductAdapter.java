@@ -1,5 +1,7 @@
 package com.app.smartpos.adapter;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -91,7 +93,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
         }
         holder.txtWeight.setText(product_weight + " " + weight_unit_name);
-        holder.txtPrice.setText(currency + product_price);
+        holder.txtPrice.setText(currency + trimLongDouble(product_price));
 
 
         holder.cardProduct.setOnClickListener(new View.OnClickListener() {
