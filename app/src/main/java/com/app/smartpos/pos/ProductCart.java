@@ -448,7 +448,7 @@ public class ProductCart extends BaseActivity {
 
         //get data from local database
         final List<HashMap<String, String>> payment_method;
-        payment_method = databaseAccess.getPaymentMethod();
+        payment_method = databaseAccess.getPaymentMethod(true);
 
         for (int i=0;  i<payment_method.size();  i++) {
 
