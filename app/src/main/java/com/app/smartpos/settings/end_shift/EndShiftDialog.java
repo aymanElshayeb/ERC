@@ -107,7 +107,7 @@ public class EndShiftDialog extends DialogFragment {
             cash_map.put("name", "CASH");
             cash_map.put("code", "CASH");
             cardTypes.add(cash_map);
-            cardTypes.addAll(databaseAccess.getCardTypes());
+            cardTypes.addAll(databaseAccess.getCardTypes(true));
             for(int i=0;i<cardTypes.size();i++){
                 String code=cardTypes.get(i).get("code");
                 String cash=paymentTypesCashMap.get(code);

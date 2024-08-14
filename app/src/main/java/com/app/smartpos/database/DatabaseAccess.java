@@ -2042,18 +2042,20 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getCardTypes() {
+    public ArrayList<HashMap<String, String>> getCardTypes(boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> payment_method = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM card_type ORDER BY id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
-                map.put("active", cursor.getString(cursor.getColumnIndex("active")));
+                String active=cursor.getString(cursor.getColumnIndex("active"));
+                map.put("active", active);
                 map.put("code", cursor.getString(cursor.getColumnIndex("code")));
                 map.put("name", cursor.getString(cursor.getColumnIndex("name")));
                 map.put("CASH", "0");
-
-                payment_method.add(map);
+                if(!showActiveOnly || active.equals("1")) {
+                    payment_method.add(map);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
