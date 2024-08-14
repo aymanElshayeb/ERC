@@ -206,6 +206,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data lastSync = new Data.Builder().
                 putString("url", LAST_SYNC_URL).
                 putString("tenantId", SharedPrefUtils.getMerchantId(requireContext())).
+                putString("ecrCode", SharedPrefUtils.getEcrCode(requireContext())).
                 build();
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
