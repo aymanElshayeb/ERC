@@ -4,15 +4,12 @@ import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,11 +30,8 @@ import android.widget.Toast;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
-import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
-import com.app.smartpos.common.DeviceFactory.DeviceInterface;
-import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -47,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

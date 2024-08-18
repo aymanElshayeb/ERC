@@ -3,9 +3,11 @@ package com.app.smartpos.utils.qrandbrcodegeneration;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.util.Base64;
+import java.util.Base64;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.google.zxing.BarcodeFormat;
@@ -71,9 +73,10 @@ public class ZatcaQRCodeGeneration {
             outputStream1.write(tlInvoiceDate);
             outputStream1.write(tlTotalAmountWithTax);
             outputStream1.write(tlTaxAmount);
-//            base64QRCode = Base64.getEncoder().encodeToString(outputStream1.toByteArray());
-            base64QRCode = Base64.encodeToString(outputStream1.toByteArray(),Base64.DEFAULT);
+            Device device = DeviceFactory.getDevice();
+            base64QRCode = device.zatcaQrCodeGeneration(outputStream1.toByteArray());
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return base64QRCode;
     }

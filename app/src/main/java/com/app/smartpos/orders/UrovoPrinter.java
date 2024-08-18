@@ -96,7 +96,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTax(String tax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(tax))));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?f.format(Double.parseDouble(tax)) : String.valueOf(0)));
         bitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -124,7 +124,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
         bitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
-        bitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
+//        bitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
         bitmaps = new ArrayList<>();
@@ -138,9 +138,8 @@ public class UrovoPrinter extends BaseActivity {
             bitmaps.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
             bitmaps.add(PrintingHelper.createBitmapFromText(price));
             bitmaps.add(PrintingHelper.createBitmapFromText(qty));
-            bitmaps.add(PrintingHelper.createBitmapFromText(productCode));
             mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,50),0);
-            mPrintManager.addBitmap(PrintingHelper.createBitmapFromText(name),250);
+            mPrintManager.addBitmap(PrintingHelper.createBitmapFromText(name),150);
             mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
         }
     }
@@ -158,14 +157,14 @@ public class UrovoPrinter extends BaseActivity {
     private void printMerchantTaxNumber(String merchantTaxNumber) {
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
-        bitmaps.add(PrintingHelper.createBitmapFromText("رقم السجل التجارى :"));
-        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,45),70);
+        bitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
+        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,15),70);
     }
 
     private void printMerchantId(String merchantId) {
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
-        bitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
+        bitmaps.add(PrintingHelper.createBitmapFromText("رقم السجل التجارى :"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,45),70);
     }
 

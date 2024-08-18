@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderDetailsAdapter;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.pdf_report.BarCodeEncoder;
@@ -168,10 +170,9 @@ public class OrderDetailsActivity extends BaseActivity {
         templatePDF.addImage(logoBitmap,80f,60f);
         templatePDF.addTitle("","Merchant ID : " + (configuration.isEmpty() ? "" : configuration.get("merchant_id")) + "\n Merchant tax number : " + (configuration.isEmpty() ? "" : configuration.get("merchant_tax_number")) + "\nInvoice ID:" + order_id, order_date + "  " +order_time);
 
-        BarCodeEncoder qrCodeEncoder = new BarCodeEncoder();
         try {
-            bm = qrCodeEncoder.encodeAsBitmap(order_id, BarcodeFormat.CODE_128, 600, 300);
-        } catch (WriterException e) {
+            bm = barCodeEncoder.encodeQrOrBc(order_id, BarcodeFormat.CODE_128, 600, 300);
+        } catch (Exception e) {
             Log.d("Data", e.toString());
         }
 
@@ -188,13 +189,8 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
         btnThermalPrinter.setOnClickListener(v -> {
-
-
-            UrovoPrinter urovoPrinter = new UrovoPrinter();
-            NewLandEnhancedPrinter newLandPrinter=new NewLandEnhancedPrinter();
-            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
-//            DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(getApplicationContext());
-//            boolean successfulPrint = newLandPrinter.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency );
+            Device device = DeviceFactory.getDevice();
+            boolean successfulPrint = device.print(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
             if(!successfulPrint){
                 //Check if the Bluetooth is available and on.
                 if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;

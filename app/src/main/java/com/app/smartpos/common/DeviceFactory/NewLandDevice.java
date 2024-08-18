@@ -1,11 +1,13 @@
 package com.app.smartpos.common.DeviceFactory;
 
 import android.content.Intent;
+import android.util.Base64;
 
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
+import com.app.smartpos.orders.NewLandEnhancedPrinter;
 
-public class NewLandDevice extends Device implements DeviceInterface{
+public class NewLandDevice implements Device{
     @Override
     public Intent pay(long total) {
         Intent intent = new Intent();
@@ -33,5 +35,16 @@ public class NewLandDevice extends Device implements DeviceInterface{
     @Override
     public String amountString() {
         return "Amounts";
+    }
+
+    @Override
+    public boolean print(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+        NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
+        return newLandPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency);
+    }
+
+    @Override
+    public String zatcaQrCodeGeneration(byte[] byteArray) {
+        return Base64.encodeToString(byteArray,Base64.DEFAULT);
     }
 }
