@@ -21,6 +21,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
@@ -34,6 +35,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class Items extends AppCompatActivity {
 
     PosProductAdapter productCartAdapter;
@@ -43,6 +46,7 @@ public class Items extends AppCompatActivity {
     TextView cartTotalPriceTv;
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
+    DatabaseAccess databaseAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +68,7 @@ public class Items extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),2,RecyclerView.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
 
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
 
@@ -101,7 +105,7 @@ public class Items extends AppCompatActivity {
         });
     }
 
-    public void updateCart(HashMap<String, String> product){
+    public void updateCart(HashMap<String, String> product,int position){
         int index=-1;
         for(int i=0;i<selectedProductList.size();i++){
             if(selectedProductList.get(i).get("product_id").toString().equals(product.get("product_id").toString())){
@@ -111,7 +115,7 @@ public class Items extends AppCompatActivity {
         int count=0;
         int total=0;
         if(index!=-1){
-            double productCount=Double.parseDouble(selectedProductList.get(index).get("product_count"));
+            double productCount=Double.parseDouble(product.get("product_count"));
             if(productCount==0){
                 selectedProductList.remove(index);
             }else {
@@ -131,10 +135,11 @@ public class Items extends AppCompatActivity {
         cartCountTv.setText(""+count);
         cartTotalPriceTv.setText(total+ " SAR");
 
+
         if(count>0){
             animateViewCartHeight(103*getResources().getDisplayMetrics().density);
         }else{
-            animateViewCartHeight(0);
+            animateViewCartHeight(1);
         }
 
 
@@ -149,23 +154,39 @@ public class Items extends AppCompatActivity {
             params.height = (int)(float)valueAnimator.getAnimatedValue();
             viewCartCl.setLayoutParams(params);
         });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                if(height==0){
-                    viewCartCl.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                if(height>0){
-                    viewCartCl.setVisibility(View.VISIBLE);
-                }
-            }
-        });
         animator.start();
+    }
+
+    public void addToCart(){
+        databaseAccess.open();
+
+        int check = 1;
+                //databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, ""+product_stock);
+
+        databaseAccess.open();
+        int count=databaseAccess.getCartItemCount();
+        if (count==0)
+        {
+            PosActivity.txtCount.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            PosActivity. txtCount.setVisibility(View.VISIBLE);
+            PosActivity.txtCount.setText(String.valueOf(count));
+        }
+
+        if (check == 1) {
+            Toasty.success(this, R.string.product_added_to_cart, Toast.LENGTH_SHORT).show();
+            //player.start();
+        } else if (check == 2) {
+
+            Toasty.info(this, R.string.product_already_added_to_cart, Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toasty.error(this, R.string.product_added_to_cart_failed_try_again, Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 }
