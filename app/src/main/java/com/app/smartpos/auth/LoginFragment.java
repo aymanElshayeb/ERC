@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.HomeActivity;
+import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
@@ -50,7 +51,7 @@ public class LoginFragment extends Fragment {
                 if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
                     SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
-                    Intent intent = new Intent(context, HomeActivity.class);
+                    Intent intent = new Intent(context, NewHomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();
                 } else {
