@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
@@ -76,15 +77,28 @@ public class CashPricing extends AppCompatActivity {
         del.setOnClickListener(view -> del());
 
         payTv.setOnClickListener(view -> {
-            Intent intent=new Intent();
-            intent.putExtra("change",change);
-            setResult(RESULT_OK,intent);
-            finish();
+            double changeResult=Double.parseDouble(changeTv.getText().toString().split(" ")[0]);
+            double cashResult=Double.parseDouble(cashGivingTv.getText().toString().split(" ")[0]);
+            if(cashResult>=totalAmount) {
+                Intent intent = new Intent();
+                intent.putExtra("change", change);
+                setResult(RESULT_OK, intent);
+                finish();
+            }else{
+                Toast.makeText(this, getString(R.string.cash_given_must_be_equal_or_more_than_total_amount), Toast.LENGTH_SHORT).show();
+            }
         });
+
+        cashGivingTv.setText("0 "+currency);
+        change=0;
+        changeTv.setText(change+" "+currency);
 
     }
 
     private void setNumber(String number){
+        if(cash.equals("0")){
+            cash="";
+        }
         cash+=number;
         cashGivingTv.setText(cash+" "+currency);
         change=totalAmount-Double.parseDouble(cash);
@@ -92,9 +106,16 @@ public class CashPricing extends AppCompatActivity {
     }
 
     private void del(){
-        cash=cash.substring(0,cash.length()-1);
-        cashGivingTv.setText(cash+" "+currency);
-        change=totalAmount-Double.parseDouble(cash);
+        if(cash.length()<=1){
+            cash="";
+            cashGivingTv.setText("0 "+currency);
+            change=0;
+        }else {
+            cash = cash.substring(0, cash.length() - 1);
+            cashGivingTv.setText(cash+" "+currency);
+            change=totalAmount-Double.parseDouble(cash);
+        }
+
         changeTv.setText(change+" "+currency);
     }
 }

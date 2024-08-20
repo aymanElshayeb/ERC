@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.profile.Profile;
+import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftDialog;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -39,6 +40,7 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout circleNameLl=findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL=findViewById(R.id.items_ll);
         LinearLayout endOfShiftLl=findViewById(R.id.end_of_shift_ll);
+        TextView syncTv=findViewById(R.id.sync_tv);
 
         currentShiftNumberTv=findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv=findViewById(R.id.current_shift_sar_tv);
@@ -50,6 +52,10 @@ public class NewHomeActivity extends BaseActivity {
 
         itemsLL.setOnClickListener(view -> {
             startActivity(new Intent(this, Items.class));
+        });
+
+        syncTv.setOnClickListener(view -> {
+            startActivity(new Intent(this, DataBaseBackupActivity.class));
         });
 
         endOfShiftLl.setOnClickListener(v -> {

@@ -58,9 +58,10 @@
     <string name="checkout">Checkout</string>
     <string name="cash">Cash</string>
     <string name="cash_details">Cash Details</string>
-    <string name="cash_giving">Cash Giving</string>
+    <string name="cash_given">Cash Given</string>
     <string name="change">Change</string>
     <string name="pay">Pay</string>
+    <string name="cash_given_must_be_equal_or_more_than_total_amount">Cash given must be more than or equal to Total amount</string>
 
     <string name="all_customer">All Customer</string>
     <string name="no_customer_found">No Customer Found!</string>
