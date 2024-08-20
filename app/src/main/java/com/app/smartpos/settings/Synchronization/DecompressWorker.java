@@ -32,7 +32,9 @@ public class DecompressWorker extends Worker {
 
         File gzipFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
         File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), removeGzipExtension(fileName));
-
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
         if (decompressGzip(gzipFile, outputFile)) {
             return Result.success();
         } else {

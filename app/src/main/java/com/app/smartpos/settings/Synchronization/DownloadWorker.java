@@ -60,7 +60,11 @@ public class DownloadWorker extends Worker {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
                 File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
+                if (outputFile.exists()) {
+                    outputFile.delete();
+                }
                 downloadFile(connection.getInputStream(),outputFile);
+
                 connection.disconnect();
                 return Result.success();
             } else {

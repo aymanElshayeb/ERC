@@ -42,6 +42,7 @@ import androidx.work.WorkManager;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.Synchronization.CompressWorker;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
@@ -51,6 +52,8 @@ import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
 import com.app.smartpos.utils.SharedPrefUtils;
+
+import java.util.HashMap;
 
 public class DownloadDataDialog extends DialogFragment {
 
@@ -142,18 +145,20 @@ public class DownloadDataDialog extends DialogFragment {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
-
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
+        databaseAccess.open();
+        HashMap<String,String> conf=databaseAccess.getConfiguration();
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
-                putString("tenantId", SharedPrefUtils.getMerchantId(requireActivity())).
+                putString("tenantId",conf.get("merchant_id")).
                 putString("username", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
-                .putString("tenantId", SharedPrefUtils.getMerchantId(requireActivity()))
+                .putString("tenantId",conf.get("merchant_id"))
                 .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
-                .putString("ecrCode", SharedPrefUtils.getEcrCode(requireActivity()))
+                .putString("ecrCode", conf.get("ecr_code"))
                 .build();
 
         Data decompressInputData = new Data.Builder()
@@ -197,24 +202,27 @@ public class DownloadDataDialog extends DialogFragment {
     private void enqueueCreateAndUploadWorkers() {
         //username Admin
         //password 01111Mm&
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
+        databaseAccess.open();
+        HashMap<String,String> conf=databaseAccess.getConfiguration();
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
-                putString("tenantId", SharedPrefUtils.getMerchantId(requireContext())).
+                putString("tenantId", conf.get("merchant_id")).
                 putString("username", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data lastSync = new Data.Builder().
                 putString("url", LAST_SYNC_URL).
-                putString("tenantId", SharedPrefUtils.getMerchantId(requireContext())).
-                putString("ecrCode", SharedPrefUtils.getEcrCode(requireContext())).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode",conf.get("ecr_code")).
                 build();
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
                 .build();
         Data uploadInputData = new Data.Builder().
                 putString("url", SYNC_URL).
-                putString("tenantId", SharedPrefUtils.getMerchantId(requireContext())).
-                putString("ecrCode", SharedPrefUtils.getEcrCode(requireContext())).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode",conf.get("ecr_code")).
                 build();
         OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
                 setInputData(loginInputData).
