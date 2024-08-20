@@ -109,7 +109,7 @@ public class NewCheckout extends AppCompatActivity {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount",totalAmount),12);
             }else if(paymentType.equals("CARD")){
                 Intent intent=device.pay(totalAmount);
-                startActivityForResult(intent,13);
+                launcher.launch(intent);
             }
         });
     }
@@ -299,13 +299,17 @@ public class NewCheckout extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else if (requestCode==13 && resultCode == Activity.RESULT_OK) {
-            if (data.getData() != null) {
+        }
+    }
+
+    ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), launcherResult -> {
+        if (launcherResult.getResultCode() == Activity.RESULT_OK) {
+            if (launcherResult.getData() != null) {
                 try {
                     String jsonActivityResult = device.jsonActivityResult();
                     String amountString = device.amountString();
 
-                    JSONObject response = new JSONObject(data.getStringExtra(jsonActivityResult));
+                    JSONObject response = new JSONObject(launcherResult.getData().getStringExtra(jsonActivityResult));
                     String statusCode = "";
                     try {
                         JSONObject result = response.getJSONObject(device.resultHeader());
@@ -322,6 +326,7 @@ public class NewCheckout extends AppCompatActivity {
                             //long id=databaseAccess.insertCardDetails(name,code);
                             //Log.i("datadata",id+"");
                             proceedOrder("", "CARD", "", totalTax, "0", code, ApprovalCode, Double.parseDouble(PurchaseAmount),0);
+
                         } else if(resultStatus.equals("Declined")) {
                             Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
                         }
@@ -337,5 +342,5 @@ public class NewCheckout extends AppCompatActivity {
                 }
             }
         }
-    }
+    });
 }
