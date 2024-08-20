@@ -124,7 +124,7 @@ public class ProductCart extends BaseActivity {
 
 
             imgNoProduct.setVisibility(View.GONE);
-            productCartAdapter = new CartAdapter(ProductCart.this, cartProductList,txt_total_price,btnSubmitOrder,imgNoProduct,txt_no_product);
+            //productCartAdapter = new CartAdapter(ProductCart.this, cartProductList,txt_total_price,btnSubmitOrder,imgNoProduct,txt_no_product);
 
             recyclerView.setAdapter(productCartAdapter);
 

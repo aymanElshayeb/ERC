@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
+import com.app.smartpos.checkout.NewCheckout;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
 
@@ -27,6 +31,9 @@ public class Cart extends AppCompatActivity {
     TextView totalAmountTv;
     TextView totalVatTv;
     List<HashMap<String, String>> cartProductList;
+
+    String currency;
+    DatabaseAccess databaseAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +44,7 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
+        ImageView backIm = findViewById(R.id.back_im);
         totalAmountWithoutVatTv = findViewById(R.id.total_amount_without_vat_tv);
         totalAmountTv = findViewById(R.id.total_amount_tv);
         totalVatTv = findViewById(R.id.total_vat_tv);
@@ -46,31 +54,44 @@ public class Cart extends AppCompatActivity {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
 
-        final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
+        currency = databaseAccess.getCurrency();
 
+        databaseAccess.open();
         //get data from local database
         cartProductList = databaseAccess.getCartProduct();
 
 
 
-//        productCartAdapter = new CartAdapter(this, cartProductList);
-//        recyclerView.setAdapter(productCartAdapter);
+        productCartAdapter = new CartAdapter(this, cartProductList);
+        recyclerView.setAdapter(productCartAdapter);
 
-        calculatePrices();
+        updateTotalPrice(cartProductList);
 
         addItemsTv.setOnClickListener(view -> finish());
-        confirmTv.setOnClickListener(view -> {});
+        backIm.setOnClickListener(view -> finish());
+        confirmTv.setOnClickListener(view -> {
+            finish();
+            startActivity(new Intent(this, NewCheckout.class));
+        });
     }
 
-    public void calculatePrices(){
+    public void updateTotalPrice(List<HashMap<String, String>> list){
+        double totalWithoutTax=0;
         double total=0;
-        for(int i=0;i<cartProductList.size();i++){
-            double productPrice=Double.parseDouble(cartProductList.get(i).get("product_price"));
-            double productCount=Double.parseDouble(cartProductList.get(i).get("product_qty"));
+        for(int i=0;i<list.size();i++){
+            String productId=list.get(i).get("product_id");
+            double productPrice=Double.parseDouble(list.get(i).get("product_price"));
+            double productCount=Double.parseDouble(list.get(i).get("product_qty"));
+            databaseAccess.open();
+            double productTax = 1+databaseAccess.getProductTax(productId)/100;
+            totalWithoutTax+= (productPrice/productTax)*productCount;
             total+=productPrice*productCount;
         }
-        totalAmountWithoutVatTv.setText(total+" SAR");
+        totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
+        totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
+        totalAmountTv.setText(Utils.trimLongDouble(total)+" "+currency);
     }
 }

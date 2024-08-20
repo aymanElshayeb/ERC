@@ -738,14 +738,25 @@ public class DatabaseAccess {
 
     }
 
-    public void updateProductInCart(int cart_id, int count) {
+    public void updateProductInCart(String product_id, String count) {
 
 
-        SQLiteStatement result = database.compileStatement("UPDATE product_cart SET product_qty=product_qty + count WHERE product_id='" + cart_id + "'");
+        SQLiteStatement result = database.compileStatement("UPDATE product_cart SET product_qty='"+count+"' WHERE product_id='" + product_id + "'");
 
 
         result.execute();
 
+
+        database.close();
+
+
+    }
+
+    public void removeProductFromCart(String productId) {
+
+        SQLiteStatement result = database.compileStatement("DELETE FROM product_cart WHERE product_id ='" + productId + "'");
+
+        result.execute();
 
         database.close();
 
@@ -778,6 +789,30 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return product;
+    }
+
+    public HashMap<String, String> getCartProductById(String productId) {
+        HashMap<String, String> map = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM product_cart where product_id = '"+productId+"'", null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                map= new HashMap<>();
+
+                map.put("cart_id", cursor.getString(0));
+                map.put("product_id", cursor.getString(1));
+                map.put("product_weight", cursor.getString(2));
+                map.put("product_weight_unit", cursor.getString(3));
+                map.put("product_price", cursor.getString(4));
+                map.put("product_qty", cursor.getString(5));
+                map.put("stock", cursor.getString(6));
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        database.close();
+        return map;
     }
 
 

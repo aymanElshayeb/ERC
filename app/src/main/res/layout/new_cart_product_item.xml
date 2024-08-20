@@ -18,7 +18,7 @@
 
 
     <TextView
-        android:id="@+id/product_name_tv"
+        android:id="@+id/txt_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -32,7 +32,7 @@
         app:fontFamily="@font/worksans_regular" />
 
     <TextView
-        android:id="@+id/product_price_tv"
+        android:id="@+id/txt_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/product_im"
@@ -50,18 +50,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <ImageView
-            android:id="@+id/minus_im"
+            android:id="@+id/txt_minus"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_minus"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
-            android:id="@+id/product_count_tv"
+            android:id="@+id/txt_number"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toEndOf="@id/minus_im"
-            app:layout_constraintEnd_toStartOf="@id/plus_im"
+            app:layout_constraintStart_toEndOf="@id/txt_minus"
+            app:layout_constraintEnd_toStartOf="@id/txt_plus"
             android:layout_marginHorizontal="6dp"
             android:background="@drawable/rounded_corners_login_edittext_light"
             android:text="00"
@@ -73,7 +73,7 @@
             android:fontFamily="@font/worksans_semibold" />
 
         <ImageView
-            android:id="@+id/plus_im"
+            android:id="@+id/txt_plus"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_plus"

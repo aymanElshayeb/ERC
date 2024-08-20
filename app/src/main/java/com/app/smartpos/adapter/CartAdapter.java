@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
+import com.app.smartpos.cart.Cart;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
 
@@ -30,21 +31,14 @@ import es.dmoral.toasty.Toasty;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> {
 
     MediaPlayer player;
-    TextView txt_total_price, txt_no_product;
-    Button btnSubmitOrder;
-    ImageView imgNoProduct;
     private List<HashMap<String, String>> cart_product;
-    private ProductCart productCart;
+    private Cart productCart;
 
 
-    public CartAdapter(ProductCart productCart, List<HashMap<String, String>> cart_product, TextView txt_total_price, Button btnSubmitOrder, ImageView imgNoProduct, TextView txt_no_product) {
+    public CartAdapter(Cart productCart, List<HashMap<String, String>> cart_product) {
         this.productCart = productCart;
         this.cart_product = cart_product;
         player = MediaPlayer.create(productCart, R.raw.delete_sound);
-        this.txt_total_price = txt_total_price;
-        this.btnSubmitOrder = btnSubmitOrder;
-        this.imgNoProduct = imgNoProduct;
-        this.txt_no_product = txt_no_product;
 
     }
 
@@ -52,7 +46,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(productCart).inflate(R.layout.cart_product_items, parent, false);
+        View view = LayoutInflater.from(productCart).inflate(R.layout.new_cart_product_item, parent, false);
         return new MyViewHolder(view);
 
     }
@@ -89,19 +83,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
 
-       productCart.updateTotalPrice();
+       //productCart.updateTotalPrice();
 
-        if (base64Image != null) {
-            if (base64Image.isEmpty() || base64Image.length() < 6) {
-                holder.imgProduct.setImageResource(R.drawable.image_placeholder);
-            } else {
-
-
-                byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
-                holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-
-            }
-        }
+//        if (base64Image != null) {
+//            if (base64Image.isEmpty() || base64Image.length() < 6) {
+//                holder.imgProduct.setImageResource(R.drawable.image_placeholder);
+//            } else {
+//
+//
+//                byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
+//                holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+//
+//            }
+//        }
 
 
         final double getPrice = Double.parseDouble(price) * Integer.parseInt(qty);
@@ -112,50 +106,50 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 //        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
-        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productCart);
-                databaseAccess.open();
-                boolean deleteProduct = databaseAccess.deleteProductFromCart(cart_id);
-
-                if (deleteProduct) {
-                    Toasty.success(productCart, productCart.getString(R.string.product_removed_from_cart), Toast.LENGTH_SHORT).show();
-
-                    // Calculate Cart's Total Price Again
-                    //  setCartTotal();
-
-                    productCart.updateTotalPrice();
-
-                    player.start();
-
-                    //for delete cart item dynamically
-                    // Remove CartItem from Cart List
-                    cart_product.remove(holder.getAdapterPosition());
-
-                    // Notify that item at position has been removed
-                    notifyItemRemoved(holder.getAdapterPosition());
-
-
-                    productCart.updateTotalPrice();
-                } else {
-                    Toasty.error(productCart, productCart.getString(R.string.failed), Toast.LENGTH_SHORT).show();
-                }
-
-
-                databaseAccess.open();
-                int itemCount = databaseAccess.getCartItemCount();
-                Log.d("itemCount", "" + itemCount);
-                if (itemCount <= 0) {
-                    txt_total_price.setVisibility(View.GONE);
-                    btnSubmitOrder.setVisibility(View.GONE);
-
-                    imgNoProduct.setVisibility(View.VISIBLE);
-                    txt_no_product.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
+//        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productCart);
+//                databaseAccess.open();
+//                boolean deleteProduct = databaseAccess.deleteProductFromCart(cart_id);
+//
+//                if (deleteProduct) {
+//                    Toasty.success(productCart, productCart.getString(R.string.product_removed_from_cart), Toast.LENGTH_SHORT).show();
+//
+//                    // Calculate Cart's Total Price Again
+//                    //  setCartTotal();
+//
+//                    productCart.updateTotalPrice();
+//
+//                    player.start();
+//
+//                    //for delete cart item dynamically
+//                    // Remove CartItem from Cart List
+//                    cart_product.remove(holder.getAdapterPosition());
+//
+//                    // Notify that item at position has been removed
+//                    notifyItemRemoved(holder.getAdapterPosition());
+//
+//
+//                    productCart.updateTotalPrice();
+//                } else {
+//                    Toasty.error(productCart, productCart.getString(R.string.failed), Toast.LENGTH_SHORT).show();
+//                }
+//
+//
+//                databaseAccess.open();
+//                int itemCount = databaseAccess.getCartItemCount();
+//                Log.d("itemCount", "" + itemCount);
+////                if (itemCount <= 0) {
+////                    txt_total_price.setVisibility(View.GONE);
+////                    btnSubmitOrder.setVisibility(View.GONE);
+////
+////                    imgNoProduct.setVisibility(View.VISIBLE);
+////                    txt_no_product.setVisibility(View.VISIBLE);
+////                }
+//
+//            }
+//        });
 
 
         holder.txtPlus.setOnClickListener(new View.OnClickListener() {
@@ -178,12 +172,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     holder.txtPrice.setText(currency + trimLongDouble(cost));
                     holder.txtQtyNumber.setText("" + get_qty);
 
-
+                    cart_product.get(position).put("product_qty",get_qty+"");
                     DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productCart);
                     databaseAccess.open();
                     databaseAccess.updateProductQty(cart_id, "" + get_qty);
-
-                    productCart.updateTotalPrice();
+                    notifyItemChanged(position);
+                    productCart.updateTotalPrice(cart_product);
                 }
             }
         });
@@ -206,19 +200,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     holder.txtPrice.setText(currency + trimLongDouble(cost));
                     holder.txtQtyNumber.setText("" + get_qty);
 
-
+                    cart_product.get(position).put("product_qty",get_qty+"");
                     DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productCart);
                     databaseAccess.open();
                     databaseAccess.updateProductQty(cart_id, "" + get_qty);
-
-                    productCart.updateTotalPrice();
+                    notifyItemChanged(position);
+                    productCart.updateTotalPrice(cart_product);
 
                 }
 
 
             }
         });
-
 
     }
 
@@ -229,8 +222,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtItemName, txtPrice, txtWeight, txtQtyNumber, txtPlus, txtMinus;
-        ImageView imgProduct, imgDelete;
+        TextView txtItemName, txtPrice, txtQtyNumber;
+        ImageView txtPlus, txtMinus;
+       // ImageView imgProduct, imgDelete;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -238,8 +232,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             txtPrice = itemView.findViewById(R.id.txt_price);
 //            txtWeight = itemView.findViewById(R.id.txt_weight);
             txtQtyNumber = itemView.findViewById(R.id.txt_number);
-            imgProduct = itemView.findViewById(R.id.cart_product_image);
-            imgDelete = itemView.findViewById(R.id.img_delete);
+           // imgProduct = itemView.findViewById(R.id.cart_product_image);
             txtMinus = itemView.findViewById(R.id.txt_minus);
             txtPlus = itemView.findViewById(R.id.txt_plus);
 

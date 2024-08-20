@@ -55,6 +55,13 @@
     <string name="add_items">Add items</string>
     <string name="confirm">Confirm</string>
 
+    <string name="checkout">Checkout</string>
+    <string name="cash">Cash</string>
+    <string name="cash_details">Cash Details</string>
+    <string name="cash_giving">Cash Giving</string>
+    <string name="change">Change</string>
+    <string name="pay">Pay</string>
+
     <string name="all_customer">All Customer</string>
     <string name="no_customer_found">No Customer Found!</string>
     <string name="all_suppliers">All Suppliers</string>
@@ -346,7 +353,7 @@
     <string name="search">Search</string>
     <string name="view_cart">View Cart</string>
     <string name="clear">Clear</string>
-    
+
     <string name="receipt_details">Receipt Details</string>
     <string name="receipt_number">Receipt Number</string>
     <string name="view_receipt">View Receipt</string>

@@ -67,7 +67,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         String name = productData.get(position).get("product_name_en");
         final String product_category = productData.get(position).get("product_category");
         final String product_weight = productData.get(position).get("product_weight");
-        final String product_count = productData.get(position).get("product_count");
+        final String product_count = ((Items)productActivity).checkCount(position);
         final String product_desc = productData.get(position).get("product_desc");
         final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
         final String product_price = productData.get(position).get("product_sell_price");
