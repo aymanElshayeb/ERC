@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.adapter.CartPaymentMethodAdapter;
@@ -279,8 +280,8 @@ public class NewCheckout extends AppCompatActivity {
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
-        Intent intent=new Intent(this, OrdersActivity.class);
-
+        Intent intent=new Intent(this, NewHomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
 
