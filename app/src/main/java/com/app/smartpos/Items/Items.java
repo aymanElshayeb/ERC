@@ -5,12 +5,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import com.app.smartpos.adapter.PosProductAdapter;
 import com.app.smartpos.cart.Cart;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.PosActivity;
+import com.app.smartpos.pos.ScannerActivity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -42,7 +47,7 @@ public class Items extends AppCompatActivity {
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
-
+    public static EditText searchEt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +59,9 @@ public class Items extends AppCompatActivity {
         );
         setContentView(R.layout.activity_items);
 
+        searchEt = findViewById(R.id.search_et);
+        LinearLayout noProductsLl = findViewById(R.id.no_products_ll);
+        ImageView scannerIm = findViewById(R.id.img_scanner);
         ImageView backIm = findViewById(R.id.back_im);
         TextView clearTv = findViewById(R.id.clear_tv);
         RecyclerView recycler = findViewById(R.id.recycler);
@@ -69,7 +77,6 @@ public class Items extends AppCompatActivity {
 
         productList = databaseAccess.getProducts(false);
 
-        Log.i("datadata", productList.size() + "");
         productCartAdapter = new PosProductAdapter(this, productList);
         recycler.setAdapter(productCartAdapter);
 
@@ -78,12 +85,46 @@ public class Items extends AppCompatActivity {
             startActivity(intent);
         });
 
+        scannerIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Items.this, ScannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
         clearTv.setOnClickListener(view -> {
 
         });
 
         backIm.setOnClickListener(view -> {
             finish();
+        });
+
+        searchEt.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                databaseAccess.open();
+                productList = databaseAccess.getSearchProducts(s.toString(), true);
+                productCartAdapter = new PosProductAdapter(Items.this, productList);
+                recycler.setAdapter(productCartAdapter);
+
+                noProductsLl.setVisibility(productList.size()>0 ? View.GONE : View.VISIBLE);
+                recycler.setVisibility(productList.size()==0 ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+
         });
     }
 

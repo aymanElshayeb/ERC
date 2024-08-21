@@ -43,11 +43,14 @@
     
     <EditText
         android:id="@+id/search_et"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         app:layout_constraintTop_toBottomOf="@id/back_im"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_scanner"
         android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_corners_login_edittext_light"
         android:hint="@string/search"
         android:paddingHorizontal="16dp"
@@ -55,6 +58,17 @@
         android:textSize="17sp"
         android:textColor="@color/black"
         android:fontFamily="@font/inter_regular"/>
+
+    <ImageView
+        android:id="@+id/img_scanner"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintTop_toBottomOf="@id/back_im"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/barcode" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -65,6 +79,35 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginHorizontal="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/no_products_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image_no_product"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/not_found"/>
+
+        <TextView
+            android:id="@+id/txt_no_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_product_found"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            app:fontFamily="@font/sailec_regular" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/view_cart_cl"
