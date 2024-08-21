@@ -1,5 +1,6 @@
 package com.app.smartpos.settings.end_shift;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -64,6 +65,8 @@ public class EndShiftStep1 extends AppCompatActivity {
         numberOfSalesTv.setText(orderList.size()+"");
 
         backIm.setOnClickListener(view -> finish());
+
+        endMyShiftTv.setOnClickListener(view -> startActivity(new Intent(this, EndShiftStep2.class)));
 
     }
 }

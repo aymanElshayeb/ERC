@@ -67,7 +67,7 @@
                     android:fontFamily="@font/inter_black"
                     android:gravity="start|center_vertical"
                     android:paddingStart="8dp"
-                    android:text="leave cash"
+                    android:text="@string/leave_cash"
                     android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

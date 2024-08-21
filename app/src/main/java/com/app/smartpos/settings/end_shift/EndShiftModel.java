@@ -16,9 +16,10 @@ public class EndShiftModel {
     double startCash;
     double leaveCash;
 
+    String note;
     String sequence;
     String userName;
-    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences,String sequence,String userName ,int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash) {
+    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences,String sequence,String userName ,int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash,String note) {
         this.shiftDifferences = shiftDifferences;
         this.sequence=sequence;
         this.userName=userName;
@@ -32,6 +33,7 @@ public class EndShiftModel {
         this.endDateTime = endDateTime;
         this.startCash = startCash;
         this.leaveCash = leaveCash;
+        this.note=note;
     }
 
     public HashMap<String, ShiftDifferences> getShiftDifferences() {
@@ -85,6 +87,10 @@ public class EndShiftModel {
         return leaveCash;
     }
 
+    public String getNote() {
+        return note;
+    }
+
     @Override
     public String toString() {
         return "EndShiftModel{" +
@@ -99,6 +105,7 @@ public class EndShiftModel {
                 ", endDateTime=" + endDateTime +
                 ", startCash=" + startCash +
                 ", leaveCash=" + leaveCash +
+                ", note='" + note + '\'' +
                 ", sequence='" + sequence + '\'' +
                 ", userName='" + userName + '\'' +
                 '}';

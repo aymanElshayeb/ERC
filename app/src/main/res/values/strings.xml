@@ -54,6 +54,7 @@
     <string name="total_vat">Total Vat</string>
     <string name="add_items">Add items</string>
     <string name="confirm">Confirm</string>
+    <string name="confirm_with_error">Confirm with error</string>
 
     <string name="checkout">Checkout</string>
     <string name="cash">Cash</string>
@@ -188,6 +189,8 @@
     <string name="want_to_delete_customer">Want to Delete Customer ?</string>
     <string name="customer_deleted">Customer Deleted</string>
     <string name="note">Note: </string>
+    <string name="note_">Note</string>
+    <string name="add_notes_for_shift">Add notes for before end the shift (optional)</string>
     <string name="want_to_delete_expense">Want to Delete Expense ?</string>
     <string name="expense_deleted">Expense Deleted</string>
     <string name="order_id">Order ID:</string>
@@ -347,6 +350,7 @@
     <string name="user_name">Username</string>
     <string name="shift_id">Shift ID</string>
     <string name="shift_sequence">Shift Sequence</string>
+    <string name="leave_cash">Leave Cash</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>

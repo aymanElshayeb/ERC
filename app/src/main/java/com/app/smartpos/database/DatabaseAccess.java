@@ -216,6 +216,8 @@ public class DatabaseAccess {
         values.put("num_canceled_transaction", endShiftModel.getNum_canceled_transaction());
         values.put("num_returned_transaction", endShiftModel.getNum_returned_transaction());
 
+        values.put("notes", endShiftModel.getNote());
+
         long check = 0;
         try {
             check = database.insertOrThrow("shift", null, values);
