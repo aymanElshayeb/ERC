@@ -66,6 +66,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 //        final String weight_unit_id = cart_product.get(position).get("product_weight_unit");
         final String weight = cart_product.get(position).get("product_weight");
         final String qty = cart_product.get(position).get("product_qty");
+        final String uuid = cart_product.get(position).get("product_uuid");
         final String stock = cart_product.get(position).get("stock");
 
         int getStock=(stock==null || stock.isEmpty())?
@@ -84,19 +85,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         String currency = databaseAccess.getCurrency();
 
        //productCart.updateTotalPrice();
+        if(uuid.equals("PR999999")){
+            holder.imgProduct.setImageResource(R.drawable.ic_custom_option_gray);
+        }else {
+            if (base64Image != null) {
+                if (base64Image.isEmpty() || base64Image.length() < 6) {
+                    holder.imgProduct.setImageResource(R.drawable.image_placeholder);
+                } else {
 
-//        if (base64Image != null) {
-//            if (base64Image.isEmpty() || base64Image.length() < 6) {
-//                holder.imgProduct.setImageResource(R.drawable.image_placeholder);
-//            } else {
-//
-//
-//                byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
-//                holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-//
-//            }
-//        }
 
+                    byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
+                    holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+
+                }
+            }
+        }
 
         final double getPrice = Double.parseDouble(price) * Integer.parseInt(qty);
 
@@ -224,7 +227,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         TextView txtItemName, txtPrice, txtQtyNumber;
         ImageView txtPlus, txtMinus;
-       // ImageView imgProduct, imgDelete;
+        ImageView imgProduct;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -232,7 +235,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             txtPrice = itemView.findViewById(R.id.txt_price);
 //            txtWeight = itemView.findViewById(R.id.txt_weight);
             txtQtyNumber = itemView.findViewById(R.id.txt_number);
-           // imgProduct = itemView.findViewById(R.id.cart_product_image);
+            imgProduct = itemView.findViewById(R.id.product_im);
             txtMinus = itemView.findViewById(R.id.txt_minus);
             txtPlus = itemView.findViewById(R.id.txt_plus);
 

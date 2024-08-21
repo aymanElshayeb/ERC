@@ -12,7 +12,9 @@
         android:layout_width="45dp"
         android:layout_height="match_parent"
         app:riv_corner_radius="6dp"
+        android:padding="2dp"
         android:src="@drawable/image_placeholder"
+        android:background="@drawable/custom_payment_method_item"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

@@ -370,4 +370,8 @@
     <string name="merchant_empty">Merchant ID field is empty</string>
     <string name="leave_cash_empty">Please add leave cash</string>
 
+    <string name="options">Options</string>
+    <string name="custom_items">Custom Item</string>
+    <string name="clear_all_items">Clear All Items</string>
+
 </resources>

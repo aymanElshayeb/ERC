@@ -82,7 +82,7 @@ public class DatabaseAccess {
         values.put("customer_cell", customer_cell);
         values.put("customer_email", customer_email);
         values.put("customer_address", customer_address);
-        values.put("customer_active",customer_active);
+        values.put("customer_active", customer_active);
 
         long check = database.insert("customers", null, values);
         database.close();
@@ -118,7 +118,7 @@ public class DatabaseAccess {
 
 
     //insert payment method
-    public boolean addPaymentMethod(String payment_method_name,boolean payment_method_active) {
+    public boolean addPaymentMethod(String payment_method_name, boolean payment_method_active) {
 
         ContentValues values = new ContentValues();
 
@@ -179,8 +179,8 @@ public class DatabaseAccess {
         }
     }
 
-    public String getLastShift(String key){
-        String result="";
+    public String getLastShift(String key) {
+        String result = "";
         Cursor cursor = database.rawQuery("SELECT * FROM shift ORDER BY id DESC LIMIT 1", null);
         if (cursor.moveToFirst()) {
             result = cursor.getString(cursor.getColumnIndex(key));
@@ -188,8 +188,9 @@ public class DatabaseAccess {
         database.close();
         return result;
     }
+
     public int addShift(EndShiftModel endShiftModel) {
-        Log.i("datadata",endShiftModel.toString());
+        Log.i("datadata", endShiftModel.toString());
         ContentValues values = new ContentValues();
 
         values.put("sequence", endShiftModel.getSequence());
@@ -198,22 +199,22 @@ public class DatabaseAccess {
         values.put("start_date_time", endShiftModel.getStartDateTime());
         values.put("end_date_time", endShiftModel.getEndDateTime());
 
-        double total_cash=0;
-        double diff_cash=0;
-        if(endShiftModel.getShiftDifferences().containsKey("CASH")){
-            ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get("CASH");
+        double total_cash = 0;
+        double diff_cash = 0;
+        if (endShiftModel.getShiftDifferences().containsKey("CASH")) {
+            ShiftDifferences shiftDifferences = endShiftModel.getShiftDifferences().get("CASH");
             total_cash = shiftDifferences.getReal();
             diff_cash = shiftDifferences.getDiff();
         }
-        values.put("total_cash",total_cash);
-        values.put("difference_cash",diff_cash);
+        values.put("total_cash", total_cash);
+        values.put("difference_cash", diff_cash);
 
-        values.put("start_cash",endShiftModel.getStartCash());
-        values.put("leave_cash",endShiftModel.getLeaveCash());
+        values.put("start_cash", endShiftModel.getStartCash());
+        values.put("leave_cash", endShiftModel.getLeaveCash());
 
-        values.put("num_successful_transaction",endShiftModel.getNum_successful_transaction());
-        values.put("num_canceled_transaction",endShiftModel.getNum_canceled_transaction());
-        values.put("num_returned_transaction",endShiftModel.getNum_returned_transaction());
+        values.put("num_successful_transaction", endShiftModel.getNum_successful_transaction());
+        values.put("num_canceled_transaction", endShiftModel.getNum_canceled_transaction());
+        values.put("num_returned_transaction", endShiftModel.getNum_returned_transaction());
 
         long check = 0;
         try {
@@ -233,7 +234,7 @@ public class DatabaseAccess {
 
     }
 
-    public boolean addShiftCreditCalculations(String id, ShiftDifferences shiftDifference,String type) {
+    public boolean addShiftCreditCalculations(String id, ShiftDifferences shiftDifference, String type) {
         ContentValues values = new ContentValues();
 
         values.put("shift_id", id);
@@ -241,7 +242,7 @@ public class DatabaseAccess {
         values.put("credit_code", shiftDifference.getCode());
         values.put("difference", shiftDifference.getDiff());
 
-        Log.i("datadata_shift_diff",values.toString());
+        Log.i("datadata_shift_diff", values.toString());
 
         long check = database.insert("credit_calculations", null, values);
         database.close();
@@ -273,14 +274,13 @@ public class DatabaseAccess {
 
 
     //update payment method
-    public boolean updatePaymentMethod(String payment_method_id, String payment_method_name,boolean payment_method_active) {
+    public boolean updatePaymentMethod(String payment_method_id, String payment_method_name, boolean payment_method_active) {
 
         ContentValues values = new ContentValues();
 
 
         values.put("payment_method_name", payment_method_name);
         values.put("payment_method_active", payment_method_active);
-
 
 
         long check = database.update("payment_method", values, "payment_method_id=? ", new String[]{payment_method_id});
@@ -338,7 +338,7 @@ public class DatabaseAccess {
 
 
     //update customer
-    public boolean updateCustomer(String customer_id, String customer_name, String customer_cell, String customer_email, String customer_address,boolean customer_active) {
+    public boolean updateCustomer(String customer_id, String customer_name, String customer_cell, String customer_email, String customer_address, boolean customer_active) {
 
         ContentValues values = new ContentValues();
 
@@ -347,7 +347,7 @@ public class DatabaseAccess {
         values.put("customer_cell", customer_cell);
         values.put("customer_email", customer_email);
         values.put("customer_address", customer_address);
-        values.put("customer_active",customer_active);
+        values.put("customer_active", customer_active);
 
         long check = database.update("customers", values, " customer_id=? ", new String[]{customer_id});
         database.close();
@@ -580,7 +580,7 @@ public class DatabaseAccess {
     public int getShiftWithTimestamp(long timeStamp) {
 
         int id = 0;
-        Cursor cursor = database.rawQuery("SELECT * FROM shift WHERE end_date_time= "+ timeStamp +"", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM shift WHERE end_date_time= " + timeStamp + "", null);
 
 
         if (cursor.moveToFirst()) {
@@ -600,20 +600,20 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public HashMap<String,String> getUserWithUserName(String userName) {
+    public HashMap<String, String> getUserWithUserName(String userName) {
 
         Cursor cursor = database.rawQuery("SELECT * FROM user WHERE username='" + userName + "'", null);
 
-        HashMap<String,String> hashMap=null;
+        HashMap<String, String> hashMap = null;
         if (cursor.moveToFirst()) {
-            hashMap=new HashMap<>();
+            hashMap = new HashMap<>();
             do {
-                hashMap.put("id",cursor.getString(cursor.getColumnIndex("id")));
-                hashMap.put("name_en",cursor.getString(cursor.getColumnIndex("name_en")));
-                hashMap.put("name_ar",cursor.getString(cursor.getColumnIndex("name_ar")));
-                hashMap.put("email",cursor.getString(cursor.getColumnIndex("email")));
-                hashMap.put("password",cursor.getString(cursor.getColumnIndex("password")));
-                hashMap.put("username",cursor.getString(cursor.getColumnIndex("username")));
+                hashMap.put("id", cursor.getString(cursor.getColumnIndex("id")));
+                hashMap.put("name_en", cursor.getString(cursor.getColumnIndex("name_en")));
+                hashMap.put("name_ar", cursor.getString(cursor.getColumnIndex("name_ar")));
+                hashMap.put("email", cursor.getString(cursor.getColumnIndex("email")));
+                hashMap.put("password", cursor.getString(cursor.getColumnIndex("password")));
+                hashMap.put("username", cursor.getString(cursor.getColumnIndex("username")));
 
             } while (cursor.moveToNext());
         }
@@ -641,11 +641,9 @@ public class DatabaseAccess {
 
                 } while (cursor.moveToNext());
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             cursor.close();
             database.close();
         }
@@ -683,7 +681,7 @@ public class DatabaseAccess {
     public String getCategoryName(String category_id) {
 
         String product_category = "n/a";
-        if(category_id.isEmpty() || category_id.isBlank()) return product_category;
+        if (category_id.isEmpty() || category_id.isBlank()) return product_category;
         Cursor cursor = database.rawQuery("SELECT * FROM product_category WHERE category_id=" + category_id + "", null);
 
 
@@ -705,7 +703,7 @@ public class DatabaseAccess {
 
 
     //Add product into cart
-    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock) {
+    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock,String product_uuid) {
 
 
         Cursor result = database.rawQuery("SELECT * FROM product_cart WHERE product_id='" + product_id + "'", null);
@@ -720,6 +718,7 @@ public class DatabaseAccess {
             values.put("product_weight_unit", weight_unit);
             values.put("product_price", price);
             values.put("product_qty", qty);
+            values.put("product_uuid", product_uuid);
             values.put("stock", stock);
 
             long check = database.insert("product_cart", null, values);
@@ -741,7 +740,7 @@ public class DatabaseAccess {
     public void updateProductInCart(String product_id, String count) {
 
 
-        SQLiteStatement result = database.compileStatement("UPDATE product_cart SET product_qty='"+count+"' WHERE product_id='" + product_id + "'");
+        SQLiteStatement result = database.compileStatement("UPDATE product_cart SET product_qty='" + count + "' WHERE product_id='" + product_id + "'");
 
 
         result.execute();
@@ -773,13 +772,14 @@ public class DatabaseAccess {
                 HashMap<String, String> map = new HashMap<String, String>();
 
 
-                map.put("cart_id", cursor.getString(0));
-                map.put("product_id", cursor.getString(1));
-                map.put("product_weight", cursor.getString(2));
-                map.put("product_weight_unit", cursor.getString(3));
-                map.put("product_price", cursor.getString(4));
-                map.put("product_qty", cursor.getString(5));
-                map.put("stock", cursor.getString(6));
+                map.put("cart_id", cursor.getString(cursor.getColumnIndex("cart_id")));
+                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
+                map.put("product_weight_unit", cursor.getString(cursor.getColumnIndex("product_weight_unit")));
+                map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
+                map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("stock", cursor.getString(cursor.getColumnIndex("stock")));
 
 
                 product.add(map);
@@ -793,11 +793,11 @@ public class DatabaseAccess {
 
     public HashMap<String, String> getCartProductById(String productId) {
         HashMap<String, String> map = null;
-        Cursor cursor = database.rawQuery("SELECT * FROM product_cart where product_id = '"+productId+"'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM product_cart where product_id = '" + productId + "'", null);
         if (cursor.moveToFirst()) {
             do {
 
-                map= new HashMap<>();
+                map = new HashMap<>();
 
                 map.put("cart_id", cursor.getString(0));
                 map.put("product_id", cursor.getString(1));
@@ -817,7 +817,7 @@ public class DatabaseAccess {
 
 
     public long insertCardDetails(String name, String code) {
-        long id=0;
+        long id = 0;
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("code", code);
@@ -825,17 +825,17 @@ public class DatabaseAccess {
 
         try {
             id = database.insertOrThrow("card_type", null, values);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("datadata",id+"");
-
+        Log.i("datadata", id + "");
 
 
         return id;
     }
+
     //insert order in order list
-    public void insertOrder(String order_id, JSONObject obj,Context context) {
+    public void insertOrder(String order_id, JSONObject obj, Context context) {
 
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
@@ -881,7 +881,7 @@ public class DatabaseAccess {
             values.put("tax_number", tax_number);
             values.put("operation_type", "invoice");
             values.put("order_status", order_status);
-            values.put("qr_code","");
+            values.put("qr_code", "");
 
 
             database.insert("order_list", null, values);
@@ -922,7 +922,7 @@ public class DatabaseAccess {
                 values2.put("product_weight", product_weight);
                 values2.put("in_tax_total", in_tax_total);
                 values2.put("ex_tax_total", ex_tax_total);
-                values2.put("tax_amount", in_tax_total-ex_tax_total);
+                values2.put("tax_amount", in_tax_total - ex_tax_total);
                 values2.put("product_qty", product_qty);
                 values2.put("product_price", product_price);
                 values2.put("tax_percentage", getProductTax(product_id));
@@ -934,7 +934,7 @@ public class DatabaseAccess {
                 values3.put("product_stock", updated_stock);
                 //for order insert
                 long check = database.insert("order_details", null, values2);
-                Log.i("datadata", "insertOrder: "+check);
+                Log.i("datadata", "insertOrder: " + check);
 
                 //updating stock
                 database.update("products", values3, "product_id=?", new String[]{product_id});
@@ -1042,7 +1042,7 @@ public class DatabaseAccess {
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getOrderListWithTime(long time) {
         ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE order_timestamp > "+time+"", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE order_timestamp > " + time + "", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
@@ -1121,7 +1121,7 @@ public class DatabaseAccess {
     public ArrayList<HashMap<String, String>> getOrderDetailsList(String order_id) {
         ArrayList<HashMap<String, String>> orderDetailsList = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + order_id + "' ORDER BY order_details_id DESC", null);
-        Log.i("datadata_result",cursor.moveToFirst()+" "+"SELECT * FROM order_details WHERE invoice_id= "+ order_id + " ORDER BY order_details_id DESC");
+        Log.i("datadata_result", cursor.moveToFirst() + " " + "SELECT * FROM order_details WHERE invoice_id= " + order_id + " ORDER BY order_details_id DESC");
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
@@ -1383,7 +1383,7 @@ public class DatabaseAccess {
 
     //get product data
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getTabProducts(String category_id,boolean showActiveOnly) {
+    public ArrayList<HashMap<String, String>> getTabProducts(String category_id, boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_category = '" + category_id + "' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
@@ -1406,7 +1406,7 @@ public class DatabaseAccess {
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                if(!showActiveOnly || active.equals("1")) {
+                if (!showActiveOnly || active.equals("1")) {
                     product.add(map);
                 }
             } while (cursor.moveToNext());
@@ -1492,7 +1492,7 @@ public class DatabaseAccess {
             do {
 
 
-                currency = cursor.getString(cursor.getColumnIndex("shop_currency"))+" ";
+                currency = cursor.getString(cursor.getColumnIndex("shop_currency")) + " ";
 
 
             } while (cursor.moveToNext());
@@ -1514,9 +1514,9 @@ public class DatabaseAccess {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart", null);
         if (cursor.moveToFirst()) {
             do {
-                String priceId=cursor.getString(cursor.getColumnIndex("product_id"));
-                double tax = 1+getProductTax(priceId)/100.0;
-                double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price")))/tax;
+                String priceId = cursor.getString(cursor.getColumnIndex("product_id"));
+                double tax = 1 + getProductTax(priceId) / 100.0;
+                double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price"))) / tax;
                 int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
                 double sub_total = price * qty;
                 total_price = total_price + sub_total;
@@ -1750,6 +1750,7 @@ public class DatabaseAccess {
         database.close();
         return total_tax;
     }
+
     //calculate total price of product
     public double getTotalOrderPrice(String type) {
 
@@ -2071,7 +2072,7 @@ public class DatabaseAccess {
                 map.put("payment_method_id", cursor.getString(cursor.getColumnIndex("payment_method_id")));
                 map.put("payment_method_name", cursor.getString(cursor.getColumnIndex("payment_method_name")));
                 map.put("payment_method_active", active);
-                if(!showActiveOnly || active.equals("1")) {
+                if (!showActiveOnly || active.equals("1")) {
                     payment_method.add(map);
                 }
             } while (cursor.moveToNext());
@@ -2088,12 +2089,12 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
-                String active=cursor.getString(cursor.getColumnIndex("active"));
+                String active = cursor.getString(cursor.getColumnIndex("active"));
                 map.put("active", active);
                 map.put("code", cursor.getString(cursor.getColumnIndex("code")));
                 map.put("name", cursor.getString(cursor.getColumnIndex("name")));
                 map.put("CASH", "0");
-                if(!showActiveOnly || active.equals("1")) {
+                if (!showActiveOnly || active.equals("1")) {
                     payment_method.add(map);
                 }
             } while (cursor.moveToNext());
@@ -2135,7 +2136,6 @@ public class DatabaseAccess {
                 map.put("customer_email", cursor.getString(cursor.getColumnIndex("customer_email")));
                 map.put("customer_address", cursor.getString(cursor.getColumnIndex("customer_address")));
                 map.put("customer_active", cursor.getString(cursor.getColumnIndex("customer_active")));
-
 
 
                 customer.add(map);
@@ -2209,9 +2209,10 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<>();
 
-                String active=cursor.getString(cursor.getColumnIndex("product_active"));
+                String product_uuid = cursor.getString(cursor.getColumnIndex("product_uuid"));
+                String active = cursor.getString(cursor.getColumnIndex("product_active"));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
-                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("product_uuid", product_uuid);
                 map.put("product_active", active);
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2228,7 +2229,7 @@ public class DatabaseAccess {
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
                 map.put("product_count", "0");
 
-                if(!showActiveOnly || active.equals("1")) {
+                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("PR999999")) {
                     product.add(map);
                 }
             } while (cursor.moveToNext());
@@ -2236,6 +2237,52 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return product;
+    }
+
+    public HashMap<String, String> getCustomProduct() {
+        HashMap<String, String> map = null;
+        Cursor cursor = database.rawQuery("SELECT * FROM products Where product_uuid = 'PR999999'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                map = new HashMap<>();
+
+                String product_uuid = cursor.getString(cursor.getColumnIndex("product_uuid"));
+                String active = cursor.getString(cursor.getColumnIndex("product_active"));
+                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", product_uuid);
+                map.put("product_active", active);
+                map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
+                map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
+                map.put("product_code", cursor.getString(cursor.getColumnIndex("product_code")));
+                map.put("product_description", cursor.getString(cursor.getColumnIndex("product_description")));
+                map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
+                map.put("product_sell_price", cursor.getString(cursor.getColumnIndex("product_sell_price")));
+                map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
+                map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
+                map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
+                map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
+                map.put("product_count", "0");
+
+                if (!active.equals("1")) {
+                    map=null;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return map;
+    }
+
+    public Boolean checkCustomProductInCart() {
+        Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'PR999999'", null);
+        boolean exist=cursor.moveToFirst();
+        Log.i("datadata_exist",exist+"");
+        cursor.close();
+        database.close();
+        return exist;
     }
 
 
@@ -2498,15 +2545,16 @@ public class DatabaseAccess {
 
     //get product data
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getSearchProducts(String s,boolean showActiveOnly) {
+    public ArrayList<HashMap<String, String>> getSearchProducts(String s, boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name_en LIKE '%" + s + "%' OR product_name_ar LIKE '%\" + s + \"%' OR product_uuid LIKE '%" + s + "%' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 String active = cursor.getString(cursor.getColumnIndex("product_active"));
                 HashMap<String, String> map = new HashMap<>();
+                String product_uuid = cursor.getString(cursor.getColumnIndex("product_uuid"));
                 map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
-                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("product_uuid", product_uuid);
                 map.put("product_active", active);
                 map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
                 map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
@@ -2521,7 +2569,7 @@ public class DatabaseAccess {
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                if(!showActiveOnly || active.equals("1")) {
+                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("PR999999")) {
                     product.add(map);
                 }
             } while (cursor.moveToNext());
@@ -2616,6 +2664,7 @@ public class DatabaseAccess {
         }
         return configuration;
     }
+
     @SuppressLint("Range")
     public Boolean addConfiguration(RegistrationResponseDto registrationResponseDto) {
 
@@ -2647,9 +2696,9 @@ public class DatabaseAccess {
         try {
             cursor = database.rawQuery("SELECT * FROM sequence_text WHERE id=" + sequenceId, null);
             if (cursor != null && cursor.moveToFirst()) {
-                nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value")))+1;
+                nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value"))) + 1;
                 prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
-                Log.i("datadata_seq",nextValue+"");
+                Log.i("datadata_seq", nextValue + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2661,8 +2710,8 @@ public class DatabaseAccess {
         try {
             sequence = ecrCode + "-001-" + prefix + String.format("%010d", nextValue);
             sequenceMap.put("sequence", sequence);
-            sequenceMap.put("next_value",String.valueOf(nextValue));
-            sequenceMap.put("sequence_id",String.valueOf(sequenceId));
+            sequenceMap.put("next_value", String.valueOf(nextValue));
+            sequenceMap.put("sequence_id", String.valueOf(sequenceId));
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -2843,9 +2892,9 @@ public class DatabaseAccess {
     public void addDemoConfiguration() {
         ContentValues values = new ContentValues();
         values.put("ecr_code", "e123");
-        values.put("merchant_id","cr11223344");
-        values.put("merchant_logo","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");
-        values.put("merchant_tax_number","123456789");
+        values.put("merchant_id", "cr11223344");
+        values.put("merchant_logo", "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");
+        values.put("merchant_tax_number", "123456789");
         database.insert("configuration", null, values);
     }
 }

@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,17 +27,15 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.PosProductAdapter;
 import com.app.smartpos.cart.Cart;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pos.PosActivity;
 import com.app.smartpos.pos.ScannerActivity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
-
 public class Items extends AppCompatActivity {
 
+    public static EditText searchEt;
     PosProductAdapter productCartAdapter;
     List<HashMap<String, String>> productList;
     List<HashMap<String, String>> selectedProductList = new LinkedList<>();
@@ -47,7 +44,7 @@ public class Items extends AppCompatActivity {
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
-    public static EditText searchEt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +60,7 @@ public class Items extends AppCompatActivity {
         LinearLayout noProductsLl = findViewById(R.id.no_products_ll);
         ImageView scannerIm = findViewById(R.id.img_scanner);
         ImageView backIm = findViewById(R.id.back_im);
-        TextView clearTv = findViewById(R.id.clear_tv);
+        ImageView moreIm = findViewById(R.id.more_im);
         RecyclerView recycler = findViewById(R.id.recycler);
         cartCountTv = findViewById(R.id.cart_count_tv);
         cartTotalPriceTv = findViewById(R.id.cart_total_price_tv);
@@ -88,13 +85,15 @@ public class Items extends AppCompatActivity {
         scannerIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(Items.this, ScannerActivity.class);
+                Intent intent = new Intent(Items.this, ScannerActivity.class);
                 startActivity(intent);
             }
         });
 
-        clearTv.setOnClickListener(view -> {
-
+        moreIm.setOnClickListener(view -> {
+            ItemsOptionsDialog dialog = new ItemsOptionsDialog();
+            dialog.setItems(this);
+            dialog.show(getSupportFragmentManager(), "dialog");
         });
 
         backIm.setOnClickListener(view -> {
@@ -115,8 +114,8 @@ public class Items extends AppCompatActivity {
                 productCartAdapter = new PosProductAdapter(Items.this, productList);
                 recycler.setAdapter(productCartAdapter);
 
-                noProductsLl.setVisibility(productList.size()>0 ? View.GONE : View.VISIBLE);
-                recycler.setVisibility(productList.size()==0 ? View.GONE : View.VISIBLE);
+                noProductsLl.setVisibility(productList.size() > 0 ? View.GONE : View.VISIBLE);
+                recycler.setVisibility(productList.size() == 0 ? View.GONE : View.VISIBLE);
             }
 
             @Override
@@ -134,7 +133,7 @@ public class Items extends AppCompatActivity {
         databaseAccess.open();
 
         selectedProductList = databaseAccess.getCartProduct();
-        if(selectedProductList.size()>0) {
+        if (selectedProductList.size() > 0) {
             updateCartUI();
         }
         productCartAdapter.notifyDataSetChanged();
@@ -162,25 +161,26 @@ public class Items extends AppCompatActivity {
             } else {
 
                 databaseAccess.open();
-                databaseAccess.updateProductInCart(id,product.get("product_count"));
+                databaseAccess.updateProductInCart(id, product.get("product_count"));
                 selectedProductList.set(index, convertProductToCartItem(product));
             }
         } else {
 
-            final String product_id = product.get("product_id");
-            final String product_weight = product.get("product_weight");
-            final String product_stock = product.get("product_stock");
-            final String product_price = product.get("product_sell_price");
-            final String weight_unit_id = product.get("product_weight_unit_id");
+            String product_id = product.get("product_id");
+            String product_weight = product.get("product_weight");
+            String product_stock = product.get("product_stock");
+            String product_price = product.get("product_sell_price");
+            String weight_unit_id = product.get("product_weight_unit_id");
+            String product_uuid = product.get("product_uuid");
             databaseAccess.open();
-            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock);
+            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid);
             selectedProductList.add(convertProductToCartItem(product));
         }
 
         updateCartUI();
     }
 
-    private void updateCartUI(){
+    private void updateCartUI() {
         int count = 0;
         int total = 0;
         for (int i = 0; i < selectedProductList.size(); i++) {
@@ -189,7 +189,7 @@ public class Items extends AppCompatActivity {
             total += productPrice * productCount;
             count += productCount;
         }
-
+        Log.i("datadata_count", count + "");
         cartCountTv.setText("" + count);
         cartTotalPriceTv.setText(total + " SAR");
 
@@ -201,14 +201,16 @@ public class Items extends AppCompatActivity {
         }
     }
 
-    private HashMap<String ,String> convertProductToCartItem(HashMap<String,String>product){
+    private HashMap<String, String> convertProductToCartItem(HashMap<String, String> product) {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("product_id", product.get("product_id"));
         map.put("product_price", product.get("product_sell_price"));
         map.put("product_qty", product.get("product_count"));
+        map.put("product_uuid", product.get("product_uuid"));
 
         return map;
     }
+
     public void animateViewCartHeight(float height) {
         ValueAnimator animator = ValueAnimator.ofFloat(viewCartCl.getHeight(), height);
         animator.setInterpolator(new LinearInterpolator());
@@ -230,17 +232,50 @@ public class Items extends AppCompatActivity {
         animator.start();
     }
 
-    public String checkCount(int position){
-        String count="0";
+    public String checkCount(int position) {
+        String count = "0";
         for (int i = 0; i < selectedProductList.size(); i++) {
             if (selectedProductList.get(i).get("product_id").toString().equals(productList.get(position).get("product_id").toString())) {
-                count=selectedProductList.get(i).get("product_qty");
-                Log.i("datadata_count",selectedProductList.get(i).toString());
-                Log.i("datadata_count",count);
-                productList.get(position).put("product_count",count);
+                count = selectedProductList.get(i).get("product_qty");
+                Log.i("datadata_count", selectedProductList.get(i).toString());
+                Log.i("datadata_count", count);
+                productList.get(position).put("product_count", count);
                 break;
             }
         }
         return count;
+    }
+
+    public void addCustomItem() {
+        databaseAccess.open();
+        boolean isItemExist = databaseAccess.checkCustomProductInCart();
+        if (!isItemExist) {
+            databaseAccess.open();
+            HashMap<String, String> product = databaseAccess.getCustomProduct();
+            Log.i("datadata", product.toString());
+            String product_id = product.get("product_id");
+            String product_weight = product.get("product_weight");
+            String product_stock = product.get("product_stock");
+            String product_price = product.get("product_sell_price");
+            String weight_unit_id = product.get("product_weight_unit_id");
+            product.put("product_count", "1");
+            String product_uuid = product.get("product_uuid");
+            databaseAccess.open();
+            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid);
+            selectedProductList.add(convertProductToCartItem(product));
+            Log.i("datadata", selectedProductList.size() + "");
+            updateCartUI();
+        }
+    }
+
+    public void clearAllItems() {
+        for (int i = 0; i < selectedProductList.size(); i++) {
+            String product_id = selectedProductList.get(i).get("product_id");
+            databaseAccess.open();
+            databaseAccess.removeProductFromCart(product_id);
+        }
+        selectedProductList.clear();
+        productCartAdapter.notifyDataSetChanged();
+        updateCartUI();
     }
 }

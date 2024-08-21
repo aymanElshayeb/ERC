@@ -28,16 +28,13 @@
         android:textSize="17sp"
         android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/clear_tv"
+    <ImageView
+        android:id="@+id/more_im"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/clear"
+        android:src="@drawable/ic_dots"
         android:layout_marginTop="53dp"
         android:layout_marginEnd="24dp"
-        android:textSize="17sp"
-        android:fontFamily="@font/inter_regular"
-        android:textColor="@color/successColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     

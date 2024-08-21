@@ -33,6 +33,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.app.smartpos.HomeActivity;
+import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
@@ -90,7 +91,7 @@ public class RegistrationDialog extends DialogFragment {
                 SharedPrefUtils.setStartDateTime(requireActivity());
                 SharedPrefUtils.setDemoPressed(requireActivity(),true);
                 requireActivity().finish();
-                requireActivity().startActivity(new Intent(requireActivity(), HomeActivity.class));
+                requireActivity().startActivity(new Intent(requireActivity(), NewHomeActivity.class));
             });
 
             requestForStoragePermissions();

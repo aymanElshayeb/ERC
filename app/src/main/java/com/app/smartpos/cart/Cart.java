@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -89,6 +90,7 @@ public class Cart extends AppCompatActivity {
             double productTax = 1+databaseAccess.getProductTax(productId)/100;
             totalWithoutTax+= (productPrice/productTax)*productCount;
             total+=productPrice*productCount;
+            Log.i("datadata",productTax+" "+totalWithoutTax+" "+total);
         }
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
         totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);

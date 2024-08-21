@@ -37,7 +37,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
     private Activity productActivity;
     MediaPlayer player;
     public static int count;
-
+    DatabaseAccess databaseAccess;
 
     public PosProductAdapter(Activity productActivity, List<HashMap<String, String>> productData) {
         this.productActivity = productActivity;
@@ -58,7 +58,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
     @Override
     public void onBindViewHolder(@NonNull final PosProductAdapter.MyViewHolder holder, int position) {
 
-        final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productActivity);
+        databaseAccess = DatabaseAccess.getInstance(productActivity);
 
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
@@ -68,7 +68,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         final String product_category = productData.get(position).get("product_category");
         final String product_weight = productData.get(position).get("product_weight");
         final String product_count = ((Items)productActivity).checkCount(position);
-        final String product_desc = productData.get(position).get("product_desc");
+        final String product_desc = productData.get(position).get("product_description");
         final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
         final String product_price = productData.get(position).get("product_sell_price");
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
@@ -82,7 +82,10 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
         holder.txtProductName.setText(name);
 
-        holder.txtCategory.setText(product_category);
+        databaseAccess.open();
+        String categoryName = databaseAccess.getCategoryName(product_category);
+
+        holder.txtCategory.setText(categoryName);
         holder.txtDesc.setText(product_desc);
         holder.txtPrice.setText(currency + trimLongDouble(product_price));
         holder.txtCount.setText(product_count);
@@ -102,7 +105,6 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
         if (base64Image != null) {
             if (base64Image.length() < 6) {
-                Log.d("64base", base64Image);
                 holder.product_image.setImageResource(R.drawable.image_placeholder);
                 holder.product_image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
