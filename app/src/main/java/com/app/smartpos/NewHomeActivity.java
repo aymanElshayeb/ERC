@@ -16,6 +16,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.profile.Profile;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftDialog;
+import com.app.smartpos.settings.end_shift.EndShiftStep1;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -59,8 +60,7 @@ public class NewHomeActivity extends BaseActivity {
         });
 
         endOfShiftLl.setOnClickListener(v -> {
-            EndShiftDialog dialog=new EndShiftDialog();
-            dialog.show(getSupportFragmentManager(),"end shift dialog");
+            startActivity(new Intent(this, EndShiftStep1.class));
         });
 
         databaseAccess = DatabaseAccess.getInstance(this);

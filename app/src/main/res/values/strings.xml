@@ -329,6 +329,11 @@
     <string name="download_data">Download Data</string>
 
     <string name="end_shift_report">End Shift Report</string>
+    <string name="end_my_shift">End My Shift</string>
+    <string name="shift_summary_details">Shift Summary Details</string>
+    <string name="total_cash">Total Cash</string>
+    <string name="total_card">Total Card</string>
+    <string name="number_of_sales">Number of Sales</string>
     <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
     <string name="real">Real</string>
     <string name="input">Input</string>
