@@ -380,7 +380,7 @@
     <string name="select_which_item_you_want_to_refund">Select which item you want to refund</string>
     <string name="refund_total">Refund Total</string>
     <string name="total_qty">Total Qty:</string>
-    <string name="how_many_items_want_to_refund">How many items want to refund?</string>
+    <string name="how_many_items_want_to_refund">How many items you want to refund?</string>
 
     <string name="registration">Registration</string>
     <string name="merchant_id">Merchant ID</string>
