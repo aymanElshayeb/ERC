@@ -160,7 +160,6 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginStart="16dp"
             android:textColor="@color/white"
             android:backgroundTint="@color/purple"
             android:background="@drawable/rounded_button_6"

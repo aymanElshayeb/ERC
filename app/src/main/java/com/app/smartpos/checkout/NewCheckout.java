@@ -261,6 +261,7 @@ public class NewCheckout extends AppCompatActivity {
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_name_en", product.get(0).get("product_name_en"));
                         objp.put("product_name_ar", product.get(0).get("product_name_ar"));
+                        objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_weight", lines.get(i).get("product_weight") + " " + weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock") == null ? Integer.MAX_VALUE : lines.get(i).get("stock"));

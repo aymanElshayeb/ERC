@@ -861,7 +861,7 @@ public class DatabaseAccess {
             double paid_amount = obj.getDouble("paid_amount");
             double change_amount = obj.getDouble("change_amount");
             String tax_number = obj.getString("tax_number");
-            String sequence_text = obj.getString("sequence_text");
+
 
             values.put("invoice_id", order_id);
             values.put("order_date", order_date);
@@ -1149,6 +1149,28 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return orderDetailsList;
+    }
+
+    public void updateOrderDetailsItem(String column, String value, String order_details_id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(column, value);
+
+        long check = database.update("order_details", values, "order_details_id=?", new String[]{order_details_id});
+
+
+    }
+
+    public void updateOrderListItem(String column, String value, String invoice_id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(column, value);
+
+        long check = database.update("order_list", values, "invoice_id=?", new String[]{invoice_id});
+
+
     }
 
 

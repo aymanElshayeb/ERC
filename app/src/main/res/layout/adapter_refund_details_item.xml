@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/product_im"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:riv_corner_radius="6dp"
+        android:padding="2dp"
+        android:src="@drawable/image_placeholder"
+        android:background="@drawable/custom_payment_method_item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"/>
+
+
+    <TextView
+        android:id="@+id/product_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLength="20"
+        app:layout_constraintTop_toTopOf="@id/product_im"
+        app:layout_constraintStart_toEndOf="@id/product_im"
+        android:layout_marginStart="8dp"
+        android:text="@string/product_name"
+        android:textSize="15sp"
+        android:textColor="@color/light_purple"
+        app:fontFamily="@font/worksans_regular" />
+
+    <TextView
+        android:id="@+id/qty_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/product_im"
+        app:layout_constraintStart_toEndOf="@id/product_im"
+        android:layout_marginStart="8dp"
+        android:text="@string/total_qty"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:fontFamily="@font/worksans_semibold" />
+
+    <ImageView
+        android:id="@+id/checkbox_im"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/purple"
+        android:src="@drawable/ic_box_uncheck"
+        app:layout_constraintTop_toTopOf="@id/product_im"
+        app:layout_constraintBottom_toBottomOf="@id/product_im"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/refund_qty_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/qty_tv"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/product_im"
+            app:layout_constraintStart_toEndOf="@id/product_im"
+            android:text="@string/how_many_items_want_to_refund"
+            android:textColor="@color/light_purple"
+            android:textSize="16sp"
+            app:fontFamily="@font/worksans_semibold" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="140dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp">
+            <ImageView
+                android:id="@+id/minus_im"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_minus"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/number_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toEndOf="@id/minus_im"
+                app:layout_constraintEnd_toStartOf="@id/plus_im"
+                android:layout_marginHorizontal="6dp"
+                android:background="@drawable/rounded_corners_login_edittext_light"
+                android:text="0"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:textColorHint="@color/light_purple"
+                android:textSize="17sp"
+                android:textColor="#000000"
+                android:fontFamily="@font/worksans_semibold" />
+
+            <ImageView
+                android:id="@+id/plus_im"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_plus"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/amount_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold"
+                android:text="320.00"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/currency_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/inter_regular"
+                android:text="SAR"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@id/amount_tv"
+                app:layout_constraintStart_toEndOf="@id/amount_tv" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="28dp"
+        android:background="#E6E9EF"
+        app:layout_constraintTop_toBottomOf="@id/refund_qty_ll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
