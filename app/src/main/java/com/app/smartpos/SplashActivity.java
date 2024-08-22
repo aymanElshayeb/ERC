@@ -38,8 +38,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
-                //Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
+                //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
+                Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                 startActivity(intent);
                 finish();
             }
