@@ -1,43 +1,31 @@
 package com.app.smartpos.adapter;
 
-import static com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype.Slidetop;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
-import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.orders.OrderDetailsActivity;
-import com.app.smartpos.refund.RefundDetails;
-import com.app.smartpos.refund.RefundList;
-import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.app.smartpos.refund.RefundOrOrderDetails;
+import com.app.smartpos.refund.RefundOrOrderList;
 
 import java.util.HashMap;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
-
-public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.MyViewHolder> {
+public class RefundsOrOrdersAdapter extends RecyclerView.Adapter<RefundsOrOrdersAdapter.MyViewHolder> {
 
 
-    RefundList refundList;
+    RefundOrOrderList refundOrOrderList;
     private List<HashMap<String, String>> orderData;
 
 
-    public RefundAdapter(RefundList refundList, List<HashMap<String, String>> orderData) {
-        this.refundList = refundList;
+    public RefundsOrOrdersAdapter(RefundOrOrderList refundOrOrderList, List<HashMap<String, String>> orderData) {
+        this.refundOrOrderList = refundOrOrderList;
         this.orderData = orderData;
     }
 
@@ -62,11 +50,13 @@ public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.MyViewHold
 
         holder.amount_tv.setText(in_tax_total);
         holder.receipt_number_tv.setText(invoice_id);
-        holder.currency_tv.setText(refundList.getCurrency());
+        holder.currency_tv.setText(refundOrOrderList.getCurrency());
         holder.card_tv.setVisibility(payment_method.equals("CARD")?View.VISIBLE:View.GONE);
         holder.cash_tv.setVisibility(payment_method.equals("CASH")?View.VISIBLE:View.GONE);
-        holder.refunded_tv.setVisibility(operation_type.equals("refunded")?View.VISIBLE:View.GONE);
+        if(refundOrOrderList.isRefund()) {
 
+        }
+        holder.refunded_tv.setVisibility(operation_type.equals("refunded") ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -97,12 +87,14 @@ public class RefundAdapter extends RecyclerView.Adapter<RefundAdapter.MyViewHold
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(refundList, RefundDetails.class);
+            Intent i = new Intent(refundOrOrderList, RefundOrOrderDetails.class).putExtra("isRefund",refundOrOrderList.isRefund());
             i.putExtra("order_id",orderData.get(getAdapterPosition()).get("invoice_id"));
             i.putExtra("order_payment_method",orderData.get(getAdapterPosition()).get("order_payment_method"));
             i.putExtra("operation_type",orderData.get(getAdapterPosition()).get("operation_type"));
-            refundList.finish();
-            refundList.startActivity(i);
+            if(refundOrOrderList.isRefund()) {
+                refundOrOrderList.finish();
+            }
+            refundOrOrderList.startActivity(i);
         }
     }
 

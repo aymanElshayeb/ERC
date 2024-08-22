@@ -25,6 +25,7 @@
     <string name="expense">Expense</string>
     <string name="report">Report</string>
     <string name="all_orders">All Orders</string>
+    <string name="orders">Orders</string>
     <string name="all_sales">All Sales</string>
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>

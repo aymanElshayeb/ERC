@@ -35,13 +35,13 @@ public class Refund extends AppCompatActivity {
         EditText search_et = findViewById(R.id.search_et);
         Button view_receipt_btn = findViewById(R.id.view_receipt_btn);
 
-        allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundList.class)));
+        allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund",true)));
         view_receipt_btn.setOnClickListener(view -> {
             databaseAccess.open();
             if (!search_et.getText().toString().trim().isEmpty()) {
                 List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
                 if (list.size() > 0) {
-                    Intent i = new Intent(this, RefundDetails.class);
+                    Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
 
                     i.putExtra("order_id", list.get(0).get("invoice_id"));
                     i.putExtra("order_payment_method", list.get(0).get("order_payment_method"));

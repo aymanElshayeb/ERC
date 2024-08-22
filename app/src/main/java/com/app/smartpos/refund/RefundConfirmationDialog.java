@@ -13,13 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
-import com.app.smartpos.settings.end_shift.EndShiftStep2;
 
 public class RefundConfirmationDialog extends DialogFragment {
 
 
     View root;
-    RefundDetails refundDetails;
+    RefundOrOrderDetails refundDetails;
     String amount;
 
     @Nullable
@@ -47,7 +46,7 @@ public class RefundConfirmationDialog extends DialogFragment {
         return root;
     }
 
-    public void setData(RefundDetails refundDetails,String amount) {
+    public void setData(RefundOrOrderDetails refundDetails, String amount) {
         this.refundDetails = refundDetails;
         this.amount=amount;
     }

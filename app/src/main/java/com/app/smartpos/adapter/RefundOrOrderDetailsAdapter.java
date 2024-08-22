@@ -13,20 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
-import com.app.smartpos.refund.RefundDetails;
+import com.app.smartpos.refund.RefundOrOrderDetails;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdapter.MyViewHolder> {
+public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOrderDetailsAdapter.MyViewHolder> {
 
 
-    RefundDetails refundDetails;
+    RefundOrOrderDetails refundOrOrderDetails;
     private List<HashMap<String, String>> orderData;
 
 
-    public RefundDetailsAdapter(RefundDetails refundDetails, List<HashMap<String, String>> orderData) {
-        this.refundDetails = refundDetails;
+    public RefundOrOrderDetailsAdapter(RefundOrOrderDetails refundOrOrderDetails, List<HashMap<String, String>> orderData) {
+        this.refundOrOrderDetails = refundOrOrderDetails;
         this.orderData = orderData;
     }
 
@@ -53,10 +53,14 @@ public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdap
 
         holder.product_name_tv.setText(product_name_en);
 
-        holder.qty_tv.setText(refundDetails.getString(R.string.total_qty) + " " + product_qty);
-        holder.currency_tv.setText(refundDetails.getCurrency());
+        holder.qty_tv.setText(refundOrOrderDetails.getString(R.string.total_qty) + " " + product_qty);
+        holder.currency_tv.setText(refundOrOrderDetails.getCurrency());
 
         holder.line.setAlpha(position == orderData.size() - 1 ? 0f : 1.0f);
+
+        if(!refundOrOrderDetails.isRefund()){
+            holder.checkbox_im.setVisibility(View.GONE);
+        }
 
         if (item_checked.equals("1")) {
             holder.checkbox_im.setImageResource(R.drawable.ic_box_check);
@@ -65,7 +69,7 @@ public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdap
             if (refund_qty[0] > 0) {
                 holder.amount_ll.setVisibility(View.VISIBLE);
                 holder.number_tv.setText(refund_qty[0] + "");
-                holder.amount_tv.setText((product_price * refund_qty[0]) + " " + refundDetails.getCurrency());
+                holder.amount_tv.setText((product_price * refund_qty[0]) + " " + refundOrOrderDetails.getCurrency());
             } else {
                 holder.amount_ll.setVisibility(View.GONE);
             }
@@ -95,7 +99,7 @@ public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdap
                 refund_qty[0] += 1;
                 orderData.get(position).put("refund_qty", refund_qty[0] + "");
                 notifyItemChanged(position);
-                refundDetails.updateTotalAmount();
+                refundOrOrderDetails.updateTotalAmount();
             }
         });
 
@@ -104,7 +108,7 @@ public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdap
                 refund_qty[0] -= 1;
                 orderData.get(position).put("refund_qty", refund_qty[0] + "");
                 notifyItemChanged(position);
-                refundDetails.updateTotalAmount();
+                refundOrOrderDetails.updateTotalAmount();
             }
         });
 
@@ -114,7 +118,7 @@ public class RefundDetailsAdapter extends RecyclerView.Adapter<RefundDetailsAdap
             } else {
                 orderData.get(position).put("item_checked", "1");
             }
-            refundDetails.updateTotalAmount();
+            refundOrOrderDetails.updateTotalAmount();
             notifyItemChanged(position);
         });
     }

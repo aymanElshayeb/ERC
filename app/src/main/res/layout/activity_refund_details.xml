@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".refund.RefundDetails">
+    tools:context=".refund.RefundOrOrderDetails">
     <ImageView
         android:id="@+id/back_im"
         android:layout_width="wrap_content"
@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
+        android:id="@+id/title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/refund"
@@ -149,6 +150,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/question_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -175,6 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="16dp">
                 <TextView
+                    android:id="@+id/amount_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
@@ -182,6 +185,7 @@
                     android:textColor="@color/light_purple"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:textSize="16sp" />
 
                 <TextView

@@ -8,20 +8,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.app.smartpos.R;
-import com.app.smartpos.adapter.RefundAdapter;
+import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.database.DatabaseAccess;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class RefundList extends AppCompatActivity {
+public class RefundOrOrderList extends AppCompatActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
 
-    RefundAdapter refundAdapter;
+    RefundsOrOrdersAdapter refundsOrOrdersAdapter;
+    boolean isRefund;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +32,15 @@ public class RefundList extends AppCompatActivity {
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_refund_list);
-
+        isRefund=getIntent().getBooleanExtra("isRefund",false);
+        TextView title_tv=findViewById(R.id.title_tv);
+        TextView title_text=findViewById(R.id.title_text);
         RecyclerView recycler=findViewById(R.id.recycler);
+
+        if(!isRefund){
+            title_tv.setText(getString(R.string.orders));
+            title_text.setText(getString(R.string.all_orders));
+        }
 
         databaseAccess=DatabaseAccess.getInstance(this);
 
@@ -45,11 +54,15 @@ public class RefundList extends AppCompatActivity {
         List<HashMap<String, String>> orderList;
         orderList = databaseAccess.getOrderList();
 
-        refundAdapter=new RefundAdapter(this,orderList);
+        refundsOrOrdersAdapter =new RefundsOrOrdersAdapter(this,orderList);
         recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        recycler.setAdapter(refundAdapter);
+        recycler.setAdapter(refundsOrOrdersAdapter);
 
 
+    }
+
+    public boolean isRefund() {
+        return isRefund;
     }
 
     public String getCurrency() {

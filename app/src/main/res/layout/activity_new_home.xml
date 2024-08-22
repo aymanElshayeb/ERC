@@ -122,118 +122,143 @@
             app:layout_constraintTop_toBottomOf="@id/current_shift_number_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="37dp"
-        android:orientation="vertical">
-
+        android:scrollbars="none">
         <LinearLayout
-            android:id="@+id/items_ll"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_home_items"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_items" />
+            <LinearLayout
+                android:id="@+id/items_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_items" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/items"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/all_orders_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/inter_medium"
-                android:text="@string/items"
-                android:textColor="@color/purple"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/bills_ll"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_home_items"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_all_orders" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_bill" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/all_orders"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:id="@+id/bills_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/inter_medium"
-                android:text="@string/quick_bills"
-                android:textColor="@color/purple"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/refund_ll"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_home_items"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bill" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_refund" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/quick_bills"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:id="@+id/refund_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/inter_medium"
-                android:text="@string/refund"
-                android:textColor="@color/purple"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/end_of_shift_ll"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_home_items"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_refund" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_end_shift" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/refund"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:id="@+id/end_of_shift_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/inter_medium"
-                android:text="@string/end_of_shift"
-                android:textColor="@color/purple"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-    </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_end_shift" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/end_of_shift"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

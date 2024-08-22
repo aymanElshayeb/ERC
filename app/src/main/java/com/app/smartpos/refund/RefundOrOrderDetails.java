@@ -2,10 +2,10 @@ package com.app.smartpos.refund;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -14,17 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
-import com.app.smartpos.adapter.RefundDetailsAdapter;
+import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class RefundDetails extends AppCompatActivity {
+public class RefundOrOrderDetails extends AppCompatActivity {
 
     DatabaseAccess databaseAccess;
-    RefundDetailsAdapter refundDetailsAdapter;
+    RefundOrOrderDetailsAdapter refundDetailsAdapter;
     String currency;
     TextView receipt_number_tv;
     TextView card_tv, cash_tv, refunded_tv, total_amount_tv;
@@ -32,7 +32,7 @@ public class RefundDetails extends AppCompatActivity {
     List<HashMap<String, String>> orderDetailsList;
     String orderId;
     TextView refund_tv;
-
+    boolean isRefund;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,12 @@ public class RefundDetails extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_refund_details);
 
+        isRefund=getIntent().getBooleanExtra("isRefund",false);
+
+        TextView title_tv = findViewById(R.id.title_tv);
+        TextView question_tv = findViewById(R.id.question_tv);
+        TextView amount_tv = findViewById(R.id.amount_tv);
+        LinearLayout btn_ll = findViewById(R.id.btn_ll);
         receipt_number_tv = findViewById(R.id.receipt_number_tv);
         RecyclerView recycler = findViewById(R.id.recycler);
         card_tv = findViewById(R.id.card_tv);
@@ -71,13 +77,22 @@ public class RefundDetails extends AppCompatActivity {
             orderDetailsList.get(i).put("item_checked", "0");
         }
 
-        refundDetailsAdapter = new RefundDetailsAdapter(this, orderDetailsList);
+        refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler.setAdapter(refundDetailsAdapter);
-
+        if(!isRefund){
+            title_tv.setText(getString(R.string.order_details));
+            question_tv.setVisibility(View.GONE);
+            amount_tv.setText(getString(R.string.total_amount));
+            btn_ll.setVisibility(View.GONE);
+        }
         updateTotalAmount();
 
         refund_tv.setOnClickListener(view -> refundPressed());
+    }
+
+    public boolean isRefund() {
+        return isRefund;
     }
 
     public String getCurrency() {
@@ -90,11 +105,16 @@ public class RefundDetails extends AppCompatActivity {
         for (int i = 0; i < orderDetailsList.size(); i++) {
             double product_price = Double.parseDouble(orderDetailsList.get(i).get("product_price"));
             double refund_qty = Double.parseDouble(orderDetailsList.get(i).get("refund_qty"));
+            double product_qty = Double.parseDouble(orderDetailsList.get(i).get("product_qty"));
             String item_checked = orderDetailsList.get(i).get("item_checked");
 
-            if (item_checked.equals("1") && refund_qty > 0) {
-                total += refund_qty * product_price;
-                canRefund = true;
+            if(!isRefund){
+                total += product_qty * product_price;
+            }else {
+                if (item_checked.equals("1") && refund_qty > 0) {
+                    total += refund_qty * product_price;
+                    canRefund = true;
+                }
             }
         }
         refund_tv.setEnabled(canRefund);

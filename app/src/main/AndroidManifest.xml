@@ -34,10 +34,10 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".refund.RefundDetails"
+            android:name=".refund.RefundOrOrderDetails"
             android:exported="false" />
         <activity
-            android:name=".refund.RefundList"
+            android:name=".refund.RefundOrOrderList"
             android:exported="false" />
         <activity
             android:name=".checkout.CheckoutOrderDetails"

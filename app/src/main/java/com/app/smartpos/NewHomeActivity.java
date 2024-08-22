@@ -15,6 +15,7 @@ import com.app.smartpos.Items.Items;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.profile.Profile;
 import com.app.smartpos.refund.Refund;
+import com.app.smartpos.refund.RefundOrOrderList;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftDialog;
 import com.app.smartpos.settings.end_shift.EndShiftStep1;
@@ -41,6 +42,7 @@ public class NewHomeActivity extends BaseActivity {
 
         LinearLayout circleNameLl=findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL=findViewById(R.id.items_ll);
+        LinearLayout allOrdersLL=findViewById(R.id.all_orders_ll);
         LinearLayout refundLL=findViewById(R.id.refund_ll);
         LinearLayout endOfShiftLl=findViewById(R.id.end_of_shift_ll);
         TextView syncTv=findViewById(R.id.sync_tv);
@@ -55,6 +57,10 @@ public class NewHomeActivity extends BaseActivity {
 
         itemsLL.setOnClickListener(view -> {
             startActivity(new Intent(this, Items.class));
+        });
+
+        allOrdersLL.setOnClickListener(view -> {
+            startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund",false));
         });
 
         syncTv.setOnClickListener(view -> {
