@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.SettingsActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.ArrayList;
@@ -79,9 +77,11 @@ public class EndShiftStep2 extends AppCompatActivity {
         paymentTypesCashMap.put("CASH",startCash+"");
         databaseAccess.open();
         for (int i = 0; i < orderList.size(); i++) {
+            Log.i("datadata_tax",orderList.get(i).toString());
             databaseAccess.open();
             double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
-            double tax = Double.parseDouble(orderList.get(i).get("tax"));
+            databaseAccess.open();
+            double tax = databaseAccess.totalOrderTax(orderList.get(i).get("invoice_id"));
             double discount = Double.parseDouble(orderList.get(i).get("discount"));
 
             total_amount += total_price;
@@ -101,6 +101,7 @@ public class EndShiftStep2 extends AppCompatActivity {
                 paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
             }
         }
+        Log.i("datadata_tax",total_tax+"");
         totalAmountTv.setText(total_amount+" "+currency);
         databaseAccess.open();
         List<HashMap<String, String>> cardTypes=new ArrayList<>();
