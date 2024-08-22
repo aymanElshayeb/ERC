@@ -395,5 +395,6 @@
     
     <string name="print_receipt">Print Receipt</string>
     <string name="no_receipt">No Receipt</string>
+    <string name="close">Close</string>
 
 </resources>

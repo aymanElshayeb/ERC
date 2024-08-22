@@ -3,6 +3,7 @@ package com.app.smartpos.checkout;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -39,21 +40,23 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         ImageView receiptIm = findViewById(R.id.receipt_im);
         TextView printReceipt = findViewById(R.id.print_receipt_tv);
         TextView noReceipt = findViewById(R.id.no_receipt_tv);
+        TextView closeTv = findViewById(R.id.close_tv);
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
         databaseAccess.open();
-        HashMap<String, String> map = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
-
-        String invoice_id = map.get("invoice_id");
-        String customer_name = map.get("customer_name");
-        String order_date = map.get("order_date");
-        String order_time = map.get("order_time");
-        String tax = map.get("tax");
-        String discount = map.get("discount");
-        double price_before_tax = Double.parseDouble(map.get("ex_tax_total"));
-        double price_after_tax = Double.parseDouble(map.get("in_tax_total"));
+        //HashMap<String, String> orderDetails = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
+        HashMap<String, String> orderLitItem = databaseAccess.getOrderListByOrderId(getIntent().getStringExtra("id"));
+        //Log.i("datadata",map.toString());
+        String invoice_id = orderLitItem.get("invoice_id");
+        String customer_name = orderLitItem.get("customer_name");
+        String order_date = orderLitItem.get("order_date");
+        String order_time = orderLitItem.get("order_time");
+        String tax = orderLitItem.get("tax");
+        String discount = orderLitItem.get("discount");
+        double price_before_tax = Double.parseDouble(orderLitItem.get("ex_tax_total"));
+        double price_after_tax = Double.parseDouble(orderLitItem.get("in_tax_total"));
 
         OrderBitmap orderBitmap = new OrderBitmap();
         Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
@@ -64,6 +67,13 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         });
 
         noReceipt.setOnClickListener(view -> {
+            Intent intent = new Intent(this, NewHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
+        closeTv.setOnClickListener(view -> {
             Intent intent = new Intent(this, NewHomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

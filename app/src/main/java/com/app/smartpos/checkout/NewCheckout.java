@@ -278,6 +278,7 @@ public class NewCheckout extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                Log.i("datadata",obj.toString());
                 saveOrderInOfflineDb(obj);
 
 

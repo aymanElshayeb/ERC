@@ -175,10 +175,10 @@ public class EndShiftStep2 extends AppCompatActivity {
                 if (employeeCash != models.get(i).real) {
                     String value = trimLongDouble((employeeCash - models.get(i).real));
                     if (employeeCash - models.get(i).real > 0) {
-                        models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": +" + value);
+                        models.get(i).paymentCashErrorTv.setText("+" + value);
                         models.get(i).paymentCashErrorTv.setTextColor(getResources().getColor(R.color.successColor));
                     } else {
-                        models.get(i).paymentCashErrorTv.setText(models.get(i).type + ": " + value);
+                        models.get(i).paymentCashErrorTv.setText(value);
                         models.get(i).paymentCashErrorTv.setTextColor(getResources().getColor(R.color.errorColor));
                     }
                 }
