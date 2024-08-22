@@ -383,4 +383,17 @@
     <string name="custom_items">Custom Item</string>
     <string name="clear_all_items">Clear All Items</string>
 
+    <string name="confirmation_for_ending_your_shift">Confirmation for ending your shift?</string>
+    <string name="confirmation_for_ending_your_shift_desc">Are you sure you want to end your current shift and submit details?</string>
+
+    <string name="have_a_good_day">Have a good day!</string>
+    <string name="you_will_be_logged_out_in">You will be logged out in</string>
+    <string name="seconds">Seconds</string>
+    <string name="second">Second</string>
+
+    <string name="payment_success">Payment Success</string>
+    
+    <string name="print_receipt">Print Receipt</string>
+    <string name="no_receipt">No Receipt</string>
+
 </resources>

@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class NewLandEnhancedPrinter extends BaseActivity {
+public class OrderBitmap extends BaseActivity {
     String name, price, qty;
     double productTotalPrice;
     DecimalFormat f;
@@ -44,74 +44,14 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     int width = 0;
     String line="--------------------------------------------";
 
-    public NewLandEnhancedPrinter() {
-        ModuleManage.getInstance().init();
-        mPrintManager = ModuleManage.getInstance().getPrinterModule();
-    }
-
-
-    public boolean printReceipt(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandEnhancedPrinter.this);
-        databaseAccess.open();
-        configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
-        databaseAccess.open();
-        orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
-        databaseAccess.open();
-        orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat("#.00");
-        try {
-            byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-            Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            bitmaps.add(new PrinterModel(0,logo));
-            printMerchantId(merchantId);
-            printMerchantTaxNumber(merchantTaxNumber);
-            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));
-            //mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
-            printReceiptNo(invoiceId);
-            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة")));
-            printInvoiceBarcode(invoiceId);
-            //Todo products ( id, name, price including tax, qty, total including tax
-            printProducts(orderDetailsList);
-            printTotalExcludingTax(priceBeforeTax);
-            printDiscount(discount);
-            printTax(tax);
-            printTotalIncludingTax(priceAfterTax);
-            //Todo total paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("إجمالى المدفوع").toString(), "");
-            //Todo needs to be paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
-            //Todo remaining
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
-            printZatcaQrCode(databaseAccess);
-            Map<String, Bitmap> bitmapResult = new HashMap<>();
-            String bitmapName1 = "logo";
-            bitmapResult.put(bitmapName1, creatGeneralBitmap());
-
-            StringBuffer printDara = new StringBuffer();
-            printDara.append("*image c " + width + "*" + totalHeight + " path:" + bitmapName1 + "\n");
-            printDara.append("!hz s\n!asc s\n");
-            mPrintManager.print(printDara.toString(), bitmapResult, new PrintListener() {
-                @Override
-                public void onSuccess() {
-                    Log.i("datadata", "success");
-                }
-
-                @Override
-                public void onError(ErrorCode errorCode, String s) {
-                    Log.i("datadata_error", "error " + errorCode + " " + s);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
+    public OrderBitmap() {
 
     }
+
+
 
     public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandEnhancedPrinter.this);
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");

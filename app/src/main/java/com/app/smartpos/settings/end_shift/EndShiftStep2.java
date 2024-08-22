@@ -216,18 +216,22 @@ public class EndShiftStep2 extends AppCompatActivity {
             if (hasError) {
                 confirmWithErrorTv.setVisibility(View.VISIBLE);
             } else {
-                addToShift();
+                EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
+                dialog.setEndShiftStep2(this);
+                dialog.show(getSupportFragmentManager(),"dialog");
             }
 
         });
 
         confirmWithErrorTv.setOnClickListener(view -> {
-            addToShift();
+            EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
+            dialog.setEndShiftStep2(this);
+            dialog.show(getSupportFragmentManager(),"dialog");
         });
 
 }
 
-    private void addToShift() {
+    public void addToShift() {
         databaseAccess.open();
         int id = databaseAccess.addShift(endShiftModel);
         if (id > -1) {
@@ -243,13 +247,7 @@ public class EndShiftStep2 extends AppCompatActivity {
 
         }
         Log.i("datadata", id + "");
-        openReport(endShiftModel);
+        startActivity(new Intent(this, ShiftEndedSuccessfully.class));
 
-    }
-
-    public void openReport(EndShiftModel model){
-        EndShiftReportDialog reportDialog=new EndShiftReportDialog();
-        reportDialog.setEndShiftModel(model);
-        reportDialog.show(getSupportFragmentManager(),"dialog");
     }
 }

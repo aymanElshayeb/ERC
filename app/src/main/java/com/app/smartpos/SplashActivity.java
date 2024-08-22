@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 
 import org.apache.http.auth.AUTH;
@@ -37,6 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                 startActivity(intent);
                 finish();

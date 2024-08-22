@@ -33,11 +33,23 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".settings.end_shift.EndShiftStep2"
+            android:name=".checkout.CheckoutOrderDetails"
             android:exported="false" />
         <activity
-            android:name=".settings.end_shift.EndShiftStep1"
+            android:name=".checkout.SuccessfulPayment"
             android:exported="false" />
+        <activity
+            android:name=".settings.end_shift.ShiftEndedSuccessfully"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".settings.end_shift.EndShiftStep2"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".settings.end_shift.EndShiftStep1"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".checkout.CashPricing"
             android:exported="false"
