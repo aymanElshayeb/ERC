@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -60,6 +61,9 @@ public class CheckoutOrderDetails extends AppCompatActivity {
 
         OrderBitmap orderBitmap = new OrderBitmap();
         Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
+        ViewGroup.LayoutParams params=receiptIm.getLayoutParams();
+        params.height=(int)(bitmap.getHeight()*getResources().getDisplayMetrics().density);
+        receiptIm.setLayoutParams(params);
         receiptIm.setImageBitmap(bitmap);
 
         printReceipt.setOnClickListener(view -> {
