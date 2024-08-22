@@ -89,6 +89,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         updateTotalAmount();
 
         refund_tv.setOnClickListener(view -> refundPressed());
+        findViewById(R.id.back_im).setOnClickListener(view -> finish());
     }
 
     public boolean isRefund() {

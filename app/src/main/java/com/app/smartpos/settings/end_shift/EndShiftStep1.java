@@ -36,7 +36,6 @@ public class EndShiftStep1 extends AppCompatActivity {
         TextView totalCardTv = findViewById(R.id.total_card_tv);
         TextView numberOfSalesTv = findViewById(R.id.number_of_sales_tv);
         TextView endMyShiftTv = findViewById(R.id.end_my_shift_tv);
-        ImageView backIm = findViewById(R.id.back_im);
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
@@ -66,7 +65,7 @@ public class EndShiftStep1 extends AppCompatActivity {
         totalCardTv.setText(totalCard+" "+currency);
         numberOfSalesTv.setText(orderList.size()+"");
 
-        backIm.setOnClickListener(view -> finish());
+        findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
         endMyShiftTv.setOnClickListener(view -> startActivity(new Intent(this, EndShiftStep2.class)));
 

@@ -58,6 +58,7 @@ public class RefundOrOrderList extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recycler.setAdapter(refundsOrOrdersAdapter);
 
+        findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
     }
 

@@ -51,5 +51,7 @@ public class Refund extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.back_im).setOnClickListener(view -> finish());
     }
 }
