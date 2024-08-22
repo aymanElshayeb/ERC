@@ -3,6 +3,7 @@ package com.app.smartpos.orders;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -107,6 +108,7 @@ public class OrderBitmap extends BaseActivity {
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(width, totalHeight, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE);
         int lastY = 0;
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();

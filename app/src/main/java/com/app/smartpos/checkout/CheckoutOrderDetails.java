@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -26,6 +28,9 @@ public class CheckoutOrderDetails extends AppCompatActivity {
 
     DatabaseAccess databaseAccess;
     Device device;
+    private ImageView receiptIm;
+    private TextView printReceipt;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,38 @@ public class CheckoutOrderDetails extends AppCompatActivity {
 
         device = DeviceFactory.getDevice();
 
-        ImageView receiptIm = findViewById(R.id.receipt_im);
-        TextView printReceipt = findViewById(R.id.print_receipt_tv);
+        scrollView = findViewById(R.id.scrollView);
+        receiptIm = findViewById(R.id.receipt_im);
+        printReceipt = findViewById(R.id.print_receipt_tv);
         TextView noReceipt = findViewById(R.id.no_receipt_tv);
         TextView closeTv = findViewById(R.id.close_tv);
 
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                createBitmap();
+            }
+        });
+
+
+        noReceipt.setOnClickListener(view -> {
+            Intent intent = new Intent(this, NewHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
+        closeTv.setOnClickListener(view -> {
+            Intent intent = new Intent(this, NewHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
+    }
+
+    private void createBitmap() {
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
@@ -61,28 +93,18 @@ public class CheckoutOrderDetails extends AppCompatActivity {
 
         OrderBitmap orderBitmap = new OrderBitmap();
         Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
-        ViewGroup.LayoutParams params=receiptIm.getLayoutParams();
-        params.height=(int)(bitmap.getHeight()*getResources().getDisplayMetrics().density);
-        receiptIm.setLayoutParams(params);
+        Log.i("datadata", bitmap.getHeight() + " " + scrollView.getHeight());
+
+        if (bitmap.getHeight() < scrollView.getHeight()) {
+            double scale=(double) scrollView.getHeight()/ bitmap.getHeight();
+            bitmap=Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*scale),scrollView.getHeight(),false);
+        }else{
+            //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
+        }
         receiptIm.setImageBitmap(bitmap);
 
         printReceipt.setOnClickListener(view -> {
             device.print(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
         });
-
-        noReceipt.setOnClickListener(view -> {
-            Intent intent = new Intent(this, NewHomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
-
-        closeTv.setOnClickListener(view -> {
-            Intent intent = new Intent(this, NewHomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
-
     }
 }
