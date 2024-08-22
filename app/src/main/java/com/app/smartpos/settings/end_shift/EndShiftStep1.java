@@ -52,11 +52,13 @@ public class EndShiftStep1 extends AppCompatActivity {
         double total=0;
         for (int i=0;i<orderList.size();i++){
             databaseAccess.open();
-            total += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
+            double amount=databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
+            total += amount;
             if (orderList.get(i).get("order_payment_method").equals("CASH")) {
-                totalCash+=Double.parseDouble(orderList.get(i).get("in_tax_total"));
+                //totalCash+=Double.parseDouble(orderList.get(i).get("in_tax_total"));
+                totalCash+=amount;
             }else if (orderList.get(i).get("order_payment_method").equals("CARD")) {
-                totalCard+=Double.parseDouble(orderList.get(i).get("in_tax_total"));
+                totalCard+=amount;
             }
         }
         totalAmountTv.setText(total+" "+currency);
