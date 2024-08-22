@@ -99,4 +99,9 @@ public class NewHomeActivity extends BaseActivity {
         }
         currentShiftNumberTv.setText(total_amount+"");
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }
