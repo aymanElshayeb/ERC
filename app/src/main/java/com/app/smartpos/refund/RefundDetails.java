@@ -1,5 +1,6 @@
 package com.app.smartpos.refund;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundDetailsAdapter;
+import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 
 import java.util.HashMap;
@@ -101,6 +103,12 @@ public class RefundDetails extends AppCompatActivity {
     }
 
     private void refundPressed() {
+        RefundConfirmationDialog dialog=new RefundConfirmationDialog();
+        dialog.setData(this,total_amount_tv.getText().toString());
+        dialog.show(getSupportFragmentManager(),"dialog");
+    }
+
+    public void refundConfirmation(){
         boolean canRefund = false;
         for (int i = 0; i < orderDetailsList.size(); i++) {
             double refund_qty = Double.parseDouble(orderDetailsList.get(i).get("refund_qty"));
@@ -109,7 +117,6 @@ public class RefundDetails extends AppCompatActivity {
             String order_details_id = orderDetailsList.get(i).get("order_details_id");
 
             if (item_checked.equals("1") && refund_qty > 0) {
-                Log.i("datadata",product_qty+" "+refund_qty);
                 canRefund = true;
                 databaseAccess.open();
                 databaseAccess.updateOrderDetailsItem("product_qty", "" + (int) (product_qty - refund_qty), order_details_id);
@@ -119,6 +126,8 @@ public class RefundDetails extends AppCompatActivity {
         if (canRefund) {
             databaseAccess.open();
             databaseAccess.updateOrderListItem("operation_type", "refunded", orderId);
+            Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString());
+            startActivity(intent);
             finish();
         }
     }

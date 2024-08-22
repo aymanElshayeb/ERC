@@ -35,7 +35,11 @@ public class SuccessfulPayment extends AppCompatActivity {
         biggerCircleIm=findViewById(R.id.bigger_circle_im);
         smallerCircleIm=findViewById(R.id.smaller_circle_im);
         amountTv=findViewById(R.id.amount_tv);
+        TextView titleTv=findViewById(R.id.title_tv);
 
+        if(!getIntent().getExtras().containsKey("id")) {
+            titleTv.setText(getString(R.string.items_successfully_refunded));
+        }
         amountTv.setText(getIntent().getStringExtra("amount"));
         startTimer();
     }
@@ -50,7 +54,9 @@ public class SuccessfulPayment extends AppCompatActivity {
             @Override
             public void onFinish() {
                 finish();
-                startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id",getIntent().getStringExtra("id")));
+                if(getIntent().getExtras().containsKey("id")) {
+                    startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id", getIntent().getStringExtra("id")));
+                }
             }
         }.start();
 

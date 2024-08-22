@@ -46,6 +46,9 @@
     <string name="quick_bills">Quick Bills</string>
     <string name="refund">Refund</string>
     <string name="end_of_shift">End of Shift</string>
+    <string name="confirmation_refund">Confirmation refund</string>
+    <string name="confirmation_refund_desc">Are you sure you want to refund this order?</string>
+    <string name="items_successfully_refunded">Items Successfully Refunded</string>
 
     <string name="cart">Cart</string>
     <string name="order_summary">Order Summary</string>
