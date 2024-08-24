@@ -90,6 +90,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
+                android:id="@+id/cash_giving_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -101,13 +102,18 @@
 
             <TextView
                 android:id="@+id/cash_giving_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/inter_semibold"
+                android:gravity="end"
+                android:maxLines="1"
                 android:text="00.00"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cash_giving_text"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,6 +125,7 @@
             android:layout_marginBottom="36dp">
 
             <TextView
+                android:id="@+id/change_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
@@ -131,13 +138,18 @@
 
             <TextView
                 android:id="@+id/change_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/inter_bold"
+                android:gravity="end"
+                android:maxLines="1"
                 android:text="00.00"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/change_text"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

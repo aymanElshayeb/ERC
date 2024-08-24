@@ -99,10 +99,16 @@ public class CashPricing extends AppCompatActivity {
         if(cash.equals("0")){
             cash="";
         }
-        cash+=number;
-        cashGivingTv.setText(cash+" "+currency);
-        change=totalAmount-Double.parseDouble(cash);
-        changeTv.setText(change+" "+currency);
+        if(cash.isEmpty() && number.equals(".")){
+            number="0.";
+        }
+        if(cash.contains(".") && number.equals(".")){
+            number="";
+        }
+        cash += number;
+        cashGivingTv.setText(cash + " " + currency);
+        change = totalAmount - Double.parseDouble(cash);
+        changeTv.setText(change + " " + currency);
     }
 
     private void del(){
