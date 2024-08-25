@@ -182,6 +182,7 @@
     <string name="select_customer">SELECT CUSTOMER</string>
     <string name="order_history">Order History</string>
     <string name="order_details">Order Details</string>
+    <string name="invoice">Invoice</string>
     <string name="total_price">Total Price: </string>
     <string name="add_expense">Add Expense</string>
     <string name="hi_welcome">Hello! Welcome</string>
@@ -195,6 +196,7 @@
     <string name="note">Note: </string>
     <string name="note_">Note</string>
     <string name="add_notes_for_shift">Add notes for before end the shift (optional)</string>
+    <string name="done">Done</string>
     <string name="want_to_delete_expense">Want to Delete Expense ?</string>
     <string name="expense_deleted">Expense Deleted</string>
     <string name="order_id">Order ID:</string>
@@ -348,6 +350,7 @@
     <string name="total_amount">Total Amount</string>
     <string name="total_transactions_number">Total Transactions Number</string>
     <string name="total_successful_transactions">Total Successful Transactions</string>
+    <string name="total_refunds">Total Refunds</string>
     <string name="start_shift_date">Start Shift Date</string>
     <string name="end_shift_date">End Shift Date</string>
     <string name="user_id">User ID</string>

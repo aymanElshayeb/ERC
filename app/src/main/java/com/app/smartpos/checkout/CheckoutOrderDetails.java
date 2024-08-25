@@ -86,10 +86,15 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         String customer_name = orderLitItem.get("customer_name");
         String order_date = orderLitItem.get("order_date");
         String order_time = orderLitItem.get("order_time");
-        String tax = orderLitItem.get("tax");
+        databaseAccess.open();
+        double tax = databaseAccess.totalOrderTax(invoice_id);
         String discount = orderLitItem.get("discount");
-        double price_before_tax = Double.parseDouble(orderLitItem.get("ex_tax_total"));
-        double price_after_tax = Double.parseDouble(orderLitItem.get("in_tax_total"));
+        databaseAccess.open();
+
+        double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
+
+        Log.i("datadata_tax2",""+tax+" "+price_after_tax);
+        double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap();
         Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
@@ -104,7 +109,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         receiptIm.setImageBitmap(bitmap);
 
         printReceipt.setOnClickListener(view -> {
-            device.print(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
+            device.print(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax+"", discount, currency);
         });
     }
 }

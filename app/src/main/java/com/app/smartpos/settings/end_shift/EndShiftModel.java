@@ -1,14 +1,16 @@
 package com.app.smartpos.settings.end_shift;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class EndShiftModel {
+public class EndShiftModel implements Serializable {
     HashMap<String,ShiftDifferences> shiftDifferences;
     int num_successful_transaction;
     int num_canceled_transaction;
     int num_returned_transaction;
     double total_amount;
+    int totalRefunds;
     double total_tax;
     String deviceID;
     long startDateTime;
@@ -91,6 +93,14 @@ public class EndShiftModel {
         return note;
     }
 
+    public int getTotalRefunds() {
+        return totalRefunds;
+    }
+
+    public void setTotalRefunds(int totalRefunds) {
+        this.totalRefunds = totalRefunds;
+    }
+
     @Override
     public String toString() {
         return "EndShiftModel{" +
@@ -99,6 +109,7 @@ public class EndShiftModel {
                 ", num_canceled_transaction=" + num_canceled_transaction +
                 ", num_returned_transaction=" + num_returned_transaction +
                 ", total_amount=" + total_amount +
+                ", totalRefunds=" + totalRefunds +
                 ", total_tax=" + total_tax +
                 ", deviceID='" + deviceID + '\'' +
                 ", startDateTime=" + startDateTime +

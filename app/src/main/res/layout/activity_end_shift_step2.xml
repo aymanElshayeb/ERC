@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="28dp">
 
             <ImageView
@@ -40,6 +40,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -84,96 +85,32 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/confirm_tv"
-        app:layout_constraintTop_toBottomOf="@id/top_panel_ll">
-
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/end_my_shift_tv"
+        app:layout_constraintTop_toBottomOf="@id/top_panel_ll"
+        android:layout_marginBottom="8dp">
         <LinearLayout
+            android:id="@+id/views_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:fontFamily="@font/inter_semibold"
+                android:text="@string/shift_summary_details"
+                android:textColor="@color/light_purple"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/leave_cash_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_black"
-                    android:gravity="start|center_vertical"
-                    android:paddingStart="8dp"
-                    android:text="@string/leave_cash"
-                    android:textSize="17sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/leave_cash_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginVertical="8dp"
-                    android:background="@drawable/rounded_corners_login_edittext_light"
-                    android:fontFamily="@font/inter_black"
-                    android:gravity="start|center_vertical"
-                    android:hint="0"
-                    android:inputType="numberDecimal"
-                    android:paddingHorizontal="8dp"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/leave_cash_text" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/shift_items_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <TextView
-                    android:id="@+id/note_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_black"
-                    android:gravity="start|center_vertical"
-                    android:paddingStart="8dp"
-                    android:text="@string/note"
-                    android:textSize="17sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/note_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginVertical="8dp"
-                    android:background="@drawable/rounded_corners_login_edittext_light"
-                    android:fontFamily="@font/inter_black"
-                    android:gravity="start|top"
-                    android:hint="@string/add_notes_for_shift"
-                    android:inputType="textMultiLine"
-                    android:padding="8dp"
-                    android:textColorHint="@color/grey_d8"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/note_text" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
-
     </ScrollView>
 
+
     <TextView
-        android:id="@+id/confirm_tv"
+        android:id="@+id/end_my_shift_tv"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginHorizontal="16dp"
@@ -182,24 +119,8 @@
         android:backgroundTint="#ece9ff"
         android:fontFamily="@font/inter_semibold"
         android:gravity="center"
-        android:text="@string/confirm"
+        android:text="@string/end_my_shift"
         android:textColor="@color/purple"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <TextView
-        android:id="@+id/confirm_with_error_tv"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/rounded_button_6"
-        android:backgroundTint="#FBE7E7"
-        android:fontFamily="@font/inter_semibold"
-        android:gravity="center"
-        android:text="@string/confirm_with_error"
-        android:textColor="#F74F4F"
-        android:textSize="17sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

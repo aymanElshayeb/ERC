@@ -109,50 +109,6 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         return true;
 
     }
-
-    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandEnhancedPrinter.this);
-        databaseAccess.open();
-        configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
-        databaseAccess.open();
-        orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
-        databaseAccess.open();
-        orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat("#.00");
-        try {
-            byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-            Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            bitmaps.add(new PrinterModel(0,logo));
-            printMerchantId(merchantId);
-            printMerchantTaxNumber(merchantTaxNumber);
-            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));
-            //mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
-            printReceiptNo(invoiceId);
-            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة")));
-            printInvoiceBarcode(invoiceId);
-            //Todo products ( id, name, price including tax, qty, total including tax
-            printProducts(orderDetailsList);
-            printTotalExcludingTax(priceBeforeTax);
-            printDiscount(discount);
-            printTax(tax);
-            printTotalIncludingTax(priceAfterTax);
-            //Todo total paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("إجمالى المدفوع").toString(), "");
-            //Todo needs to be paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
-            //Todo remaining
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
-            printZatcaQrCode(databaseAccess);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return creatGeneralBitmap();
-
-    }
-
     public Bitmap creatGeneralBitmap() {
         totalHeight = 0;
         int size = bitmaps.size();
@@ -236,7 +192,8 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
+            String total=productTotalPrice==0?"0.0":f.format(productTotalPrice);
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(total));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(price));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(productCode));
