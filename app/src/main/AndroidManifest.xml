@@ -50,11 +50,11 @@
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".settings.end_shift.EndShiftStep2"
+            android:name=".settings.end_shift.EndShiftStep1"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".settings.end_shift.EndShiftStep1"
+            android:name=".settings.end_shift.EndShiftStep2"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity

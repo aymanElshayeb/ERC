@@ -51,7 +51,7 @@ public class OrderBitmap extends BaseActivity {
 
 
 
-    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -131,15 +131,15 @@ public class OrderBitmap extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceAfterTax)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
     }
 
-    private void printTax(String tax) {
+    private void printTax(double tax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(tax))));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? f.format(tax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -147,7 +147,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printDiscount(String discount) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : String.valueOf(0)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -155,7 +155,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceBeforeTax)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -177,7 +177,8 @@ public class OrderBitmap extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
+            String total=productTotalPrice==0?"0.0":f.format(productTotalPrice);
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(total));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(price));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
             bitmaps.add(new PrinterModel(1,PrintingHelper.combineMultipleBitmapsHorizontally(ProductBitmap, 50)));

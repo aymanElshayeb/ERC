@@ -44,6 +44,7 @@ public class Items extends AppCompatActivity {
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
+    boolean firstOpen=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +134,8 @@ public class Items extends AppCompatActivity {
         databaseAccess.open();
 
         selectedProductList = databaseAccess.getCartProduct();
-        if (selectedProductList.size() > 0) {
-            updateCartUI();
-        }
+        updateCartUI();
+        firstOpen=false;
         productCartAdapter.notifyDataSetChanged();
     }
 
@@ -196,8 +196,8 @@ public class Items extends AppCompatActivity {
 
         if (count > 0) {
             animateViewCartHeight(103 * getResources().getDisplayMetrics().density);
-        } else {
-            animateViewCartHeight(1);
+        } else if(!firstOpen){
+            animateViewCartHeight(1f);
         }
     }
 
@@ -217,6 +217,7 @@ public class Items extends AppCompatActivity {
         animator.setDuration(500);
         animator.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams params = viewCartCl.getLayoutParams();
+            Log.i("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
             params.height = (int) (float) valueAnimator.getAnimatedValue();
             viewCartCl.setLayoutParams(params);
         });
@@ -228,6 +229,7 @@ public class Items extends AppCompatActivity {
                 viewCartCl.setVisibility(View.VISIBLE);
             }
         });
+
 
         animator.start();
     }

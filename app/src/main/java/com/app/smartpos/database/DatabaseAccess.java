@@ -1914,18 +1914,16 @@ public class DatabaseAccess {
 
 
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + invoice_id + "'", null);
-
+        Log.i("datadata_tax2",cursor.getCount()+"");
 
         if (cursor.moveToFirst()) {
             do {
-                Log.i("datadata_tax",cursor.toString());
                 @SuppressLint("Range") double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price")));
                 @SuppressLint("Range") int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
                 @SuppressLint("Range") double tax = 1.0+Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax_percentage")))/100.0;
-                Log.i("datadata_tax",price+" "+qty+" "+tax);
-                double sub_total = price-(price/tax) * qty;
+                double sub_total = (price-(price/tax)) * qty;
                 total_price = total_price + sub_total;
-
+                Log.i("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
 
             } while (cursor.moveToNext());
         } else {

@@ -2,6 +2,7 @@ package com.app.smartpos.refund;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
+import com.app.smartpos.checkout.CheckoutOrderDetails;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 
@@ -80,15 +82,26 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler.setAdapter(refundDetailsAdapter);
+        Log.i("datadata",""+isRefund);
+
+        updateTotalAmount();
         if(!isRefund){
             title_tv.setText(getString(R.string.order_details));
             question_tv.setVisibility(View.GONE);
             amount_tv.setText(getString(R.string.total_amount));
-            btn_ll.setVisibility(View.GONE);
-        }
-        updateTotalAmount();
+            refund_tv.setText(getString(R.string.invoice));
+            refund_tv.setAlpha(1.0f);
+            refund_tv.setEnabled(true);
 
-        refund_tv.setOnClickListener(view -> refundPressed());
+        }
+
+        refund_tv.setOnClickListener(view -> {
+            if(!isRefund){
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId));
+            }else {
+                refundPressed();
+            }
+        });
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
     }
 

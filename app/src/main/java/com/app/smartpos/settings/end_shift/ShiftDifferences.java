@@ -1,6 +1,8 @@
 package com.app.smartpos.settings.end_shift;
 
-public class ShiftDifferences {
+import java.io.Serializable;
+
+public class ShiftDifferences implements Serializable {
     double real;
     double input;
     double diff;

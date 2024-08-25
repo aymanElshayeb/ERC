@@ -18,7 +18,7 @@ public class EndShiftConfirmationDialog extends DialogFragment {
 
 
     View root;
-    EndShiftStep2 endShiftStep2;
+    EndShiftStep1 endShiftStep2;
 
     @Nullable
     @Override
@@ -44,7 +44,7 @@ public class EndShiftConfirmationDialog extends DialogFragment {
         return root;
     }
 
-    public void setEndShiftStep2(EndShiftStep2 endShiftStep2) {
+    public void setEndShiftStep2(EndShiftStep1 endShiftStep2) {
         this.endShiftStep2 = endShiftStep2;
     }
 
