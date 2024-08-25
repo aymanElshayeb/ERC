@@ -100,10 +100,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/mobile_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:text="+966581234567"
                     android:textColor="@color/light_purple"
                     android:textSize="17sp"
                     app:layout_constraintEnd_toEndOf="parent"

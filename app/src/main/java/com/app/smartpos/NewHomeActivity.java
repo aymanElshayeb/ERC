@@ -44,6 +44,9 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout refundLL = findViewById(R.id.refund_ll);
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
+        TextView nameTv = findViewById(R.id.name_tv);
+
+        nameTv.setText(SharedPrefUtils.getUsername(this));
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
