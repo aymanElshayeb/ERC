@@ -69,7 +69,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         final String product_weight = productData.get(position).get("product_weight");
         final String product_count = ((Items)productActivity).checkCount(position);
         final String product_desc = productData.get(position).get("product_description");
-        final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
+//        final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
         final String product_price = productData.get(position).get("product_sell_price");
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
         String base64Image = productData.get(position).get("product_image");
@@ -120,7 +120,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         holder.plusIm.setOnClickListener(v -> {
 
 
-            if (product_stock<=0)
+            if (1==0)
             {
 
                 Toasty.warning(productActivity, R.string.stock_is_low_please_update_stock, Toast.LENGTH_SHORT).show();
@@ -136,7 +136,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         holder.minusIm.setOnClickListener(v -> {
 
 
-            if (product_stock<=0)
+            if (1==0)
             {
 
                 Toasty.warning(productActivity, R.string.stock_is_low_please_update_stock, Toast.LENGTH_SHORT).show();
