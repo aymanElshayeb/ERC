@@ -1008,6 +1008,46 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
+    public ArrayList<HashMap<String, String>> getOrderListPaginated(int offet) {
+        ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list ORDER BY order_id DESC LIMIT 10 OFFSET "+offet, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
+                map.put("order_date", cursor.getString(cursor.getColumnIndex("order_date")));
+                map.put("order_time", cursor.getString(cursor.getColumnIndex("order_time")));
+                map.put("order_timestamp", cursor.getString(cursor.getColumnIndex("order_timestamp")));
+                map.put("order_type", cursor.getString(cursor.getColumnIndex("order_type")));
+                map.put("order_payment_method", cursor.getString(cursor.getColumnIndex("order_payment_method")));
+                map.put("customer_name", cursor.getString(cursor.getColumnIndex("customer_name")));
+                map.put("tax", cursor.getString(cursor.getColumnIndex("tax")));
+                map.put("discount", cursor.getString(cursor.getColumnIndex("discount")));
+                map.put("card_type_code", cursor.getString(cursor.getColumnIndex("card_type_code")));
+                map.put("approval_code", cursor.getString(cursor.getColumnIndex("approval_code")));
+                map.put("original_order_id", cursor.getString(cursor.getColumnIndex("original_order_id")));
+                map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
+                map.put("ex_tax_total", cursor.getString(cursor.getColumnIndex("ex_tax_total")));
+                map.put("in_tax_total", cursor.getString(cursor.getColumnIndex("in_tax_total")));
+                map.put("paid_amount", cursor.getString(cursor.getColumnIndex("paid_amount")));
+                map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
+                map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
+                map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
+
+
+                map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
+
+
+                orderList.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return orderList;
+    }
+
+    @SuppressLint("Range")
     public HashMap<String, String> getOrderListByOrderId(String order_id) {
         HashMap<String, String> orderListMap = new HashMap<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE invoice_id='" + order_id + "'", null);
