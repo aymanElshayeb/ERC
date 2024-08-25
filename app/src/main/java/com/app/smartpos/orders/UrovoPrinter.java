@@ -88,7 +88,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceAfterTax)));
+        bitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -96,7 +96,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTax(String tax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?f.format(Double.parseDouble(tax)) : String.valueOf(0)));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?f.format(Double.parseDouble(tax)) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -104,7 +104,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printDiscount(String discount) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?f.format(Double.parseDouble(discount)) : String.valueOf(0)));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?f.format(Double.parseDouble(discount)) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,70),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -112,7 +112,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceBeforeTax)));
+        bitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
@@ -135,7 +135,8 @@ public class UrovoPrinter extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             bitmaps = new ArrayList<>();
-            bitmaps.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
+            String total=productTotalPrice==0?"0.0":f.format(productTotalPrice);
+            bitmaps.add(PrintingHelper.createBitmapFromText(total));
             bitmaps.add(PrintingHelper.createBitmapFromText(price));
             bitmaps.add(PrintingHelper.createBitmapFromText(qty));
             mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,50),0);
