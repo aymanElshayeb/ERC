@@ -81,7 +81,7 @@ public class ProductActivity extends BaseActivity {
 
         //get data from local database
         List<HashMap<String, String>> productData;
-        productData = databaseAccess.getProducts(false);
+        productData = databaseAccess.getProducts(true);
 
         Log.d("data", "" + productData.size());
 

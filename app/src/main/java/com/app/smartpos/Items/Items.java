@@ -72,7 +72,7 @@ public class Items extends AppCompatActivity {
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
-        productList = databaseAccess.getProducts(false);
+        productList = databaseAccess.getProducts(true);
 
         productCartAdapter = new PosProductAdapter(this, productList);
         recycler.setAdapter(productCartAdapter);
