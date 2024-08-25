@@ -167,6 +167,7 @@ public class OrderBitmap extends BaseActivity {
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
         bitmaps.add(new PrinterModel(1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
 
@@ -181,6 +182,7 @@ public class OrderBitmap extends BaseActivity {
             ProductBitmap.add(PrintingHelper.createBitmapFromText(total));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(price));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(productCode));
             bitmaps.add(new PrinterModel(1,PrintingHelper.combineMultipleBitmapsHorizontally(ProductBitmap, 50)));
             bitmaps.add(new PrinterModel(1,PrintingHelper.createBitmapFromText(name)));
             bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
