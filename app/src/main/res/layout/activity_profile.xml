@@ -9,8 +9,8 @@
     android:background="@color/grey_f9">
     <ImageView
         android:id="@+id/close_im"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:src="@drawable/ic_close_profile"
         android:backgroundTint="@color/light_purple"
         android:layout_marginTop="52dp"
@@ -62,9 +62,9 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
+            android:id="@+id/username_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="karimsaad687@gmail.com"
             android:textSize="17sp"
             android:fontFamily="@font/inter_regular"
             android:textColor="@color/light_purple"
@@ -88,6 +88,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
+            android:id="@+id/mobile_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+966581234567"
@@ -231,6 +232,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/logout_ll"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"

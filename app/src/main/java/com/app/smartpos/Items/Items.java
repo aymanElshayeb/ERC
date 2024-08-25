@@ -133,9 +133,7 @@ public class Items extends AppCompatActivity {
         databaseAccess.open();
 
         selectedProductList = databaseAccess.getCartProduct();
-        if (selectedProductList.size() > 0) {
-            updateCartUI();
-        }
+        updateCartUI();
         productCartAdapter.notifyDataSetChanged();
     }
 

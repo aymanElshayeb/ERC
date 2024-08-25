@@ -2,6 +2,7 @@ package com.app.smartpos.adapter;
 
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.util.Base64;
@@ -51,6 +52,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
@@ -109,50 +111,47 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 //        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
-//        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(productCart);
-//                databaseAccess.open();
-//                boolean deleteProduct = databaseAccess.deleteProductFromCart(cart_id);
+        holder.deleteIm.setOnClickListener(v -> {
+            DatabaseAccess databaseAccess1 = DatabaseAccess.getInstance(productCart);
+            databaseAccess1.open();
+            boolean deleteProduct = databaseAccess1.deleteProductFromCart(cart_id);
+
+            if (deleteProduct) {
+                Toasty.success(productCart, productCart.getString(R.string.product_removed_from_cart), Toast.LENGTH_SHORT).show();
+
+                // Calculate Cart's Total Price Again
+                //  setCartTotal();
+
+                productCart.updateTotalPrice(cart_product);
+
+                player.start();
+
+                //for delete cart item dynamically
+                // Remove CartItem from Cart List
+                cart_product.remove(holder.getAdapterPosition());
+
+                // Notify that item at position has been removed
+                notifyItemRemoved(holder.getAdapterPosition());
+
+
+                productCart.updateTotalPrice(cart_product);
+            } else {
+                Toasty.error(productCart, productCart.getString(R.string.failed), Toast.LENGTH_SHORT).show();
+            }
+
+
+            databaseAccess1.open();
+            int itemCount = databaseAccess1.getCartItemCount();
+            Log.d("itemCount", "" + itemCount);
+//                if (itemCount <= 0) {
+//                    txt_total_price.setVisibility(View.GONE);
+//                    btnSubmitOrder.setVisibility(View.GONE);
 //
-//                if (deleteProduct) {
-//                    Toasty.success(productCart, productCart.getString(R.string.product_removed_from_cart), Toast.LENGTH_SHORT).show();
-//
-//                    // Calculate Cart's Total Price Again
-//                    //  setCartTotal();
-//
-//                    productCart.updateTotalPrice();
-//
-//                    player.start();
-//
-//                    //for delete cart item dynamically
-//                    // Remove CartItem from Cart List
-//                    cart_product.remove(holder.getAdapterPosition());
-//
-//                    // Notify that item at position has been removed
-//                    notifyItemRemoved(holder.getAdapterPosition());
-//
-//
-//                    productCart.updateTotalPrice();
-//                } else {
-//                    Toasty.error(productCart, productCart.getString(R.string.failed), Toast.LENGTH_SHORT).show();
+//                    imgNoProduct.setVisibility(View.VISIBLE);
+//                    txt_no_product.setVisibility(View.VISIBLE);
 //                }
-//
-//
-//                databaseAccess.open();
-//                int itemCount = databaseAccess.getCartItemCount();
-//                Log.d("itemCount", "" + itemCount);
-////                if (itemCount <= 0) {
-////                    txt_total_price.setVisibility(View.GONE);
-////                    btnSubmitOrder.setVisibility(View.GONE);
-////
-////                    imgNoProduct.setVisibility(View.VISIBLE);
-////                    txt_no_product.setVisibility(View.VISIBLE);
-////                }
-//
-//            }
-//        });
+
+        });
 
 
         holder.txtPlus.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +226,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         TextView txtItemName, txtPrice, txtQtyNumber;
         ImageView txtPlus, txtMinus;
-        ImageView imgProduct;
+        ImageView imgProduct,deleteIm;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -238,6 +237,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             imgProduct = itemView.findViewById(R.id.product_im);
             txtMinus = itemView.findViewById(R.id.txt_minus);
             txtPlus = itemView.findViewById(R.id.txt_plus);
+            deleteIm = itemView.findViewById(R.id.delete_im);
 
         }
 
