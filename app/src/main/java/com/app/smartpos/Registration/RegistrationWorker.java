@@ -68,7 +68,7 @@ public class RegistrationWorker extends Worker {
                 String responseBody = response.body().string();
                 ServiceResult<RegistrationResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<RegistrationResponseDto>>(){}.getType());
                 if(result.getCode()!=200){
-                    Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                    Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO REGISTER").build();
                     return Result.failure(outputData);
                 }
                 RegistrationResponseDto registrationResponseDto=result.getData().getReturnedObj().get(0);
@@ -82,7 +82,7 @@ public class RegistrationWorker extends Worker {
                         build();
                 return Result.success(outputData);
             } else {
-                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO REGISTER").build();
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
