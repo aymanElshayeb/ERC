@@ -4,6 +4,7 @@ import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -39,6 +40,7 @@ public class EndShiftStep2 extends AppCompatActivity {
 
         viewsLl=findViewById(R.id.views_ll);
         TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
+        TextView printZReport=findViewById(R.id.print_z_report);
 
         endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
 
@@ -69,6 +71,9 @@ public class EndShiftStep2 extends AppCompatActivity {
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
         });
+        printZReport.setOnClickListener(view -> {
+            onPrintZReport();
+        });
 
     }
 
@@ -81,5 +86,9 @@ public class EndShiftStep2 extends AppCompatActivity {
         textTv.setText(text);
         valueTv.setText(value);
         viewsLl.addView(root_view);
+    }
+
+    private void onPrintZReport () {
+        //  write functionality here
     }
 }

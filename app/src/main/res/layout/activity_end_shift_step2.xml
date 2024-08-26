@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/end_my_shift_tv"
+        app:layout_constraintBottom_toTopOf="@id/bottom_buttons"
         app:layout_constraintTop_toBottomOf="@id/top_panel_ll"
         android:layout_marginBottom="8dp">
         <LinearLayout
@@ -108,7 +108,26 @@
         </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/bottom_buttons"
+        app:layout_constraintBottom_toBottomOf="parent">
 
+    <TextView
+        android:id="@+id/print_z_report"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_button_6"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:fontFamily="@font/inter_semibold"
+        android:gravity="center"
+        android:text="@string/print_z_report"
+        android:textColor="@color/white"
+        android:textSize="17sp"/>
     <TextView
         android:id="@+id/end_my_shift_tv"
         android:layout_width="match_parent"
@@ -122,5 +141,7 @@
         android:text="@string/end_my_shift"
         android:textColor="@color/purple"
         android:textSize="17sp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

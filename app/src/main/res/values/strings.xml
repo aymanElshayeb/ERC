@@ -339,6 +339,7 @@
 
     <string name="end_shift_report">End Shift Report</string>
     <string name="end_my_shift">End My Shift</string>
+    <string name="print_z_report">Print Z Report</string>
     <string name="shift_summary_details">Shift Summary Details</string>
     <string name="total_cash">Total Cash</string>
     <string name="total_card">Total Card</string>
