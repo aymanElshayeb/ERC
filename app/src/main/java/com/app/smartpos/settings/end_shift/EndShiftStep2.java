@@ -16,6 +16,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -89,6 +91,7 @@ public class EndShiftStep2 extends AppCompatActivity {
     }
 
     private void onPrintZReport () {
-        //  write functionality here
+        Device device = DeviceFactory.getDevice();
+        device.printZReport(endShiftModel);
     }
 }

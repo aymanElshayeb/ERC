@@ -6,6 +6,7 @@ import android.util.Base64;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.orders.NewLandEnhancedPrinter;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 public class NewLandDevice implements Device{
     @Override
@@ -38,9 +39,14 @@ public class NewLandDevice implements Device{
     }
 
     @Override
-    public boolean print(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
         return newLandPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency);
+    }
+
+    @Override
+    public boolean printZReport(EndShiftModel endShiftModel) {
+        return false;
     }
 
     @Override

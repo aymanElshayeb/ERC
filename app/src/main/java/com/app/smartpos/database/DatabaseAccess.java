@@ -2765,7 +2765,7 @@ public class DatabaseAccess {
         values.put("ecr_code", registrationResponseDto.getEcrCode());
         values.put("merchant_id", registrationResponseDto.getMerchantId());
         values.put("merchant_logo", registrationResponseDto.getMerchantLogo());
-        values.put("merchant_tax_number", registrationResponseDto.getTaxnumber());
+        values.put("merchant_tax_number", registrationResponseDto.getTax());
 
         long check = database.insert("configuration", null, values);
         database.close();

@@ -131,7 +131,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceAfterTax)));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -139,7 +139,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printTax(double tax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? f.format(tax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(tax)));
         newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -147,7 +147,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printDiscount(String discount) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : String.valueOf(0)));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -155,7 +155,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceBeforeTax)));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
@@ -167,7 +167,7 @@ public class OrderBitmap extends BaseActivity {
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText("    "));
         bitmaps.add(new PrinterModel(1,PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));
 
@@ -178,11 +178,10 @@ public class OrderBitmap extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            String total=productTotalPrice==0?"0.0":f.format(productTotalPrice);
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(total));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(price));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(price))));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(productCode));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
             bitmaps.add(new PrinterModel(1,PrintingHelper.combineMultipleBitmapsHorizontally(ProductBitmap, 50)));
             bitmaps.add(new PrinterModel(1,PrintingHelper.createBitmapFromText(name)));
             bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText(line)));

@@ -2,9 +2,7 @@ package com.app.smartpos.orders;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +20,6 @@ import com.app.smartpos.adapter.OrderDetailsAdapter;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.database.DatabaseOpenHelper;
-import com.app.smartpos.pdf_report.BarCodeEncoder;
 import com.app.smartpos.pdf_report.TemplatePDF;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.IPrintToPrinter;
@@ -31,11 +27,9 @@ import com.app.smartpos.utils.PrefMng;
 import com.app.smartpos.utils.Tools;
 import com.app.smartpos.utils.WoosimPrnMng;
 import com.app.smartpos.utils.printerFactory;
-import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -190,7 +184,7 @@ public class OrderDetailsActivity extends BaseActivity {
 
         btnThermalPrinter.setOnClickListener(v -> {
             Device device = DeviceFactory.getDevice();
-            boolean successfulPrint = device.print(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
+            boolean successfulPrint = device.printReciept(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
             if(!successfulPrint){
                 //Check if the Bluetooth is available and on.
                 if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;

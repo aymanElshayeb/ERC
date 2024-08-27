@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.orders.UrovoPrinter;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 import java.util.Base64;
 
@@ -37,9 +38,15 @@ public class UrovoDevice implements Device{
     }
 
     @Override
-    public boolean print(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
         UrovoPrinter urovoPrinter = new UrovoPrinter();
         return urovoPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency);
+    }
+
+    @Override
+    public boolean printZReport(EndShiftModel endShiftModel) {
+        UrovoPrinter urovoPrinter = new UrovoPrinter();
+        return urovoPrinter.printZReport(endShiftModel);
     }
 
     @SuppressLint("NewApi")

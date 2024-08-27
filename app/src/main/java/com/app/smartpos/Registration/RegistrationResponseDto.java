@@ -7,7 +7,7 @@ public class RegistrationResponseDto {
     private String username;
     private String token;
     private String merchantLogo;
-    private String taxnumber;
+    private String tax;
 
     // Getters and Setters
     public String getEcrCode() {
@@ -58,12 +58,12 @@ public class RegistrationResponseDto {
         this.merchantLogo = merchantLogo;
     }
 
-    public String getTaxnumber() {
-        return taxnumber;
+    public String getTax() {
+        return tax;
     }
 
-    public void setTaxnumber(String taxnumber) {
-        this.taxnumber = taxnumber;
+    public void setTax(String tax) {
+        this.tax = tax;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RegistrationResponseDto {
                 ", username='" + username + '\'' +
                 ", token='" + token + '\'' +
                 ", merchantLogo='" + merchantLogo + '\'' +
-                ", taxnumber='" + taxnumber + '\'' +
+                ", taxnumber='" + tax + '\'' +
                 '}';
     }
 }

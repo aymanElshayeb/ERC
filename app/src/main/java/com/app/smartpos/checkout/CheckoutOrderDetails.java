@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -106,7 +105,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         receiptIm.setImageBitmap(bitmap);
 
         printReceipt.setOnClickListener(view -> {
-            device.print(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax+"", discount, currency);
+            device.printReciept(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax+"", discount, currency);
         });
     }
 }

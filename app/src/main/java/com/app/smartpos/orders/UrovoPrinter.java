@@ -1,9 +1,12 @@
 package com.app.smartpos.orders;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
+import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
@@ -15,9 +18,15 @@ import com.urovo.sdk.print.PrinterProviderImpl;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class UrovoPrinter extends BaseActivity {
     String name, price, qty;
@@ -31,6 +40,7 @@ public class UrovoPrinter extends BaseActivity {
     SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
     ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
     List<Bitmap> bitmaps;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
 
 
     public UrovoPrinter() {
@@ -71,6 +81,7 @@ public class UrovoPrinter extends BaseActivity {
         //Todo remaining
 //        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
             printZatcaQrCode(databaseAccess);
+            printLine();
             mPrintManager.startPrint();
         }
         catch (Exception e){
@@ -79,6 +90,109 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager.close();
         return true;
 
+    }
+
+    @SuppressLint("NewApi")
+    public boolean printZReport(EndShiftModel endShiftModel){
+        f = new DecimalFormat("#.00");
+        try {
+            mPrintManager.initPrint();
+            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), "Z Report");
+            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), LocalDateTime.now().toString().replace("T","  ") + " " + LocalDateTime.now().format(formatter));
+            printLine();
+            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), "Shift no  " + endShiftModel.getSequence());
+            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Username   " + endShiftModel.getUserName());
+            printStartAndEndShiftTime(endShiftModel.getStartDateTime(), endShiftModel.getEndDateTime());
+            printLine();
+            printStartAndLeaveCash(endShiftModel.getStartCash(), endShiftModel.getLeaveCash());
+            printNumOfTransactions(endShiftModel.getNum_successful_transaction(), endShiftModel.getNum_returned_transaction());
+            printCashDiscrepancies(endShiftModel.getTotal_amount(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getDiff());
+            printPaymentDetails(endShiftModel.getTotal_amount(), endShiftModel.getShiftDifferences());
+            printCardTypesBreakdown(endShiftModel.getShiftDifferences());
+            printLine();
+            mPrintManager.startPrint();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        mPrintManager.close();
+        return true;
+    }
+
+    private void printCashDiscrepancies(double totalCash, double differenceCash) {
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
+        printLine();
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Actual total cash    " + zeroChecker(f.format(totalCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash    " + zeroChecker(f.format(totalCash + differenceCash)));
+        printLine();
+    }
+
+    private void printNumOfTransactions(int numSuccessfulTransaction, int numReturnedTransaction) {
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Transactions number breakdown");
+        printLine();
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Successful transactions   " + numSuccessfulTransaction);
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Refunded transactions   " + numReturnedTransaction);
+        printLine();
+    }
+
+    private void printCardTypesBreakdown(HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Card types breakdown");
+        printLine();
+        double totalCard = 0.0;
+        for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()){
+            if(!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")){
+                mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), shiftsCardTypeCalculations.getKey(), zeroChecker(f.format(shiftsCardTypeCalculations.getValue().getReal())));
+                totalCard += Double.parseDouble(f.format(shiftsCardTypeCalculations.getValue().getReal()));
+            }
+        }
+        printLine();
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), "Total", zeroChecker(String.valueOf(totalCard)));
+    }
+
+    private void printPaymentDetails(double totalCash, HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Payment details");
+        printLine();
+        double totalPayments = 0.0;
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash", zeroChecker(f.format(totalCash)));
+        totalPayments += Double.parseDouble(f.format(totalCash));
+        totalPayments += printTotalCard(shiftsCardTypesCalculations);
+        printLine();
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), "Total", zeroChecker(String.valueOf(totalPayments)));
+        printLine();
+    }
+
+    private void printStartAndLeaveCash(double startCash, double leaveCash) {
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Start cash" ,zeroChecker(f.format(startCash)));
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Leave cash", zeroChecker(f.format(leaveCash)));
+        printLine();
+    }
+
+    private void printStartAndEndShiftTime(long startDateTime, long endDateTime) {
+        mPrintManager.addTextOnlyLeft(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Shift start date time");
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),printReportDateTime(getDateTime(startDateTime)));
+        mPrintManager.addTextOnlyLeft(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Shift end date time");
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),printReportDateTime(getDateTime(endDateTime)));
+    }
+
+    @SuppressLint("NewApi")
+    private String printReportDateTime(LocalDateTime dateTime) {
+        return dateTime.toString().replace("T","  ") + " " + dateTime.format(formatter);
+    }
+
+    private double printTotalCard(HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
+        double totalCard = 0.0;
+        for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()){
+            if(!(Objects.equals(shiftsCardTypeCalculations.getKey(),"CASH")))
+                totalCard += Double.parseDouble(f.format(shiftsCardTypeCalculations.getValue().getReal()));
+        }
+        mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total card", zeroChecker(String.valueOf(totalCard)));
+        return totalCard;
+    }
+
+    private static LocalDateTime getDateTime(Long dateTimeMillisecond) {
+        Instant instant = Instant.ofEpochMilli(dateTimeMillisecond);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        return localDateTime;
     }
 
     private void printZatcaQrCode(DatabaseAccess databaseAccess) {
@@ -91,7 +205,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+        printLine();
     }
 
     private void printTax(String tax) {
@@ -99,7 +213,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?f.format(Double.parseDouble(tax)) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+        printLine();
     }
 
     private void printDiscount(String discount) {
@@ -107,7 +221,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?f.format(Double.parseDouble(discount)) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,70),0);
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+        printLine();
     }
 
     private void printTotalExcludingTax(double priceBeforeTax) {
@@ -115,18 +229,17 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+        printLine();
     }
 
     private void printProducts(List<HashMap<String, String>> orderDetailsList) {
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
         bitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
 //        bitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+        printLine();
         bitmaps = new ArrayList<>();
         for (int i = 0; i < orderDetailsList.size(); i++) {
             productCode = orderDetailsList.get(i).get("product_uuid");
@@ -141,7 +254,7 @@ public class UrovoPrinter extends BaseActivity {
             bitmaps.add(PrintingHelper.createBitmapFromText(qty));
             mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,50),0);
             mPrintManager.addBitmap(PrintingHelper.createBitmapFromText(name),150);
-            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+            printLine();
         }
     }
 
@@ -169,5 +282,11 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,45),70);
     }
 
+    private void printLine(){
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true),"----------------------------------------");
+    }
 
+    private String zeroChecker(String valueToBePrinted){
+        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.0")? "0" : valueToBePrinted;
+    }
 }
