@@ -147,6 +147,10 @@ public class NewCheckout extends AppCompatActivity {
                 Intent intent = device.pay(totalAmount);
                 launcher.launch(intent);
             }
+            else{
+                Toasty.info(this, "Please select Payment Method",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
@@ -74,8 +75,12 @@ public class Cart extends AppCompatActivity {
         addItemsTv.setOnClickListener(view -> finish());
         backIm.setOnClickListener(view -> finish());
         confirmTv.setOnClickListener(view -> {
-            finish();
-            startActivity(new Intent(this, NewCheckout.class));
+            if (productCartAdapter.getItemCount() == 0) {
+                Toast.makeText(Cart.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+                startActivity(new Intent(this, NewCheckout.class));
+            }
         });
     }
 

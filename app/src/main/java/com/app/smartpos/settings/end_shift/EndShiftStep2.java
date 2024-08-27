@@ -49,13 +49,15 @@ public class EndShiftStep2 extends AppCompatActivity {
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
-            addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
-            addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
-            addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
+            if( keys.get(i).equals("CASH")){
+                addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
+                addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
+                addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
+            }
         }
         addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
         addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
-        //addView(requireContext().getResources().getString(R.string.total_amount), trimLongDouble(endShiftModel.getTotal_amount()));
+        addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotal_amount()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
 
@@ -66,7 +68,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getResources().getString(R.string.end_shift_date), end_date);
 
 
-        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
+//        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
         addView(getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
 
