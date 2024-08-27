@@ -911,9 +911,10 @@ public class DatabaseAccess {
                 String product_order_date = jo.getString("product_order_date");
                 String product_uuid = jo.getString("product_uuid");
                 String product_id = getProductIdByUuid(product_uuid);
+                double taxPercentage= getProductTax(product_id);
 //                String stock = jo.getString("stock");
-                double in_tax_total = obj.getDouble("in_tax_total");
-                double ex_tax_total = obj.getDouble("ex_tax_total");
+                double in_tax_total = Double.parseDouble(product_price)*Double.parseDouble(product_qty);
+                double ex_tax_total =in_tax_total-((in_tax_total*taxPercentage)/(100+taxPercentage)) ;
                 int updated_stock = Integer.MAX_VALUE - Integer.parseInt(product_qty);
 
 
