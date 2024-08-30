@@ -46,7 +46,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
         String product_uuid = orderData.get(position).get("product_uuid");
         String payment_method = orderData.get(position).get("order_payment_method");
         double product_qty = Double.parseDouble(orderData.get(position).get("product_qty"));
-        final double[] refund_qty = {Double.parseDouble(orderData.get(position).get("refund_qty"))};
+        final int[] refund_qty = {Integer.parseInt(orderData.get(position).get("refund_qty"))};
         String item_checked = orderData.get(position).get("item_checked");
         String order_type = orderData.get(position).get("order_type");
         String orderStatus = orderData.get(position).get(Constant.ORDER_STATUS);

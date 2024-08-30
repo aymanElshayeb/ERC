@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".QuickBill">
 
     <LinearLayout
         android:id="@+id/top_panel_ll"
@@ -10,12 +12,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_gradient_purple"
         android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="28dp">
 
             <ImageView
@@ -24,126 +26,133 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:padding="8dp"
+                android:layout_marginStart="24dp"
                 android:src="@drawable/ic_back"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_semibold"
-                android:text="@string/end_of_shift"
+                android:text="@string/quick_bills"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
             android:fontFamily="@font/inter_semibold"
-            android:text="@string/total_amount"
+            android:text="@string/amount"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="34dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center">
-
             <TextView
-                android:id="@+id/total_amount_tv"
+                android:id="@+id/amount_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="@font/inter_bold"
-                android:text="0.0"
+                android:gravity="end"
+                android:maxLines="1"
+                android:text="0"
                 android:textColor="@color/white"
-                android:textSize="34sp" />
-
+                android:textSize="45sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/change_text"
+                app:layout_constraintTop_toTopOf="parent" />
             <TextView
                 android:id="@+id/currency_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/inter_regular"
+                android:gravity="end"
+                android:maxLines="1"
+                android:text="SAR"
                 android:textColor="@color/white"
-                android:textSize="17sp" />
+                android:textSize="23sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/change_text"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
+
 
     </LinearLayout>
 
-    <ScrollView
+    <include
+        layout="@layout/layout_numbers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/bottom_buttons"
-        app:layout_constraintTop_toBottomOf="@id/top_panel_ll">
+        app:layout_constraintBottom_toTopOf="@+id/line"
+        app:layout_constraintTop_toBottomOf="@+id/top_panel_ll" />
 
-        <LinearLayout
-            android:id="@+id/views_ll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="18dp"
-                android:fontFamily="@font/inter_semibold"
-                android:text="@string/shift_summary_details"
-                android:textColor="@color/light_purple"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-    </ScrollView>
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DBDBDB"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/description_et"/>
+    
+    <EditText
+        android:id="@+id/description_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:textSize="17sp"
+        android:textColor="@color/black"
+        android:hint="@string/description_optional"
+        android:textColorHint="@color/grey_d8"
+        app:layout_constraintBottom_toTopOf="@id/btn_ll"
+        android:background="@drawable/rounded_corners_login_edittext_light"
+        android:paddingHorizontal="16dp"
+        android:inputType="text"
+        android:maxLines="1"
+        android:fontFamily="@font/inter_semibold"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"/>
 
     <LinearLayout
-        android:id="@+id/bottom_buttons"
+        android:id="@+id/btn_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="103dp"
+        android:background="@color/grey_f9"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/print_z_report"
-            android:layout_width="match_parent"
+            android:id="@+id/option_tv"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_weight="1"
             android:background="@drawable/rounded_button_6"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/purple"
             android:fontFamily="@font/inter_semibold"
             android:gravity="center"
-            android:text="@string/print_z_report"
+            android:text="@string/add_to_cart"
             android:textColor="@color/white"
             android:textSize="17sp" />
-
-        <TextView
-            android:id="@+id/end_my_shift_tv"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/rounded_button_6"
-            android:backgroundTint="#ece9ff"
-            android:fontFamily="@font/inter_semibold"
-            android:gravity="center"
-            android:text="@string/end_my_shift"
-            android:textColor="@color/purple"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

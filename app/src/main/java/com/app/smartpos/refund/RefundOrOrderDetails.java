@@ -8,20 +8,33 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
 import com.app.smartpos.checkout.CheckoutOrderDetails;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+
+import es.dmoral.toasty.Toasty;
 
 public class RefundOrOrderDetails extends AppCompatActivity {
 
@@ -35,6 +48,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
     String orderId;
     TextView refund_tv;
     boolean isRefund;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +58,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_refund_details);
 
-        isRefund=getIntent().getBooleanExtra("isRefund",false);
+        isRefund = getIntent().getBooleanExtra("isRefund", false);
 
         TextView title_tv = findViewById(R.id.title_tv);
         TextView question_tv = findViewById(R.id.question_tv);
@@ -66,7 +80,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         card_tv.setVisibility(order_payment_method.equals("CARD") ? View.VISIBLE : View.GONE);
         cash_tv.setVisibility(order_payment_method.equals("CASH") ? View.VISIBLE : View.GONE);
-        refunded_tv.setVisibility(operation_type.equals("refunded") ? View.VISIBLE : View.GONE);
+        refunded_tv.setVisibility(operation_type.equals("refund") ? View.VISIBLE : View.GONE);
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
@@ -82,10 +96,10 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler.setAdapter(refundDetailsAdapter);
-        Log.i("datadata",""+isRefund);
+        Log.i("datadata", "" + isRefund);
 
         updateTotalAmount();
-        if(!isRefund){
+        if (!isRefund) {
             title_tv.setText(getString(R.string.order_details));
             question_tv.setVisibility(View.GONE);
             amount_tv.setText(getString(R.string.total_amount));
@@ -96,9 +110,9 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         }
 
         refund_tv.setOnClickListener(view -> {
-            if(!isRefund){
+            if (!isRefund) {
                 startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId));
-            }else {
+            } else {
                 refundPressed();
             }
         });
@@ -118,13 +132,13 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         double total = 0;
         for (int i = 0; i < orderDetailsList.size(); i++) {
             double product_price = Double.parseDouble(orderDetailsList.get(i).get("product_price"));
-            double refund_qty = Double.parseDouble(orderDetailsList.get(i).get("refund_qty"));
+            int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
             double product_qty = Double.parseDouble(orderDetailsList.get(i).get("product_qty"));
             String item_checked = orderDetailsList.get(i).get("item_checked");
 
-            if(!isRefund){
+            if (!isRefund) {
                 total += product_qty * product_price;
-            }else {
+            } else {
                 if (item_checked.equals("1") && refund_qty > 0) {
                     total += refund_qty * product_price;
                     canRefund = true;
@@ -137,32 +151,188 @@ public class RefundOrOrderDetails extends AppCompatActivity {
     }
 
     private void refundPressed() {
-        RefundConfirmationDialog dialog=new RefundConfirmationDialog();
-        dialog.setData(this,total_amount_tv.getText().toString());
-        dialog.show(getSupportFragmentManager(),"dialog");
+        RefundConfirmationDialog dialog = new RefundConfirmationDialog();
+        dialog.setData(this, total_amount_tv.getText().toString());
+        dialog.show(getSupportFragmentManager(), "dialog");
     }
 
-    public void refundConfirmation(){
+    public void refundConfirmation() {
         boolean canRefund = false;
+        double total_amount = 0;
+        double total_tax = 0;
         for (int i = 0; i < orderDetailsList.size(); i++) {
-            double refund_qty = Double.parseDouble(orderDetailsList.get(i).get("refund_qty"));
-            double product_qty = Double.parseDouble(orderDetailsList.get(i).get("product_qty"));
+            int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
             String item_checked = orderDetailsList.get(i).get("item_checked");
-            String order_details_id = orderDetailsList.get(i).get("order_details_id");
 
             if (item_checked.equals("1") && refund_qty > 0) {
                 canRefund = true;
-                databaseAccess.open();
-                databaseAccess.updateOrderDetailsItem("product_qty", "" + (int) (product_qty - refund_qty), order_details_id);
+                total_amount += Double.parseDouble(orderDetailsList.get(i).get("in_tax_total"));
+                total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount"));
+
+//                databaseAccess.open();
+//                databaseAccess.updateOrderDetailsItem("product_qty", "" + (int) (product_qty - refund_qty), order_details_id);
             }
         }
 
         if (canRefund) {
             databaseAccess.open();
-            databaseAccess.updateOrderListItem("operation_type", "refunded", orderId);
-            Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString());
-            startActivity(intent);
-            finish();
+            databaseAccess.updateOrderListItem("order_status", Constant.REFUNDED, orderId);
+            try {
+                String refundSequence=proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
+                Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence);
+                startActivity(intent);
+                finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
+    }
+
+    public String proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total, double change) throws JSONException {
+
+        //boolean success=true;
+        final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+
+        databaseAccess.open();
+        //get data from local database
+        String sequence = null;
+        if (orderDetailsList.isEmpty()) {
+            Toasty.error(this, R.string.no_product_found, Toast.LENGTH_SHORT).show();
+        } else {
+
+
+            //get current timestamp
+
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
+            //H denote 24 hours and h denote 12 hour hour format
+            String currentTime = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date()); //HH:mm:ss a
+
+            //timestamp use for invoice id for unique
+            Long tsLong = System.currentTimeMillis() / 1000;
+            String timeStamp = tsLong.toString();
+            Log.d("Time", timeStamp);
+
+            final JSONObject obj = new JSONObject();
+            try {
+
+
+                obj.put("order_date", currentDate);
+                obj.put("order_time", currentTime);
+                obj.put("order_timestamp", new Timestamp(System.currentTimeMillis()).getTime());
+                obj.put("order_type", type);
+                obj.put("order_payment_method", payment_method);
+                obj.put("customer_name", customer_name);
+                obj.put("order_status", Constant.COMPLETED);
+                obj.put("operation_type", "refund");
+                obj.put("original_order_id", orderId);
+                obj.put("card_type_code", card_type_code);
+                obj.put("approval_code", approval_code);
+                databaseAccess.open();
+                HashMap<String, String> configuration = databaseAccess.getConfiguration();
+                String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");
+                obj.put("ecr_code", ecr_code);
+
+
+
+                double totalPriceWithTax = 0;
+                double total_tax = 0;
+                for (int i = 0; i < orderDetailsList.size(); i++) {
+                    int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
+                    String item_checked = orderDetailsList.get(i).get("item_checked");
+
+                    if (item_checked.equals("1") && refund_qty > 0) {
+                        totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price"))*refund_qty;
+                        total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))*refund_qty;
+                    }
+                }
+                obj.put("in_tax_total", totalPriceWithTax);
+                obj.put("ex_tax_total", totalPriceWithTax-total_tax);
+
+                obj.put("paid_amount", total == 0 ? totalPriceWithTax : total);
+                obj.put("change_amount", change);
+
+                String tax_number = configuration.get("merchant_tax_number");
+                obj.put("tax_number", tax_number);
+
+                databaseAccess.open();
+                HashMap<String, String> sequenceMap = databaseAccess.getSequence(1, ecr_code);
+                obj.put("sequence_text", sequenceMap.get("sequence_id"));
+
+                obj.put("tax", calculated_tax);
+                obj.put("discount", discount);
+
+
+                JSONArray array = new JSONArray();
+
+
+                for (int i = 0; i < orderDetailsList.size(); i++) {
+                    int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
+                    String item_checked = orderDetailsList.get(i).get("item_checked");
+
+                    if (item_checked.equals("1") && refund_qty > 0) {
+                        databaseAccess.open();
+                        String product_uuid = orderDetailsList.get(i).get("product_uuid");
+
+                        ArrayList<HashMap<String, String>> product = databaseAccess.getProductsInfoFromUUID(product_uuid);
+
+                        databaseAccess.open();
+                        String weight_unit = databaseAccess.getWeightUnitName(product.get(0).get("product_weight_unit_id"));
+
+
+                        JSONObject objp = new JSONObject();
+                        objp.put("product_uuid", product.get(0).get("product_uuid"));
+                        objp.put("product_name_en", product.get(0).get("product_name_en"));
+                        objp.put("product_name_ar", product.get(0).get("product_name_ar"));
+                        objp.put("product_uuid", product.get(0).get("product_uuid"));
+                        objp.put("product_weight", orderDetailsList.get(i).get("product_weight") + " " + weight_unit);
+                        objp.put("product_qty", -refund_qty + "");
+                        objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
+                        objp.put("product_price", orderDetailsList.get(i).get("product_price"));
+                        objp.put("product_image", product.get(0).get("product_image") == null ? "" : product.get(0).get("product_image"));
+                        objp.put("product_order_date", currentDate);
+
+                        array.put(objp);
+                    }
+
+                }
+                obj.put("lines", array);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.i("datadata", obj.toString());
+            sequence=saveOrderInOfflineDb(obj);
+
+        }
+        return sequence;
+    }
+
+    //for save data in offline
+    private String saveOrderInOfflineDb(final JSONObject obj) throws JSONException {
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+
+        databaseAccess.open();
+        HashMap<String, String> sequenceMap = databaseAccess.getSequence(Constant.INVOICE_SEQ_ID, obj.getString("ecr_code"));
+
+        databaseAccess.open();
+        databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
+
+        String orderId = sequenceMap.get("sequence");
+        databaseAccess.open();
+        databaseAccess.insertOrder(orderId, obj, this);
+
+
+//        Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        startActivity(intent);
+//        finish();
+
+        return orderId;
     }
 }

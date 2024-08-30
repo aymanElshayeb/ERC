@@ -60,7 +60,7 @@ public class RefundOrOrderList extends AppCompatActivity {
 
         //get data from local database
 
-        orderList.addAll(databaseAccess.getOrderListPaginated(offset));
+        orderList.addAll(databaseAccess.getOrderListPaginated(offset,isRefund));
 
         refundsOrOrdersAdapter = new RefundsOrOrdersAdapter(this, orderList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -83,7 +83,7 @@ public class RefundOrOrderList extends AppCompatActivity {
             offset+=10;
             int size=orderList.size();
             databaseAccess.open();
-            orderList.addAll(databaseAccess.getOrderListPaginated(offset));
+            orderList.addAll(databaseAccess.getOrderListPaginated(offset,isRefund));
             hasMore=orderList.size()>size;
             recycler.post(() -> refundsOrOrdersAdapter.notifyDataSetChanged());
         }

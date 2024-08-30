@@ -9,7 +9,12 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 
+import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.orders.OrderBitmap;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class PrintingHelper {
@@ -106,5 +111,29 @@ public class PrintingHelper {
         }
 
         return combinedBitmap;
+    }
+
+    public static PrinterData createBitmap(DatabaseAccess databaseAccess, String id) {
+        databaseAccess.open();
+        String currency = databaseAccess.getCurrency();
+        databaseAccess.open();
+        //HashMap<String, String> orderDetails = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
+        HashMap<String, String> orderLitItem = databaseAccess.getOrderListByOrderId(id);
+        //Log.i("datadata",map.toString());
+        String invoice_id = orderLitItem.get("invoice_id");
+        String customer_name = orderLitItem.get("customer_name");
+        String order_date = orderLitItem.get("order_date");
+        String order_time = orderLitItem.get("order_time");
+        databaseAccess.open();
+        double tax = databaseAccess.totalOrderTax(invoice_id);
+        String discount = orderLitItem.get("discount");
+        databaseAccess.open();
+        double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
+        double price_before_tax = price_after_tax-tax;
+
+        OrderBitmap orderBitmap = new OrderBitmap();
+        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
+        return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
+
     }
 }

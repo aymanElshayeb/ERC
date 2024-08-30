@@ -40,24 +40,29 @@ public class EndShiftStep2 extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_end_shift_step2);
 
+        databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        currency=databaseAccess.getCurrency();
+
         viewsLl=findViewById(R.id.views_ll);
+        TextView totalAmountTv=findViewById(R.id.total_amount_tv);
         TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
         TextView printZReport=findViewById(R.id.print_z_report);
 
         endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
 
+        totalAmountTv.setText(trimLongDouble(endShiftModel.getTotal_amount()+endShiftModel.getLeaveCash())+" "+currency);
+
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
-            if( keys.get(i).equals("CASH")){
-                addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
-            }
+            addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
+            addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
+            addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
         }
         addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
         addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
-        addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotal_amount()));
+        //addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getT()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
 
@@ -95,5 +100,10 @@ public class EndShiftStep2 extends AppCompatActivity {
     private void onPrintZReport () {
         Device device = DeviceFactory.getDevice();
         device.printZReport(endShiftModel);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

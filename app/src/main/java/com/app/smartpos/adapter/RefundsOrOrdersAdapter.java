@@ -56,7 +56,7 @@ public class RefundsOrOrdersAdapter extends RecyclerView.Adapter<RefundsOrOrders
         if(refundOrOrderList.isRefund()) {
 
         }
-        holder.refunded_tv.setVisibility(operation_type.equals("refunded") ? View.VISIBLE : View.GONE);
+        holder.refunded_tv.setVisibility(operation_type.equals("refund") ? View.VISIBLE : View.GONE);
         if(position==orderData.size()-1){
             refundOrOrderList.loadMore();
         }

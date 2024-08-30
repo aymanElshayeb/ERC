@@ -861,6 +861,7 @@ public class DatabaseAccess {
             double paid_amount = obj.getDouble("paid_amount");
             double change_amount = obj.getDouble("change_amount");
             String tax_number = obj.getString("tax_number");
+            String operation_type = obj.getString("operation_type");
 
 
             values.put("invoice_id", order_id);
@@ -881,7 +882,7 @@ public class DatabaseAccess {
             values.put("paid_amount", paid_amount);
             values.put("change_amount", change_amount);
             values.put("tax_number", tax_number);
-            values.put("operation_type", "invoice");
+            values.put("operation_type", operation_type);
             values.put("order_status", order_status);
             values.put("qr_code", "");
 
@@ -1009,9 +1010,13 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getOrderListPaginated(int offet) {
+    public ArrayList<HashMap<String, String>> getOrderListPaginated(int offet,boolean isReund) {
         ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM order_list ORDER BY order_id DESC LIMIT 10 OFFSET "+offet, null);
+        String where="";
+        if(isReund){
+            where = "Where operation_type = 'invoice' OR order_status = '"+Constant.REFUNDED+"'";
+        }
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list "+where+" ORDER BY order_id DESC LIMIT 10 OFFSET "+offet, null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
@@ -2384,6 +2389,39 @@ public class DatabaseAccess {
     public ArrayList<HashMap<String, String>> getProductsInfo(String product_id) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+
+                map.put("product_id", cursor.getString(cursor.getColumnIndex("product_id")));
+                map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("product_active", cursor.getString(cursor.getColumnIndex("product_active")));
+                map.put("product_buy_price", cursor.getString(cursor.getColumnIndex("product_buy_price")));
+                map.put("product_category", cursor.getString(cursor.getColumnIndex("product_category")));
+                map.put("product_code", cursor.getString(cursor.getColumnIndex("product_code")));
+                map.put("product_description", cursor.getString(cursor.getColumnIndex("product_description")));
+                map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
+                map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
+                map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));
+                map.put("product_sell_price", cursor.getString(cursor.getColumnIndex("product_sell_price")));
+                map.put("product_stock", cursor.getString(cursor.getColumnIndex("product_stock")));
+                map.put("product_supplier", cursor.getString(cursor.getColumnIndex("product_supplier")));
+                map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
+                map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
+                map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
+
+                product.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return product;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<HashMap<String, String>> getProductsInfoFromUUID(String product_uuid) {
+        ArrayList<HashMap<String, String>> product = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_uuid='" + product_uuid + "'", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();

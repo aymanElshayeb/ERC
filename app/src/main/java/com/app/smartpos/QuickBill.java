@@ -1,4 +1,4 @@
-package com.app.smartpos.checkout;
+package com.app.smartpos;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,17 +10,15 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.smartpos.R;
+import com.app.smartpos.checkout.NewCheckout;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pos.ProductCart;
 
-public class CashPricing extends AppCompatActivity {
-
+public class QuickBill extends AppCompatActivity {
     double totalAmount=0;
     String cash="";
-    TextView totalAmountTv;
-    TextView cashGivingTv;
-    TextView changeTv;
+    TextView amountTv;
+    TextView currencyTv;
 
     String currency;
     DatabaseAccess databaseAccess;
@@ -33,22 +31,28 @@ public class CashPricing extends AppCompatActivity {
         actionBar.hide();
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        setContentView(R.layout.activity_cash_pricing);
+        setContentView(R.layout.activity_quick_bill);
 
-        totalAmount=(double) getIntent().getDoubleExtra("total_amount",0);
+        totalAmount=(double) getIntent().getLongExtra("total_amount",0);
 
-        totalAmountTv=findViewById(R.id.total_amount_tv);
-        cashGivingTv=findViewById(R.id.cash_giving_tv);
-        changeTv=findViewById(R.id.change_tv);
-        TextView payTv=findViewById(R.id.pay_tv);
+        amountTv=findViewById(R.id.amount_tv);
+        currencyTv=findViewById(R.id.currency_tv);
+        TextView titleTv=findViewById(R.id.title_tv);
+        TextView payTv=findViewById(R.id.option_tv);
 
-
+        if(getIntent().getStringExtra("type").equals("customItem")){
+            titleTv.setText(getString(R.string.custom_item));
+            payTv.setText(getString(R.string.add_to_cart));
+        }else if(getIntent().getStringExtra("type").equals("quickBill")){
+            titleTv.setText(getString(R.string.quick_bills));
+            payTv.setText(getString(R.string.pay));
+        }
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         currency = databaseAccess.getCurrency();
 
-        totalAmountTv.setText(totalAmount+" "+currency);
+        currencyTv.setText(currency);
 
         TextView num0=findViewById(R.id.num_0);
         TextView num1=findViewById(R.id.num_1);
@@ -77,21 +81,23 @@ public class CashPricing extends AppCompatActivity {
         del.setOnClickListener(view -> del());
 
         payTv.setOnClickListener(view -> {
-            double changeResult=Double.parseDouble(changeTv.getText().toString().split(" ")[0]);
-            double cashResult=Double.parseDouble(cashGivingTv.getText().toString().split(" ")[0]);
+            double cashResult=Double.parseDouble(amountTv.getText().toString().split(" ")[0]);
             if(cashResult>=totalAmount) {
                 Intent intent = new Intent();
-                intent.putExtra("change", change);
-                setResult(RESULT_OK, intent);
-                finish();
+                intent.putExtra("amount", Utils.trimLongDouble(amountTv.getText().toString()));
+                if(getIntent().getStringExtra("type").equals("customItem")) {
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }else{
+                    startActivity(new Intent(this, NewCheckout.class).putExtra("fromQuickBill",true).putExtra("amount",Utils.trimLongDouble(amountTv.getText().toString())));
+                }
             }else{
                 Toast.makeText(this, getString(R.string.cash_given_must_be_equal_or_more_than_total_amount), Toast.LENGTH_SHORT).show();
             }
         });
 
-        cashGivingTv.setText("0 "+currency);
         change=0;
-        changeTv.setText(change+" "+currency);
+        amountTv.setText(change+"");
 
     }
 
@@ -106,22 +112,19 @@ public class CashPricing extends AppCompatActivity {
             number="";
         }
         cash += number;
-        cashGivingTv.setText(cash + " " + currency);
-        change = totalAmount - Double.parseDouble(cash);
-        changeTv.setText(change + " " + currency);
+        amountTv.setText(cash);
+
     }
 
     private void del(){
         if(cash.length()<=1){
             cash="";
-            cashGivingTv.setText("0 "+currency);
+            amountTv.setText("0 "+currency);
             change=0;
         }else {
             cash = cash.substring(0, cash.length() - 1);
-            cashGivingTv.setText(cash+" "+currency);
+            amountTv.setText(cash+" "+currency);
             change=totalAmount-Double.parseDouble(cash);
         }
-
-        changeTv.setText(change+" "+currency);
     }
 }
