@@ -42,6 +42,7 @@ public class EndShiftDialog extends DialogFragment {
     double total_tax = 0;
     EndShiftModel endShiftModel;
     double totalRefundsAmount;
+    double totalCardsAmount;
     DatabaseAccess databaseAccess;
 
     @Nullable
@@ -209,7 +210,7 @@ public class EndShiftDialog extends DialogFragment {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),"" , totalRefundsAmount);
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(requireContext()), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),"" , totalRefundsAmount, totalCardsAmount);
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {
