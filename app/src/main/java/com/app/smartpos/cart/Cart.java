@@ -65,8 +65,6 @@ public class Cart extends AppCompatActivity {
         //get data from local database
         cartProductList = databaseAccess.getCartProduct();
 
-
-
         productCartAdapter = new CartAdapter(this, cartProductList);
         recyclerView.setAdapter(productCartAdapter);
 
