@@ -39,6 +39,8 @@ public class EndShiftStep1 extends AppCompatActivity {
     DatabaseAccess databaseAccess;
     String currency;
     int totalRefunds=0;
+
+    double totalRefundsAmount=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +89,11 @@ public class EndShiftStep1 extends AppCompatActivity {
             double discount = Double.parseDouble(orderList.get(i).get("discount"));
             if(orderList.get(i).get("operation_type").equals("refund")){
                 totalRefunds++;
+                totalRefundsAmount +=  total_price;
+            } else {
+                total_amount += total_price;
+
             }
-            total_amount += total_price;
             total_tax += tax;
             Log.i("datadata_card",orderList.get(i).get("order_payment_method")+" "+orderList.get(i).get("card_type_code"));
             double calculated_total_price = total_price - discount;
@@ -217,7 +222,7 @@ public class EndShiftStep1 extends AppCompatActivity {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(this), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),noteEt.getText().toString());
+            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(this), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),noteEt.getText().toString() , totalRefundsAmount);
             endShiftModel.setTotalRefunds(totalRefunds);
             if (hasError) {
                 confirmWithErrorTv.setVisibility(View.VISIBLE);

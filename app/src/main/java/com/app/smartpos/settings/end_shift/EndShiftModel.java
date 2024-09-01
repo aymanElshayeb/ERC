@@ -17,11 +17,11 @@ public class EndShiftModel implements Serializable {
     long endDateTime;
     double startCash;
     double leaveCash;
-
+    double totalRefundsAmount;
     String note;
     String sequence;
     String userName;
-    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences,String sequence,String userName ,int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash,String note) {
+    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences,String sequence,String userName ,int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash,String note, double totalRefundsAmount) {
         this.shiftDifferences = shiftDifferences;
         this.sequence=sequence;
         this.userName=userName;
@@ -36,6 +36,7 @@ public class EndShiftModel implements Serializable {
         this.startCash = startCash;
         this.leaveCash = leaveCash;
         this.note=note;
+        this.totalRefundsAmount = totalRefundsAmount;
     }
 
     public HashMap<String, ShiftDifferences> getShiftDifferences() {
@@ -95,6 +96,9 @@ public class EndShiftModel implements Serializable {
 
     public int getTotalRefunds() {
         return totalRefunds;
+    }
+    public double getTotalRefundsAmount() {
+        return totalRefundsAmount;
     }
 
     public void setTotalRefunds(int totalRefunds) {
