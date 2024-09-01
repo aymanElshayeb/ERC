@@ -330,7 +330,8 @@
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
-    <string name="wrong_username_password">Wrong username or pasword</string>
+    <string name="wrong_username_password">Wrong username or password</string>
+    <string name="wrong_email_password">Wrong email or password</string>
 
     <string name="synchronization">Synchronization</string>
     <string name="admin_email">Admin Username</string>

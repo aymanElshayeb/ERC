@@ -39,23 +39,23 @@ public class LoginFragment extends Fragment {
         if (root == null) {
             root = inflater.inflate(R.layout.fragment_login, container, false);
             context = requireContext();
-            EditText usernameEt = root.findViewById(R.id.username_et);
+            EditText EmailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            usernameEt.setText("karimsaad687");
+            EmailEt.setText("karimsaad687@gmail.com");
             passwordEt.setText("123456789");
             loginBtn.setOnClickListener(view -> {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
                 databaseAccess.open();
-                HashMap<String,String> map = databaseAccess.getUserWithUserName(usernameEt.getText().toString());
+                HashMap<String,String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
                 if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
-                    SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
+                    SharedPrefUtils.setUserEmail(requireActivity(),map.get("email"));
                     SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
                     Intent intent = new Intent(context, NewHomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();
                 } else {
-                    Toast.makeText(context, getString(R.string.wrong_username_password), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
                 }
             });
         }

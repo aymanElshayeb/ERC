@@ -143,9 +143,11 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
             }
             else {
                 int product_count_int = Integer.parseInt(product_count)-1;
-                productData.get(position).put("product_count",""+product_count_int);
-                notifyItemChanged(position);
-                ((Items)productActivity).updateCart(productData.get(position),position);
+                if(product_count_int >= 0){
+                    productData.get(position).put("product_count",""+product_count_int);
+                    notifyItemChanged(position);
+                    ((Items)productActivity).updateCart(productData.get(position),position);
+                }
             }
         });
 

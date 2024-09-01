@@ -11,7 +11,7 @@
         android:pathData="M7,7h18v18h-18z"/>
   </group>
   <path
-      android:pathData="M16,22V16M16,16V10M16,16H22M16,16H10"
+      android:pathData="M16,16V24M16,18V8M14,16H24M16,16H8"
       android:strokeWidth="2"
       android:fillColor="#00000000"
       android:strokeColor="#ffffff"

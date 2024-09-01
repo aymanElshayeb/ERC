@@ -31,6 +31,7 @@ public class EndShiftStep2 extends AppCompatActivity {
     String currency;
     EndShiftModel endShiftModel;
     LinearLayout viewsLl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +44,14 @@ public class EndShiftStep2 extends AppCompatActivity {
         viewsLl=findViewById(R.id.views_ll);
         TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
         TextView printZReport=findViewById(R.id.print_z_report);
+        TextView totalAmountTv = findViewById(R.id.total_amount_tv);
 
+        Log.w("here1 ", endShiftModel + "");
         endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
+
+        databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        currency=databaseAccess.getCurrency();
 
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
         for (int i = 0; i < keys.size(); i++) {
@@ -60,7 +67,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotal_amount()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
-
+        totalAmountTv.setText(endShiftModel.total_amount+" "+currency);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy\nhh:mm aa");
         String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
         addView(getResources().getString(R.string.start_shift_date), start_date);

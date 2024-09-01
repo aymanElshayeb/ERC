@@ -626,6 +626,30 @@ public class DatabaseAccess {
         return hashMap;
     }
 
+    public HashMap<String, String> getUserWithEmail(String email) {
+
+        Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "'", null);
+
+        HashMap<String, String> hashMap = null;
+        if (cursor.moveToFirst()) {
+            hashMap = new HashMap<>();
+            do {
+                hashMap.put("id", cursor.getString(cursor.getColumnIndex("id")));
+                hashMap.put("name_en", cursor.getString(cursor.getColumnIndex("name_en")));
+                hashMap.put("name_ar", cursor.getString(cursor.getColumnIndex("name_ar")));
+                hashMap.put("email", cursor.getString(cursor.getColumnIndex("email")));
+                hashMap.put("password", cursor.getString(cursor.getColumnIndex("password")));
+                hashMap.put("username", cursor.getString(cursor.getColumnIndex("username")));
+
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        database.close();
+        return hashMap;
+    }
+
 
     //get product weight unit name
     @SuppressLint("Range")
