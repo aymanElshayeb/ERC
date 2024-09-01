@@ -18,8 +18,11 @@ import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.printing.PrinterData;
+import com.app.smartpos.utils.printing.PrintingHelper;
 
 import java.util.HashMap;
 
@@ -31,6 +34,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
     private TextView printReceipt;
     private ScrollView scrollView;
 
+    PrinterData printerData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_checkout_order_details);
 
+        databaseAccess=DatabaseAccess.getInstance(this);
         device = DeviceFactory.getDevice();
 
         scrollView = findViewById(R.id.scrollView);
@@ -52,7 +57,17 @@ public class CheckoutOrderDetails extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                createBitmap();
+                printerData=PrintingHelper.createBitmap(databaseAccess,getIntent().getStringExtra("id"));
+                Bitmap bitmap=printerData.getBitmap();
+                if (bitmap.getHeight() < scrollView.getHeight()) {
+                    double scale=(double) scrollView.getHeight()/ bitmap.getHeight();
+                    bitmap=Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*scale),scrollView.getHeight(),false);
+                }else{
+                    //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
+                }
+                receiptIm.setImageBitmap(bitmap);
+
+
             }
         });
 
@@ -71,41 +86,9 @@ public class CheckoutOrderDetails extends AppCompatActivity {
             finish();
         });
 
-    }
-
-    private void createBitmap() {
-        databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        String currency = databaseAccess.getCurrency();
-        databaseAccess.open();
-        //HashMap<String, String> orderDetails = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
-        HashMap<String, String> orderLitItem = databaseAccess.getOrderListByOrderId(getIntent().getStringExtra("id"));
-        //Log.i("datadata",map.toString());
-        String invoice_id = orderLitItem.get("invoice_id");
-        String customer_name = orderLitItem.get("customer_name");
-        String order_date = orderLitItem.get("order_date");
-        String order_time = orderLitItem.get("order_time");
-        databaseAccess.open();
-        double tax = databaseAccess.totalOrderTax(invoice_id);
-        String discount = orderLitItem.get("discount");
-        databaseAccess.open();
-        double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
-        double price_before_tax = price_after_tax-tax;
-
-        OrderBitmap orderBitmap = new OrderBitmap();
-        Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
-        Log.i("datadata", bitmap.getHeight() + " " + scrollView.getHeight());
-
-        if (bitmap.getHeight() < scrollView.getHeight()) {
-            double scale=(double) scrollView.getHeight()/ bitmap.getHeight();
-            bitmap=Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*scale),scrollView.getHeight(),false);
-        }else{
-            //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
-        }
-        receiptIm.setImageBitmap(bitmap);
-
         printReceipt.setOnClickListener(view -> {
-            device.printReciept(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax+"", discount, currency);
+            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax()+"", printerData.getDiscount(), printerData.getCurrency());
         });
+
     }
 }

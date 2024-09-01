@@ -44,7 +44,7 @@ public class ItemsOptionsDialog extends DialogFragment {
             //ImageButton closeBtn = root.findViewById(R.id.btn_close);
 
             customItemLl.setOnClickListener(view -> {
-               items.addCustomItem();
+               items.openCustomBill();
                dismiss();
             });
 

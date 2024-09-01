@@ -31,6 +31,7 @@ public class Constant {
     public static final String PENDING = "Pending";
     public static final String PROCESSING = "Processing";
     public static final String COMPLETED = "Completed";
+    public static final String REFUNDED = "Refunded";
     public static final String CANCEL = "Cancel";
 
 

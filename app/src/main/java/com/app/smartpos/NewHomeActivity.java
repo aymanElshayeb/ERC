@@ -41,6 +41,7 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout circleNameLl = findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL = findViewById(R.id.items_ll);
         LinearLayout allOrdersLL = findViewById(R.id.all_orders_ll);
+        LinearLayout billsLl = findViewById(R.id.bills_ll);
         LinearLayout refundLL = findViewById(R.id.refund_ll);
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
@@ -63,6 +64,11 @@ public class NewHomeActivity extends BaseActivity {
         allOrdersLL.setOnClickListener(view -> {
             startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund", false));
         });
+
+        billsLl.setOnClickListener(view -> {
+            startActivity(new Intent(this, QuickBill.class).putExtra("type","quickBill"));
+        });
+
 
         syncTv.setOnClickListener(view -> {
             startActivity(new Intent(this, DataBaseBackupActivity.class));

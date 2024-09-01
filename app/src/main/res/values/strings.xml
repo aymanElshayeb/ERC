@@ -415,4 +415,9 @@
     <string name="no_receipt">No Receipt</string>
     <string name="close">Close</string>
 
+    <string name="amount">Amount</string>
+    <string name="custom_item">Custom Item</string>
+    <string name="description_optional">Description (Optional)</string>
+
+
 </resources>

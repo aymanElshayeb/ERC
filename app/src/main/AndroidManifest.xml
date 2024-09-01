@@ -34,6 +34,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".QuickBill"
+            android:exported="false" />
+        <activity
             android:name=".refund.RefundOrOrderDetails"
             android:exported="false" />
         <activity

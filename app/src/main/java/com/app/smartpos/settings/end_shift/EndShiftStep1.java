@@ -85,7 +85,7 @@ public class EndShiftStep1 extends AppCompatActivity {
             databaseAccess.open();
             double tax = databaseAccess.totalOrderTax(orderList.get(i).get("invoice_id"));
             double discount = Double.parseDouble(orderList.get(i).get("discount"));
-            if(orderList.get(i).get("operation_type").equals("refunded")){
+            if(orderList.get(i).get("operation_type").equals("refund")){
                 totalRefunds++;
             }
             total_amount += total_price;
@@ -168,7 +168,7 @@ public class EndShiftStep1 extends AppCompatActivity {
                 return;
             }
 
-            int total_transactions = orderList.size();
+            int total_transactions = orderList.size()-totalRefunds;
 
             for (int i = 0; i < models.size(); i++) {
                 String real = models.get(i).inputPaymentCashEt.getText().toString();

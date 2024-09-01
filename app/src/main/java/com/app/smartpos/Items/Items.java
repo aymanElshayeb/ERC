@@ -17,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.smartpos.QuickBill;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.PosProductAdapter;
 import com.app.smartpos.cart.Cart;
@@ -182,7 +184,7 @@ public class Items extends AppCompatActivity {
 
     private void updateCartUI() {
         int count = 0;
-        int total = 0;
+        double total = 0;
         for (int i = 0; i < selectedProductList.size(); i++) {
             double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
             double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
@@ -248,7 +250,15 @@ public class Items extends AppCompatActivity {
         return count;
     }
 
-    public void addCustomItem() {
+    public void openCustomBill(){
+        databaseAccess.open();
+        boolean isItemExist = databaseAccess.checkCustomProductInCart();
+        if(!isItemExist){
+            startActivityForResult(new Intent(this, QuickBill.class).putExtra("type","customItem"),12);
+        }
+    }
+
+    public void addCustomItem(String amount) {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if (!isItemExist) {
@@ -258,12 +268,13 @@ public class Items extends AppCompatActivity {
             String product_id = product.get("product_id");
             String product_weight = product.get("product_weight");
             String product_stock = product.get("product_stock");
-            String product_price = product.get("product_sell_price");
+            //String product_price = product.get("product_sell_price");
             String weight_unit_id = product.get("product_weight_unit_id");
             product.put("product_count", "1");
+            product.put("product_sell_price", amount);
             String product_uuid = product.get("product_uuid");
             databaseAccess.open();
-            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid);
+            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid);
             selectedProductList.add(convertProductToCartItem(product));
             Log.i("datadata", selectedProductList.size() + "");
             updateCartUI();
@@ -279,5 +290,14 @@ public class Items extends AppCompatActivity {
         selectedProductList.clear();
         productCartAdapter.notifyDataSetChanged();
         updateCartUI();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode==12){
+            Log.i("datadata",data.getStringExtra("amount"));
+            addCustomItem(data.getStringExtra("amount"));
+        }
     }
 }

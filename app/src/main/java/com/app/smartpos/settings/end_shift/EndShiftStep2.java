@@ -31,7 +31,6 @@ public class EndShiftStep2 extends AppCompatActivity {
     String currency;
     EndShiftModel endShiftModel;
     LinearLayout viewsLl;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,17 +40,15 @@ public class EndShiftStep2 extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_end_shift_step2);
 
-        viewsLl=findViewById(R.id.views_ll);
-        TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
-        TextView printZReport=findViewById(R.id.print_z_report);
-        TextView totalAmountTv = findViewById(R.id.total_amount_tv);
-
-        Log.w("here1 ", endShiftModel + "");
-        endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
-
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         currency=databaseAccess.getCurrency();
+
+        viewsLl=findViewById(R.id.views_ll);
+        TextView totalAmountTv=findViewById(R.id.total_amount_tv);        TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
+        TextView printZReport=findViewById(R.id.print_z_report);
+
+        endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
 
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
         for (int i = 0; i < keys.size(); i++) {
@@ -64,7 +61,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         }
         addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
         addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
-        addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotal_amount()));
+//        addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotal_amount()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
         totalAmountTv.setText(endShiftModel.total_amount+" "+currency);
@@ -102,5 +99,10 @@ public class EndShiftStep2 extends AppCompatActivity {
     private void onPrintZReport () {
         Device device = DeviceFactory.getDevice();
         device.printZReport(endShiftModel);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

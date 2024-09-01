@@ -48,13 +48,14 @@ public class NewCheckout extends AppCompatActivity {
     List<HashMap<String, String>> cartProductList;
     List<HashMap<String, String>> paymentMethodData;
 
-    long totalAmount = 0;
+    double totalAmount = 0;
     String currency;
     DatabaseAccess databaseAccess;
 
     CartPaymentMethodAdapter adapter;
     String paymentType = "";
     Device device;
+    boolean fromQuickBill;
     private double totalTax;
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), launcherResult -> {
         if (launcherResult.getResultCode() == Activity.RESULT_OK) {
@@ -97,6 +98,7 @@ public class NewCheckout extends AppCompatActivity {
         }
     });
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +128,13 @@ public class NewCheckout extends AppCompatActivity {
 
         databaseAccess.open();
         //get data from local database
-        cartProductList = databaseAccess.getCartProduct();
-
+        fromQuickBill = getIntent().getBooleanExtra("fromQuickBill", false);
+        if (!fromQuickBill) {
+            cartProductList = databaseAccess.getCartProduct();
+        } else {
+            cartProductList = new ArrayList<>();
+            cartProductList.add(addCustomItem(getIntent().getStringExtra("amount")));
+        }
         List<HashMap<String, String>> paymentMethodData;
         databaseAccess.open();
         paymentMethodData = databaseAccess.getPaymentMethod(true);
@@ -144,10 +151,9 @@ public class NewCheckout extends AppCompatActivity {
             if (paymentType.equals("CASH")) {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
-                Intent intent = device.pay(totalAmount);
+                Intent intent = device.pay((long) totalAmount);
                 launcher.launch(intent);
-            }
-            else{
+            } else {
                 Toasty.info(this, "Please select Payment Method",
                         Toast.LENGTH_SHORT).show();
             }
@@ -159,6 +165,7 @@ public class NewCheckout extends AppCompatActivity {
     }
 
     public void updateTotalPrice(List<HashMap<String, String>> list) {
+        Log.i("datadata_size", list.size() + "");
         double totalWithoutTax = 0;
 
         for (int i = 0; i < list.size(); i++) {
@@ -179,6 +186,12 @@ public class NewCheckout extends AppCompatActivity {
     public void proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total, double change) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+
+        if (fromQuickBill) {
+            databaseAccess.open();
+            databaseAccess.addToCart(cartProductList.get(0).get("product_id"), "1", cartProductList.get(0).get("weight_unit_id"), cartProductList.get(0).get("product_price"), 1, cartProductList.get(0).get("product_stock"), cartProductList.get(0).get("product_uuid"));
+        }
+
         databaseAccess.open();
 
         int itemCount = databaseAccess.getCartItemCount();
@@ -218,6 +231,7 @@ public class NewCheckout extends AppCompatActivity {
                     obj.put("order_payment_method", payment_method);
                     obj.put("customer_name", customer_name);
                     obj.put("order_status", Constant.COMPLETED);
+                    obj.put("operation_type", "invoice");
                     obj.put("original_order_id", null);
                     obj.put("card_type_code", card_type_code);
                     obj.put("approval_code", approval_code);
@@ -283,7 +297,7 @@ public class NewCheckout extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.i("datadata",obj.toString());
+                Log.i("datadata", obj.toString());
                 saveOrderInOfflineDb(obj);
 
 
@@ -318,6 +332,21 @@ public class NewCheckout extends AppCompatActivity {
 
 
     }
+
+    public HashMap<String, String> addCustomItem(String amount) {
+        databaseAccess.open();
+        HashMap<String, String> product = databaseAccess.getCustomProduct();
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("product_id", product.get("product_id"));
+        map.put("product_price", amount);
+        map.put("product_qty", "1");
+        map.put("weight_unit_id",product.get("product_weight"));
+        map.put("product_stock",product.get("product_stock"));
+        map.put("product_weight_unit_id",product.get("product_weight_unit_id"));
+        map.put("product_uuid", product.get("product_uuid"));
+        return map;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
