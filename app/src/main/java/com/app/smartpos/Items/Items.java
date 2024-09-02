@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -174,8 +175,9 @@ public class Items extends AppCompatActivity {
             String product_price = product.get("product_sell_price");
             String weight_unit_id = product.get("product_weight_unit_id");
             String product_uuid = product.get("product_uuid");
+            String product_description = product.get("product_description");
             databaseAccess.open();
-            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid);
+            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid,product_description);
             selectedProductList.add(convertProductToCartItem(product));
         }
 
@@ -209,6 +211,7 @@ public class Items extends AppCompatActivity {
         map.put("product_price", product.get("product_sell_price"));
         map.put("product_qty", product.get("product_count"));
         map.put("product_uuid", product.get("product_uuid"));
+        map.put("product_description", product.get("product_description"));
 
         return map;
     }
@@ -255,16 +258,17 @@ public class Items extends AppCompatActivity {
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if(!isItemExist){
             startActivityForResult(new Intent(this, QuickBill.class).putExtra("type","customItem"),12);
+        }else{
+            Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void addCustomItem(String amount) {
+    public void addCustomItem(String amount,String description) {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if (!isItemExist) {
             databaseAccess.open();
             HashMap<String, String> product = databaseAccess.getCustomProduct();
-            Log.i("datadata", product.toString());
             String product_id = product.get("product_id");
             String product_weight = product.get("product_weight");
             String product_stock = product.get("product_stock");
@@ -272,12 +276,15 @@ public class Items extends AppCompatActivity {
             String weight_unit_id = product.get("product_weight_unit_id");
             product.put("product_count", "1");
             product.put("product_sell_price", amount);
+            product.put("product_description", description);
             String product_uuid = product.get("product_uuid");
             databaseAccess.open();
-            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid);
+            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid,description);
             selectedProductList.add(convertProductToCartItem(product));
             Log.i("datadata", selectedProductList.size() + "");
             updateCartUI();
+        }else{
+            Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -296,8 +303,7 @@ public class Items extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode==12){
-            Log.i("datadata",data.getStringExtra("amount"));
-            addCustomItem(data.getStringExtra("amount"));
+            addCustomItem(data.getStringExtra("amount"),data.getStringExtra("description"));
         }
     }
 }

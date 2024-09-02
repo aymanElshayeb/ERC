@@ -729,7 +729,7 @@ public class DatabaseAccess {
 
 
     //Add product into cart
-    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock,String product_uuid) {
+    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock,String product_uuid,String description) {
 
 
         Cursor result = database.rawQuery("SELECT * FROM product_cart WHERE product_id='" + product_id + "'", null);
@@ -743,6 +743,7 @@ public class DatabaseAccess {
             values.put("product_weight", weight);
             values.put("product_weight_unit", weight_unit);
             values.put("product_price", price);
+            values.put("product_description", description);
             values.put("product_qty", qty);
             values.put("product_uuid", product_uuid);
             values.put("stock", stock);
@@ -805,6 +806,7 @@ public class DatabaseAccess {
                 map.put("product_price", cursor.getString(cursor.getColumnIndex("product_price")));
                 map.put("product_qty", cursor.getString(cursor.getColumnIndex("product_qty")));
                 map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("product_description", cursor.getString(cursor.getColumnIndex("product_description")));
                 map.put("stock", cursor.getString(cursor.getColumnIndex("stock")));
 
 
@@ -935,6 +937,7 @@ public class DatabaseAccess {
                 String product_image = jo.getString("product_image");
                 String product_order_date = jo.getString("product_order_date");
                 String product_uuid = jo.getString("product_uuid");
+                String product_description = jo.getString("product_description");
                 String product_id = getProductIdByUuid(product_uuid);
                 double taxPercentage= getProductTax(product_id);
 //                String stock = jo.getString("stock");
@@ -957,6 +960,7 @@ public class DatabaseAccess {
                 values2.put("product_image", product_image);
                 values2.put("product_order_date", product_order_date);
                 values2.put("order_status", order_status);
+                values2.put("product_description", product_description);
 
                 //for stock update
                 values3.put("product_stock", updated_stock);
@@ -1204,6 +1208,7 @@ public class DatabaseAccess {
                 map.put("invoice_id", cursor.getString(cursor.getColumnIndex("invoice_id")));
                 map.put("order_status", cursor.getString(cursor.getColumnIndex("order_status")));
                 map.put("product_uuid", cursor.getString(cursor.getColumnIndex("product_uuid")));
+                map.put("product_description", cursor.getString(cursor.getColumnIndex("product_description")));
                 map.put("product_image", cursor.getString(cursor.getColumnIndex("product_image")));
                 map.put("product_name_en", cursor.getString(cursor.getColumnIndex("product_name_en")));
                 map.put("product_name_ar", cursor.getString(cursor.getColumnIndex("product_name_ar")));

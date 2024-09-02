@@ -189,7 +189,7 @@ public class NewCheckout extends AppCompatActivity {
 
         if (fromQuickBill) {
             databaseAccess.open();
-            databaseAccess.addToCart(cartProductList.get(0).get("product_id"), "1", cartProductList.get(0).get("weight_unit_id"), cartProductList.get(0).get("product_price"), 1, cartProductList.get(0).get("product_stock"), cartProductList.get(0).get("product_uuid"));
+            databaseAccess.addToCart(cartProductList.get(0).get("product_id"), "1", cartProductList.get(0).get("weight_unit_id"), cartProductList.get(0).get("product_price"), 1, cartProductList.get(0).get("product_stock"), cartProductList.get(0).get("product_uuid"),cartProductList.get(0).get("product_description"));
         }
 
         databaseAccess.open();
@@ -286,6 +286,7 @@ public class NewCheckout extends AppCompatActivity {
                         objp.put("product_price", lines.get(i).get("product_price"));
                         objp.put("product_image", product.get(0).get("product_image") == null ? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
+                        objp.put("product_description", lines.get(i).get("product_description"));
 
                         array.put(objp);
 

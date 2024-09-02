@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class QuickBill extends AppCompatActivity {
         currencyTv=findViewById(R.id.currency_tv);
         TextView titleTv=findViewById(R.id.title_tv);
         TextView payTv=findViewById(R.id.option_tv);
+        EditText descriptionEt=findViewById(R.id.description_et);
 
         if(getIntent().getStringExtra("type").equals("customItem")){
             titleTv.setText(getString(R.string.custom_item));
@@ -85,6 +87,7 @@ public class QuickBill extends AppCompatActivity {
             if(cashResult>=totalAmount) {
                 Intent intent = new Intent();
                 intent.putExtra("amount", Utils.trimLongDouble(amountTv.getText().toString()));
+                intent.putExtra("description", descriptionEt.getText().toString().trim());
                 if(getIntent().getStringExtra("type").equals("customItem")) {
                     setResult(RESULT_OK, intent);
                     finish();

@@ -68,7 +68,7 @@ public class ItemsOptionsDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         getDialog().getWindow().setGravity(Gravity.BOTTOM);

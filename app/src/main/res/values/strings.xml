@@ -50,6 +50,7 @@
     <string name="confirmation_refund">Confirmation refund</string>
     <string name="confirmation_refund_desc">Are you sure you want to refund this order?</string>
     <string name="items_successfully_refunded">Items Successfully Refunded</string>
+    <string name="cutom_item_already_added">Custom item already added</string>
 
     <string name="cart">Cart</string>
     <string name="order_summary">Order Summary</string>

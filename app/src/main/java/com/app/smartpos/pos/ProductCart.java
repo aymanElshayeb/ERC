@@ -247,6 +247,7 @@ public class ProductCart extends BaseActivity {
                         objp.put("product_price", lines.get(i).get("product_price"));
                         objp.put("product_image", product.get(0).get("product_image") == null? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
+                        objp.put("product_description", lines.get(i).get("product_description"));
 
                         array.put(objp);
 

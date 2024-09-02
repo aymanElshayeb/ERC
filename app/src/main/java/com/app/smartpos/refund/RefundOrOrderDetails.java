@@ -91,12 +91,13 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         for (int i = 0; i < orderDetailsList.size(); i++) {
             orderDetailsList.get(i).put("refund_qty", "0");
             orderDetailsList.get(i).put("item_checked", "0");
+            Log.i("datadata", "" + orderDetailsList.get(i).toString());
         }
 
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler.setAdapter(refundDetailsAdapter);
-        Log.i("datadata", "" + isRefund);
+
 
         updateTotalAmount();
         if (!isRefund) {
@@ -290,6 +291,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                         objp.put("product_qty", -refund_qty + "");
                         objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
                         objp.put("product_price", orderDetailsList.get(i).get("product_price"));
+                        objp.put("product_price", orderDetailsList.get(i).get("product_description"));
                         objp.put("product_image", product.get(0).get("product_image") == null ? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
 
