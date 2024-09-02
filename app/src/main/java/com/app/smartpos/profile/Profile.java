@@ -33,7 +33,7 @@ public class Profile extends AppCompatActivity {
         ImageView closeIm=findViewById(R.id.close_im);
 
         usernameTv.setText(SharedPrefUtils.getUsername(this));
-
+        mobileTv.setText(SharedPrefUtils.getMobileNumber(this));
         closeIm.setOnClickListener(view -> {
             finish();
         });

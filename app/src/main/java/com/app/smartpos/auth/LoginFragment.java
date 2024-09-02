@@ -49,7 +49,9 @@ public class LoginFragment extends Fragment {
                 databaseAccess.open();
                 HashMap<String,String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
                 if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
+                    SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserEmail(requireActivity(),map.get("email"));
+                    SharedPrefUtils.setMobileNumber(requireActivity(),map.get("mobile_number"));
                     SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
                     Intent intent = new Intent(context, NewHomeActivity.class);
                     startActivity(intent);

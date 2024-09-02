@@ -353,7 +353,7 @@
     <string name="total_transactions_number">Total Transactions Number</string>
     <string name="total_successful_transactions">Total Successful Transactions</string>
     <string name="total_refunds">Total Refunds</string>
-    <string name="total_cash_amount">Total Successful Amount</string>
+    <string name="total_cash_amount">Total Sales Amount</string>
     <string name="total_refunds_amount">Total Refunds Amount</string>
     <string name="start_shift_date">Start Shift Date</string>
     <string name="end_shift_date">End Shift Date</string>
