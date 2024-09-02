@@ -45,7 +45,8 @@ public class EndShiftStep2 extends AppCompatActivity {
         currency=databaseAccess.getCurrency();
 
         viewsLl=findViewById(R.id.views_ll);
-        TextView totalAmountTv=findViewById(R.id.total_amount_tv);        TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
+        TextView totalAmountTv=findViewById(R.id.total_amount_tv);
+        TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
         TextView printZReport=findViewById(R.id.print_z_report);
 
         endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
@@ -63,6 +64,13 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
         addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotalCardsAmount()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
+
+        addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount()));
+
+        //TODO: Add Total Refunds Amount
+
+        addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount()));
+
 
         totalAmountTv.setText(endShiftModel.total_amount+" "+currency);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy\nhh:mm aa");
