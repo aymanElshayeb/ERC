@@ -122,7 +122,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printCashDiscrepancies(double totalCash, double differenceCash) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
         printLine();
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Actual total cash    " + zeroChecker(f.format(totalCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash from sales    " + zeroChecker(f.format(totalCash)));
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash    " + zeroChecker(f.format(totalCash + differenceCash)));
         printLine();
     }
@@ -130,7 +130,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printNumOfTransactions(int numSuccessfulTransaction, int numReturnedTransaction) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Transactions number breakdown");
         printLine();
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Successful transactions   " + numSuccessfulTransaction);
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Sales transactions   " + numSuccessfulTransaction);
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Refunded transactions   " + numReturnedTransaction);
         printLine();
     }
