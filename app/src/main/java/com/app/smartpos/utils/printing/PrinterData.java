@@ -70,7 +70,6 @@ public class PrinterData {
     @Override
     public String toString() {
         return "PrinterData{" +
-                "bitmap=" + bitmap +
                 ", invoice_id='" + invoice_id + '\'' +
                 ", customer_name='" + customer_name + '\'' +
                 ", order_date='" + order_date + '\'' +

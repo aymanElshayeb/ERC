@@ -133,7 +133,7 @@ public class NewCheckout extends AppCompatActivity {
             cartProductList = databaseAccess.getCartProduct();
         } else {
             cartProductList = new ArrayList<>();
-            cartProductList.add(addCustomItem(getIntent().getStringExtra("amount")));
+            cartProductList.add(addCustomItem(getIntent().getStringExtra("amount"),getIntent().getStringExtra("description")));
         }
         List<HashMap<String, String>> paymentMethodData;
         databaseAccess.open();
@@ -235,6 +235,8 @@ public class NewCheckout extends AppCompatActivity {
                     obj.put("original_order_id", null);
                     obj.put("card_type_code", card_type_code);
                     obj.put("approval_code", approval_code);
+                    obj.put("operation_sub_type", fromQuickBill?"freeText":"product");
+
                     databaseAccess.open();
                     HashMap<String, String> configuration = databaseAccess.getConfiguration();
                     String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");
@@ -334,12 +336,13 @@ public class NewCheckout extends AppCompatActivity {
 
     }
 
-    public HashMap<String, String> addCustomItem(String amount) {
+    public HashMap<String, String> addCustomItem(String amount,String description) {
         databaseAccess.open();
         HashMap<String, String> product = databaseAccess.getCustomProduct();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("product_id", product.get("product_id"));
         map.put("product_price", amount);
+        map.put("product_description", description);
         map.put("product_qty", "1");
         map.put("weight_unit_id",product.get("product_weight"));
         map.put("product_stock",product.get("product_stock"));

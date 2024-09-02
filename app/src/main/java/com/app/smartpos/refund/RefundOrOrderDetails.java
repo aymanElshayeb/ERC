@@ -46,6 +46,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
     List<HashMap<String, String>> orderDetailsList;
     String orderId;
+    String operation_sub_type;
     TextView refund_tv;
     boolean isRefund;
 
@@ -74,6 +75,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         refund_tv = findViewById(R.id.refund_tv);
 
         orderId = getIntent().getStringExtra("order_id");
+        operation_sub_type = getIntent().getStringExtra("operation_sub_type");
         String order_payment_method = getIntent().getStringExtra("order_payment_method");
         String operation_type = getIntent().getStringExtra("operation_type");
         receipt_number_tv.setText(orderId);
@@ -230,6 +232,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                 obj.put("original_order_id", orderId);
                 obj.put("card_type_code", card_type_code);
                 obj.put("approval_code", approval_code);
+                obj.put("operation_sub_type", operation_sub_type);
                 databaseAccess.open();
                 HashMap<String, String> configuration = databaseAccess.getConfiguration();
                 String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");

@@ -888,6 +888,8 @@ public class DatabaseAccess {
             double change_amount = obj.getDouble("change_amount");
             String tax_number = obj.getString("tax_number");
             String operation_type = obj.getString("operation_type");
+            String operation_sub_type = obj.getString("operation_sub_type");
+
 
 
             values.put("invoice_id", order_id);
@@ -900,6 +902,7 @@ public class DatabaseAccess {
             values.put("original_order_id", "");
             values.put("card_type_code", card_type_code);
             values.put("approval_code", approval_code);
+            values.put("operation_sub_type", operation_sub_type);
             values.put("ecr_code", ecr_code);
             values.put("tax", tax);
             values.put("discount", discount);
@@ -1067,6 +1070,7 @@ public class DatabaseAccess {
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
                 map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("operation_sub_type", cursor.getString(cursor.getColumnIndex("operation_sub_type")));
                 map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
 
 
@@ -1106,6 +1110,7 @@ public class DatabaseAccess {
                 orderListMap.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 orderListMap.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
                 orderListMap.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                orderListMap.put("operation_sub_type", cursor.getString(cursor.getColumnIndex("operation_sub_type")));
                 orderListMap.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
                 orderListMap.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
             } while (cursor.moveToNext());
@@ -1142,6 +1147,7 @@ public class DatabaseAccess {
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
                 map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("operation_sub_type", cursor.getString(cursor.getColumnIndex("operation_sub_type")));
                 map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
 
 
@@ -1183,6 +1189,7 @@ public class DatabaseAccess {
                 map.put("change_amount", cursor.getString(cursor.getColumnIndex("change_amount")));
                 map.put("tax_number", cursor.getString(cursor.getColumnIndex("tax_number")));
                 map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
+                map.put("operation_sub_type", cursor.getString(cursor.getColumnIndex("operation_sub_type")));
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));
                 orderList.add(map);
             } while (cursor.moveToNext());
@@ -1572,6 +1579,10 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 product_Tax = cursor.getDouble(cursor.getColumnIndex("product_tax"));
+                if(cursor.getString(cursor.getColumnIndex("product_uuid")).equals("CUSTOM_ITEM")){
+                    product_Tax=getShopTax();
+                }
+
             } while (cursor.moveToNext());
         }
 
@@ -1602,6 +1613,27 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return currency;
+    }
+
+    public double getShopTax() {
+
+        double tax = 0;
+        Cursor cursor = database.rawQuery("SELECT * FROM shop", null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+
+
+                tax = cursor.getDouble(cursor.getColumnIndex("tax"));
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        return tax;
     }
 
 
@@ -2356,7 +2388,7 @@ public class DatabaseAccess {
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
                 map.put("product_count", "0");
 
-                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("PR999999")) {
+                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("CUSTOM_ITEM")) {
                     product.add(map);
                 }
             } while (cursor.moveToNext());
@@ -2368,7 +2400,7 @@ public class DatabaseAccess {
 
     public HashMap<String, String> getCustomProduct() {
         HashMap<String, String> map = null;
-        Cursor cursor = database.rawQuery("SELECT * FROM products Where product_uuid = 'PR999999'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM products Where product_uuid = 'CUSTOM_ITEM'", null);
         if (cursor.moveToFirst()) {
             do {
                 map = new HashMap<>();
@@ -2404,7 +2436,7 @@ public class DatabaseAccess {
     }
 
     public Boolean checkCustomProductInCart() {
-        Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'PR999999'", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'CUSTOM_ITEM'", null);
         boolean exist=cursor.moveToFirst();
         Log.i("datadata_exist",exist+"");
         cursor.close();
@@ -2729,7 +2761,7 @@ public class DatabaseAccess {
                 map.put("product_tax", cursor.getString(cursor.getColumnIndex("product_tax")));
                 map.put("product_weight", cursor.getString(cursor.getColumnIndex("product_weight")));
                 map.put("product_weight_unit_id", cursor.getString(cursor.getColumnIndex("product_weight_unit_id")));
-                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("PR999999")) {
+                if ((!showActiveOnly || active.equals("1")) && !product_uuid.equals("CUSTOM_ITEM")) {
                     product.add(map);
                 }
             } while (cursor.moveToNext());

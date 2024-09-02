@@ -52,14 +52,18 @@ public class EndShiftStep2 extends AppCompatActivity {
         endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
 
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
+        double totalCard=0;
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
             if( keys.get(i).equals("CASH")){
                 addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
                 addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
                 addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
+            }else{
+                totalCard+=shiftDifferences.getReal();
             }
         }
+        addView(getResources().getString(R.string.total_card), totalCard + "");
         addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
         addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
         addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotalCardsAmount()));

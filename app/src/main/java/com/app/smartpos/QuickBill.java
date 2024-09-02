@@ -2,9 +2,12 @@ package com.app.smartpos;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -16,6 +19,7 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 
 public class QuickBill extends AppCompatActivity {
+    ConstraintLayout rootCl;
     double totalAmount=0;
     String cash="";
     TextView amountTv;
@@ -36,6 +40,9 @@ public class QuickBill extends AppCompatActivity {
 
         totalAmount=(double) getIntent().getLongExtra("total_amount",0);
 
+
+
+        //rootCl=findViewById(R.id.root_cl);
         amountTv=findViewById(R.id.amount_tv);
         currencyTv=findViewById(R.id.currency_tv);
         TextView titleTv=findViewById(R.id.title_tv);
@@ -92,7 +99,7 @@ public class QuickBill extends AppCompatActivity {
                     setResult(RESULT_OK, intent);
                     finish();
                 }else{
-                    startActivity(new Intent(this, NewCheckout.class).putExtra("fromQuickBill",true).putExtra("amount",Utils.trimLongDouble(amountTv.getText().toString())));
+                    startActivity(new Intent(this, NewCheckout.class).putExtra("fromQuickBill",true).putExtra("amount",Utils.trimLongDouble(amountTv.getText().toString())).putExtra("description", descriptionEt.getText().toString().trim()));
                 }
             }else{
                 Toast.makeText(this, getString(R.string.cash_given_must_be_equal_or_more_than_total_amount), Toast.LENGTH_SHORT).show();
@@ -101,6 +108,16 @@ public class QuickBill extends AppCompatActivity {
 
         change=0;
         amountTv.setText(change+"");
+
+//        rootCl.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                ViewGroup.LayoutParams params=rootCl.getLayoutParams();
+//                params.height=getResources().getDisplayMetrics().heightPixels;
+//                rootCl.setLayoutParams(params);
+//                rootCl.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//            }
+//        });
 
     }
 
@@ -122,11 +139,11 @@ public class QuickBill extends AppCompatActivity {
     private void del(){
         if(cash.length()<=1){
             cash="";
-            amountTv.setText("0 "+currency);
+            amountTv.setText("0");
             change=0;
         }else {
             cash = cash.substring(0, cash.length() - 1);
-            amountTv.setText(cash+" "+currency);
+            amountTv.setText(cash);
             change=totalAmount-Double.parseDouble(cash);
         }
     }

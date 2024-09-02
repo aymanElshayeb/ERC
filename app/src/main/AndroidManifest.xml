@@ -35,7 +35,8 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".QuickBill"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".refund.RefundOrOrderDetails"
             android:exported="false" />

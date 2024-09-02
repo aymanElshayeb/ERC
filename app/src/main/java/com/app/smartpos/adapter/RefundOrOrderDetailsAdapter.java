@@ -80,7 +80,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
 
         String base64Image = product_image;
 
-        if (product_uuid.equals("PR999999")) {
+        if (product_uuid.equals("CUSTOM_ITEM")) {
             holder.product_im.setImageResource(R.drawable.ic_custom_option_gray);
         } else {
             if (base64Image != null) {

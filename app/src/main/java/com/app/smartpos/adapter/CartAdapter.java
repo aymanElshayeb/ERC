@@ -87,12 +87,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         String currency = databaseAccess.getCurrency();
 
        //productCart.updateTotalPrice();
-        holder.txtPlus.setImageResource(uuid.equals("PR999999") ? R.drawable.ic_plus_gray : R.drawable.ic_plus);
-        holder.txtPlus.setEnabled(!uuid.equals("PR999999"));
-        holder.txtMinus.setImageResource(uuid.equals("PR999999") ? R.drawable.ic_minus_gray : R.drawable.ic_minus);
-        holder.txtMinus.setEnabled(!uuid.equals("PR999999"));
+        holder.txtPlus.setImageResource(uuid.equals("CUSTOM_ITEM") ? R.drawable.ic_plus_gray : R.drawable.ic_plus);
+        holder.txtPlus.setEnabled(!uuid.equals("CUSTOM_ITEM"));
+        holder.txtMinus.setImageResource(uuid.equals("CUSTOM_ITEM") ? R.drawable.ic_minus_gray : R.drawable.ic_minus);
+        holder.txtMinus.setEnabled(!uuid.equals("CUSTOM_ITEM"));
 
-        if(uuid.equals("PR999999")){
+        if(uuid.equals("CUSTOM_ITEM")){
             holder.imgProduct.setImageResource(R.drawable.ic_custom_option_gray);
         }else {
             if (base64Image != null) {

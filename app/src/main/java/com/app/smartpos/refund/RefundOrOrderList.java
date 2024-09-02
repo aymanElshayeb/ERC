@@ -61,7 +61,9 @@ public class RefundOrOrderList extends AppCompatActivity {
         //get data from local database
 
         orderList.addAll(databaseAccess.getOrderListPaginated(offset,isRefund));
-
+        if(orderList.size()>0) {
+            Log.i("datadata_sub_type", orderList.get(0).toString());
+        }
         refundsOrOrdersAdapter = new RefundsOrOrdersAdapter(this, orderList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler.setAdapter(refundsOrOrdersAdapter);

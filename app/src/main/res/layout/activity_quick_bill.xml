@@ -98,22 +98,6 @@
 
     </LinearLayout>
 
-    <include
-        layout="@layout/layout_numbers"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/line"
-        app:layout_constraintTop_toBottomOf="@+id/top_panel_ll" />
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DBDBDB"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/description_et"/>
-    
     <EditText
         android:id="@+id/description_et"
         android:layout_width="match_parent"
@@ -122,14 +106,30 @@
         android:textColor="@color/black"
         android:hint="@string/description_optional"
         android:textColorHint="@color/grey_d8"
-        app:layout_constraintBottom_toTopOf="@id/btn_ll"
+        app:layout_constraintTop_toBottomOf="@id/top_panel_ll"
         android:background="@drawable/rounded_corners_login_edittext_light"
         android:paddingHorizontal="16dp"
         android:inputType="text"
         android:maxLines="1"
         android:fontFamily="@font/inter_semibold"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginTop="24dp"/>
+    <include
+        layout="@layout/layout_numbers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/line"
+        app:layout_constraintTop_toBottomOf="@+id/description_et" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DBDBDB"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_ll"/>
+
 
     <LinearLayout
         android:id="@+id/btn_ll"
