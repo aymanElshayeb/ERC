@@ -48,7 +48,7 @@ public class EndShiftStep1 extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+       // w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_end_shift_step1);
 
         TextView totalAmountTv = findViewById(R.id.total_amount_tv);
