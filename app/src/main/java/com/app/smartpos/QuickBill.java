@@ -4,8 +4,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -18,8 +22,8 @@ import com.app.smartpos.checkout.NewCheckout;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 
-public class QuickBill extends AppCompatActivity {
-    ConstraintLayout rootCl;
+public class QuickBill extends Activity {
+    //ConstraintLayout rootCl;
     double totalAmount=0;
     String cash="";
     TextView amountTv;
@@ -32,10 +36,10 @@ public class QuickBill extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-        Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.hide();
+//        Window w = getWindow();
+  //      w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_quick_bill);
 
         totalAmount=(double) getIntent().getLongExtra("total_amount",0);
@@ -109,15 +113,20 @@ public class QuickBill extends AppCompatActivity {
         change=0;
         amountTv.setText(change+"");
 
-//        rootCl.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        Window mRootWindow = getWindow();
+        View mRootView = mRootWindow.getDecorView().findViewById(android.R.id.content);
+//        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //            @Override
 //            public void onGlobalLayout() {
-//                ViewGroup.LayoutParams params=rootCl.getLayoutParams();
-//                params.height=getResources().getDisplayMetrics().heightPixels;
-//                rootCl.setLayoutParams(params);
-//                rootCl.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                Rect r = new Rect();
+//                View view = mRootWindow.getDecorView();
+//                view.getWindowVisibleDisplayFrame(r);
+//                int heightDiff = mRootView.getRootView().getHeight()- mRootView.getHeight();
+//                Log.i("datadata_height","hibhjg "+heightDiff+" "+rootCl.getHeight()+" "+r.toString());
+//
 //            }
 //        });
+
 
     }
 
