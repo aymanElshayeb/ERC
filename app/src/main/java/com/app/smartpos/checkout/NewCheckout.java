@@ -187,14 +187,14 @@ public class NewCheckout extends AppCompatActivity {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
 
-        if (fromQuickBill) {
-            databaseAccess.open();
-            databaseAccess.addToCart(cartProductList.get(0).get("product_id"), "1", cartProductList.get(0).get("weight_unit_id"), cartProductList.get(0).get("product_price"), 1, cartProductList.get(0).get("product_stock"), cartProductList.get(0).get("product_uuid"),cartProductList.get(0).get("product_description"));
-        }
+//        if (fromQuickBill) {
+//            databaseAccess.open();
+//            databaseAccess.addToCart(cartProductList.get(0).get("product_id"), "1", cartProductList.get(0).get("weight_unit_id"), cartProductList.get(0).get("product_price"), 1, cartProductList.get(0).get("product_stock"), cartProductList.get(0).get("product_uuid"),cartProductList.get(0).get("product_description"));
+//        }
 
         databaseAccess.open();
 
-        int itemCount = databaseAccess.getCartItemCount();
+        int itemCount = cartProductList.size();
 
         if (itemCount > 0) {
 
@@ -202,7 +202,7 @@ public class NewCheckout extends AppCompatActivity {
             databaseAccess.open();
             //get data from local database
             final List<HashMap<String, String>> lines;
-            lines = databaseAccess.getCartProduct();
+            lines = cartProductList;
 
             if (lines.isEmpty()) {
                 Toasty.error(this, R.string.no_product_found, Toast.LENGTH_SHORT).show();
@@ -279,9 +279,14 @@ public class NewCheckout extends AppCompatActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
-                        objp.put("product_name_en", product.get(0).get("product_name_en"));
-                        objp.put("product_name_ar", product.get(0).get("product_name_ar"));
-                        objp.put("product_uuid", product.get(0).get("product_uuid"));
+                        String englishName=product.get(0).get("product_name_en");
+                        String arabicName=product.get(0).get("product_name_ar");
+                        if(product.get(0).get("product_uuid").equals("CUSTOM_ITEM")){
+                            englishName=lines.get(i).get("product_description");
+                            arabicName=lines.get(i).get("product_description");
+                        }
+                        objp.put("product_name_en", englishName);
+                        objp.put("product_name_ar", arabicName);
                         objp.put("product_weight", lines.get(i).get("product_weight") + " " + weight_unit);
                         objp.put("product_qty", lines.get(i).get("product_qty"));
                         objp.put("stock", lines.get(i).get("stock") == null ? Integer.MAX_VALUE : lines.get(i).get("stock"));
@@ -323,7 +328,7 @@ public class NewCheckout extends AppCompatActivity {
 
         String orderId = sequenceMap.get("sequence");
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this);
+        databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();

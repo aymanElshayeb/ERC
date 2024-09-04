@@ -863,7 +863,7 @@ public class DatabaseAccess {
     }
 
     //insert order in order list
-    public void insertOrder(String order_id, JSONObject obj, Context context) {
+    public void insertOrder(String order_id, JSONObject obj, Context context,boolean deleteCart) {
 
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
@@ -918,7 +918,8 @@ public class DatabaseAccess {
 
             database.insert("order_list", null, values);
 
-            database.delete("product_cart", null, null);
+            if(deleteCart)
+                database.delete("product_cart", null, null);
 
 
         } catch (JSONException e) {

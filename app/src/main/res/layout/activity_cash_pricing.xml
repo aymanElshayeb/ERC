@@ -109,11 +109,27 @@
                 android:fontFamily="@font/inter_semibold"
                 android:gravity="end"
                 android:maxLines="1"
+                android:maxLength="6"
+                android:text="00.00"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@id/currency_tv"
+                app:layout_constraintStart_toEndOf="@+id/cash_giving_text"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/currency_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/inter_semibold"
+                android:gravity="end"
+                android:maxLines="1"
                 android:text="00.00"
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cash_giving_text"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

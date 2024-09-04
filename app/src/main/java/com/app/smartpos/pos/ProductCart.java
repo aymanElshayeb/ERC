@@ -288,7 +288,7 @@ public class ProductCart extends BaseActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
 
         databaseAccess.open();
-        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj,ProductCart.this);
+        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj,ProductCart.this,true);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();

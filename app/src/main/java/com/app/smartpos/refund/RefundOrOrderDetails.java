@@ -287,8 +287,14 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
-                        objp.put("product_name_en", product.get(0).get("product_name_en"));
-                        objp.put("product_name_ar", product.get(0).get("product_name_ar"));
+                        String englishName=product.get(0).get("product_name_en");
+                        String arabicName=product.get(0).get("product_name_ar");
+                        if(product.get(0).get("product_uuid").equals("CUSTOM_ITEM")){
+                            englishName=orderDetailsList.get(i).get("product_description");
+                            arabicName=orderDetailsList.get(i).get("product_description");
+                        }
+                        objp.put("product_name_en", englishName);
+                        objp.put("product_name_ar", arabicName);
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_weight", orderDetailsList.get(i).get("product_weight") + " " + weight_unit);
                         objp.put("product_qty", -refund_qty + "");
@@ -328,7 +334,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         String orderId = sequenceMap.get("sequence");
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this);
+        databaseAccess.insertOrder(orderId, obj, this,true);
 
 
 //        Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
