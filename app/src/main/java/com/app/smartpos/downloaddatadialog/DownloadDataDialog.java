@@ -151,7 +151,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId",conf.get("merchant_id")).
-                putString("username", usernameEt.getText().toString()).
+                putString("email", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data downloadInputData = new Data.Builder()
@@ -208,7 +208,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("username", usernameEt.getText().toString()).
+                putString("email", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data lastSync = new Data.Builder().

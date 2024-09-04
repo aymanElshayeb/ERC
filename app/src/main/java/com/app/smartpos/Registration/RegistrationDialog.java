@@ -111,7 +111,7 @@ public class RegistrationDialog extends DialogFragment {
 
     private void requestForStoragePermissions() {
         //Android is 11 (R) or above
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
+        if((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) || Build.VERSION.SDK_INT >= 35){
             if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(
                         requireActivity(),
@@ -135,7 +135,7 @@ public class RegistrationDialog extends DialogFragment {
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
                 putString("tenantId", merchantEt.getText().toString()).
-                putString("username", usernameEt.getText().toString()).
+                putString("email", usernameEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 putString("deviceId", deviceId).
                 build();

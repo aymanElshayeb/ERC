@@ -52,7 +52,7 @@ public class DownloadWorker extends Worker {
                 ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("tenantId", tenantId);
+            connection.setRequestProperty("tenantId", "cr" + tenantId);
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey",API_KEY);
             connection.setRequestProperty("ecrCode",ecrCode);

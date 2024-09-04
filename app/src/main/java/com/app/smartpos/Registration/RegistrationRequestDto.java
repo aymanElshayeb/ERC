@@ -1,12 +1,12 @@
 package com.app.smartpos.Registration;
 
 public class RegistrationRequestDto {
-    private String username;
+    private String email;
     private String password;
     private String deviceId;
 
-    public RegistrationRequestDto(String username, String password, String deviceId) {
-        this.username = username;
+    public RegistrationRequestDto(String email, String password, String deviceId) {
+        this.email = email;
         this.password = password;
         this.deviceId = deviceId;
     }
@@ -14,12 +14,12 @@ public class RegistrationRequestDto {
     public RegistrationRequestDto() {
     }
 
-    public String getUsername() {
-        return username;
+    public String getemail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setemail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

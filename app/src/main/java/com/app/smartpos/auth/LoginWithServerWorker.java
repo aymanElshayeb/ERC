@@ -42,19 +42,19 @@ public class LoginWithServerWorker extends Worker {
     @Override
     public Result doWork() {
         // Perform login with server logic here
-        String username = getInputData().getString("username");
+        String email = getInputData().getString("email");
         String password = getInputData().getString("password");
         String tenantId= getInputData().getString("tenantId");
         String urlString=getInputData().getString("url");
 
-        if (username == null || password == null || tenantId==null) {
+        if (email == null || password == null || tenantId==null) {
             return Result.failure();
         }
 
         OkHttpClient client = getUnsafeOkHttpClient();
 
         FormBody formBody = new FormBody.Builder()
-                .add("username", username)
+                .add("email", email)
                 .add("password",password)
                 .build();
         Headers headers=new Headers.Builder().
