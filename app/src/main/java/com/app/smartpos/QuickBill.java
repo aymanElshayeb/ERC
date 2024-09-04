@@ -31,7 +31,6 @@ public class QuickBill extends Activity {
 
     String currency;
     DatabaseAccess databaseAccess;
-    private double change;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +93,12 @@ public class QuickBill extends Activity {
         del.setOnClickListener(view -> del());
 
         payTv.setOnClickListener(view -> {
-            double cashResult=Double.parseDouble(amountTv.getText().toString().split(" ")[0]);
-            if(cashResult>=totalAmount) {
+            double cashResult=Double.parseDouble(amountTv.getText().toString());
+            if(descriptionEt.getText().toString().trim().isEmpty()){
+                Toast.makeText(this, getString(R.string.please_add_decription), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(cashResult>0) {
                 Intent intent = new Intent();
                 intent.putExtra("amount", Utils.trimLongDouble(amountTv.getText().toString()));
                 intent.putExtra("description", descriptionEt.getText().toString().trim());
@@ -106,12 +109,11 @@ public class QuickBill extends Activity {
                     startActivity(new Intent(this, NewCheckout.class).putExtra("fromQuickBill",true).putExtra("amount",Utils.trimLongDouble(amountTv.getText().toString())).putExtra("description", descriptionEt.getText().toString().trim()));
                 }
             }else{
-                Toast.makeText(this, getString(R.string.cash_given_must_be_equal_or_more_than_total_amount), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.amount_must_be_more_than_zero), Toast.LENGTH_SHORT).show();
             }
         });
 
-        change=0;
-        amountTv.setText(change+"");
+        amountTv.setText("0");
 
         Window mRootWindow = getWindow();
         View mRootView = mRootWindow.getDecorView().findViewById(android.R.id.content);
@@ -149,11 +151,9 @@ public class QuickBill extends Activity {
         if(cash.length()<=1){
             cash="";
             amountTv.setText("0");
-            change=0;
         }else {
             cash = cash.substring(0, cash.length() - 1);
             amountTv.setText(cash);
-            change=totalAmount-Double.parseDouble(cash);
         }
     }
 }

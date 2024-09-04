@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:textSize="17sp"
         android:textColor="@color/black"
-        android:hint="@string/description_optional"
+        android:hint="@string/description"
         android:textColorHint="@color/grey_d8"
         app:layout_constraintBottom_toTopOf="@id/btn_ll"
         android:background="@drawable/rounded_corners_login_edittext_light"
