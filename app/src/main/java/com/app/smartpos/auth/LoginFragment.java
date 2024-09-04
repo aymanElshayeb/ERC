@@ -48,7 +48,9 @@ public class LoginFragment extends Fragment {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
                 databaseAccess.open();
                 HashMap<String,String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
-                if (map!=null && isValid(passwordEt.getText().toString(),map.get("password"))) {
+                //isValid(passwordEt.getText().toString(),map.get("password")
+                // check password removed for now only for testing
+                if (map!=null) {
                     SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserEmail(requireActivity(),map.get("email"));
                     SharedPrefUtils.setMobileNumber(requireActivity(),map.get("mobile_number"));
