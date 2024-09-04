@@ -294,7 +294,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                         objp.put("product_qty", -refund_qty + "");
                         objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
                         objp.put("product_price", orderDetailsList.get(i).get("product_price"));
-                        objp.put("product_price", orderDetailsList.get(i).get("product_description"));
+                        objp.put("product_description", orderDetailsList.get(i).get("product_description"));
                         objp.put("product_image", product.get(0).get("product_image") == null ? "" : product.get(0).get("product_image"));
                         objp.put("product_order_date", currentDate);
 
