@@ -23,6 +23,9 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+    packagingOptions{
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -31,6 +34,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.7.7'
     implementation 'androidx.navigation:navigation-ui:2.7.7'
+    implementation files('libs/Hasher_Java/lib/jcl-over-slf4j-1.7.32.jar')
+    implementation files('libs/Hasher_Java/lib/log4j-1.2.17.jar')
+    implementation files('libs/Hasher_Java/lib/shiro-core-1.4.1.jar')
+    implementation files('libs/Hasher_Java/lib/shiro-web-1.4.1.jar')
+    implementation files('libs/Hasher_Java/lib/slf4j-api-1.7.32.jar')
+    implementation files('libs/Hasher_Java/lib/slf4j-log4j12-1.6.4.jar')
     testImplementation 'junit:junit:4.13.2'
     implementation files('libs/WoosimLib231.jar')
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
