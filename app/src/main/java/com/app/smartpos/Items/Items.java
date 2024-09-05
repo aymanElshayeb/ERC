@@ -175,9 +175,8 @@ public class Items extends AppCompatActivity {
             String product_price = product.get("product_sell_price");
             String weight_unit_id = product.get("product_weight_unit_id");
             String product_uuid = product.get("product_uuid");
-            String product_description = product.get("product_description");
             databaseAccess.open();
-            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid,product_description);
+            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid,"");
             selectedProductList.add(convertProductToCartItem(product));
         }
 

@@ -288,7 +288,7 @@ public class ProductCart extends BaseActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
 
         databaseAccess.open();
-        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj,ProductCart.this,true);
+        databaseAccess.insertOrder(sequenceMap.get("sequence"),obj,ProductCart.this,true,databaseAccess);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
@@ -311,9 +311,9 @@ public class ProductCart extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
         //get data from local database
-        List<HashMap<String, String>> shopData;
+        HashMap<String, String> shopData;
         shopData = databaseAccess.getShopInformation();
-        String shop_currency = shopData.get(0).get("shop_currency")+" ";
+        String shop_currency = shopData.get("shop_currency")+" ";
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(ProductCart.this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_payment, null);

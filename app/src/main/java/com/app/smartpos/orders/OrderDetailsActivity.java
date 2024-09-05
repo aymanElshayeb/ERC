@@ -120,14 +120,14 @@ public class OrderDetailsActivity extends BaseActivity {
 
         databaseAccess.open();
         //get data from local database
-        List<HashMap<String, String>> shopData;
+        HashMap<String, String> shopData;
         shopData = databaseAccess.getShopInformation();
 
-        shop_name = shopData.get(0).get("shop_name");
-        shop_contact = shopData.get(0).get("shop_contact");
-        shop_email = shopData.get(0).get("shop_email");
-        shop_address = shopData.get(0).get("shop_address");
-        currency = " "+shopData.get(0).get("shop_currency")+" ";
+        shop_name = shopData.get("shop_name");
+        shop_contact = shopData.get("shop_contact");
+        shop_email = shopData.get("shop_email");
+        shop_address = shopData.get("shop_address");
+        currency = " "+shopData.get("shop_currency")+" ";
 
         total_price = Double.parseDouble(orderDetailsList.get(0).get("ex_tax_total"));
         getTax = Double.parseDouble(orderDetailsList.get(0).get("tax_amount"));

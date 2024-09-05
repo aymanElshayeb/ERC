@@ -10,7 +10,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.Constant;
-import com.app.smartpos.customers.AddCustomersActivity;
+import com.app.smartpos.Registration.dto.RegistrationResponseDto;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.baseDto.ServiceRequest;
 import com.app.smartpos.utils.baseDto.ServiceResult;
@@ -45,7 +45,7 @@ public class RegistrationWorker extends Worker {
         // Perform registration logic here
         OkHttpClient client = getUnsafeOkHttpClient();
         Headers headers=new Headers.Builder().
-                add("tenantId", "cr" + tenantId).
+                add("tenantId", tenantId).
                 add("apikey", Constant.API_KEY).
                 build();
         //prepare the dto class
@@ -76,6 +76,8 @@ public class RegistrationWorker extends Worker {
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
                 databaseAccess.addConfiguration(registrationResponseDto);
+                databaseAccess.open();
+                databaseAccess.addShop(registrationResponseDto,databaseAccess);
                 String authorization=registrationResponseDto.getToken();
                 Data outputData = new Data.Builder().
                         putString("Authorization", authorization).

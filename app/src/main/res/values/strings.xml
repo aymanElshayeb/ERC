@@ -352,7 +352,7 @@
     <string name="diff">Diff</string>
     <string name="total_amount">Total Amount</string>
     <string name="total_transactions_number">Total Transactions Number</string>
-    <string name="total_successful_transactions">Total Successful Transactions</string>
+    <string name="total_sales_transactions">Total Sales Transactions</string>
     <string name="total_refunds">Total Refunds</string>
     <string name="total_cash_amount">Total Sales Amount</string>
     <string name="total_refunds_amount">Total Refunds Amount</string>

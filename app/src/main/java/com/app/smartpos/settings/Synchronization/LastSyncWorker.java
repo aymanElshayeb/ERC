@@ -10,7 +10,6 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.app.smartpos.Registration.RegistrationResponseDto;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

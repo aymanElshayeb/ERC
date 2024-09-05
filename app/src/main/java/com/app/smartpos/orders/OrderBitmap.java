@@ -63,9 +63,11 @@ public class OrderBitmap extends BaseActivity {
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
         f = new DecimalFormat("#.00");
         try {
-            byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-            Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            bitmaps.add(new PrinterModel(0,logo));
+            if(!configuration.get("merchant_logo").isEmpty()){
+                byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
+                Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                bitmaps.add(new PrinterModel(0,logo));
+            }
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);
             bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));

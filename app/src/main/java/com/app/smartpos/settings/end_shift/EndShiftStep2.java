@@ -65,8 +65,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         }
         addView(getResources().getString(R.string.total_card), totalCard + "");
         addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
-        addView(getResources().getString(R.string.total_successful_transactions), endShiftModel.getNum_successful_transaction() + "");
-        addView(getString(R.string.total_card), trimLongDouble(endShiftModel.getTotalCardsAmount()));
+        addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
         addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount()));

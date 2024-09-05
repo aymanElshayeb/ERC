@@ -334,7 +334,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         String orderId = sequenceMap.get("sequence");
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this,true);
+        databaseAccess.insertOrder(orderId, obj, this,true, databaseAccess);
 
 
 //        Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();

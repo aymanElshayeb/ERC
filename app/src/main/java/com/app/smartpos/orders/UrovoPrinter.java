@@ -61,6 +61,7 @@ public class UrovoPrinter extends BaseActivity {
         f = new DecimalFormat("#.00");
         try {
             mPrintManager.initPrint();
+            if(!configuration.get("merchant_logo").isEmpty())
                 mPrintManager.addImage(PrintingHelper.getImageBundle(), PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo")));
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);

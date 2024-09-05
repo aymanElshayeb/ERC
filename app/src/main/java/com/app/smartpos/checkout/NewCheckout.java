@@ -281,7 +281,7 @@ public class NewCheckout extends AppCompatActivity {
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         String englishName=product.get(0).get("product_name_en");
                         String arabicName=product.get(0).get("product_name_ar");
-                        if(product.get(0).get("product_uuid").equals("CUSTOM_ITEM")){
+                        if(!lines.get(i).get("product_description").isEmpty()){
                             englishName=lines.get(i).get("product_description");
                             arabicName=lines.get(i).get("product_description");
                         }
@@ -328,7 +328,7 @@ public class NewCheckout extends AppCompatActivity {
 
         String orderId = sequenceMap.get("sequence");
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill);
+        databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill,databaseAccess);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
