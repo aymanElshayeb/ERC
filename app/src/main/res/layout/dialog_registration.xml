@@ -34,7 +34,7 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/rounded_corners_login_edittext_light"
         android:fontFamily="@font/inter_regular"
-        android:hint="@string/user_name"
+        android:hint="@string/email"
         android:inputType="text"
         android:paddingHorizontal="16dp"
         android:textColor="@color/black"
