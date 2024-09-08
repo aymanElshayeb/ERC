@@ -1,12 +1,9 @@
 package com.app.smartpos.auth;
 
 
-import static com.app.smartpos.utils.PasswordUtils.isValid;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.app.smartpos.HomeActivity;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.Consts;
-import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -50,16 +44,15 @@ public class LoginFragment extends Fragment {
             loginBtn.setOnClickListener(view -> {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
                 databaseAccess.open();
-                HashMap<String,String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
+                HashMap<String, String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
                 Hasher hasher = new Hasher();
-
-                boolean isMatch =  hasher.hashPassword(passwordEt.getText().toString() , map.get("password"));
-
-                if ( isMatch) {
-                    SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
-                    SharedPrefUtils.setUserEmail(requireActivity(),map.get("email"));
-                    SharedPrefUtils.setMobileNumber(requireActivity(),map.get("mobile_number"));
-                    SharedPrefUtils.setUserId(requireActivity(),map.get("id"));
+                boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
+                //Log.i("datadata",map.toString());
+                if (isMatch) {
+                    SharedPrefUtils.setUsername(requireActivity(), map.get("username"));
+                    SharedPrefUtils.setUserEmail(requireActivity(), map.get("email"));
+                    SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
+                    SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
                     Intent intent = new Intent(context, NewHomeActivity.class);
                     startActivity(intent);
                     requireActivity().finish();

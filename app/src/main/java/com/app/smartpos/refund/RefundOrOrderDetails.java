@@ -252,10 +252,10 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                         total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))*refund_qty;
                     }
                 }
-                obj.put("in_tax_total", totalPriceWithTax);
-                obj.put("ex_tax_total", totalPriceWithTax-total_tax);
+                obj.put("in_tax_total", -totalPriceWithTax);
+                obj.put("ex_tax_total", -(totalPriceWithTax-total_tax));
 
-                obj.put("paid_amount", total == 0 ? totalPriceWithTax : total);
+                obj.put("paid_amount", -(total == 0 ? totalPriceWithTax : total));
                 obj.put("change_amount", change);
 
                 String tax_number = configuration.get("merchant_tax_number");
@@ -265,7 +265,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                 HashMap<String, String> sequenceMap = databaseAccess.getSequence(1, ecr_code);
                 obj.put("sequence_text", sequenceMap.get("sequence_id"));
 
-                obj.put("tax", calculated_tax);
+                obj.put("tax", -calculated_tax);
                 obj.put("discount", discount);
 
 

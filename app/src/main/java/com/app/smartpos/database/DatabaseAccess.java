@@ -640,6 +640,7 @@ public class DatabaseAccess {
                 hashMap.put("email", cursor.getString(cursor.getColumnIndex("email")));
                 hashMap.put("password", cursor.getString(cursor.getColumnIndex("password")));
                 hashMap.put("username", cursor.getString(cursor.getColumnIndex("username")));
+                hashMap.put("mobile", cursor.getString(cursor.getColumnIndex("mobile")));
 
             } while (cursor.moveToNext());
         }
@@ -887,6 +888,7 @@ public class DatabaseAccess {
             double paid_amount = obj.getDouble("paid_amount");
             double change_amount = obj.getDouble("change_amount");
 //            String tax_number = obj.getString("tax_number");
+            String original_order_id = obj.has("original_order_id")?obj.getString("original_order_id"):"";
             String operation_type = obj.getString("operation_type");
             String operation_sub_type = obj.getString("operation_sub_type");
 
@@ -912,6 +914,7 @@ public class DatabaseAccess {
             values.put("change_amount", change_amount);
 //            values.put("tax_number", tax_number);
             values.put("operation_type", operation_type);
+            values.put("original_order_id", original_order_id);
             values.put("order_status", order_status);
             values.put("qr_code", "");
 

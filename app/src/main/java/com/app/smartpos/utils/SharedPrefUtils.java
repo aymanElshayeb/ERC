@@ -48,6 +48,11 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_name","");
     }
 
+    public static String getEmail(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("user_email","");
+    }
+
     public static String getUserId(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_id","");
