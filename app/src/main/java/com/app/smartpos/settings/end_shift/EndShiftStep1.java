@@ -130,40 +130,38 @@ public class EndShiftStep1 extends AppCompatActivity {
         Log.i("datadata",paymentTypesCashMap.get("CASH").toString());
         LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
         for (int i = 0; i < cardTypes.size(); i++) {
-            View root_view = LayoutInflater.from(this).inflate(R.layout.layout_new_end_shift_payment_method, null);
 
-            TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
-            EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);
-            TextView paymentTypeAmountErrorTv = root_view.findViewById(R.id.payment_type_amount_error_tv);
-            paymentTypeTv.setText(cardTypes.get(i).get("name"));
+            // remove this condition if you want to show all cards
+            if ("CASH".equals(cardTypes.get(i).get("name"))) {
+                View root_view = LayoutInflater.from(this).inflate(R.layout.layout_new_end_shift_payment_method, null);
+                Log.w("card types", cardTypes + "");
 
-            String cash = cardTypes.get(i).get("CASH");
-            if (cash == null) {
-                cash = "0";
+                TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
+                EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);
+                TextView paymentTypeAmountErrorTv = root_view.findViewById(R.id.payment_type_amount_error_tv);
+                paymentTypeTv.setText(cardTypes.get(i).get("name"));
+
+                String cash = cardTypes.get(i).get("CASH");
+                if (cash == null) {
+                    cash = "0";
+                }
+                models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, cardTypes.get(i).get("name"), cardTypes.get(i).get("code"), Double.parseDouble(cash)));
+
+                shiftItemsLl.addView(root_view);
+
+                paymentTypeAmountEt.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        confirmWithErrorTv.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {}
+                });
             }
-            Log.i("datadata",cardTypes.get(i).get("name")+" "+cash);
-            models.addLast(new EndShiftPaymentModels(paymentTypeAmountEt, paymentTypeAmountErrorTv, cardTypes.get(i).get("name"),cardTypes.get(i).get("code"), Double.parseDouble(cash)));
-
-            shiftItemsLl.addView(root_view);
-
-
-            paymentTypeAmountEt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    confirmWithErrorTv.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-
         }
 
         HashMap<String, ShiftDifferences> map = new HashMap<>();
