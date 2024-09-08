@@ -90,5 +90,9 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation 'com.google.zxing:javase:3.4.1'
 
+    //android fast networking
+    implementation 'com.github.amitshekhariitbhu.Fast-Android-Networking:android-networking:1.0.4'
+    implementation 'com.github.mklimek:ssl-utils-android:1.0.1'
+
 
 }

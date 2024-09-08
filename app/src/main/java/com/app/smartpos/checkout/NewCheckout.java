@@ -244,10 +244,18 @@ public class NewCheckout extends AppCompatActivity {
 
                     databaseAccess.open();
                     double totalPriceWithTax = databaseAccess.getTotalPriceWithTax();
+                    if(fromQuickBill){
+                        totalPriceWithTax=Double.parseDouble(cartProductList.get(0).get("product_price"));
+                    }
                     obj.put("in_tax_total", totalPriceWithTax);
 
                     databaseAccess.open();
-                    obj.put("ex_tax_total", databaseAccess.getTotalPriceWithoutTax());
+                    double totalPriceWithoutTax = databaseAccess.getTotalPriceWithoutTax();
+                    if(fromQuickBill){
+                        databaseAccess.open();
+                        totalPriceWithoutTax=totalPriceWithTax/(1.0+databaseAccess.getShopTax()/100.0);
+                    }
+                    obj.put("ex_tax_total", totalPriceWithoutTax);
 
                     obj.put("paid_amount", total == 0 ? totalPriceWithTax : total);
                     obj.put("change_amount", change);
@@ -362,7 +370,7 @@ public class NewCheckout extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12 && resultCode == Activity.RESULT_OK) {
             double change = data.getDoubleExtra("change", 0);
-            // Log.i("datadata",change+" "+totalAmount);
+             Log.i("datadata",change+" "+totalAmount);
             try {
                 proceedOrder("", "CASH", "", totalTax, "0", "", "", totalAmount, change);
             } catch (JSONException e) {

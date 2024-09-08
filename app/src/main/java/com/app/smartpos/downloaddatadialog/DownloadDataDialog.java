@@ -43,6 +43,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
+import com.app.smartpos.refund.Refund;
 import com.app.smartpos.settings.Synchronization.CompressWorker;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
@@ -271,6 +272,9 @@ public class DownloadDataDialog extends DialogFragment {
 
     private void closePendingScreen() {
         dismissAllowingStateLoss();
+        if(getActivity() instanceof Refund) {
+            ((Refund) getActivity()).callApi();
+        }
     }
 
     private void observeWorker(OneTimeWorkRequest workRequest) {

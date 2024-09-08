@@ -16,8 +16,8 @@ public class Hasher {
         defaultHashService.setHashAlgorithmName("SHA-512");
         passwordService.setHashService(defaultHashService);
         passwordService.setHashFormat(hashFormat);
-//        String hash = passwordService.encryptPassword(password);
-
+        //String hash = passwordService.encryptPassword(password);
+        //Log.i("datadata",hash);
         return passwordService.passwordsMatch(password, hashedDBPassword);
     }
 
