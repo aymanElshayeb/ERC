@@ -41,8 +41,7 @@ public class UploadWorker extends Worker {
         }
 
         // Step 1: Get the file from the download directory
-        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File fileToUpload = new File(downloadDir,filePath ); // Replace with your actual file name
+        File fileToUpload = new File(getApplicationContext().getCacheDir().getAbsolutePath(),filePath ); // Replace with your actual file name
 
         if (!fileToUpload.exists()) {
             return Result.failure(); // Return failure if the file does not exist
