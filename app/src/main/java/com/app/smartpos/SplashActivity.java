@@ -10,11 +10,18 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
+import com.mklimek.sslutilsandroid.SslUtils;
 
 import org.apache.http.auth.AUTH;
+
+import javax.net.ssl.SSLContext;
+
+import okhttp3.OkHttpClient;
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -34,6 +41,8 @@ public class SplashActivity extends AppCompatActivity {
         databaseAccess.open();
         String endDateString = databaseAccess.getLastShift("end_date_time");
         Log.i("end_date", endDateString);
+
+        AndroidNetworking.initialize(this);
 
         new Handler().postDelayed(new Runnable() {
             @Override

@@ -2,6 +2,7 @@ package com.app.smartpos.refund;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
+import com.app.smartpos.refund.Model.RefundModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 public class Refund extends AppCompatActivity {
 
     DatabaseAccess databaseAccess;
+    RefundDetailsViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,8 @@ public class Refund extends AppCompatActivity {
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_refund);
+
+        model=new RefundDetailsViewModel();
 
         databaseAccess = DatabaseAccess.getInstance(this);
 
@@ -39,19 +45,26 @@ public class Refund extends AppCompatActivity {
         view_receipt_btn.setOnClickListener(view -> {
             databaseAccess.open();
             if (!search_et.getText().toString().trim().isEmpty()) {
-                List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
-                if (list.size() > 0) {
-                    Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
-
-                    i.putExtra("order_id", list.get(0).get("invoice_id"));
-                    i.putExtra("order_payment_method", list.get(0).get("order_payment_method"));
-                    i.putExtra("operation_type", list.get(0).get("operation_type"));
-
-                    startActivity(i);
-                }
+//                List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
+//                if (list.size() > 0) {
+//                    Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
+//
+//                    i.putExtra("order_id", list.get(0).get("invoice_id"));
+//                    i.putExtra("order_payment_method", list.get(0).get("order_payment_method"));
+//                    i.putExtra("operation_type", list.get(0).get("operation_type"));
+//
+//                    startActivity(i);
+//                }
+                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+                //dialog.show(getSupportFragmentManager(),"dialog");
+                callApi();
             }
         });
 
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
+    }
+
+    public void callApi(){
+        model.start("D0015-001-I0000000002");
     }
 }

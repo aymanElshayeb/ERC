@@ -43,7 +43,7 @@ public class LoginFragment extends Fragment {
             EditText EmailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            EmailEt.setText("karimsaad687@gmail.com");
+            EmailEt.setText("admin@admin.com");
             passwordEt.setText("01111Mm&");
 
 
