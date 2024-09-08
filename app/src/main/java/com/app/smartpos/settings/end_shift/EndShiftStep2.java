@@ -4,6 +4,7 @@ import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
@@ -76,7 +79,7 @@ public class EndShiftStep2 extends AppCompatActivity {
 
 
         totalAmountTv.setText(endShiftModel.total_amount+" "+currency);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy\nhh:mm aa");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm aa");
         String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
         addView(getResources().getString(R.string.start_shift_date), start_date);
         String end_date = formatter.format(new Date(endShiftModel.getEndDateTime()));
@@ -86,7 +89,6 @@ public class EndShiftStep2 extends AppCompatActivity {
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
         addView(getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
-
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
         });
@@ -104,6 +106,29 @@ public class EndShiftStep2 extends AppCompatActivity {
 
         textTv.setText(text);
         valueTv.setText(value);
+
+        // Find the root ConstraintLayout
+        ConstraintLayout rootLayout = root_view.findViewById(R.id.rootLayout);
+
+        // Adjust layout dynamically based on the length of the value
+        if (value.length() > 15) { // Adjust the condition as needed
+            // If the value is too long, stack text and value vertically
+            valueTv.setMaxLines(1);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(rootLayout);
+            constraintSet.clear(R.id.text_tv, ConstraintSet.END); // Remove horizontal constraint
+            constraintSet.connect(R.id.value_tv, ConstraintSet.TOP, R.id.text_tv, ConstraintSet.BOTTOM); // Stack value below text
+            constraintSet.connect(R.id.value_tv, ConstraintSet.START, R.id.text_tv, ConstraintSet.START); // Align start of value with text
+            constraintSet.applyTo(rootLayout);
+        } else {
+            // For shorter values, keep them in the same row
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(rootLayout);
+            constraintSet.connect(R.id.text_tv, ConstraintSet.END, R.id.value_tv, ConstraintSet.START); // Keep text and value on the same line
+            constraintSet.connect(R.id.value_tv, ConstraintSet.START, R.id.text_tv, ConstraintSet.END);
+            constraintSet.applyTo(rootLayout);
+        }
+
         viewsLl.addView(root_view);
     }
 

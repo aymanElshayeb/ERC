@@ -29,8 +29,8 @@ public class CompressWorker extends Worker {
             return Result.failure();
         }
 
-        File inputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-        File gzipFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName+".gz");
+        File inputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
+        File gzipFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName+".gz");
         if (compressGzip(inputFile,gzipFile)) {
             Data outputData = new Data.Builder().putString("fileNameGzip",gzipFile.getName())
                     .putString("Authorization",getInputData().getString("Authorization"))

@@ -248,6 +248,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
                     if (item_checked.equals("1") && refund_qty > 0) {
                         totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price"))*refund_qty;
+                        //ToDo tax amount should be divided by the total qantity of the order line before multiplying
                         total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))*refund_qty;
                     }
                 }

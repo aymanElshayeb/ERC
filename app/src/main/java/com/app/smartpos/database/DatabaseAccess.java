@@ -945,9 +945,9 @@ public class DatabaseAccess {
                 String product_id = getProductIdByUuid(product_uuid);
                 double taxPercentage;
                 if(!product_description.isEmpty()){
-                    databaseAccess.open();
                     HashMap<String, String> shop = databaseAccess.getShopInformation();
                     taxPercentage = Double.parseDouble(shop.get("shop_tax"));
+                    databaseAccess.open();
                 }
                 else
                     taxPercentage= getProductTax(product_id);

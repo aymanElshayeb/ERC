@@ -23,7 +23,7 @@ public class ExportFileWorker extends Worker {
         String[] lastSync =new String[]{invoiceLastSync,shiftLastSync};
         try {
             DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-            db.exportTablesToNewDatabase(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+"/"+fileName,lastSync);
+            db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath()+"/"+fileName,lastSync);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure();

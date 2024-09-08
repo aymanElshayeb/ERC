@@ -24,6 +24,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -43,14 +44,18 @@ public class LoginFragment extends Fragment {
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
             EmailEt.setText("karimsaad687@gmail.com");
-            passwordEt.setText("123456789");
+            passwordEt.setText("01111Mm&");
+
+
             loginBtn.setOnClickListener(view -> {
                 final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
                 databaseAccess.open();
                 HashMap<String,String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
-                //isValid(passwordEt.getText().toString(),map.get("password")
-                // check password removed for now only for testing
-                if (map!=null) {
+                Hasher hasher = new Hasher();
+
+                boolean isMatch =  hasher.hashPassword(passwordEt.getText().toString() , map.get("password"));
+
+                if ( isMatch) {
                     SharedPrefUtils.setUsername(requireActivity(),map.get("username"));
                     SharedPrefUtils.setUserEmail(requireActivity(),map.get("email"));
                     SharedPrefUtils.setMobileNumber(requireActivity(),map.get("mobile_number"));
