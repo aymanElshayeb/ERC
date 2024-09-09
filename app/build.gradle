@@ -92,7 +92,7 @@ dependencies {
 
     //android fast networking
     implementation 'com.github.amitshekhariitbhu.Fast-Android-Networking:android-networking:1.0.4'
-    implementation 'com.github.mklimek:ssl-utils-android:1.0.1'
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
 
 }

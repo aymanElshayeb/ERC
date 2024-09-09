@@ -21,6 +21,8 @@ import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
 import com.app.smartpos.checkout.CheckoutOrderDetails;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
+import com.app.smartpos.refund.Model.RefundModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +51,9 @@ public class RefundOrOrderDetails extends AppCompatActivity {
     String operation_sub_type;
     TextView refund_tv;
     boolean isRefund;
+    private String order_payment_method;
+    private String operation_type;
+    private String refundSequence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,27 +79,41 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         refund_tv = findViewById(R.id.refund_tv);
 
-        orderId = getIntent().getStringExtra("order_id");
-        operation_sub_type = getIntent().getStringExtra("operation_sub_type");
-        String order_payment_method = getIntent().getStringExtra("order_payment_method");
-        String operation_type = getIntent().getStringExtra("operation_type");
-        receipt_number_tv.setText(orderId);
-
-        card_tv.setVisibility(order_payment_method.equals("CARD") ? View.VISIBLE : View.GONE);
-        cash_tv.setVisibility(order_payment_method.equals("CASH") ? View.VISIBLE : View.GONE);
-        refunded_tv.setVisibility(operation_type.equals("refund") ? View.VISIBLE : View.GONE);
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         currency = databaseAccess.getCurrency();
         databaseAccess.open();
         //get data from local database
-        orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
-        for (int i = 0; i < orderDetailsList.size(); i++) {
-            orderDetailsList.get(i).put("refund_qty", "0");
-            orderDetailsList.get(i).put("item_checked", "0");
-            Log.i("datadata", "" + orderDetailsList.get(i).toString());
+        if(!isRefund) {
+            orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
+            orderId = getIntent().getStringExtra("order_id");
+            operation_sub_type = getIntent().getStringExtra("operation_sub_type");
+            order_payment_method = getIntent().getStringExtra("order_payment_method");
+            operation_type = getIntent().getStringExtra("operation_type");
+
+            for (int i = 0; i < orderDetailsList.size(); i++) {
+                orderDetailsList.get(i).put("refund_qty", "0");
+                orderDetailsList.get(i).put("item_checked", "0");
+                Log.i("datadata", "" + orderDetailsList.get(i).toString());
+            }
+        }else{
+            RefundModel refundModel = (RefundModel) getIntent().getSerializableExtra("refundModel");
+            orderId = refundModel.getOrder_id();
+            operation_sub_type = refundModel.getOperation_sub_type();
+            order_payment_method = refundModel.getOrder_payment_method();
+            operation_type = refundModel.getOperation_type();
+            orderDetailsList=refundModel.getOrderDetailsItems();
+
         }
+
+
+        receipt_number_tv.setText(orderId);
+
+        card_tv.setVisibility(order_payment_method.equals("CARD") ? View.VISIBLE : View.GONE);
+        cash_tv.setVisibility(order_payment_method.equals("CASH") ? View.VISIBLE : View.GONE);
+        refunded_tv.setVisibility(operation_type.equals("refund") ? View.VISIBLE : View.GONE);
+
 
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -181,15 +200,21 @@ public class RefundOrOrderDetails extends AppCompatActivity {
             databaseAccess.open();
             databaseAccess.updateOrderListItem("order_status", Constant.REFUNDED, orderId);
             try {
-                String refundSequence=proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
-                Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence);
-                startActivity(intent);
-                finish();
+                refundSequence=proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
+                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+                dialog.show(getSupportFragmentManager(),"dialog");
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
+    }
+
+    public void redirectToSuccess(){
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence);
+        startActivity(intent);
+        finish();
     }
 
     public String proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total, double change) throws JSONException {
@@ -298,7 +323,8 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                         objp.put("product_name_ar", arabicName);
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_weight", orderDetailsList.get(i).get("product_weight") + " " + weight_unit);
-                        objp.put("product_qty", -refund_qty + "");
+                        objp.put("product_qty", orderDetailsList.get(i).get("product_qty") + "");
+                        //objp.put("product_qty", -refund_qty + "");
                         objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
                         objp.put("product_price", orderDetailsList.get(i).get("product_price"));
                         objp.put("product_description", orderDetailsList.get(i).get("product_description"));

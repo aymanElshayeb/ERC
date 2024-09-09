@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -626,6 +627,30 @@ public class DatabaseAccess {
         return hashMap;
     }
 
+    public List<HashMap<String, String>> getAllUsers() {
+
+        Cursor cursor = database.rawQuery("SELECT * FROM user", null);
+
+        List<HashMap<String, String>> list = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            HashMap<String,String> hashMap = new HashMap<>();
+            do {
+                hashMap.put("id", cursor.getString(cursor.getColumnIndex("id")));
+                hashMap.put("name_en", cursor.getString(cursor.getColumnIndex("name_en")));
+                hashMap.put("name_ar", cursor.getString(cursor.getColumnIndex("name_ar")));
+                hashMap.put("email", cursor.getString(cursor.getColumnIndex("email")));
+                hashMap.put("password", cursor.getString(cursor.getColumnIndex("password")));
+                hashMap.put("username", cursor.getString(cursor.getColumnIndex("username")));
+                hashMap.put("mobile", cursor.getString(cursor.getColumnIndex("mobile")));
+                list.add(hashMap);
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        database.close();
+        return list;
+    }
     public HashMap<String, String> getUserWithEmail(String email) {
 
         Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "'", null);
@@ -650,6 +675,8 @@ public class DatabaseAccess {
         database.close();
         return hashMap;
     }
+
+
 
 
     //get product weight unit name

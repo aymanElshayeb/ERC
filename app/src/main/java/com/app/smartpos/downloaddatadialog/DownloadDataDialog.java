@@ -44,6 +44,7 @@ import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.refund.Refund;
+import com.app.smartpos.refund.RefundOrOrderDetails;
 import com.app.smartpos.settings.Synchronization.CompressWorker;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
@@ -274,6 +275,8 @@ public class DownloadDataDialog extends DialogFragment {
         dismissAllowingStateLoss();
         if(getActivity() instanceof Refund) {
             ((Refund) getActivity()).callApi();
+        }else if(getActivity() instanceof RefundOrOrderDetails) {
+            ((RefundOrOrderDetails) getActivity()).redirectToSuccess();
         }
     }
 

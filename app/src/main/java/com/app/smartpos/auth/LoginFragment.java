@@ -4,6 +4,7 @@ package com.app.smartpos.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class LoginFragment extends Fragment {
 
@@ -39,10 +41,15 @@ public class LoginFragment extends Fragment {
             Button loginBtn = root.findViewById(R.id.login_btn);
             EmailEt.setText("admin@admin.com");
             passwordEt.setText("01111Mm&");
-
+            DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
+            databaseAccess.open();
+            List<HashMap<String,String>>list=databaseAccess.getAllUsers();
+            for(int i=0;i<list.size();i++) {
+                Log.i("datadata",list.get(i).toString());
+            }
 
             loginBtn.setOnClickListener(view -> {
-                final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
+
                 databaseAccess.open();
                 HashMap<String, String> map = databaseAccess.getUserWithEmail(EmailEt.getText().toString());
                 Hasher hasher = new Hasher();

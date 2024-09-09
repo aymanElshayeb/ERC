@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
@@ -69,14 +70,20 @@ public class Refund extends AppCompatActivity {
 //                }
                 DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
                 dialog.show(getSupportFragmentManager(),"dialog");
-                callApi();
+                //callApi();
             }
         });
 
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
+
+        model.getLiveData().observe(this, refundModel -> {
+            Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
+            i.putExtra("refundModel", refundModel);
+            startActivity(i);
+        });
     }
 
     public void callApi(){
-        model.start("D0015-001-I0000000002");
+        model.start("D0038-001-I0000000001",databaseAccess);
     }
 }
