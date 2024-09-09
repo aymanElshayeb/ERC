@@ -57,7 +57,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                printerData=PrintingHelper.createBitmap(databaseAccess,getIntent().getStringExtra("id"));
+                printerData=PrintingHelper.createBitmap(databaseAccess,getIntent().getStringExtra("id"),getIntent().getStringExtra("printType"));
                 Log.i("datadata",printerData.toString());
                 Bitmap bitmap=printerData.getBitmap();
                 if (bitmap.getHeight() < scrollView.getHeight()) {
@@ -88,7 +88,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         });
 
         printReceipt.setOnClickListener(view -> {
-            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax()+"", printerData.getDiscount(), printerData.getCurrency());
+            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax()+"", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
         });
 
     }

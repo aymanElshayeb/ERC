@@ -50,7 +50,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     }
 
 
-    public boolean printReceipt(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReceipt(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandEnhancedPrinter.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -70,6 +70,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));
             //mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
             printReceiptNo(invoiceId);
+            printType(printType);
             bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة")));
             printInvoiceBarcode(invoiceId);
             //Todo products ( id, name, price including tax, qty, total including tax
@@ -211,7 +212,11 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     private void printReceiptNo(String invoiceId) {
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText("Receipt No ")));
         bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(invoiceId)));
+    }
 
+    private void printType(String type) {
+        if (!type.equals("invoice")&&!type.isEmpty())
+            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(type)));
     }
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {

@@ -39,9 +39,9 @@ public class NewLandDevice implements Device{
     }
 
     @Override
-    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
-        return newLandPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency);
+        return newLandPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency,printType);
     }
 
     @Override

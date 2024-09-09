@@ -9,7 +9,7 @@ public interface Device{
     String resultHeader();
     String jsonActivityResult();
     String amountString();
-    boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency);
+    boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType);
     boolean printZReport(EndShiftModel endShiftModel);
     String zatcaQrCodeGeneration(byte[] byteArray);
 }

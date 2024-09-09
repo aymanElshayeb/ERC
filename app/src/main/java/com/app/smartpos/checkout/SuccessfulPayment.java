@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -52,7 +53,8 @@ public class SuccessfulPayment extends AppCompatActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"));
+            Log.i("datadata_type",getIntent().getStringExtra("printType"));
+            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
         amountTv.setText(getIntent().getStringExtra("amount"));
@@ -63,7 +65,7 @@ public class SuccessfulPayment extends AppCompatActivity {
 
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
-            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency());
+            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
         });
     }
 
@@ -80,7 +82,7 @@ public class SuccessfulPayment extends AppCompatActivity {
                     finish();
                 }
                 if (getIntent().getExtras().containsKey("id")) {
-                    startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id", getIntent().getStringExtra("id")));
+                    startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id", getIntent().getStringExtra("id")).putExtra("printType",getIntent().getStringExtra("printType")));
                 }
             }
         }.start();

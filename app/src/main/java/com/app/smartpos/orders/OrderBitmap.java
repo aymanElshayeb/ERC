@@ -51,7 +51,7 @@ public class OrderBitmap extends BaseActivity {
 
 
 
-    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency) {
+    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency,String printType) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -73,6 +73,7 @@ public class OrderBitmap extends BaseActivity {
             bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));
             //mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
             printReceiptNo(invoiceId);
+            printType(printType);
             bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة")));
             printInvoiceBarcode(invoiceId);
             //Todo products ( id, name, price including tax, qty, total including tax
@@ -198,7 +199,11 @@ public class OrderBitmap extends BaseActivity {
     private void printReceiptNo(String invoiceId) {
         bitmaps.add(new PrinterModel(-1,PrintingHelper.createBitmapFromText("Receipt No ")));
         bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(invoiceId)));
+    }
 
+    private void printType(String type) {
+        if (!type.equals("invoice")&&!type.isEmpty())
+            bitmaps.add(new PrinterModel(0,PrintingHelper.createBitmapFromText(type)));
     }
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {

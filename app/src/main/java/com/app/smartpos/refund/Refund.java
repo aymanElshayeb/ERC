@@ -84,6 +84,6 @@ public class Refund extends AppCompatActivity {
     }
 
     public void callApi(){
-        model.start("D0038-001-I0000000001",databaseAccess);
+        model.start(searchEt.getText().toString().trim(),databaseAccess);
     }
 }

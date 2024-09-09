@@ -113,7 +113,7 @@ public class PrintingHelper {
         return combinedBitmap;
     }
 
-    public static PrinterData createBitmap(DatabaseAccess databaseAccess, String id) {
+    public static PrinterData createBitmap(DatabaseAccess databaseAccess, String id,String printType) {
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
         databaseAccess.open();
@@ -132,7 +132,7 @@ public class PrintingHelper {
         double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap();
-        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency);
+        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType);
         return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
 
     }

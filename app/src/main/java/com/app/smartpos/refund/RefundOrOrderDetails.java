@@ -86,11 +86,11 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         databaseAccess.open();
         //get data from local database
         if(!isRefund) {
-            orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
             orderId = getIntent().getStringExtra("order_id");
             operation_sub_type = getIntent().getStringExtra("operation_sub_type");
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
+            orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
 
             for (int i = 0; i < orderDetailsList.size(); i++) {
                 orderDetailsList.get(i).put("refund_qty", "0");
@@ -133,7 +133,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
-                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId));
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType","نسخة إضافية"));
             } else {
                 refundPressed();
             }
@@ -212,7 +212,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
     }
 
     public void redirectToSuccess(){
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence);
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence).putExtra("printType","مسترجع");
         startActivity(intent);
         finish();
     }
@@ -323,8 +323,8 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                         objp.put("product_name_ar", arabicName);
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_weight", orderDetailsList.get(i).get("product_weight") + " " + weight_unit);
-                        objp.put("product_qty", orderDetailsList.get(i).get("product_qty") + "");
-                        //objp.put("product_qty", -refund_qty + "");
+                        //objp.put("product_qty", orderDetailsList.get(i).get("product_qty") + "");
+                        objp.put("product_qty", -refund_qty + "");
                         objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
                         objp.put("product_price", orderDetailsList.get(i).get("product_price"));
                         objp.put("product_description", orderDetailsList.get(i).get("product_description"));

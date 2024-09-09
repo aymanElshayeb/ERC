@@ -1,5 +1,6 @@
 package com.app.smartpos.refund;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +33,8 @@ public class RefundOrOrderList extends AppCompatActivity {
     int offset=0;
     boolean hasMore=true;
     private RecyclerView recycler;
-
+    RefundDetailsViewModel model;
+    String invoiceSeq="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,7 @@ public class RefundOrOrderList extends AppCompatActivity {
         TextView title_text = findViewById(R.id.title_text);
         recycler = findViewById(R.id.recycler);
 
+        model=new RefundDetailsViewModel();
         if (!isRefund) {
             title_tv.setText(getString(R.string.orders));
             title_text.setText(getString(R.string.all_orders));
@@ -70,6 +74,12 @@ public class RefundOrOrderList extends AppCompatActivity {
 
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
+        model.getLiveData().observe(this, refundModel -> {
+            finish();
+            Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
+            i.putExtra("refundModel", refundModel);
+            startActivity(i);
+        });
     }
 
     public boolean isRefund() {
@@ -89,5 +99,24 @@ public class RefundOrOrderList extends AppCompatActivity {
             hasMore=orderList.size()>size;
             recycler.post(() -> refundsOrOrdersAdapter.notifyDataSetChanged());
         }
+    }
+
+    public void openDetails(int adapterPosition) {
+        invoiceSeq = orderList.get(adapterPosition).get("invoice_id");
+        Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",isRefund);
+        i.putExtra("order_id",orderList.get(adapterPosition).get("invoice_id"));
+        i.putExtra("order_payment_method",orderList.get(adapterPosition).get("order_payment_method"));
+        i.putExtra("operation_type",orderList.get(adapterPosition).get("operation_type"));
+        i.putExtra("operation_sub_type",orderList.get(adapterPosition).get("operation_sub_type"));
+        if(isRefund()) {
+            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+            dialog.show(getSupportFragmentManager(),"dialog");
+        }else {
+            startActivity(i);
+        }
+    }
+
+    public void callApi(){
+        model.start(invoiceSeq,databaseAccess);
     }
 }

@@ -48,7 +48,7 @@ public class UrovoPrinter extends BaseActivity {
     }
 
 
-    public boolean printReceipt(String invoiceId,String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency){
+    public boolean printReceipt(String invoiceId,String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType){
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(UrovoPrinter.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -67,6 +67,7 @@ public class UrovoPrinter extends BaseActivity {
             printMerchantTaxNumber(merchantTaxNumber);
             mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
             printReceiptNo(invoiceId);
+            printType(printType);
             mPrintManager.addBitmap(PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة"), 100);
             printInvoiceBarcode(invoiceId);
             //Todo products ( id, name, price including tax, qty, total including tax
@@ -267,6 +268,11 @@ public class UrovoPrinter extends BaseActivity {
     private void printReceiptNo(String invoiceId) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED, true),"Receipt No ");
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED, true),invoiceId);
+    }
+
+    private void printType(String type) {
+        if (!type.equals("invoice")&&!type.isEmpty())
+            mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED, true),type);
     }
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {

@@ -184,7 +184,7 @@ public class OrderDetailsActivity extends BaseActivity {
 
         btnThermalPrinter.setOnClickListener(v -> {
             Device device = DeviceFactory.getDevice();
-            boolean successfulPrint = device.printReciept(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency);
+            boolean successfulPrint = device.printReciept(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency,"");
             if(!successfulPrint){
                 //Check if the Bluetooth is available and on.
                 if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;

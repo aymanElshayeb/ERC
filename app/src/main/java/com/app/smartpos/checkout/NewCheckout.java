@@ -341,7 +341,7 @@ public class NewCheckout extends AppCompatActivity {
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId);
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType","invoice");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

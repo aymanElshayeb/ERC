@@ -90,15 +90,7 @@ public class RefundsOrOrdersAdapter extends RecyclerView.Adapter<RefundsOrOrders
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(refundOrOrderList, RefundOrOrderDetails.class).putExtra("isRefund",refundOrOrderList.isRefund());
-            i.putExtra("order_id",orderData.get(getAdapterPosition()).get("invoice_id"));
-            i.putExtra("order_payment_method",orderData.get(getAdapterPosition()).get("order_payment_method"));
-            i.putExtra("operation_type",orderData.get(getAdapterPosition()).get("operation_type"));
-            i.putExtra("operation_sub_type",orderData.get(getAdapterPosition()).get("operation_sub_type"));
-            if(refundOrOrderList.isRefund()) {
-                refundOrOrderList.finish();
-            }
-            refundOrOrderList.startActivity(i);
+            refundOrOrderList.openDetails(getAdapterPosition());
         }
     }
 
