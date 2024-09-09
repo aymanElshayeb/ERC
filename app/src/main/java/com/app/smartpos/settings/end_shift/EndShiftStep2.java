@@ -76,9 +76,10 @@ public class EndShiftStep2 extends AppCompatActivity {
         //TODO: Add Total Refunds Amount
 
         addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount()));
+        addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
 
 
-        totalAmountTv.setText(endShiftModel.total_amount+" "+currency);
+        totalAmountTv.setText((endShiftModel.total_amount+endShiftModel.getTotalRefundsAmount()+endShiftModel.getStartCash())+" "+currency);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm aa");
         String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
         addView(getResources().getString(R.string.start_shift_date), start_date);

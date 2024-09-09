@@ -101,6 +101,7 @@ public class EndShiftStep1 extends AppCompatActivity {
             if (orderList.get(i).get("order_payment_method").equals("CASH")) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get("CASH"));
                 double total = calculated_total_price + cash;
+                Log.i("datadata_shift",calculated_total_price+" "+cash+" "+totalRefundsAmount+" "+total);
                 paymentTypesCashMap.put("CASH", total + "");
             }else if (orderList.get(i).get("order_payment_method").equals("CARD") && paymentTypesCashMap.containsKey(orderList.get(i).get("card_type_code").toString())) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
@@ -111,8 +112,8 @@ public class EndShiftStep1 extends AppCompatActivity {
                 paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
             }
         }
-        Log.i("datadata_tax",total_tax+"");
-        totalAmountTv.setText(total_amount+" "+currency);
+        Log.i("datadata_shift",total_amount+" "+totalRefundsAmount);
+        totalAmountTv.setText((total_amount+totalRefundsAmount)+" "+currency);
         databaseAccess.open();
         List<HashMap<String, String>> cardTypes=new ArrayList<>();
         HashMap<String, String> cash_map = new HashMap<>();

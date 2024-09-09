@@ -39,16 +39,16 @@ public class RefundModel implements Serializable {
                 map.put("product_uuid", uuid);
                 String description=invoiceLines.getJSONObject(i).getString("description");
                 map.put("product_description", description);
-                if(description.isEmpty()){
+                if(uuid.equals("CUSTOM_ITEM")){
+                    map.put("product_image", "");
+                    map.put("product_name_en", description);
+                    map.put("product_name_ar", description);
+                }else{
                     databaseAccess.open();
                     HashMap<String,String>map1=databaseAccess.getProductsInfoFromUUID(uuid).get(0);
                     map.put("product_image", map1.get("product_image"));
                     map.put("product_name_en", map1.get("product_name_en"));
                     map.put("product_name_ar", map1.get("product_name_ar"));
-                }else{
-                    map.put("product_image", "");
-                    map.put("product_name_en", description);
-                    map.put("product_name_ar", description);
                 }
 
                 int quantity=Integer.parseInt(invoiceLines.getJSONObject(i).getString("quantity"));
