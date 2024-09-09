@@ -59,7 +59,7 @@ public class RefundModel implements Serializable {
                 map.put("tax_amount", invoiceLines.getJSONObject(i).getString("taxAmount"));
                 map.put("tax_percentage", invoiceLines.getJSONObject(i).getJSONObject("tax").getString("percentage"));
                 map.put("item_checked", "0");
-                map.put("refund_qty", invoiceLines.getJSONObject(i).has("refundedQuantity")?invoiceLines.getJSONObject(i).getString("refundedQuantity"):"0");
+                map.put("refund_qty", "0");
 
                 orderDetailsItems.add(map);
             }
