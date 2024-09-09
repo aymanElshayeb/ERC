@@ -1,4 +1,4 @@
-package com.app.smartpos.pos;
+package com.app.smartpos.refund;
 
 import android.Manifest;
 import android.os.Build;
@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.app.smartpos.refund.Refund;
+import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.Result;
@@ -21,7 +21,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import es.dmoral.toasty.Toasty;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScannerActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
+public class RefundScannerActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
 
 
     private ZXingScannerView scannerView;
@@ -39,10 +39,10 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
             requestCameraPermission();
         }
 
-        scannerView = new ZXingScannerView(ScannerActivity.this);
+        scannerView = new ZXingScannerView(RefundScannerActivity.this);
         setContentView(scannerView);
         scannerView.startCamera();
-        scannerView.setResultHandler(ScannerActivity.this);
+        scannerView.setResultHandler(RefundScannerActivity.this);
 
 
     }
@@ -68,7 +68,7 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         final String myResult = result.getText();
 
         //set result in main activity or previous activity
-        Refund.searchEt.setText(myResult);
+        Items.searchEt.setText(myResult);
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
         onBackPressed();
@@ -84,10 +84,10 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
 
-                        scannerView = new ZXingScannerView(ScannerActivity.this);
+                        scannerView = new ZXingScannerView(RefundScannerActivity.this);
                         setContentView(scannerView);
                         scannerView.startCamera();
-                        scannerView.setResultHandler(ScannerActivity.this);
+                        scannerView.setResultHandler(RefundScannerActivity.this);
                     }
 
                     @Override
@@ -95,7 +95,7 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
 
                         // check for permanent denial of permission
                         if (response.isPermanentlyDenied()) {
-                            Toasty.info(ScannerActivity.this, R.string.camera_permission, Toast.LENGTH_SHORT).show();
+                            Toasty.info(RefundScannerActivity.this, R.string.camera_permission, Toast.LENGTH_SHORT).show();
                         }
                     }
 

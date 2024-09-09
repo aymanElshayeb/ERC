@@ -92,12 +92,12 @@ public class SharedPrefUtils {
     }
     public static void setMobileNumber(Context context,String ecrCode){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("mobile_number", ecrCode).commit();
+        editor.putString("mobile", ecrCode).commit();
     }
 
     public static String getMobileNumber(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
-        return sharedPreferences.getString("mobile_number","");
+        return sharedPreferences.getString("mobile","");
     }
 
 

@@ -28,14 +28,15 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         TextView usernameTv=findViewById(R.id.username_tv);
+        TextView flNameTv=findViewById(R.id.fl_name_tv);
         TextView emailTv=findViewById(R.id.email_tv);
-        TextView mobileTv=findViewById(R.id.mobile_tv);
         LinearLayout logoutLl=findViewById(R.id.logout_ll);
         ImageView closeIm=findViewById(R.id.close_im);
-
         usernameTv.setText(SharedPrefUtils.getUsername(this));
-        emailTv.setText(SharedPrefUtils.getEmail(this));
+        TextView mobileTv=findViewById(R.id.mobile_tv);
         mobileTv.setText(SharedPrefUtils.getMobileNumber(this));
+        emailTv.setText(SharedPrefUtils.getEmail(this));
+        flNameTv.setText(SharedPrefUtils.getUsername(this).substring(0, 1));
         closeIm.setOnClickListener(view -> {
             finish();
         });

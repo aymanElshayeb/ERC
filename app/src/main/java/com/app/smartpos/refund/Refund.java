@@ -3,17 +3,21 @@ package com.app.smartpos.refund;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
+import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.refund.Model.RefundModel;
 
 import java.util.HashMap;
@@ -23,6 +27,8 @@ public class Refund extends AppCompatActivity {
 
     DatabaseAccess databaseAccess;
     RefundDetailsViewModel model;
+    public static EditText searchEt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +42,21 @@ public class Refund extends AppCompatActivity {
         model=new RefundDetailsViewModel();
 
         databaseAccess = DatabaseAccess.getInstance(this);
-
+        ImageView scannerIm = findViewById(R.id.img_scanner);
         Button allRefundsBtn = findViewById(R.id.view_all_receipt_btn);
-        EditText search_et = findViewById(R.id.search_et);
+        searchEt = findViewById(R.id.search_et);
         Button view_receipt_btn = findViewById(R.id.view_receipt_btn);
-
+        scannerIm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Refund.this, ScannerActivity.class);
+                startActivity(intent);
+            }
+        });
         allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund",true)));
         view_receipt_btn.setOnClickListener(view -> {
             databaseAccess.open();
-            if (!search_et.getText().toString().trim().isEmpty()) {
+            if (!searchEt.getText().toString().trim().isEmpty()) {
 //                List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
 //                if (list.size() > 0) {
 //                    Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
@@ -56,7 +68,7 @@ public class Refund extends AppCompatActivity {
 //                    startActivity(i);
 //                }
                 DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
-                //dialog.show(getSupportFragmentManager(),"dialog");
+                dialog.show(getSupportFragmentManager(),"dialog");
                 callApi();
             }
         });

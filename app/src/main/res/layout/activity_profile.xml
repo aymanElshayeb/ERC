@@ -41,8 +41,21 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="43dp"
+                android:gravity="center"
                 android:background="@drawable/custom_white_circle"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+                <TextView
+                    android:id="@+id/fl_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/inter_bold"
+                    android:includeFontPadding="false"
+                    android:text="F"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/username_tv"
@@ -180,6 +193,7 @@
                 android:fontFamily="@font/inter_medium"
                 android:text="@string/need_a_help"
                 android:textColor="@color/black"
+                android:layout_marginTop="16dp"
                 android:textSize="20sp" />
 
             <TextView
@@ -250,7 +264,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/rounded_button_6"
                 android:backgroundTint="#FBE7E7"
                 android:gravity="center">

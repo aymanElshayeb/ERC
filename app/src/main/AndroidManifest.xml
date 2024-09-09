@@ -125,6 +125,7 @@
         <activity android:name=".product.EditProductScannerViewActivity" />
         <activity android:name=".pdf_report.ViewPDFActivity" />
         <activity android:name=".pos.ScannerActivity" />
+        <activity android:name=".refund.RefundScannerActivity" />
         <activity android:name=".product.ScannerViewActivity" />
         <activity android:name=".product.EditProductActivity" />
         <activity android:name=".settings.backup.BackupActivity" />
