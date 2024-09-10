@@ -1,6 +1,7 @@
 package com.app.smartpos.refund;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.refund.Model.RefundModel;
+import com.app.smartpos.utils.AuthoruzationHolder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +70,7 @@ public class Refund extends AppCompatActivity {
 //
 //                    startActivity(i);
 //                }
-                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
                 dialog.show(getSupportFragmentManager(),"dialog");
                 //callApi();
             }
@@ -84,6 +86,9 @@ public class Refund extends AppCompatActivity {
     }
 
     public void callApi(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.i("INSIDE CALL API" , AuthoruzationHolder.getAuthorization());
+        }
         model.start(searchEt.getText().toString().trim(),databaseAccess);
     }
 }

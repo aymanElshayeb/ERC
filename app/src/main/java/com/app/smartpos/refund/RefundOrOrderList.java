@@ -109,7 +109,7 @@ public class RefundOrOrderList extends AppCompatActivity {
         i.putExtra("operation_type",orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type",orderList.get(adapterPosition).get("operation_sub_type"));
         if(isRefund()) {
-            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
             dialog.show(getSupportFragmentManager(),"dialog");
         }else {
             startActivity(i);

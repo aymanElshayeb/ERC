@@ -1,6 +1,7 @@
 package com.app.smartpos.refund;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.refund.Model.RefundModel;
+import com.app.smartpos.utils.AuthoruzationHolder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +88,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         currency = databaseAccess.getCurrency();
         databaseAccess.open();
         //get data from local database
-        if(!isRefund) {
+        if (!isRefund) {
             orderId = getIntent().getStringExtra("order_id");
             operation_sub_type = getIntent().getStringExtra("operation_sub_type");
             order_payment_method = getIntent().getStringExtra("order_payment_method");
@@ -97,13 +100,13 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                 orderDetailsList.get(i).put("item_checked", "0");
                 Log.i("datadata", "" + orderDetailsList.get(i).toString());
             }
-        }else{
+        } else {
             RefundModel refundModel = (RefundModel) getIntent().getSerializableExtra("refundModel");
             orderId = refundModel.getOrder_id();
             operation_sub_type = refundModel.getOperation_sub_type();
             order_payment_method = refundModel.getOrder_payment_method();
             operation_type = refundModel.getOperation_type();
-            orderDetailsList=refundModel.getOrderDetailsItems();
+            orderDetailsList = refundModel.getOrderDetailsItems();
 
         }
 
@@ -133,7 +136,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
-                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType","نسخة إضافية"));
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType", "نسخة إضافية"));
             } else {
                 refundPressed();
             }
@@ -178,6 +181,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "dialog");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void refundConfirmation() {
         boolean canRefund = false;
         double total_amount = 0;
@@ -198,11 +202,14 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         if (canRefund) {
             databaseAccess.open();
-            databaseAccess.updateOrderListItem("order_status", Constant.REFUNDED, orderId);
+            if (!databaseAccess.getOrderListByOrderId(orderId).isEmpty()) {
+                databaseAccess.open();
+                databaseAccess.updateOrderListItem("order_status", Constant.REFUNDED, orderId);
+            }
             try {
-                refundSequence=proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
-                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
-                dialog.show(getSupportFragmentManager(),"dialog");
+                refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
+                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+                dialog.show(getSupportFragmentManager(), "dialog");
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -211,8 +218,8 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         }
     }
 
-    public void redirectToSuccess(){
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id",refundSequence).putExtra("printType","مسترجع");
+    public void redirectToSuccess() {
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id", refundSequence).putExtra("printType", "مسترجع");
         startActivity(intent);
         finish();
     }
@@ -264,7 +271,6 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                 obj.put("ecr_code", ecr_code);
 
 
-
                 double totalPriceWithTax = 0;
                 double total_tax = 0;
                 for (int i = 0; i < orderDetailsList.size(); i++) {
@@ -272,13 +278,13 @@ public class RefundOrOrderDetails extends AppCompatActivity {
                     String item_checked = orderDetailsList.get(i).get("item_checked");
 
                     if (item_checked.equals("1") && refund_qty > 0) {
-                        totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price"))*refund_qty;
+                        totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price")) * refund_qty;
                         //ToDo tax amount should be divided by the total qantity of the order line before multiplying
-                        total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))*refund_qty;
+                        total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount")) * refund_qty;
                     }
                 }
                 obj.put("in_tax_total", -totalPriceWithTax);
-                obj.put("ex_tax_total", -(totalPriceWithTax-total_tax));
+                obj.put("ex_tax_total", -(totalPriceWithTax - total_tax));
 
                 obj.put("paid_amount", -(total == 0 ? totalPriceWithTax : total));
                 obj.put("change_amount", change);
@@ -313,11 +319,11 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
-                        String englishName=product.get(0).get("product_name_en");
-                        String arabicName=product.get(0).get("product_name_ar");
-                        if(product.get(0).get("product_uuid").equals("CUSTOM_ITEM")){
-                            englishName=orderDetailsList.get(i).get("product_description");
-                            arabicName=orderDetailsList.get(i).get("product_description");
+                        String englishName = product.get(0).get("product_name_en");
+                        String arabicName = product.get(0).get("product_name_ar");
+                        if (product.get(0).get("product_uuid").equals("CUSTOM_ITEM")) {
+                            englishName = orderDetailsList.get(i).get("product_description");
+                            arabicName = orderDetailsList.get(i).get("product_description");
                         }
                         objp.put("product_name_en", englishName);
                         objp.put("product_name_ar", arabicName);
@@ -343,7 +349,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
             }
 
             Log.i("datadata", obj.toString());
-            sequence=saveOrderInOfflineDb(obj);
+            sequence = saveOrderInOfflineDb(obj);
 
         }
         return sequence;
@@ -361,7 +367,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
 
         String orderId = sequenceMap.get("sequence");
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this,true, databaseAccess);
+        databaseAccess.insertOrder(orderId, obj, this, true, databaseAccess);
 
 
 //        Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();

@@ -215,19 +215,20 @@
         android:paddingHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center">
+
         <TextView
             android:id="@+id/refund_tv"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:gravity="center"
             android:alpha="0.5"
-            android:enabled="false"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/purple"
             android:background="@drawable/rounded_button_6"
-            android:text="@string/refund"
+            android:backgroundTint="@color/purple"
+            android:enabled="false"
             android:fontFamily="@font/inter_semibold"
-            android:textSize="17sp"/>
+            android:gravity="center"
+            android:text="@string/refund"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

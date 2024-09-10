@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import androidx.annotation.NonNull;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -32,6 +33,7 @@ public class UploadWorker extends Worker {
     public Result doWork() {
         // Get the file path from input data
         String filePath = getInputData().getString("fileNameGzip");
+
         String uri = getInputData().getString("url");
         String tenantId= getInputData().getString("tenantId");
         String authorization= getInputData().getString("Authorization");
@@ -68,11 +70,11 @@ public class UploadWorker extends Worker {
                 .post(requestBody)
                 .headers(headers)
                 .build();
-
+        Data outputData = new Data.Builder().putString("Authorization", authorization).build();
         // Step 3: Execute the request and handle the response
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                return Result.success(); // Return success if the upload is successful
+                return Result.success(outputData);
             } else {
                 return Result.failure(); // Retry the work if the server returns an error
             }
