@@ -231,4 +231,19 @@
             android:textColor="@color/white"
             android:textSize="17sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="#80000000"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:clickable="true"
+        android:translationZ="15dp">
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
