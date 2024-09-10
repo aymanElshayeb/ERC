@@ -240,6 +240,7 @@
         android:background="#80000000"
         android:orientation="vertical"
         android:visibility="gone"
+        android:clickable="true"
         android:translationZ="15dp">
         <ProgressBar
             android:layout_width="50dp"
