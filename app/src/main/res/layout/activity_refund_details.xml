@@ -97,7 +97,7 @@
                         android:gravity="center"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="3dp"
-                        android:text="@string/refunded"
+                        android:text="@string/refund"
                         android:textColor="#F74F4F"
                         android:textSize="13sp"
                         android:visibility="gone" />
