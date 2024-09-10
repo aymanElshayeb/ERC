@@ -386,7 +386,7 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        Log.i("LOG AUTH",AuthoruzationHolder.getAuthorization());
+                        Log.i("log_auth",AuthoruzationHolder.getAuthorization());
                         handleWorkCompletion(workInfo);
                     }
                 });
@@ -396,6 +396,7 @@ public class DownloadDataDialog extends DialogFragment {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage("Data Synced Successfully");
+            Log.i("datadata","here");
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -405,7 +406,6 @@ public class DownloadDataDialog extends DialogFragment {
     }
 
     private void closePendingScreen() {
-        dismissAllowingStateLoss();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.i("LOG AUTHINSIDE Close ",AuthoruzationHolder.getAuthorization());
         }
@@ -417,6 +417,7 @@ public class DownloadDataDialog extends DialogFragment {
         } else if (getActivity() instanceof RefundOrOrderDetails) {
             ((RefundOrOrderDetails) getActivity()).redirectToSuccess();
         }
+        dismissAllowingStateLoss();
     }
 
     private void observeWorker(OneTimeWorkRequest workRequest) {

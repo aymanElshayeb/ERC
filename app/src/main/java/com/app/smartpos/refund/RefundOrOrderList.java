@@ -75,10 +75,15 @@ public class RefundOrOrderList extends AppCompatActivity {
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
         model.getLiveData().observe(this, refundModel -> {
-            finish();
-            Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
-            i.putExtra("refundModel", refundModel);
-            startActivity(i);
+            if(refundModel==null){
+                ItemNotFoundDialog dialog=new ItemNotFoundDialog();
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }else {
+                finish();
+                Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
+                i.putExtra("refundModel", refundModel);
+                startActivity(i);
+            }
         });
     }
 

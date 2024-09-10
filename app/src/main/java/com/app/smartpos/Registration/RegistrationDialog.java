@@ -80,6 +80,7 @@ public class RegistrationDialog extends DialogFragment {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.merchant_empty), Toast.LENGTH_SHORT).show();
                 }else {
                     registerBtn.setVisibility(View.GONE);
+                    demoBtn.setEnabled(false);
                     enqueueDownloadAndReadWorkers();
                 }
             });
@@ -195,6 +196,7 @@ public class RegistrationDialog extends DialogFragment {
             // Work failed, handle failure
             showMessage("Error in Syncing data");
             registerBtn.setVisibility(View.VISIBLE);
+            demoBtn.setEnabled(true);
 
         }
     }
