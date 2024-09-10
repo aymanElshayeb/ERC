@@ -10,6 +10,7 @@ import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.Manifest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -110,7 +111,7 @@ public class DownloadDataDialog extends DialogFragment {
                 } else {
                     downloadBtn.setVisibility(View.GONE);
                     if (OPERATION_UPLOAD.equals(operationType)) {
-                        enqueueCreateAndUploadWorkers();
+                        enqueueCreateAndUploadWorkers(requireActivity());
                     } else if (OPERATION_DOWNLOAD.equals(operationType)) {
                         enqueueDownloadAndReadWorkers();
                     } else if (OPERATION_REFUND.equals(operationType)) {
@@ -212,10 +213,10 @@ public class DownloadDataDialog extends DialogFragment {
                 });
     }
 
-    public void enqueueCreateAndUploadWorkers() {
+    public void enqueueCreateAndUploadWorkers(Activity activity) {
         //username Admin
         //password 01111Mm&
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(activity);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
         Data loginInputData = new Data.Builder().
@@ -266,14 +267,14 @@ public class DownloadDataDialog extends DialogFragment {
                 build();
         WorkContinuation continuation ;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && AuthoruzationHolder.getAuthorization().isEmpty()) {
-            continuation = WorkManager.getInstance(requireActivity())
+            continuation = WorkManager.getInstance(activity)
                     .beginWith(loginRequest)
                     .then(lastSyncRequest)
                     .then(exportRequest)
                     .then(compressRequest)
                     .then(uploadRequest);
         } else {
-            continuation = WorkManager.getInstance(requireActivity())
+            continuation = WorkManager.getInstance(activity)
                     .beginWith(lastSyncRequest)
                     .then(exportRequest)
                     .then(compressRequest)
@@ -282,8 +283,8 @@ public class DownloadDataDialog extends DialogFragment {
 
         continuation.enqueue();
         observeWorker(loginRequest);
-        WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(uploadRequest.getId())
-                .observe(this, workInfo -> {
+        WorkManager.getInstance(activity).getWorkInfoByIdLiveData(uploadRequest.getId())
+                .observe(requireActivity(), workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);

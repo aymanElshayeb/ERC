@@ -16,12 +16,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkInfo;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
 import com.app.smartpos.checkout.CheckoutOrderDetails;
 import com.app.smartpos.checkout.SuccessfulPayment;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.refund.Model.RefundModel;
@@ -41,7 +43,7 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class RefundOrOrderDetails extends AppCompatActivity {
+public class RefundOrOrderDetails extends WorkerActivity {
 
     DatabaseAccess databaseAccess;
     RefundOrOrderDetailsAdapter refundDetailsAdapter;
@@ -53,6 +55,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
     String orderId;
     String operation_sub_type;
     TextView refund_tv;
+    LinearLayout loadingLl;
     boolean isRefund;
     private String order_payment_method;
     private String operation_type;
@@ -79,6 +82,7 @@ public class RefundOrOrderDetails extends AppCompatActivity {
         cash_tv = findViewById(R.id.cash_tv);
         refunded_tv = findViewById(R.id.refunded_tv);
         total_amount_tv = findViewById(R.id.total_amount_tv);
+        loadingLl = findViewById(R.id.loading_ll);
 
         refund_tv = findViewById(R.id.refund_tv);
 
@@ -208,13 +212,28 @@ public class RefundOrOrderDetails extends AppCompatActivity {
             }
             try {
                 refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
-                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
-                dialog.show(getSupportFragmentManager(), "dialog");
-
+//                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+//                dialog.show(getSupportFragmentManager(), "dialog");
+                loadingLl.setVisibility(View.VISIBLE);
+                enqueueCreateAndUploadWorkers(this);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    @Override
+    public void handleWorkCompletion(WorkInfo workInfo) {
+        super.handleWorkCompletion(workInfo);
+        loadingLl.setVisibility(View.GONE);
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+            // Work succeeded, handle success
+            showMessage("Data Synced Successfully");
+            redirectToSuccess();
+        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+            // Work failed, handle failure
+            showMessage("Error in Syncing data");
         }
     }
 
