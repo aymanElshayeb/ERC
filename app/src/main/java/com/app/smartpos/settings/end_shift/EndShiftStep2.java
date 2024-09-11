@@ -4,8 +4,6 @@ import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -88,7 +86,7 @@ public class EndShiftStep2 extends AppCompatActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(this));
+        addView(getResources().getString(R.string.user_name), SharedPrefUtils.getName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));

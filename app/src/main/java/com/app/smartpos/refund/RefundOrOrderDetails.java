@@ -299,7 +299,10 @@ public class RefundOrOrderDetails extends WorkerActivity {
                     if (item_checked.equals("1") && refund_qty > 0) {
                         totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price")) * refund_qty;
                         //ToDo tax amount should be divided by the total qantity of the order line before multiplying
-                        total_tax += Double.parseDouble(orderDetailsList.get(i).get("tax_amount")) * refund_qty;
+                        int quantity = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
+                        Log.i("datadata_qty",quantity+" "+orderDetailsList.get(i).get("tax_amount"));
+                        total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))/quantity) * refund_qty;
+                        Log.i("datadata_qty",quantity+" "+total_tax);
                     }
                 }
                 obj.put("in_tax_total", -totalPriceWithTax);
@@ -315,7 +318,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 HashMap<String, String> sequenceMap = databaseAccess.getSequence(1, ecr_code);
                 obj.put("sequence_text", sequenceMap.get("sequence_id"));
 
-                obj.put("tax", -calculated_tax);
+                obj.put("tax", -total_tax);
                 obj.put("discount", discount);
 
 

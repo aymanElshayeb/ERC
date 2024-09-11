@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -222,7 +221,7 @@ public class EndShiftStep1 extends AppCompatActivity {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUsername(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),noteEt.getText().toString().trim() , totalRefundsAmount, totalCardsAmount);
+            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),noteEt.getText().toString().trim() , totalRefundsAmount, totalCardsAmount);
             endShiftModel.setTotalRefunds(totalRefunds);
             if (hasError) {
                 confirmWithErrorTv.setVisibility(View.VISIBLE);

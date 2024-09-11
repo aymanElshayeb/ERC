@@ -1,5 +1,7 @@
 package com.app.smartpos.refund.Model;
 
+import android.util.Log;
+
 import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
 
@@ -59,7 +61,12 @@ public class RefundModel implements Serializable {
                 map.put("tax_percentage", invoiceLines.getJSONObject(i).getJSONObject("tax").getString("percentage"));
                 map.put("item_checked", "0");
                 map.put("refund_qty", "0");
-
+                if(invoiceLines.getJSONObject(i).has("refundedQuantity")){
+                    map.put("product_original_refund_quantity", invoiceLines.getJSONObject(i).getString("refundedQuantity"));
+                }else{
+                    map.put("product_original_refund_quantity", "0");
+                }
+                Log.i("datadata_map",map.toString());
                 orderDetailsItems.add(map);
             }
         } catch (JSONException e) {

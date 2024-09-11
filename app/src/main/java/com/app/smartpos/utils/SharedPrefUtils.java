@@ -43,7 +43,7 @@ public class SharedPrefUtils {
         editor.putLong("start_date_time", date.getTime()).commit();
     }
 
-    public static String getUsername(Context context){
+    public static String getName(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_name","");
     }
@@ -58,7 +58,7 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_id","");
     }
 
-    public static void setUsername(Context context,String userName){
+    public static void setName(Context context, String userName){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
         editor.putString("user_name", userName).commit();
     }

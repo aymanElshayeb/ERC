@@ -66,7 +66,7 @@ public class DownloadDataDialog extends DialogFragment {
 
     private static final int STORAGE_PERMISSION_CODE = 23;
     View root;
-    EditText usernameEt;
+    EditText emailEt;
     EditText passwordEt;
     ProgressBar progressBar;
     Button downloadBtn;
@@ -92,7 +92,7 @@ public class DownloadDataDialog extends DialogFragment {
             root = inflater.inflate(R.layout.dialog_download_data, container, false);
             //setCancelable(false);
             String operationType;
-            usernameEt = root.findViewById(R.id.username_et);
+            emailEt = root.findViewById(R.id.email_et);
             passwordEt = root.findViewById(R.id.password_et);
             downloadBtn = root.findViewById(R.id.download_btn);
             progressBar = root.findViewById(R.id.progress);
@@ -104,7 +104,7 @@ public class DownloadDataDialog extends DialogFragment {
                 operationType = "";
             }
             downloadBtn.setOnClickListener(view -> {
-                if (usernameEt.getText().toString().isEmpty()) {
+                if (emailEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 } else if (passwordEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
@@ -164,7 +164,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", usernameEt.getText().toString()).
+                putString("email", emailEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data downloadInputData = new Data.Builder()
@@ -222,7 +222,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", usernameEt.getText().toString()).
+                putString("email", emailEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
 
@@ -301,7 +301,7 @@ public class DownloadDataDialog extends DialogFragment {
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", usernameEt.getText().toString()).
+                putString("email", emailEt.getText().toString()).
                 putString("password", passwordEt.getText().toString()).
                 build();
         Data lastSync = new Data.Builder().

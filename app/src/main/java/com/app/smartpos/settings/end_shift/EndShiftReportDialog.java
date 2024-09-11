@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
-import com.app.smartpos.auth.LoginUser;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
@@ -71,7 +69,7 @@ public class EndShiftReportDialog extends DialogFragment {
 
 
             addView(requireContext().getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(requireContext()));
-            addView(requireContext().getResources().getString(R.string.user_name), SharedPrefUtils.getUsername(requireContext()));
+            addView(requireContext().getResources().getString(R.string.user_name), SharedPrefUtils.getName(requireContext()));
             addView(requireContext().getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
 
 
