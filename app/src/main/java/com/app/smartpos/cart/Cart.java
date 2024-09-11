@@ -98,5 +98,9 @@ public class Cart extends AppCompatActivity {
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
         totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
         totalAmountTv.setText(Utils.trimLongDouble(total)+" "+currency);
+
+        if(total==0){
+            finish();
+        }
     }
 }

@@ -96,8 +96,8 @@ public class DownloadDataDialog extends DialogFragment {
             passwordEt = root.findViewById(R.id.password_et);
             downloadBtn = root.findViewById(R.id.download_btn);
             progressBar = root.findViewById(R.id.progress);
-            usernameEt.setText("admin@admin.com");
-            passwordEt.setText("01111Mm&");
+//            usernameEt.setText("admin@admin.com");
+//            passwordEt.setText("01111Mm&");
             if (getArguments() != null)
                 operationType = getArguments().getString(ARG_OPERATION_TYPE);
             else {
@@ -376,10 +376,12 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
+                        if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
+                            Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
 //                        authorization= workInfo.getOutputData().getString("Authorization");
-                        AuthoruzationHolder.setAuthorization(workInfo.getOutputData().getString("Authorization"));
-                        Log.i("WORK AUTH", AuthoruzationHolder.getAuthorization());
+                            AuthoruzationHolder.setAuthorization(workInfo.getOutputData().getString("Authorization"));
+                            Log.i("WORK AUTH", AuthoruzationHolder.getAuthorization());
+                        }
                     }
                 });
         WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(readRequest.getId())

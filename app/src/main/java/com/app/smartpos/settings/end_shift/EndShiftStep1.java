@@ -111,7 +111,7 @@ public class EndShiftStep1 extends AppCompatActivity {
             }
         }
         Log.i("datadata_shift",total_amount+" "+totalRefundsAmount);
-        totalAmountTv.setText((total_amount+totalRefundsAmount)+" "+currency);
+        totalAmountTv.setText(total_amount+" "+currency);
         databaseAccess.open();
         List<HashMap<String, String>> cardTypes=new ArrayList<>();
         HashMap<String, String> cash_map = new HashMap<>();

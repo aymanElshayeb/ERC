@@ -181,6 +181,7 @@ public class NewCheckout extends AppCompatActivity {
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax) + " " + currency);
         totalVatTv.setText(Utils.trimLongDouble(totalTax) + " " + currency);
         totalAmountTv.setText(Utils.trimLongDouble(totalAmount) + " " + currency);
+
     }
 
     public void proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total, double change) throws JSONException {

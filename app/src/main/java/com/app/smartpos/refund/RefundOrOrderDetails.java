@@ -305,7 +305,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 obj.put("in_tax_total", -totalPriceWithTax);
                 obj.put("ex_tax_total", -(totalPriceWithTax - total_tax));
 
-                obj.put("paid_amount", -(total == 0 ? totalPriceWithTax : total));
+                obj.put("paid_amount", -totalPriceWithTax);
                 obj.put("change_amount", change);
 
                 String tax_number = configuration.get("merchant_tax_number");

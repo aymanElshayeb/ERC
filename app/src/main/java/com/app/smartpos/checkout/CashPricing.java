@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class CashPricing extends AppCompatActivity {
         TextView currencyTv=findViewById(R.id.currency_tv);
         changeTv=findViewById(R.id.change_tv);
         TextView payTv=findViewById(R.id.pay_tv);
+        ImageView backIm=findViewById(R.id.back_im);
 
 
 
@@ -94,6 +96,8 @@ public class CashPricing extends AppCompatActivity {
         cashGivingTv.setText("0");
         change=0;
         changeTv.setText(change+" "+currency);
+
+        backIm.setOnClickListener(view -> finish());
 
     }
 
