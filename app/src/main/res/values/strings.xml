@@ -426,5 +426,7 @@
     <string name="please_add_decription">Please add description</string>
 
 
+    <string name="item_not_found">Item not found</string>
+
 
 </resources>

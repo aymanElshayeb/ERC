@@ -75,10 +75,15 @@ public class RefundOrOrderList extends AppCompatActivity {
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
         model.getLiveData().observe(this, refundModel -> {
-            finish();
-            Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
-            i.putExtra("refundModel", refundModel);
-            startActivity(i);
+            if(refundModel==null){
+                ItemNotFoundDialog dialog=new ItemNotFoundDialog();
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }else {
+                finish();
+                Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
+                i.putExtra("refundModel", refundModel);
+                startActivity(i);
+            }
         });
     }
 
@@ -109,7 +114,7 @@ public class RefundOrOrderList extends AppCompatActivity {
         i.putExtra("operation_type",orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type",orderList.get(adapterPosition).get("operation_sub_type"));
         if(isRefund()) {
-            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
+            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
             dialog.show(getSupportFragmentManager(),"dialog");
         }else {
             startActivity(i);

@@ -71,12 +71,11 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
-        addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount()));
+        addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount()- endShiftModel.getTotalRefundsAmount()));
 
         //TODO: Add Total Refunds Amount
 
-        addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount()));
-        addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
+        addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount() * -1));
 
 
         totalAmountTv.setText((endShiftModel.total_amount+endShiftModel.getTotalRefundsAmount()+endShiftModel.getStartCash())+" "+currency);

@@ -46,7 +46,8 @@ public class NewLandDevice implements Device{
 
     @Override
     public boolean printZReport(EndShiftModel endShiftModel) {
-        return false;
+        NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
+        return newLandPrinter.printZReport(endShiftModel);
     }
 
     @Override

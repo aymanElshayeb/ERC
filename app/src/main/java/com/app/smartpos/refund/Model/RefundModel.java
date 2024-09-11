@@ -2,7 +2,6 @@ package com.app.smartpos.refund.Model;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
