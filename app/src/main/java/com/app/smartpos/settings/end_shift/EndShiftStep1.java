@@ -159,6 +159,12 @@ public class EndShiftStep1 extends AppCompatActivity {
                     @Override
                     public void afterTextChanged(Editable editable) {}
                 });
+            }else{
+                String cash = cardTypes.get(i).get("CASH");
+                if (cash == null) {
+                    cash = "0";
+                }
+                models.addLast(new EndShiftPaymentModels(null, null, cardTypes.get(i).get("name"), cardTypes.get(i).get("code"), Double.parseDouble(cash)));
             }
         }
 
@@ -173,6 +179,11 @@ public class EndShiftStep1 extends AppCompatActivity {
             int total_transactions = orderList.size()-totalRefunds;
 
             for (int i = 0; i < models.size(); i++) {
+                if(models.get(i).inputPaymentCashEt==null){
+                    ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, 0, 0,models.get(i).code);
+                    map.put(models.get(i).type, shiftDifferences);
+                    continue;
+                }
                 String real = models.get(i).inputPaymentCashEt.getText().toString();
                 double employeeCash = Double.parseDouble(real.isEmpty() ? "0" : real);
                 models.get(i).setError(employeeCash != models.get(i).real);

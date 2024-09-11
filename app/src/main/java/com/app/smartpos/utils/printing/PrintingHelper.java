@@ -1,5 +1,6 @@
 package com.app.smartpos.utils.printing;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,9 +14,19 @@ import android.util.Log;
 
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.orders.PrinterModel;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
+import com.app.smartpos.settings.end_shift.ShiftDifferences;
+import com.newland.sdk.me.module.printer.ErrorCode;
+import com.newland.sdk.me.module.printer.PrintListener;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class PrintingHelper {
     private static String fontPath = Environment.getExternalStorageDirectory() + "/alipuhuiti.ttf";
@@ -136,4 +147,7 @@ public class PrintingHelper {
         return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
 
     }
+
+
+
 }

@@ -128,7 +128,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Sales amount"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(totalAmount)));
-        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,130),0);
+        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,140),0);
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Refunded amount"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(totalRefundsAmount)));
@@ -145,7 +145,7 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
         printLine();
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash sales    " + zeroChecker(f.format(totalCash)));
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash    " + zeroChecker(f.format(totalCash + differenceCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash      " + zeroChecker(f.format(totalCash + differenceCash)));
         printLine();
     }
 
@@ -153,9 +153,9 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Transactions number breakdown");
         printLine();
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText("Sales transactions"));
+        bitmaps.add(PrintingHelper.createBitmapFromText("Successful transactions"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
-        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,137),0);
+        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,85),0);
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Refunded transactions"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
@@ -196,6 +196,7 @@ public class UrovoPrinter extends BaseActivity {
     }
 
     private void printStartAndLeaveCash(double startCash, double leaveCash) {
+
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Start cash"));
         bitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(startCash))));
@@ -223,7 +224,7 @@ public class UrovoPrinter extends BaseActivity {
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Total card"));
         bitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,100),0);
+        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,105),0);
         return totalCard;
     }
 

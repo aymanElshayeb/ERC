@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -131,12 +132,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
             bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Z Report")));
             bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(getDateTime(new Date().getTime()))));
-            // printLine();
+            printLine();
             bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Shift no  " + endShiftModel.getSequence())));
-            bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Username   " + endShiftModel.getUserName())));
+            bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Username   " + endShiftModel.getUserName())));
 
             printStartAndEndShiftTime(endShiftModel.getStartDateTime(), endShiftModel.getEndDateTime());
-            // printLine();
+            printLine();
             printStartAndLeaveCash(endShiftModel.getStartCash(), endShiftModel.getLeaveCash());
             printNumOfTransactions(endShiftModel.getNum_successful_transaction(), endShiftModel.getNum_returned_transaction());
             printTransactionsAmount(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount(), endShiftModel.getTotalRefundsAmount() * -1);
@@ -176,17 +177,17 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Sales amount"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(totalAmount)));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 130)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 140)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Refunded amount"));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(totalRefundsAmount)));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
         printLine();
         ArrayList<Bitmap> combinedBitmaps3 = new ArrayList<>();
         combinedBitmaps3.add(PrintingHelper.createBitmapFromText("Total"));
         combinedBitmaps3.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalAmount - totalRefundsAmount))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps3, 200)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps3, 200)));
         printLine();
     }
 
@@ -194,7 +195,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Cash discrepancies")));
         printLine();
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Total cash sales    " + zeroChecker(f.format(totalCash)))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash    " + zeroChecker(f.format(totalCash + differenceCash)))));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash      " + zeroChecker(f.format(totalCash + differenceCash)))));
 
         printLine();
     }
@@ -204,14 +205,14 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
         printLine();
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Sales transactions"));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Successful transactions"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 137)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 85)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Refunded transactions"));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
 
         printLine();
     }
@@ -226,8 +227,8 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(shiftsCardTypeCalculations.getKey()));
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(shiftsCardTypeCalculations.getValue().getReal()))));
-                bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
-
+                //bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
+                bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
                 totalCard += Double.parseDouble(f.format(shiftsCardTypeCalculations.getValue().getReal()));
             }
         }
@@ -235,7 +236,8 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
+        //bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
     }
 
     private void printPaymentDetails(double totalCash, double totalCard) {
@@ -246,7 +248,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total cash"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalCash))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
 
         totalPayments += Double.parseDouble(f.format(totalCash));
         totalPayments += printTotalCard(totalCard);
@@ -254,7 +256,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Total"));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalPayments))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 150)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 150)));
 
         printLine();
     }
@@ -264,13 +266,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Start cash"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(startCash))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 110)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
 
-        printLine();
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Leave cash"));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(leaveCash))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
 
         printLine();
     }
@@ -288,7 +289,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps = new ArrayList<>();
         combinedBitmaps.add(PrintingHelper.createBitmapFromText("Total card"));
         combinedBitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps, 100)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps, 105)));
         return totalCard;
     }
 
@@ -306,16 +307,24 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(width, totalHeight, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE);
         int lastY = 0;
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
-            int startX = 0;
-            if (bitmaps.get(i).getSide() == 0) {
-                startX = width / 2 - bitmap.getWidth() / 2;
-            } else if (bitmaps.get(i).getSide() == 1) {
-                startX = width - bitmap.getWidth();
+            if(bitmaps.get(i).type==1) {
+                int startX = 0;
+                if (bitmaps.get(i).getSide() == 0) {
+                    startX = width / 2 - bitmap.getWidth() / 2;
+                } else if (bitmaps.get(i).getSide() == 1) {
+                    startX = width - bitmap.getWidth();
+                }
+                canvas.drawBitmap(bitmaps.get(i).getBitmap(), startX, lastY, new Paint());
+            }else{
+                Bitmap bitmap2 = bitmaps.get(i).bitmap2;
+                canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
+                canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
+
             }
-            canvas.drawBitmap(bitmaps.get(i).getBitmap(), startX, lastY, new Paint());
             lastY += bitmap.getHeight();
         }
         return bmp;
