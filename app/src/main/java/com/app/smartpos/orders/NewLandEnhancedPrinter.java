@@ -196,13 +196,13 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Total cash sales    " + zeroChecker(f.format(totalCash)))));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash    " + zeroChecker(f.format(totalCash + differenceCash)))));
 
-//        printLine();
+        printLine();
     }
 
     private void printNumOfTransactions(int numSuccessfulTransaction, int numReturnedTransaction) {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Transactions number breakdown")));
 
-//        printLine();
+        printLine();
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Sales transactions"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
@@ -213,7 +213,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
         bitmaps.add(new PrinterModel(0, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
 
-//        printLine();
+        printLine();
     }
 
     private void printCardTypesBreakdown(HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
