@@ -235,6 +235,11 @@ public class EndShiftStep1 extends AppCompatActivity {
         });
 
         confirmWithErrorTv.setOnClickListener(view -> {
+            if (leaveCashEt.getText().toString().isEmpty()) {
+                Toast.makeText(this, getString(R.string.leave_cash_empty), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            endShiftModel.setLeaveCash(Double.parseDouble(leaveCashEt.getText().toString()));
             EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
             dialog.setEndShiftStep2(this);
             dialog.show(getSupportFragmentManager(),"dialog");

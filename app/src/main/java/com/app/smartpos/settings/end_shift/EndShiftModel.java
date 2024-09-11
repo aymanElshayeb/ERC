@@ -110,6 +110,10 @@ public class EndShiftModel implements Serializable {
         this.totalRefunds = totalRefunds;
     }
 
+    public void setLeaveCash(double leaveCash) {
+        this.leaveCash = leaveCash;
+    }
+
     @Override
     public String toString() {
         return "EndShiftModel{" +
