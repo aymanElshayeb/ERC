@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ public class QuickBill extends Activity {
         currencyTv=findViewById(R.id.currency_tv);
         TextView titleTv=findViewById(R.id.title_tv);
         TextView payTv=findViewById(R.id.option_tv);
+        ImageView backIm=findViewById(R.id.back_im);
         EditText descriptionEt=findViewById(R.id.description_et);
 
         if(getIntent().getStringExtra("type").equals("customItem")){
@@ -115,19 +117,7 @@ public class QuickBill extends Activity {
 
         amountTv.setText("0");
 
-        Window mRootWindow = getWindow();
-        View mRootView = mRootWindow.getDecorView().findViewById(android.R.id.content);
-//        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                Rect r = new Rect();
-//                View view = mRootWindow.getDecorView();
-//                view.getWindowVisibleDisplayFrame(r);
-//                int heightDiff = mRootView.getRootView().getHeight()- mRootView.getHeight();
-//                Log.i("datadata_height","hibhjg "+heightDiff+" "+rootCl.getHeight()+" "+r.toString());
-//
-//            }
-//        });
+        backIm.setOnClickListener(view -> finish());
 
 
     }
