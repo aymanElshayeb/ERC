@@ -109,8 +109,8 @@ public class UrovoPrinter extends BaseActivity {
             printStartAndLeaveCash(endShiftModel.getStartCash(), endShiftModel.getLeaveCash());
             printNumOfTransactions(endShiftModel.getNum_successful_transaction(), endShiftModel.getNum_returned_transaction());
             printTransactionsAmount(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount(),endShiftModel.getTotalRefundsAmount() * -1);
-            printCashDiscrepancies(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount() - endShiftModel.getTotalCardsAmount(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
-            printPaymentDetails(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount() - endShiftModel.getTotalCardsAmount(), endShiftModel.getTotalCardsAmount());
+            printCashDiscrepancies(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
+            printPaymentDetails(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), endShiftModel.getTotalCardsAmount());
             printCardTypesBreakdown(endShiftModel.getShiftDifferences());
             printLine();
             mPrintManager.startPrint();
@@ -141,11 +141,11 @@ public class UrovoPrinter extends BaseActivity {
         printLine();
     }
 
-    private void printCashDiscrepancies(double totalCash, double differenceCash) {
+    private void printCashDiscrepancies(double totalCash, double inputCash) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
         printLine();
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash sales    " + zeroChecker(f.format(totalCash)));
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash      " + zeroChecker(f.format(totalCash + differenceCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash      " + zeroChecker(f.format(inputCash)));
         printLine();
     }
 

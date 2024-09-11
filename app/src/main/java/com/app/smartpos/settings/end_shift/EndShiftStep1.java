@@ -6,22 +6,28 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.utils.SharedPrefUtils;
+import com.app.smartpos.utils.printing.PrinterData;
+import com.app.smartpos.utils.printing.PrintingHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +47,8 @@ public class EndShiftStep1 extends AppCompatActivity {
 
     double totalRefundsAmount=0;
     double totalCardsAmount=0;
+    private PrinterData printerData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,9 @@ public class EndShiftStep1 extends AppCompatActivity {
         TextView confirmTv = findViewById(R.id.confirm_tv);
         TextView confirmWithErrorTv = findViewById(R.id.confirm_with_error_tv);
         ImageView backIm = findViewById(R.id.back_im);
+
+        ScrollView scrollView = findViewById(R.id.scrollView);
+        ImageView receiptIm = findViewById(R.id.receipt_im);
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
@@ -128,7 +139,7 @@ public class EndShiftStep1 extends AppCompatActivity {
         Log.i("datadata",paymentTypesCashMap.get("CASH").toString());
         LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
         for (int i = 0; i < cardTypes.size(); i++) {
-
+            Log.w("datadata_cards", cardTypes.get(i).toString() + "");
             // remove this condition if you want to show all cards
             if ("CASH".equals(cardTypes.get(i).get("name"))) {
                 View root_view = LayoutInflater.from(this).inflate(R.layout.layout_new_end_shift_payment_method, null);
@@ -240,6 +251,24 @@ public class EndShiftStep1 extends AppCompatActivity {
                 EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
                 dialog.setEndShiftStep2(this);
                 dialog.show(getSupportFragmentManager(),"dialog");
+//                scrollView.setVisibility(View.VISIBLE);
+//                scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    @Override
+//                    public void onGlobalLayout() {
+//                        scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                        Bitmap bitmap= new OrderBitmap().shiftZReport(endShiftModel);
+//                        if (bitmap.getHeight() < scrollView.getHeight()) {
+//                            double scale=(double) scrollView.getHeight()/ bitmap.getHeight();
+//                            bitmap=Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*scale),scrollView.getHeight(),false);
+//                        }else{
+//                            //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
+//                        }
+//                        receiptIm.setImageBitmap(bitmap);
+//
+//
+//                    }
+//                });
+
             }
 
         });
@@ -253,6 +282,19 @@ public class EndShiftStep1 extends AppCompatActivity {
             EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
             dialog.setEndShiftStep2(this);
             dialog.show(getSupportFragmentManager(),"dialog");
+
+//            scrollView.setVisibility(View.VISIBLE);
+//            scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                    Bitmap bitmap= new OrderBitmap().shiftZReport(endShiftModel);
+//                    receiptIm.setImageBitmap(bitmap);
+//
+//
+//                }
+//            });
+
         });
 
 }
