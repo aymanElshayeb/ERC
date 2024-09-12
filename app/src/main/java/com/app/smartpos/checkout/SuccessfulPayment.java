@@ -58,7 +58,9 @@ public class SuccessfulPayment extends AppCompatActivity {
             printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
-        amountTv.setText(Utils.trimLongDouble(getIntent().getStringExtra("amount")));
+        String amount = getIntent().getStringExtra("amount").split(" ")[0];
+        String currency = getIntent().getStringExtra("amount").split(" ")[1];
+        amountTv.setText(Utils.trimLongDouble(amount)+" "+currency);
 
         noReceipt.setOnClickListener(view -> {
             finish();

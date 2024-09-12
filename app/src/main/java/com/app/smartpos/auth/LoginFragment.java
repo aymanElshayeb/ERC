@@ -39,8 +39,8 @@ public class LoginFragment extends Fragment {
             EditText EmailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            EmailEt.setText("admin@admin.com");
-            passwordEt.setText("01111Mm&");
+//            EmailEt.setText("kohoru@polkaroad.net");
+//            passwordEt.setText("01111Mm&");
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
             List<HashMap<String,String>>list=databaseAccess.getAllUsers();
