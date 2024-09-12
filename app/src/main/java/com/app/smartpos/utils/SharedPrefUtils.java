@@ -101,6 +101,15 @@ public class SharedPrefUtils {
     }
 
 
+    public static void setUserName(Context context,String ecrCode){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("username", ecrCode).commit();
+    }
+
+    public static String getUserName(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("username","");
+    }
 //    public static void setAuth(Context context,String auth){
 //        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
 //        editor.putString("mobile", ecrCode).commit();
