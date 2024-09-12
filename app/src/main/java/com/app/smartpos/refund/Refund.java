@@ -70,8 +70,9 @@ public class Refund extends AppCompatActivity {
 //
 //                    startActivity(i);
 //                }
-                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
-                dialog.show(getSupportFragmentManager(),"dialog");
+                ConfirmSyncDialog confirmdialog=new ConfirmSyncDialog();
+                confirmdialog.show(getSupportFragmentManager(),"confirmDialog");
+
                 //callApi();
             }
         });

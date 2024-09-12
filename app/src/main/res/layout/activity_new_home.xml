@@ -9,18 +9,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_gradient_purple">
-
         <LinearLayout
             android:id="@+id/circle_name_ll"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="43dp"
-            android:background="@drawable/custom_white_circle"
-            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/custom_white_circle"
+            android:backgroundTint="@color/white"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/fl_home_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:includeFontPadding="false"
+                android:text="F"
+                android:textAllCaps="true"
+                android:textColor="#281B72"
+                android:textSize="22sp" />
+        </LinearLayout>
         <TextView
             android:id="@+id/hello_tv"
             android:layout_width="wrap_content"

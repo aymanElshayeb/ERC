@@ -28,6 +28,7 @@ public class NewHomeActivity extends BaseActivity {
     TextView currentShiftSarTv;
     String currency;
     private DatabaseAccess databaseAccess;
+    private HashMap<String, String>  configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,18 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
         TextView nameTv = findViewById(R.id.name_tv);
+        TextView locationTv = findViewById(R.id.location_tv);
+        TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
+        ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
 
         nameTv.setText(SharedPrefUtils.getName(this));
+
+        databaseAccess = DatabaseAccess.getInstance(this);
+
+        databaseAccess.open();
+        HashMap<String, String> shop = databaseAccess.getShopInformation();
+        String shopLocation = String.valueOf(shop.get("shop_address"));
+         locationTv.setText(shopLocation);
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
@@ -82,8 +93,7 @@ public class NewHomeActivity extends BaseActivity {
             startActivity(new Intent(this, EndShiftStep1.class));
         });
 
-        databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
+         databaseAccess.open();
 
         currency = databaseAccess.getCurrency();
         currentShiftSarTv.setText(currency);

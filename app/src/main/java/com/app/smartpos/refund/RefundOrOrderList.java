@@ -3,7 +3,6 @@ package com.app.smartpos.refund;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,8 +112,10 @@ public class RefundOrOrderList extends AppCompatActivity {
         i.putExtra("operation_type",orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type",orderList.get(adapterPosition).get("operation_sub_type"));
         if(isRefund()) {
-            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
-            dialog.show(getSupportFragmentManager(),"dialog");
+//            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
+//            dialog.show(getSupportFragmentManager(),"dialog");
+            ConfirmSyncDialog confirmation=new ConfirmSyncDialog();
+            confirmation.show(getSupportFragmentManager(),"confirmDialog");
         }else {
             startActivity(i);
         }
