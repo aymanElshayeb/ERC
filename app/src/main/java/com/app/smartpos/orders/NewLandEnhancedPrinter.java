@@ -194,7 +194,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     private void printCashDiscrepancies(double totalCash, double inputCash) {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Cash discrepancies")));
         printLine();
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Total cash sales    " + zeroChecker(f.format(totalCash)))));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Actual total cash   " + zeroChecker(f.format(totalCash)))));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash      " + zeroChecker(f.format(inputCash)))));
 
         printLine();

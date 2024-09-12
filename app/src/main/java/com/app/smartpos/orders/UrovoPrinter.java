@@ -144,7 +144,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printCashDiscrepancies(double totalCash, double inputCash) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
         printLine();
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash sales    " + zeroChecker(f.format(totalCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Actual total cash   " + zeroChecker(f.format(totalCash)));
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash      " + zeroChecker(f.format(inputCash)));
         printLine();
     }
