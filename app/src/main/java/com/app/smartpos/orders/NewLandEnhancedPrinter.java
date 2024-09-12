@@ -319,10 +319,16 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                     startX = width - bitmap.getWidth();
                 }
                 canvas.drawBitmap(bitmaps.get(i).getBitmap(), startX, lastY, new Paint());
-            }else{
+            }else if(bitmaps.get(i).type==2) {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
                 canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
                 canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
+            }else if(bitmaps.get(i).type==3) {
+                Bitmap bitmap2 = bitmaps.get(i).bitmap2;
+                Bitmap bitmap3 = bitmaps.get(i).bitmap3;
+                canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
+                canvas.drawBitmap(bitmaps.get(i).bitmap2, (int)((double)width/2.0 - (double)bitmap2.getWidth()/2.0), lastY, new Paint());
+                canvas.drawBitmap(bitmaps.get(i).bitmap3, width - bitmap3.getWidth(), lastY, new Paint());
 
             }
             lastY += bitmap.getHeight();
@@ -339,7 +345,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
@@ -347,7 +353,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? f.format(tax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
@@ -355,7 +361,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 70)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
@@ -363,7 +369,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
@@ -373,23 +379,21 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("بيان الصنف"));
-        bitmaps.add(new PrinterModel(1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 40)));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
+        //newBitmaps.add(PrintingHelper.createBitmapFromText("    "));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1),newBitmaps.get(2)));        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
-            productCode = orderDetailsList.get(i).get("product_uuid");
+            //productCode = orderDetailsList.get(i).get("product_uuid");
             name = orderDetailsList.get(i).get("product_name_ar");
             price = orderDetailsList.get(i).get("product_price");
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            String total = productTotalPrice == 0 ? "0.0" : f.format(productTotalPrice);
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(total));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(price));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(price))));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(productCode));
-            bitmaps.add(new PrinterModel(1, PrintingHelper.combineMultipleBitmapsHorizontally(ProductBitmap, 50)));
+            //ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
+            bitmaps.add(new PrinterModel(ProductBitmap.get(0),ProductBitmap.get(1),ProductBitmap.get(2)));
             bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(name)));
             bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
         }
@@ -401,8 +405,10 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     }
 
     private void printReceiptNo(String invoiceId) {
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Receipt No ")));
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(invoiceId)));
+        List<Bitmap> newBitmaps = new ArrayList<>();
+        newBitmaps.add(PrintingHelper.createBitmapFromText("Receipt No "));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(invoiceId));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
     private void printType(String type) {
@@ -414,14 +420,14 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
         newBitmaps.add(PrintingHelper.createBitmapFromText("رقم السجل التجارى :"));
-        bitmaps.add(new PrinterModel(1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 45)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
     private void printMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
-        bitmaps.add(new PrinterModel(1, PrintingHelper.combineMultipleBitmapsHorizontally(newBitmaps, 45)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
 

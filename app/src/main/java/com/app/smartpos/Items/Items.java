@@ -29,6 +29,7 @@ import com.app.smartpos.QuickBill;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.PosProductAdapter;
 import com.app.smartpos.cart.Cart;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
 
@@ -194,7 +195,7 @@ public class Items extends AppCompatActivity {
         }
         Log.i("datadata_count", count + "");
         cartCountTv.setText("" + count);
-        cartTotalPriceTv.setText(total + " SAR");
+        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " SAR");
 
 
         if (count > 0) {

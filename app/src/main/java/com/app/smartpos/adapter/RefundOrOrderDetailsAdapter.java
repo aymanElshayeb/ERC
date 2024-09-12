@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.refund.RefundOrOrderDetails;
 
 import java.util.HashMap;
@@ -69,7 +70,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
             if (refund_qty[0] > 0) {
                 holder.amount_ll.setVisibility(View.VISIBLE);
                 holder.number_tv.setText(refund_qty[0] + "");
-                holder.amount_tv.setText((product_price * refund_qty[0]) + " " + refundOrOrderDetails.getCurrency());
+                holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]) + " " + refundOrOrderDetails.getCurrency());
             } else {
                 holder.amount_ll.setVisibility(View.GONE);
             }

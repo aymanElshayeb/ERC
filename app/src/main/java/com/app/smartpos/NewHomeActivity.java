@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.Items.Items;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.profile.Profile;
 import com.app.smartpos.refund.Refund;
@@ -114,7 +115,7 @@ public class NewHomeActivity extends BaseActivity {
             databaseAccess.open();
             total_amount += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
         }
-        currentShiftNumberTv.setText(total_amount + "");
+        currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount) + "");
     }
 
     @Override

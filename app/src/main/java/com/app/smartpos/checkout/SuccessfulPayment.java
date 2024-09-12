@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
@@ -57,7 +58,7 @@ public class SuccessfulPayment extends AppCompatActivity {
             printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
-        amountTv.setText(getIntent().getStringExtra("amount"));
+        amountTv.setText(Utils.trimLongDouble(getIntent().getStringExtra("amount")));
 
         noReceipt.setOnClickListener(view -> {
             finish();

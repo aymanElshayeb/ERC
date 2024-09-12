@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -64,8 +65,8 @@ public class EndShiftStep2 extends AppCompatActivity {
                 totalCard+=shiftDifferences.getReal();
             }
         }
-        addView(getResources().getString(R.string.total_card), totalCard + "");
-        addView(getResources().getString(R.string.total_refunds), endShiftModel.getTotalRefunds() + "");
+        addView(getResources().getString(R.string.total_card), Utils.trimLongDouble(totalCard) + "");
+        addView(getResources().getString(R.string.total_refunds), Utils.trimLongDouble(endShiftModel.getTotalRefunds()) + "");
         addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 
@@ -77,7 +78,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
         addView(getResources().getString(R.string.leave_cash), trimLongDouble(endShiftModel.getLeaveCash()));
 
-        totalAmountTv.setText((endShiftModel.total_amount)+" "+currency);
+        totalAmountTv.setText(Utils.trimLongDouble(endShiftModel.total_amount)+" "+currency);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm aa");
         String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
         addView(getResources().getString(R.string.start_shift_date), start_date);

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -121,7 +122,7 @@ public class EndShiftStep1 extends AppCompatActivity {
             }
         }
         Log.i("datadata_shift",total_amount+" "+totalRefundsAmount);
-        totalAmountTv.setText(total_amount+" "+currency);
+        totalAmountTv.setText(Utils.trimLongDouble(total_amount)+" "+currency);
         databaseAccess.open();
         List<HashMap<String, String>> cardTypes=new ArrayList<>();
         HashMap<String, String> cash_map = new HashMap<>();

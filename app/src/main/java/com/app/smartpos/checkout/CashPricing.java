@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
 
@@ -53,7 +54,7 @@ public class CashPricing extends AppCompatActivity {
         currency = databaseAccess.getCurrency();
 
         currencyTv.setText(currency);
-        totalAmountTv.setText(totalAmount + " " + currency);
+        totalAmountTv.setText(Utils.trimLongDouble(totalAmount) + " " + currency);
 
         TextView num0 = findViewById(R.id.num_0);
         TextView num1 = findViewById(R.id.num_1);
@@ -82,9 +83,9 @@ public class CashPricing extends AppCompatActivity {
         del.setOnClickListener(view -> del());
 
         payTv.setOnClickListener(view -> {
-            double changeResult = Double.parseDouble(changeTv.getText().toString().split(" ")[0]);
-            double cashResult = Double.parseDouble(cashGivingTv.getText().toString().split(" ")[0]);
-            if (cashResult >= totalAmount) {
+            double changeResult = Double.parseDouble(Utils.trimLongDouble(changeTv.getText().toString().split(" ")[0]));
+            double cashResult = Double.parseDouble(Utils.trimLongDouble(cashGivingTv.getText().toString().split(" ")[0]));
+            if (cashResult >= Double.parseDouble(Utils.trimLongDouble(totalAmount))) {
                 Intent intent = new Intent();
                 intent.putExtra("change", change);
                 setResult(RESULT_OK, intent);
@@ -118,8 +119,7 @@ public class CashPricing extends AppCompatActivity {
         cash += number;
         cashGivingTv.setText(cash);
         change = totalAmount - Double.parseDouble(cash);
-        DecimalFormat f = new DecimalFormat("#.00");
-        changeTv.setText(f.format(change) + " " + currency);
+        changeTv.setText(Utils.trimLongDouble(change) + " " + currency);
     }
 
     private void del() {
@@ -133,6 +133,6 @@ public class CashPricing extends AppCompatActivity {
             change = totalAmount - Double.parseDouble(cash);
         }
 
-        changeTv.setText(change + " " + currency);
+        changeTv.setText(Utils.trimLongDouble(change) + " " + currency);
     }
 }

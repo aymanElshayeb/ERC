@@ -23,6 +23,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundOrOrderDetailsAdapter;
 import com.app.smartpos.checkout.CheckoutOrderDetails;
 import com.app.smartpos.checkout.SuccessfulPayment;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
@@ -176,7 +177,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
         }
         refund_tv.setEnabled(canRefund);
         refund_tv.setAlpha(canRefund ? 1.0f : 0.5f);
-        total_amount_tv.setText(total + " " + currency);
+        total_amount_tv.setText(Utils.trimLongDouble(total) + " " + currency);
     }
 
     private void refundPressed() {
