@@ -115,7 +115,7 @@ public class EndShiftStep1 extends AppCompatActivity {
                 double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
                 double total = calculated_total_price + cash;
                 paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), total + "");
-                totalCardsAmount += calculated_total_price;
+//                totalCardsAmount += calculated_total_price;
             } else {
                 paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
             }
@@ -175,6 +175,7 @@ public class EndShiftStep1 extends AppCompatActivity {
                 if (cash == null) {
                     cash = "0";
                 }
+                totalCardsAmount += Double.parseDouble(cash);
                 models.addLast(new EndShiftPaymentModels(null, null, cardTypes.get(i).get("name"), cardTypes.get(i).get("code"), Double.parseDouble(cash)));
             }
         }
@@ -211,8 +212,6 @@ public class EndShiftStep1 extends AppCompatActivity {
                         models.get(i).paymentCashErrorTv.setTextColor(getResources().getColor(R.color.errorColor));
                     }
                 }
-                if(!models.get(i).type.equalsIgnoreCase("CASH"))
-                    totalCardsAmount += shiftDifferences.getReal();
             }
 
 

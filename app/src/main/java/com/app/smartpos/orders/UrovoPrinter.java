@@ -109,8 +109,8 @@ public class UrovoPrinter extends BaseActivity {
             printStartAndLeaveCash(endShiftModel.getStartCash(), endShiftModel.getLeaveCash());
             printNumOfTransactions(endShiftModel.getNum_successful_transaction(), endShiftModel.getNum_returned_transaction());
             printTransactionsAmount(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount(),endShiftModel.getTotalRefundsAmount() * -1);
-            printCashDiscrepancies(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
-            printPaymentDetails(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), endShiftModel.getTotalCardsAmount());
+            printCashDiscrepancies(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
+            printPaymentDetails(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal() - endShiftModel.getStartCash(), endShiftModel.getTotalCardsAmount());
             printCardTypesBreakdown(endShiftModel.getShiftDifferences());
             printLine();
             mPrintManager.startPrint();
@@ -144,7 +144,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printCashDiscrepancies(double totalCash, double inputCash) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Cash discrepancies");
         printLine();
-        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Actual total cash   " + zeroChecker(f.format(totalCash)));
+        mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Total cash sales   " + zeroChecker(f.format(totalCash)));
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), "Input total cash      " + zeroChecker(f.format(inputCash)));
         printLine();
     }
@@ -153,9 +153,9 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Transactions number breakdown");
         printLine();
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText("Successful transactions"));
+        bitmaps.add(PrintingHelper.createBitmapFromText("Sales transactions"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
-        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,85),0);
+        mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,135),0);
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Refunded transactions"));
         bitmaps.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
