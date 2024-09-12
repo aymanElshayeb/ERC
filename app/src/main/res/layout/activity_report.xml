@@ -41,7 +41,7 @@
                         android:background="#FFFFFF"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:theme="@style/ThemeOverlay.AppCompat.Light"
-                        app:cardBackgroundColor="@android:color/white"
+                        app:cardBackgroundColor="#EDEAFF"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp"
                         app:layout_collapseMode="pin">
@@ -108,7 +108,7 @@
                         android:background="#FFFFFF"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:theme="@style/ThemeOverlay.AppCompat.Light"
-                        app:cardBackgroundColor="@android:color/white"
+                        app:cardBackgroundColor="#EDEAFF"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp"
                         app:layout_collapseMode="pin">
@@ -172,7 +172,7 @@
                         android:background="#FFFFFF"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:theme="@style/ThemeOverlay.AppCompat.Light"
-                        app:cardBackgroundColor="@android:color/white"
+                        app:cardBackgroundColor="#EDEAFF"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp"
                         app:layout_collapseMode="pin">
@@ -237,7 +237,7 @@
                         android:background="#FFFFFF"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:theme="@style/ThemeOverlay.AppCompat.Light"
-                        app:cardBackgroundColor="@android:color/white"
+                        app:cardBackgroundColor="#EDEAFF"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp"
                         app:layout_collapseMode="pin">

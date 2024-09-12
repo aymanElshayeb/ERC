@@ -1,5 +1,7 @@
 package com.app.smartpos.product;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -36,9 +38,9 @@ import in.mayanknagwanshi.imagepicker.ImageSelectActivity;
 public class EditProductActivity extends BaseActivity {
 
     public static EditText etxtProductCode;
-    EditText etxtProductName, etxtProductCategory, etxtProductDescription, etxtProductBuyPrice, etxtProductSellPrice, etxtProductStock, etxtProductSupplier, etxtProdcutWeightUnit, etxtProductWeight;
+    EditText etxtProductName,etxtProductNameAr,etxtProductUUID, etxtProductCategory, etxtProductDescription, etxtProductBuyPrice, etxtProductSellPrice, etxtProductStock, etxtProductSupplier, etxtProdcutWeightUnit, etxtProductWeight;
     TextView txtUpdate, txtChooseImage, txtEditProduct;
-    ImageView imgProduct, imgScanCode;
+    ImageView imgProduct, imgScanCode,imgStatus;
     String mediaPath, encodedImage = "N/A";
     ArrayAdapter<String> categoryAdapter, supplierAdapter, weightUnitAdapter;
     List<String> categoryNames, supplierNames, weightUnitNames;
@@ -54,6 +56,8 @@ public class EditProductActivity extends BaseActivity {
         getSupportActionBar().setTitle(R.string.product_details);
 
         etxtProductName = findViewById(R.id.etxt_product_name);
+        etxtProductNameAr = findViewById(R.id.etxt_product_name_ar);
+        etxtProductUUID = findViewById(R.id.etxt_product_uuid);
         etxtProductCode = findViewById(R.id.etxt_product_code);
         etxtProductCategory = findViewById(R.id.etxt_product_category);
         etxtProductDescription = findViewById(R.id.etxt_product_description);
@@ -67,6 +71,7 @@ public class EditProductActivity extends BaseActivity {
 
         txtUpdate = findViewById(R.id.txt_update);
         txtChooseImage = findViewById(R.id.txt_choose_image);
+        imgStatus = findViewById(R.id.img_status);
         imgProduct = findViewById(R.id.image_product);
         imgScanCode = findViewById(R.id.img_scan_code);
 
@@ -76,6 +81,8 @@ public class EditProductActivity extends BaseActivity {
 
 
         etxtProductName.setEnabled(false);
+        etxtProductNameAr.setEnabled(false);
+        etxtProductUUID.setEnabled(false);
         etxtProductCode.setEnabled(false);
         etxtProductCategory.setEnabled(false);
         etxtProductDescription.setEnabled(false);
@@ -143,7 +150,9 @@ public class EditProductActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> productData;
         productData = databaseAccess.getProductsInfo(productID);
-        String product_name = productData.get(0).get("product_name");
+        String product_name = productData.get(0).get("product_name_en");
+        String product_name_ar = productData.get(0).get("product_name_ar");
+        String product_uuid = productData.get(0).get("product_uuid");
         String product_code = productData.get(0).get("product_code");
         String product_category_id = productData.get(0).get("product_category");
         String product_description = productData.get(0).get("product_description");
@@ -156,7 +165,12 @@ public class EditProductActivity extends BaseActivity {
         String product_weight_unit_id = productData.get(0).get("product_weight_unit_id");
         String product_weight = productData.get(0).get("product_weight");
 
+        int status=Integer.parseInt(productData.get(0).get("product_active"));
+        imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);
+
         etxtProductName.setText(product_name);
+        etxtProductNameAr.setText(product_name_ar);
+        etxtProductUUID.setText(product_uuid);
         etxtProductCode.setText(product_code);
 
 
@@ -165,22 +179,22 @@ public class EditProductActivity extends BaseActivity {
         etxtProductCategory.setText(category_name);
 
         etxtProductDescription.setText(product_description);
-        etxtProductBuyPrice.setText(product_buy_price);
-        etxtProductSellPrice.setText(product_sell_price);
+//        etxtProductBuyPrice.setText(trimLongDouble(product_buy_price));
+        etxtProductSellPrice.setText(trimLongDouble(product_sell_price));
 
 
-        databaseAccess.open();
-        String supplier_name = databaseAccess.getSupplierName(product_supplier_id);
-        etxtProductSupplier.setText(supplier_name);
-
-        etxtProductStock.setText(product_stock);
-
-
-        databaseAccess.open();
-        String weight_unit_name = databaseAccess.getWeightUnitName(product_weight_unit_id);
-        etxtProdcutWeightUnit.setText(weight_unit_name);
-
-        etxtProductWeight.setText(product_weight);
+//        databaseAccess.open();
+//        String supplier_name = databaseAccess.getSupplierName(product_supplier_id);
+//        etxtProductSupplier.setText(supplier_name);
+//
+//        etxtProductStock.setText(product_stock);
+//
+//
+//        databaseAccess.open();
+//        String weight_unit_name = databaseAccess.getWeightUnitName(product_weight_unit_id);
+//        etxtProdcutWeightUnit.setText(weight_unit_name);
+//
+//        etxtProductWeight.setText(product_weight);
 
         if (product_image != null) {
             if (product_image.length() < 6) {

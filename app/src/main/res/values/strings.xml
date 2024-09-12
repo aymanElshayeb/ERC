@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Smart POS</string>
+    <string name="app_name" translatable="false">ECR</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>
@@ -25,6 +25,7 @@
     <string name="expense">Expense</string>
     <string name="report">Report</string>
     <string name="all_orders">All Orders</string>
+    <string name="orders">Orders</string>
     <string name="all_sales">All Sales</string>
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>
@@ -38,6 +39,35 @@
     <string name="enter_customer_cell">Enter Customer Cell</string>
     <string name="enter_customer_address">Enter Customer Address</string>
     <string name="customer_successfully_added">Customer Successfully Added</string>
+    <string name="hello">Hello</string>
+    <string name="sync">Sync</string>
+    <string name="current_shift_sales">Current Shift Sales</string>
+    <string name="sar">SAR</string>
+    <string name="items">Items</string>
+    <string name="quick_bills">Quick Bills</string>
+    <string name="refund">Refund</string>
+    <string name="end_of_shift">End of Shift</string>
+    <string name="confirmation_refund">Confirmation refund</string>
+    <string name="confirmation_refund_desc">Are you sure you want to refund this order?</string>
+    <string name="items_successfully_refunded">Items Successfully Refunded</string>
+    <string name="cutom_item_already_added">Custom item already added</string>
+
+    <string name="cart">Cart</string>
+    <string name="order_summary">Order Summary</string>
+    <string name="payment_summary">Payment Summary</string>
+    <string name="vat_exclusive">(VAT Exclusive)</string>
+    <string name="total_vat">Total Vat</string>
+    <string name="add_items">Add items</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirm_with_error">Confirm with error</string>
+
+    <string name="checkout">Checkout</string>
+    <string name="cash">Cash</string>
+    <string name="cash_details">Cash Details</string>
+    <string name="cash_given">Cash Given</string>
+    <string name="change">Change</string>
+    <string name="pay">Pay</string>
+    <string name="cash_given_must_be_equal_or_more_than_total_amount">Cash given must be more than or equal to Total amount</string>
 
     <string name="all_customer">All Customer</string>
     <string name="no_customer_found">No Customer Found!</string>
@@ -76,7 +106,7 @@
     <string name="select_supplier">Select Supplier</string>
     <string name="product_supplier">Product Supplier</string>
     <string name="choose_product_image">Choose Product Image</string>
-    <string name="database_backup">Database Backup</string>
+    <string name="database_backup">Database Synchronization</string>
     <string name="database_import">Database Import</string>
 
 
@@ -93,7 +123,8 @@
     <string name="no_data_found">No Data Found</string>
 
     <string name="shop_information">Shop Information</string>
-    <string name="data_backup">Data Backup</string>
+    <string name="data_backup">Data Synchronization</string>
+    <string name="end_shift">End Shift</string>
     <string name="shop_name">Shop Name</string>
     <string name="shop_contact_number">Shop Contact Number</string>
     <string name="shop_email">Shop Email</string>
@@ -107,7 +138,10 @@
     <string name="payment">PAYMENT</string>
     <string name="submit">SUBMIT</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="product_status">Product Status</string>
     <string name="product_name">Product Name</string>
+    <string name="arabic_product_name">Arabic product Name</string>
+    <string name="product_uuid">Product UUID</string>
     <string name="weight">Weight:</string>
     <string name="price">Price</string>
 
@@ -133,13 +167,13 @@
     <string name="shop_address_cannot_be_empty">Shop address can\'t be empty</string>
     <string name="shop_currency_cannot_be_empty">Shop currency can\'t be empty</string>
     <string name="shop_information_updated_successfully">Shop Information Updated Successfully</string>
-    <string name="enter_local_database_backup_name">Enter Local Database Backup Name</string>
+    <string name="enter_local_database_backup_name">Enter Local Database Synchronization Name</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="unable_to_create_directory_retry">Unable to create directory. Retry</string>
     <string name="database_restore">Database Restore:</string>
     <string name="unable_to_restore_retry">Unable to restore. Retry</string>
-    <string name="backup_folder_not_present">Backup folder not present</string>
+    <string name="backup_folder_not_present">Synchronization folder not present</string>
     <string name="all_product">All Product</string>
     <string name="product_cart">Product Cart</string>
     <string name="no_product_in_cart">No Product in Cart</string>
@@ -149,17 +183,21 @@
     <string name="select_customer">SELECT CUSTOMER</string>
     <string name="order_history">Order History</string>
     <string name="order_details">Order Details</string>
+    <string name="invoice">Invoice</string>
     <string name="total_price">Total Price: </string>
     <string name="add_expense">Add Expense</string>
     <string name="hi_welcome">Hello! Welcome</string>
     <string name="product_removed_from_cart">Product removed from cart</string>
-    <string name="backup_completed_successfully">Backup Completed Successfully</string>
-    <string name="unable_to_backup_database_retry">Unable to backup database. Retry</string>
+    <string name="backup_completed_successfully">Synchronization Completed Successfully</string>
+    <string name="unable_to_backup_database_retry">Unable to Synchronization database. Retry</string>
     <string name="database_Import_completed">Database Import Completed</string>
     <string name="unable_to_import_database_retry">Unable to import database. Retry</string>
     <string name="want_to_delete_customer">Want to Delete Customer ?</string>
     <string name="customer_deleted">Customer Deleted</string>
     <string name="note">Note: </string>
+    <string name="note_">Note</string>
+    <string name="add_notes_for_shift">Add notes for before end the shift (optional)</string>
+    <string name="done">Done</string>
     <string name="want_to_delete_expense">Want to Delete Expense ?</string>
     <string name="expense_deleted">Expense Deleted</string>
     <string name="order_id">Order ID:</string>
@@ -272,7 +310,7 @@
     <string name="cancel_order">Cancel Order</string>
     <string name="order_completed">Order Completed</string>
     <string name="order_updated">Order Updated</string>
-    <string name="backup_to_google_drive">Backup to Google Drive/Others</string>
+    <string name="backup_to_google_drive">Synchronization to Google Drive/Others</string>
     <string name="order_status">Order Status</string>
     <string name="select_year">Select Year</string>
     <string name="order_type_deleted">Order type deleted</string>
@@ -285,5 +323,112 @@
     <string name="update_unit">Update Unit</string>
     <string name="add_order_type">Add Order Type</string>
     <string name="add_unit">Add Unit</string>
+
+
+    <string name="welcome_to_qaema">Welcome to qaema ECR</string>
+    <string name="Please_enter_your_login_info">Please enter your login info</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login">Login</string>
+    <string name="wrong_username_password">Wrong username or password</string>
+    <string name="wrong_email_password">Wrong email or password</string>
+
+    <string name="synchronization">Synchronization</string>
+    <string name="confirm_synchronization">you will synchronize your data with server</string>
+
+    <string name="admin_email">Admin Username</string>
+    <string name="admin_password">Admin Password</string>
+    <string name="download_data">Download Data</string>
+
+    <string name="end_shift_report">End Shift Report</string>
+    <string name="end_my_shift">End My Shift</string>
+    <string name="print_z_report">Print Z Report</string>
+    <string name="shift_summary_details">Shift Summary Details</string>
+    <string name="total_cash">Total Cash</string>
+    <string name="total_card">Total Card</string>
+    <string name="number_of_sales">Number of Sales</string>
+    <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
+    <string name="real">Real</string>
+    <string name="input">Input</string>
+    <string name="diff">Diff</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="total_transactions_number">Total Transactions Number</string>
+    <string name="total_sales_transactions">Total Sales Transactions</string>
+    <string name="total_refunds">Total Refunds</string>
+    <string name="total_cash_amount">Total Sales Amount</string>
+    <string name="total_refunds_amount">Total Refunds Amount</string>
+    <string name="start_cash">Start Cash</string>
+    <string name="start_shift_date">Start Shift Date</string>
+    <string name="end_shift_date">End Shift Date</string>
+    <string name="user_id">User ID</string>
+    <string name="user_name">Username</string>
+    <string name="shift_id">Shift ID</string>
+    <string name="shift_sequence">Shift Sequence</string>
+    <string name="leave_cash">Leave Cash</string>
+
+    <string name="profile">Profile</string>
+    <string name="mobile">Mobile</string>
+    <string name="app_settings">App Settings</string>
+    <string name="language">Language</string>
+    <string name="need_a_help">Need a help?</string>
+    <string name="contact_us_on">Contact us on</string>
+    <string name="logout">Logout</string>
+
+    <string name="search">Search</string>
+    <string name="view_cart">View Cart</string>
+    <string name="clear">Clear</string>
+
+    <string name="receipt_details">Receipt Details</string>
+    <string name="all_receipts">All Receipt</string>
+    <string name="receipt_number">Receipt Number</string>
+    <string name="receipt_number_">Receipt Number:</string>
+    <string name="view_receipt">View Receipt</string>
+    <string name="view_all_receipt">View All Receipt</string>
+    <string name="or">OR</string>
+    <string name="card">Card</string>
+    <string name="refunded">Refunded</string>
+    <string name="view">View</string>
+    <string name="select_which_item_you_want_to_refund">Select which item you want to refund</string>
+    <string name="refund_total">Refund Total</string>
+    <string name="total_qty">Total Qty:</string>
+    <string name="how_many_items_want_to_refund">How many items you want to refund?</string>
+
+    <string name="registration">Registration</string>
+    <string name="merchant_id">Merchant ID</string>
+    <string name="register">Register</string>
+    <string name="demo">Demo</string>
+    <string name="user_name_empty">Username field is empty</string>
+    <string name="password_empty">password field is empty</string>
+    <string name="merchant_empty">Merchant ID field is empty</string>
+    <string name="leave_cash_empty">Please add leave cash</string>
+
+    <string name="options">Options</string>
+    <string name="custom_items">Custom Item</string>
+    <string name="clear_all_items">Clear All Items</string>
+
+    <string name="confirmation_for_ending_your_shift">Confirmation for ending your shift?</string>
+    <string name="confirmation_for_ending_your_shift_desc">Are you sure you want to end your current shift and submit details?</string>
+
+    <string name="have_a_good_day">Have a good day!</string>
+    <string name="you_will_be_logged_out_in">You will be logged out in</string>
+    <string name="seconds">Seconds</string>
+    <string name="second">Second</string>
+
+    <string name="payment_success">Payment Success</string>
+
+    <string name="print_receipt">Print Receipt</string>
+    <string name="no_receipt">No Receipt</string>
+    <string name="close">Close</string>
+
+    <string name="amount">Amount</string>
+    <string name="custom_item">Custom Item</string>
+    <string name="description">Description</string>
+    <string name="amount_must_be_more_than_zero">Amount must be more than zero</string>
+    <string name="please_add_decription">Please add description</string>
+
+
+    <string name="item_not_found">Item not found</string>
+
 
 </resources>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_gradient_purple">
+        <LinearLayout
+            android:id="@+id/circle_name_ll"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="43dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/custom_white_circle"
+            android:backgroundTint="@color/white"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/fl_home_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:includeFontPadding="false"
+                android:text="F"
+                android:textAllCaps="true"
+                android:textColor="#281B72"
+                android:textSize="22sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/hello_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="@string/hello"
+            android:textColor="#F4F4F4"
+            android:textSize="13sp"
+            app:layout_constraintStart_toEndOf="@id/circle_name_ll"
+            app:layout_constraintTop_toTopOf="@id/circle_name_ll" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/inter_medium"
+            android:includeFontPadding="false"
+            android:text="karim"
+            android:textColor="#F4F4F4"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/circle_name_ll"
+            app:layout_constraintStart_toEndOf="@id/circle_name_ll" />
+
+        <TextView
+            android:id="@+id/sync_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="19dp"
+            android:drawableStart="@drawable/ic_sync"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_medium"
+            android:includeFontPadding="false"
+            android:text="@string/sync"
+            android:textColor="#F4F4F4"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@id/circle_name_ll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/circle_name_ll" />
+
+        <TextView
+            android:id="@+id/current_shift_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="@string/current_shift_sales"
+            android:textColor="#F4F4F4"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@id/circle_name_ll"
+            app:layout_constraintTop_toBottomOf="@id/circle_name_ll" />
+
+        <TextView
+            android:id="@+id/current_shift_number_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_bold"
+            android:includeFontPadding="false"
+            android:text="3456.45"
+            android:textColor="#F4F4F4"
+            android:textSize="34sp"
+            app:layout_constraintStart_toStartOf="@id/circle_name_ll"
+            app:layout_constraintTop_toBottomOf="@id/current_shift_tv" />
+
+        <TextView
+            android:id="@+id/current_shift_sar_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="@string/sar"
+            android:textColor="#F4F4F4"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/current_shift_number_tv"
+            app:layout_constraintStart_toEndOf="@id/current_shift_number_tv"
+            app:layout_constraintTop_toTopOf="@id/current_shift_number_tv" />
+
+        <TextView
+            android:id="@+id/location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="27dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="King Abdullah Road, La Vally Store"
+            android:textColor="#F4F4F4"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintStart_toStartOf="@id/circle_name_ll"
+            app:layout_constraintTop_toBottomOf="@id/current_shift_number_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="37dp"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/items_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_items" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/items"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/all_orders_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_all_orders" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/all_orders"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bills_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bill" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/quick_bills"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/refund_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_refund" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/refund"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/end_of_shift_ll"
+                android:layout_width="match_parent"
+                android:layout_height="102dp"
+                android:background="@drawable/custom_home_items"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_end_shift" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/end_of_shift"
+                    android:textColor="@color/purple"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

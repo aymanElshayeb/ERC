@@ -1,5 +1,7 @@
 package com.app.smartpos.adapter;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,12 +56,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
 
         final String product_id = productData.get(position).get("product_id");
-        String name = productData.get(position).get("product_name");
+        String name = productData.get(position).get("product_name_en");
         String supplier_id = productData.get(position).get("product_supplier");
         String buy_price = productData.get(position).get("product_buy_price");
         String sell_price = productData.get(position).get("product_sell_price");
         String base64Image = productData.get(position).get("product_image");
-
+        int status=Integer.parseInt(productData.get(position).get("product_active"));
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
 
@@ -67,9 +69,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         String supplier_name = databaseAccess.getSupplierName(supplier_id);
 
         holder.txtProductName.setText(name);
-        holder.txtSupplierName.setText(context.getString(R.string.supplier) + supplier_name);
-        holder.txtBuyPrice.setText(context.getString(R.string.buy_price) + currency + buy_price);
-        holder.txtSellPrice.setText(context.getString(R.string.sell_price) + currency + sell_price);
+//        holder.txtSupplierName.setText(context.getString(R.string.supplier) + supplier_name);
+//        holder.txtBuyPrice.setText(context.getString(R.string.buy_price) + " "+currency + trimLongDouble(buy_price));
+        holder.txtSellPrice.setText(context.getString(R.string.sell_price) + " "+currency + trimLongDouble(sell_price));
+
+        holder.imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);
 
 
         if (base64Image != null) {
@@ -135,7 +139,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView txtProductName, txtSupplierName, txtBuyPrice, txtSellPrice;
-        ImageView imgDelete, product_image;
+        ImageView imgDelete, product_image,imgStatus;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,6 +151,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
             imgDelete = itemView.findViewById(R.id.img_delete);
             product_image = itemView.findViewById(R.id.product_image);
+
+            imgStatus = itemView.findViewById(R.id.img_status);
 
             itemView.setOnClickListener(this);
 

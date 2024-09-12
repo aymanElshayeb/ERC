@@ -2,6 +2,13 @@ package com.app.smartpos.orders;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.fonts.Font;
+import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
@@ -13,8 +20,12 @@ import com.app.smartpos.utils.printerFactory;
 import com.app.smartpos.utils.printerWordMng;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
+import com.itextpdf.awt.geom.misc.RenderingHints;
+import com.urovo.sdk.print.PrinterProviderImpl;
 import com.woosim.printer.WoosimCmd;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +73,6 @@ public class TestPrinter implements IPrintToPrinter {
     public void printContent(WoosimPrnMng prnMng) {
 
 
-
         double getDiscount=Double.parseDouble(discount);
         double getTax=Double.parseDouble(tax);
 
@@ -78,38 +88,59 @@ public class TestPrinter implements IPrintToPrinter {
 
 
         printerWordMng wordMng = printerFactory.createPaperMng(context);
+        Bundle format = getTextBundle();
         prnMng.printStr(shopName, 2, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr(shopAddress, 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr("Email: " + shopEmail, 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr("Contact: " + shopContact, 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr("Invoice ID: " + invoiceId, 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr("Order Time: " + orderTime + " " + orderDate, 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr(customerName, 1, WoosimCmd.ALIGN_CENTER);
-
-        prnMng.printStr("Email: " + shopEmail, 1, WoosimCmd.ALIGN_CENTER);
-
+        //prnMng.printStr(shopAddress, 1, WoosimCmd.ALIGN_CENTER);
+        //prnMng.printStr("Email: " + shopEmail, 1, WoosimCmd.ALIGN_CENTER);
+        //prnMng.printStr("Contact: " + shopContact, 1, WoosimCmd.ALIGN_CENTER);
+        //prnMng.printStr("Order Time: " + orderTime + " " + orderDate, 1, WoosimCmd.ALIGN_CENTER);
+        //Todo print الرقم الضريبى "tax number"
+        prnMng.printStr(orderDate + "             " + orderTime, 1, WoosimCmd.ALIGN_CENTER);
+        prnMng.printStr("Receipt ID: " + invoiceId, 1, WoosimCmd.ALIGN_CENTER);
+        //prnMng.printStr(customerName, 1, WoosimCmd.ALIGN_CENTER);
+        //prnMng.printStr("Email: " + shopEmail, 1, WoosimCmd.ALIGN_CENTER);
+        prnMng.printStr("فاتورة ضريبية مبسطة", true, false, 1, WoosimCmd.ALIGN_CENTER);
+        //Todo print barcode of the receipt id
+//        prnMng.printStr("--------------------------------");
+//
+        prnMng.printStr("  Items      Price   Qty   Total", 1, WoosimCmd.ALIGN_CENTER);
         prnMng.printStr("--------------------------------");
 
-        prnMng.printStr("  Items        Price  Qty  Total", 1, WoosimCmd.ALIGN_CENTER);
-        prnMng.printStr("--------------------------------");
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
-            name = orderDetailsList.get(i).get("product_name");
+            name = orderDetailsList.get(i).get("product_name_en");
             price = orderDetailsList.get(i).get("product_price");
             qty = orderDetailsList.get(i).get("product_qty");
             weight = orderDetailsList.get(i).get("product_weight");
 
+
             cost_total = Integer.parseInt(qty) * Double.parseDouble(price);
-            prnMng.leftRightAlign(name.trim(), " " + price + " x" + qty + " " + f.format(cost_total));
+            prnMng.printStr(name,1,WoosimCmd.ALIGN_LEFT);
+            prnMng.printStr("             " + price + "       " + qty + "      " + cost_total, 1, WoosimCmd.ALIGN_CENTER);
+            prnMng.printStr("--------------------------------");
+//            prnMng.leftRightAlign(name.trim(), " " + price + " x" + qty + " " + f.format(cost_total));
+
+//            prnMng.printTable();
 
         }
 
+//        prnMng.printPhoto(createBitmapFromText(f.format(subTotal) + "   " + "الإجمالى قبل الضريبة"));
+//        prnMng.printStr(f.format(getDiscount) +  "   " + "الخصم", 1, WoosimCmd.ALIGN_LEFT);
+//        prnMng.printStr(f.format(getTax) +  "   " + "ضريبة القيمة المضافة", 1, WoosimCmd.ALIGN_LEFT);
+//        prnMng.printStr(f.format(totalPrice) +  "   " + "الإجمالى النهائى", 1, WoosimCmd.CT_ARABIC_FORMS_B);
+//        prnMng.printStr("--------------------------------");
+//        prnMng.printStr("Total paid" + "   " + "اجمالى المدفوع", 1, WoosimCmd.ALIGN_LEFT);
+//        prnMng.printStr("needs to be paid" + "   " + "الصافى", 1, WoosimCmd.ALIGN_LEFT);
+//        prnMng.printStr("Remaining" + "   " + "الباقى", 1, WoosimCmd.ALIGN_LEFT);
+//        prnMng.printStr("--------------------------------");
+
+
+
+        prnMng.printStr("Sub Total: " + currency + f.format(subTotal), 1, WoosimCmd.ALIGN_LEFT);
+        prnMng.printStr("Total Tax (+): " + currency + f.format(getTax), 1, WoosimCmd.ALIGN_LEFT);
+        prnMng.printStr("Discount (-): " + currency + f.format(getDiscount), 1, WoosimCmd.ALIGN_LEFT);
         prnMng.printStr("--------------------------------");
-        prnMng.printStr("Sub Total: " + currency + f.format(subTotal), 1, WoosimCmd.ALIGN_RIGHT);
-        prnMng.printStr("Total Tax (+): " + currency + f.format(getTax), 1, WoosimCmd.ALIGN_RIGHT);
-        prnMng.printStr("Discount (-): " + currency + f.format(getDiscount), 1, WoosimCmd.ALIGN_RIGHT);
-        prnMng.printStr("--------------------------------");
-        prnMng.printStr("Total Price: " + currency + f.format(totalPrice), 1, WoosimCmd.ALIGN_RIGHT);
+        prnMng.printStr("Total Price: " + currency + f.format(totalPrice), 1, WoosimCmd.ALIGN_LEFT);
         prnMng.printStr(footer, 1, WoosimCmd.ALIGN_CENTER);
 
         prnMng.printNewLine();
@@ -121,6 +152,34 @@ public class TestPrinter implements IPrintToPrinter {
         prnMng.printNewLine();
         //Any finalization, you can call it here or any where in your running activity.
         printEnded(prnMng);
+    }
+
+    private Bundle getTextBundle() {
+        Bundle format = new Bundle();
+        String fontPath = Environment.getExternalStorageDirectory() + "/alipuhuiti.ttf";
+        format.putInt("font", 1);
+        format.putInt("align", 1);
+        format.putBoolean("fontBold", true);
+        format.putString("fontName", fontPath);
+        format.putInt("lineHeight", 0);
+        return format;
+    }
+
+    public static Bitmap createBitmapFromText(String text) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(50);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
+        float baseline = -paint.ascent(); // ascent() is negative
+        int width = (int) (paint.measureText(text) + 0.5f); // round
+        int height = (int) (baseline + paint.descent() + 0.5f);
+
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+        canvas.drawText(text, 0, baseline, paint);
+
+        return image;
     }
 
     @Override

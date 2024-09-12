@@ -32,8 +32,9 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
     ImageView imgNoProduct;
     TextView txtNoProducts;
 
+    boolean showActiveOnly;
 
-    public ProductCategoryAdapter(Context context, List<HashMap<String, String>> categoryData, RecyclerView recyclerView,ImageView imgNoProduct,TextView txtNoProducts) {
+    public ProductCategoryAdapter(Context context, List<HashMap<String, String>> categoryData, RecyclerView recyclerView,ImageView imgNoProduct,TextView txtNoProducts,boolean showActiveOnly) {
         this.context = context;
         this.categoryData = categoryData;
         this.recyclerView=recyclerView;
@@ -42,6 +43,7 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
         this.imgNoProduct=imgNoProduct;
         this.txtNoProducts=txtNoProducts;
 
+        this.showActiveOnly=showActiveOnly;
     }
 
 
@@ -71,7 +73,7 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
 
                 //get data from local database
                 List<HashMap<String, String>> productList;
-                productList = databaseAccess.getTabProducts(category_id);
+                productList = databaseAccess.getTabProducts(category_id,showActiveOnly);
 
                 if (productList.isEmpty()) {
 
@@ -91,9 +93,9 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
                     imgNoProduct.setVisibility(View.GONE);
                     txtNoProducts.setVisibility(View.GONE);
 
-                   PosProductAdapter productAdapter = new PosProductAdapter(context, productList);
+                   //PosProductAdapter productAdapter = new PosProductAdapter(activity, productList);
 
-                    recyclerView.setAdapter(productAdapter);
+                   // recyclerView.setAdapter(productAdapter);
 
 
 

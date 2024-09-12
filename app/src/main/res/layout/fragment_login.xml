@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/grey_f9">
+    <ImageView
+        android:id="@+id/logo_im"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_qaema_logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="37dp"
+        android:layout_marginStart="24dp"/>
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_to_qaema"
+        app:layout_constraintTop_toBottomOf="@id/logo_im"
+        app:layout_constraintStart_toStartOf="@id/logo_im"
+        android:layout_marginTop="52dp"
+        android:textSize="20dp"
+        android:fontFamily="@font/inter_black"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+    <TextView
+        android:id="@+id/sub_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Please_enter_your_login_info"
+        app:layout_constraintTop_toBottomOf="@id/title_tv"
+        app:layout_constraintStart_toStartOf="@id/title_tv"
+        android:textSize="17dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/inter_regular"
+        android:includeFontPadding="false"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/email_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/rounded_corners_login_edittext_light"
+        android:fontFamily="@font/inter_regular"
+        android:hint="@string/email"
+        android:inputType="text"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/light_purple"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/sub_title_tv" />
+
+    <EditText
+        android:id="@+id/password_et"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/email_et"
+        android:layout_marginHorizontal="24dp"
+        android:background="@drawable/rounded_corners_login_edittext_light"
+        android:hint="@string/password"
+        android:paddingHorizontal="16dp"
+        android:textSize="17sp"
+        android:fontFamily="@font/inter_regular"
+        android:textColorHint="@color/light_purple"
+        android:textColor="@color/black"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/forget_pasword_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forget_password"
+        app:layout_constraintTop_toBottomOf="@id/password_et"
+        app:layout_constraintStart_toStartOf="@id/title_tv"
+        android:textSize="17dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/inter_black"
+        android:textColor="@color/purple"/>
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_button_6"
+        android:backgroundTint="@color/purple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="42dp"
+        android:layout_marginHorizontal="24dp"
+        android:textColor="@color/white"
+        android:text="@string/login"
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        android:fontFamily="@font/inter_black"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

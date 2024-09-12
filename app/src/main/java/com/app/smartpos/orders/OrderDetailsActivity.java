@@ -17,8 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderDetailsAdapter;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pdf_report.BarCodeEncoder;
 import com.app.smartpos.pdf_report.TemplatePDF;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.IPrintToPrinter;
@@ -26,8 +27,9 @@ import com.app.smartpos.utils.PrefMng;
 import com.app.smartpos.utils.Tools;
 import com.app.smartpos.utils.WoosimPrnMng;
 import com.app.smartpos.utils.printerFactory;
+import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
+import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ public class OrderDetailsActivity extends BaseActivity {
     private static final int REQUEST_CONNECT = 100;
     private WoosimPrnMng mPrnMng = null;
     DecimalFormat f;
+    private HashMap<String, String> configuration;
+    HashMap<String, String> orderList;
 
 
     @Override
@@ -101,12 +105,10 @@ public class OrderDetailsActivity extends BaseActivity {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderDetailsActivity.this);
         databaseAccess.open();
-
-
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
-
+        Log.i("datadata_size",order_id+" "+orderDetailsList.size()+"");
         if (orderDetailsList.isEmpty()) {
             //if no data in local db, then load data from server
             Toasty.info(OrderDetailsActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
@@ -118,26 +120,24 @@ public class OrderDetailsActivity extends BaseActivity {
 
         databaseAccess.open();
         //get data from local database
-        List<HashMap<String, String>> shopData;
+        HashMap<String, String> shopData;
         shopData = databaseAccess.getShopInformation();
 
-        shop_name = shopData.get(0).get("shop_name");
-        shop_contact = shopData.get(0).get("shop_contact");
-        shop_email = shopData.get(0).get("shop_email");
-        shop_address = shopData.get(0).get("shop_address");
-        currency = shopData.get(0).get("shop_currency");
+        shop_name = shopData.get("shop_name");
+        shop_contact = shopData.get("shop_contact");
+        shop_email = shopData.get("shop_email");
+        shop_address = shopData.get("shop_address");
+        currency = " "+shopData.get("shop_currency")+" ";
 
-
-        databaseAccess.open();
-        total_price = databaseAccess.totalOrderPrice(order_id);
-        getTax = Double.parseDouble(tax);
+        total_price = Double.parseDouble(orderDetailsList.get(0).get("ex_tax_total"));
+        getTax = Double.parseDouble(orderDetailsList.get(0).get("tax_amount"));
         getDiscount = Double.parseDouble(discount);
 
 
         txtTax.setText(getString(R.string.total_tax) + " : " + currency + f.format(getTax));
         txtDiscount.setText(getString(R.string.discount) + " : " + currency + f.format(getDiscount));
 
-        calculated_total_price = total_price + getTax - getDiscount;
+        calculated_total_price = Double.parseDouble(orderDetailsList.get(0).get("in_tax_total"));
         txtTotalPrice.setText(getString(R.string.sub_total) + currency + f.format(total_price));
         txtTotalCost.setText(getString(R.string.total_price) + currency + f.format(calculated_total_price));
 
@@ -146,27 +146,36 @@ public class OrderDetailsActivity extends BaseActivity {
         shortText = "Customer Name: Mr/Mrs. " + customer_name;
         longText = "Thanks for purchase. Visit again";
 
+        databaseAccess.open();
+        configuration = databaseAccess.getConfiguration();
+
+        String logoBase64 = configuration.isEmpty() ? "" : configuration.get("merchant_logo");
+        com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder barCodeEncoder = new BarcodeEncoder();
+        Bitmap logoBitmap = barCodeEncoder.base64ToBitmap(logoBase64);
+
+        databaseAccess.open();
+        orderList = databaseAccess.getOrderListByOrderId(order_id);
+        ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
+        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration);
 
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
-        templatePDF.addMetaData("Order Receipt", "Order Receipt", "Smart POS");
-        templatePDF.addTitle(shop_name, shop_address + "\n Email: " + shop_email + "\nContact: " + shop_contact + "\nInvoice ID:" + order_id, order_time + " " + order_date);
-        templatePDF.addParagraph(shortText);
+        templatePDF.addMetaData("Order Receipt", "Order Receipt", "ECR");
+        templatePDF.addImage(logoBitmap,80f,60f);
+        templatePDF.addTitle("","Merchant ID : " + (configuration.isEmpty() ? "" : configuration.get("merchant_id")) + "\n Merchant tax number : " + (configuration.isEmpty() ? "" : configuration.get("merchant_tax_number")) + "\nInvoice ID:" + order_id, order_date + "  " +order_time);
 
-
-        BarCodeEncoder qrCodeEncoder = new BarCodeEncoder();
         try {
-            bm = qrCodeEncoder.encodeAsBitmap(order_id, BarcodeFormat.CODE_128, 600, 300);
-        } catch (WriterException e) {
+            bm = barCodeEncoder.encodeQrOrBc(order_id, BarcodeFormat.CODE_128, 600, 300);
+        } catch (Exception e) {
             Log.d("Data", e.toString());
         }
 
 
         btnPdfReceipt.setOnClickListener(v -> {
-
+            templatePDF.addImage(bm,80f,20f);
             templatePDF.createTable(header, getOrdersData());
+            templatePDF.addImage(qrCodeBitmap,60f,60f);
             templatePDF.addRightParagraph(longText);
-            templatePDF.addImage(bm);
             templatePDF.closeDocument();
             templatePDF.viewPDF();
 
@@ -174,13 +183,16 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
         btnThermalPrinter.setOnClickListener(v -> {
-
-            //Check if the Bluetooth is available and on.
-            if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
-            PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
-            //Pick a Bluetooth device
-            Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
-            startActivityForResult(i, REQUEST_CONNECT);
+            Device device = DeviceFactory.getDevice();
+            boolean successfulPrint = device.printReciept(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency,"");
+            if(!successfulPrint){
+                //Check if the Bluetooth is available and on.
+                if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
+                PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
+                //Pick a Bluetooth device
+                Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
+                startActivityForResult(i, REQUEST_CONNECT);
+            }
         });
 
     }
@@ -201,14 +213,14 @@ public class OrderDetailsActivity extends BaseActivity {
         double cost_total;
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
-            name = orderDetailsList.get(i).get("product_name");
+            name = orderDetailsList.get(i).get("product_name_en");
             price = orderDetailsList.get(i).get("product_price");
             qty = orderDetailsList.get(i).get("product_qty");
-            weight = orderDetailsList.get(i).get("product_weight");
+            //weight = orderDetailsList.get(i).get("product_weight");
 
             cost_total = Integer.parseInt(qty) * Double.parseDouble(price);
 
-            rows.add(new String[]{name + "\n" + weight + "\n" + "(" + qty + "x" + currency + price + ")", currency + f.format(cost_total)});
+            rows.add(new String[]{name + "\n" + "(" + qty + "x" + currency + price + ")", currency + f.format(cost_total)});
 
 
         }

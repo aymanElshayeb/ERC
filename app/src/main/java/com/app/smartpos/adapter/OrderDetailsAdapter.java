@@ -1,5 +1,7 @@
 package com.app.smartpos.adapter;
 
+import static com.app.smartpos.common.Utils.trimLongDouble;
+
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -23,13 +25,11 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
     Context context;
     private List<HashMap<String, String>> orderData;
-    DecimalFormat f;
 
 
     public OrderDetailsAdapter(Context context, List<HashMap<String, String>> orderData) {
         this.context = context;
         this.orderData = orderData;
-        f = new DecimalFormat("#0.00");
     }
 
     @Override
@@ -44,10 +44,10 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
 
 
-        holder.txt_product_name.setText(orderData.get(position).get("product_name"));
+        holder.txt_product_name.setText(orderData.get(position).get("product_name_en"));
 
         holder.txt_product_qty.setText(context.getString(R.string.quantity) + orderData.get(position).get("product_qty"));
-        holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
+//        holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
 
         String base64Image = orderData.get(position).get("product_image");
 
@@ -61,7 +61,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
 
-        holder.txt_total_cost.setText(currency + unit_price + " x " + qty + " = "+currency + f.format(cost));
+        holder.txt_total_cost.setText(currency + unit_price + " x " + qty + " = "+currency + trimLongDouble(cost));
 
         if (base64Image != null) {
             if (base64Image.isEmpty() || base64Image.length() < 6) {
@@ -94,7 +94,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
             txt_product_name = itemView.findViewById(R.id.txt_product_name);
             txt_product_price = itemView.findViewById(R.id.txt_price);
             txt_product_qty = itemView.findViewById(R.id.txt_qty);
-            txt_product_Weight = itemView.findViewById(R.id.txt_weight);
+//            txt_product_Weight = itemView.findViewById(R.id.txt_weight);
             imgProduct = itemView.findViewById(R.id.img_product);
             txt_total_cost = itemView.findViewById(R.id.txt_total_cost);
 

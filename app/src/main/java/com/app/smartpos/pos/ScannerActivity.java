@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.app.smartpos.refund.Refund;
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.Result;
@@ -67,13 +68,10 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         final String myResult = result.getText();
 
         //set result in main activity or previous activity
-        PosActivity.etxtSearch.setText(myResult);
+        Refund.searchEt.setText(myResult);
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
-
         onBackPressed();
-
-
     }
 
 

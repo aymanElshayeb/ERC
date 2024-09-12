@@ -81,8 +81,17 @@
                         android:id="@+id/img_delete"
                         android:layout_width="50dp"
                         android:layout_height="40dp"
+                        android:visibility="gone"
                         android:layout_marginTop="10dp"
                         app:srcCompat="@drawable/ic_delete"
+                        tools:ignore="VectorDrawableCompat" />
+
+                    <ImageView
+                        android:id="@+id/img_status"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        app:srcCompat="@drawable/disable_oval"
                         tools:ignore="VectorDrawableCompat" />
 
                 </LinearLayout>

@@ -68,7 +68,7 @@ public class PosActivity extends BaseActivity {
         RecyclerView categoryRecyclerView = findViewById(R.id.category_recyclerview);
 
         databaseAccess = DatabaseAccess.getInstance(PosActivity.this);
-
+        databaseAccess.open();
 
 
         imgScanner.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +118,7 @@ public class PosActivity extends BaseActivity {
 
                 //get data from local database
                 List<HashMap<String, String>> productList;
-                productList = databaseAccess.getProducts();
+                productList = databaseAccess.getProducts(true);
 
                 if (productList.isEmpty()) {
 
@@ -172,7 +172,7 @@ public class PosActivity extends BaseActivity {
         } else {
 
 
-            categoryAdapter = new ProductCategoryAdapter(PosActivity.this, categoryData,recyclerView,imgNoProduct,txtNoProducts);
+            categoryAdapter = new ProductCategoryAdapter(PosActivity.this, categoryData,recyclerView,imgNoProduct,txtNoProducts,true);
 
             categoryRecyclerView.setAdapter(categoryAdapter);
 
@@ -218,7 +218,7 @@ public class PosActivity extends BaseActivity {
 
         //get data from local database
         List<HashMap<String, String>> productList;
-        productList = databaseAccess.getProducts();
+        productList = databaseAccess.getProducts(true);
 
         if (productList.isEmpty()) {
 
@@ -257,7 +257,7 @@ public class PosActivity extends BaseActivity {
                 //get data from local database
                 List<HashMap<String, String>> searchProductList;
 
-                searchProductList = databaseAccess.getSearchProducts(s.toString());
+                searchProductList = databaseAccess.getSearchProducts(s.toString(),true);
 
 
                 if (searchProductList.size() <= 0) {

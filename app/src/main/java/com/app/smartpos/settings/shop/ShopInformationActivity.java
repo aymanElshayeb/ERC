@@ -50,15 +50,15 @@ public class ShopInformationActivity extends BaseActivity {
         databaseAccess.open();
 
         //get data from local database
-        List<HashMap<String, String>> shopData;
+        HashMap<String, String> shopData;
         shopData = databaseAccess.getShopInformation();
 
-        String shop_name = shopData.get(0).get("shop_name");
-        String shop_contact = shopData.get(0).get("shop_contact");
-        String shop_email = shopData.get(0).get("shop_email");
-        String shop_address = shopData.get(0).get("shop_address");
-        String shop_currency = shopData.get(0).get("shop_currency");
-        String tax = shopData.get(0).get("tax");
+        String shop_name = shopData.get("shop_name");
+        String shop_contact = shopData.get("shop_contact");
+        String shop_email = shopData.get("shop_email");
+        String shop_address = shopData.get("shop_address");
+        String shop_currency = shopData.get("shop_currency");
+        String tax = shopData.get("shop_tax");
 
         etxtShopName.setText(shop_name);
         etxtShopContact.setText(shop_contact);

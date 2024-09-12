@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -82,6 +84,8 @@ public class OrdersActivity extends BaseActivity {
             imgNoProduct.setImageResource(R.drawable.not_found);
             txtNoProducts.setVisibility(View.VISIBLE);
         } else {
+            Log.i("datadata",orderList.get(0).get("invoice_id").toString());
+            Log.i("datadata",orderList.get(0).get("card_type_code").toString());
             orderAdapter = new OrderAdapter(OrdersActivity.this, orderList);
 
             recyclerView.setAdapter(orderAdapter);

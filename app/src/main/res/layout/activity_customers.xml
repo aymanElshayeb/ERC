@@ -56,7 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:clickable="true" />
+            android:clickable="true"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

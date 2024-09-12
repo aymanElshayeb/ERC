@@ -4,34 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.app.smartpos.R;
+import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.backup.BackupActivity;
 import com.app.smartpos.settings.categories.CategoriesActivity;
+import com.app.smartpos.settings.end_shift.EndShiftDialog;
+import com.app.smartpos.settings.end_shift.EndShiftModel;
+import com.app.smartpos.settings.end_shift.EndShiftReportDialog;
 import com.app.smartpos.settings.order_type.OrderTypeActivity;
 import com.app.smartpos.settings.payment_method.PaymentMethodActivity;
 import com.app.smartpos.settings.shop.ShopInformationActivity;
 import com.app.smartpos.settings.unit.UnitActivity;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.Utils;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 public class SettingsActivity extends BaseActivity {
 
 
-    CardView cardShopInfo, cardBackup,cardCategory,cardPaymentMethod,cardOrderType,cardUnit;
+    CardView cardShopInfo, cardBackup,cardCategory,cardPaymentMethod,cardOrderType,cardUnit,cardLogout,DBBackup;
 
     private InterstitialAd mInterstitialAd;
     @Override
@@ -46,13 +46,13 @@ public class SettingsActivity extends BaseActivity {
 
         cardShopInfo = findViewById(R.id.card_shop_info);
         cardBackup = findViewById(R.id.card_backup);
+        DBBackup = findViewById(R.id.db_backup);
+
         cardCategory=findViewById(R.id.card_category);
         cardPaymentMethod=findViewById(R.id.card_payment_method);
         cardOrderType=findViewById(R.id.card_order_type);
         cardUnit=findViewById(R.id.card_unit);
-
-
-
+        cardLogout=findViewById(R.id.card_logout);
 
 
         MobileAds.initialize(this, initializationStatus -> {
@@ -148,7 +148,23 @@ public class SettingsActivity extends BaseActivity {
             startActivity(intent);
         });
 
+        cardLogout.setOnClickListener(v -> {
+            EndShiftDialog dialog=new EndShiftDialog();
+            dialog.show(getSupportFragmentManager(),"end shift dialog");
+        });
 
+        DBBackup.setOnClickListener(v -> {
+
+            Intent intent = new Intent(SettingsActivity.this, DataBaseBackupActivity.class);
+            startActivity(intent);
+        });
+
+    }
+
+    public void openReport(EndShiftModel model){
+        EndShiftReportDialog reportDialog=new EndShiftReportDialog();
+        reportDialog.setEndShiftModel(model);
+        reportDialog.show(getSupportFragmentManager(),"dialog");
     }
 
 

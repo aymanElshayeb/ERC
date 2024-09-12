@@ -1,6 +1,7 @@
 
 package com.app.smartpos.settings.backup;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.text.InputType;
@@ -21,9 +22,9 @@ import java.util.Locale;
 
 public class LocalBackup {
 
-    private BackupActivity activity;
+    private Activity activity;
 
-    public LocalBackup(BackupActivity activity) {
+    public LocalBackup(Activity activity) {
         this.activity = activity;
     }
 

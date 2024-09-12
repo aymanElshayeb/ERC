@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_round_6">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/confirmation_for_ending_your_shift"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_semibold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/confirmation_for_ending_your_shift_desc"
+        android:textSize="20sp"
+        android:layout_marginHorizontal="16dp"
+        android:textColor="@color/light_purple"
+        android:fontFamily="@font/inter_regular"/>
+
+    <TextView
+        android:id="@+id/confirm_tv"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/rounded_button_6"
+        android:fontFamily="@font/inter_semibold"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:layout_marginTop="32dp"/>
+
+    <TextView
+        android:id="@+id/cancel_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/inter_semibold"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/purple"
+        android:textSize="17sp"
+        android:layout_marginVertical="16dp"/>
+</LinearLayout>
