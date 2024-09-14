@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,7 +69,11 @@ public class SuccessfulPayment extends AppCompatActivity {
 
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
-            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
+            try {
+                device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency(), getIntent().getStringExtra("printType"));
+            }catch (Exception e){
+                Toast.makeText(this, "no printer found", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

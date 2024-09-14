@@ -151,8 +151,12 @@ public class NewCheckout extends AppCompatActivity {
             if (paymentType.equals("CASH")) {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
-                Intent intent = device.pay((long) totalAmount);
-                launcher.launch(intent);
+                try {
+                    Intent intent = device.pay((long) totalAmount);
+                    launcher.launch(intent);
+                }catch (Exception e){
+                    Toast.makeText(this, "Card payment is offline please choose cash", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toasty.info(this, "Please select Payment Method",
                         Toast.LENGTH_SHORT).show();

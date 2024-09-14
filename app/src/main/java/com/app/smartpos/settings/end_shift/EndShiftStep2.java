@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -134,7 +135,11 @@ public class EndShiftStep2 extends AppCompatActivity {
 
     private void onPrintZReport () {
         Device device = DeviceFactory.getDevice();
-        device.printZReport(endShiftModel);
+        try {
+            device.printZReport(endShiftModel);
+        }catch (Exception e){
+            Toast.makeText(this, "no printer found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
