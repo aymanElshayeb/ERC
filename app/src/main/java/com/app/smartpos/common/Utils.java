@@ -17,7 +17,7 @@ public class Utils {
         DecimalFormat f;
         f = new DecimalFormat("#.00");
         String result=value == 0 ? "0.0" : f.format(value);
-        if(result.equals(".00") || result.equals("-.00")){
+        if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
             result = "0.0";
         }
         return result;
@@ -28,7 +28,7 @@ public class Utils {
         DecimalFormat f;
         f = new DecimalFormat("#.00");
         String result=value.equals("0") ? "0.0" : f.format(doubleValue);
-        if(result.equals(".00") || result.equals("-.00")){
+        if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
             result = "0.0";
         }
         return result;
