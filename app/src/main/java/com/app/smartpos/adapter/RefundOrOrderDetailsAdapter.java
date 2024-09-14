@@ -70,7 +70,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
             if (refund_qty[0] > 0) {
                 holder.amount_ll.setVisibility(View.VISIBLE);
                 holder.number_tv.setText(refund_qty[0] + "");
-                holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]) + " " + refundOrOrderDetails.getCurrency());
+                holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]));
             } else {
                 holder.amount_ll.setVisibility(View.GONE);
             }
