@@ -20,6 +20,9 @@ public class Utils {
         if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
             result = "0.0";
         }
+        if(result.startsWith(".")){
+            result="0"+result;
+        }
         return result;
     }
 
@@ -30,6 +33,9 @@ public class Utils {
         String result=value.equals("0") ? "0.0" : f.format(doubleValue);
         if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
             result = "0.0";
+        }
+        if(result.startsWith(".")){
+            result="0"+result;
         }
         return result;
     }
