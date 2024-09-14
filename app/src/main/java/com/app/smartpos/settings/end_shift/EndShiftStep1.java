@@ -203,8 +203,8 @@ public class EndShiftStep1 extends AppCompatActivity {
                 ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real),models.get(i).code);
                 map.put(models.get(i).type, shiftDifferences);
                 Log.i("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
-                if (employeeCash != models.get(i).real) {
-                    String value = trimLongDouble((employeeCash - models.get(i).real));
+                String value = trimLongDouble((employeeCash - models.get(i).real));
+                if ((employeeCash != models.get(i).real) && !value.equals("0.0")){
                     if (employeeCash - models.get(i).real > 0) {
                         models.get(i).paymentCashErrorTv.setText("+" + value);
                         models.get(i).paymentCashErrorTv.setTextColor(getResources().getColor(R.color.successColor));
