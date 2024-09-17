@@ -69,7 +69,7 @@ public class EndShiftReportDialog extends DialogFragment {
 
 
             addView(requireContext().getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(requireContext()));
-            addView(requireContext().getResources().getString(R.string.user_name), SharedPrefUtils.getName(requireContext()));
+            addView(requireContext().getResources().getString(R.string.user_mail), SharedPrefUtils.getUserName(requireContext()));
             addView(requireContext().getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
 
 

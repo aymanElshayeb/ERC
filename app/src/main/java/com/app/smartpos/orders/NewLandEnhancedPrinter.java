@@ -338,7 +338,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printZatcaQrCode(DatabaseAccess databaseAccess) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration)));
+        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration,true)));
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {

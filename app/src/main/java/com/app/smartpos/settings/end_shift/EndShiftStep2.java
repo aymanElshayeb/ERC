@@ -59,22 +59,18 @@ public class EndShiftStep2 extends AppCompatActivity {
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
             if( keys.get(i).equals("CASH")){
-                addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
+                addView("Total Cash Sales Amount", trimLongDouble(shiftDifferences.getReal()));
+                addView("Input Total Cash", trimLongDouble(shiftDifferences.getInput()));
+                addView("Cash Amount Discrepancy", trimLongDouble(shiftDifferences.getDiff()));
             }else{
                 totalCard+=shiftDifferences.getReal();
             }
         }
-        addView(getResources().getString(R.string.total_card), Utils.trimLongDouble(totalCard) + "");
-        addView(getResources().getString(R.string.total_refunds), Utils.trimLongDouble(endShiftModel.getTotalRefunds()) + "");
+        addView(getResources().getString(R.string.total_card_amount), Utils.trimLongDouble(totalCard) + "");
+        addView(getResources().getString(R.string.total_refunds), String.valueOf(endShiftModel.getTotalRefunds()));
         addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
-
         addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount()));
-
-        //TODO: Add Total Refunds Amount
-
         addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount() * -1));
         addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
         addView(getResources().getString(R.string.leave_cash), trimLongDouble(endShiftModel.getLeaveCash()));
@@ -88,7 +84,7 @@ public class EndShiftStep2 extends AppCompatActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_name), SharedPrefUtils.getName(this));
+        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getUserName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));

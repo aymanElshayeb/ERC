@@ -156,7 +156,7 @@ public class OrderDetailsActivity extends BaseActivity {
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(order_id);
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration);
+        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration,false);
 
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();

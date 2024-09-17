@@ -346,7 +346,7 @@
     <string name="print_z_report">Print Z Report</string>
     <string name="shift_summary_details">Shift Summary Details</string>
     <string name="total_cash">Total Cash</string>
-    <string name="total_card">Total Card</string>
+    <string name="total_card_amount">Total card amount</string>
     <string name="number_of_sales">Number of Sales</string>
     <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
     <string name="real">Real</string>
@@ -355,17 +355,17 @@
     <string name="total_amount">Total Amount</string>
     <string name="total_transactions_number">Total Transactions Number</string>
     <string name="total_sales_transactions">Total Sales Transactions</string>
-    <string name="total_refunds">Total Refunds</string>
+    <string name="total_refunds">Total Refunds Transactions</string>
     <string name="total_cash_amount">Total Sales Amount</string>
     <string name="total_refunds_amount">Total Refunds Amount</string>
-    <string name="start_cash">Start Cash</string>
+    <string name="start_cash">Start Cash In Safe</string>
     <string name="start_shift_date">Start Shift Date</string>
     <string name="end_shift_date">End Shift Date</string>
     <string name="user_id">User ID</string>
-    <string name="user_name">Username</string>
+    <string name="user_mail">User mail</string>
     <string name="shift_id">Shift ID</string>
     <string name="shift_sequence">Shift Sequence</string>
-    <string name="leave_cash">Leave Cash</string>
+    <string name="leave_cash">Leave Cash For next shift</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>
@@ -401,7 +401,7 @@
     <string name="user_name_empty">Username field is empty</string>
     <string name="password_empty">password field is empty</string>
     <string name="merchant_empty">Merchant ID field is empty</string>
-    <string name="leave_cash_empty">Please add leave cash</string>
+    <string name="leave_cash_empty">Please add leave cash for safe</string>
 
     <string name="options">Options</string>
     <string name="custom_items">Custom Item</string>
