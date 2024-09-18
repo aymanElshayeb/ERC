@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
@@ -38,7 +39,6 @@ import java.util.Objects;
 public class NewLandEnhancedPrinter extends BaseActivity {
     String name, price, qty;
     double productTotalPrice;
-    DecimalFormat f;
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
@@ -74,7 +74,6 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat("#.00");
         try {
             byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
             Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -94,11 +93,11 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             printTotalIncludingTax(priceAfterTax);
             printPaidAndChangeAmount(orderList.get("paid_amount"), priceAfterTax, orderList.get("change_amount"), orderList.get("order_payment_method"));
             //Todo total paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("إجمالى المدفوع").toString(), "");
+//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), Utils.trimLongDouble(), handleArabicText("إجمالى المدفوع").toString(), "");
             //Todo needs to be paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
+//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), Utils.trimLongDouble(), handleArabicText("الصافى").toString(), "");
             //Todo remaining
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
+//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), Utils.trimLongDouble(), handleArabicText("الباقى").toString(), "");
             printZatcaQrCode(databaseAccess);
             printLine();
             Map<String, Bitmap> bitmapResult = new HashMap<>();
@@ -128,7 +127,6 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     @SuppressLint("NewApi")
     public boolean printZReport(EndShiftModel endShiftModel) {
-        f = new DecimalFormat("#.00");
         try {
 
             bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Z Report")));
@@ -195,8 +193,8 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     private void printCashDiscrepancies(double totalCash, double inputCash) {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Cash discrepancies")));
         printLine();
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Actual total cash   " + zeroChecker(f.format(totalCash)))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash      " + zeroChecker(f.format(inputCash)))));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Actual total cash   " + zeroChecker(Utils.trimLongDouble(totalCash)))));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash      " + zeroChecker(Utils.trimLongDouble(inputCash)))));
 
         printLine();
     }
@@ -227,10 +225,10 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")) {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(shiftsCardTypeCalculations.getKey()));
-                combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(shiftsCardTypeCalculations.getValue().getReal()))));
+                combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal()))));
                 //bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
                 bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
-                totalCard += Double.parseDouble(f.format(shiftsCardTypeCalculations.getValue().getReal()));
+                totalCard += Double.parseDouble(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal()));
             }
         }
         printLine();
@@ -248,15 +246,15 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         double totalPayments = 0.0;
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total cash"));
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalCash))));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
 
-        totalPayments += Double.parseDouble(f.format(totalCash));
+        totalPayments += Double.parseDouble(Utils.trimLongDouble(totalCash));
         totalPayments += printTotalCard(totalCard);
         printLine();
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Total"));
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalPayments))));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalPayments))));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 150)));
 
         printLine();
@@ -266,12 +264,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Start cash"));
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(startCash))));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(startCash))));
         bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Leave cash"));
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(leaveCash))));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(leaveCash))));
         bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
 
         printLine();
@@ -344,7 +342,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? f.format(priceAfterTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -353,17 +351,17 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     private void printPaidAndChangeAmount(String paidAmount, double priceAfterTax, String changeAmount, String orderPaymentMethod) {
         if (orderPaymentMethod.equalsIgnoreCase("cash")) {
             List<Bitmap> newBitmaps1 = new ArrayList<>();
-            newBitmaps1.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
             newBitmaps1.add(PrintingHelper.createBitmapFromText("إجمالى المدفوع"));
             bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
             printLine();
             List<Bitmap> newBitmaps2 = new ArrayList<>();
-            newBitmaps2.add(PrintingHelper.createBitmapFromText(f.format(priceAfterTax)));
+            newBitmaps2.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(priceAfterTax)));
             newBitmaps2.add(PrintingHelper.createBitmapFromText("الصافى"));
             bitmaps.add(new PrinterModel(newBitmaps2.get(0), newBitmaps2.get(1)));
             printLine();
             List<Bitmap> newBitmaps3 = new ArrayList<>();
-            newBitmaps3.add(PrintingHelper.createBitmapFromText(f.format(-1 * Double.parseDouble(changeAmount))));
+            newBitmaps3.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(-1 * Double.parseDouble(changeAmount))));
             newBitmaps3.add(PrintingHelper.createBitmapFromText("الباقى"));
             bitmaps.add(new PrinterModel(newBitmaps3.get(0), newBitmaps3.get(1)));
             printLine();
@@ -372,7 +370,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTax(double tax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? f.format(tax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? Utils.trimLongDouble(tax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -380,7 +378,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printDiscount(String discount) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? Utils.trimLongDouble(discount) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -388,7 +386,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? f.format(priceBeforeTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.0"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -411,8 +409,8 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(price))));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(productTotalPrice)));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(price))));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
             //ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
             bitmaps.add(new PrinterModel(ProductBitmap.get(0), ProductBitmap.get(1), ProductBitmap.get(2)));
