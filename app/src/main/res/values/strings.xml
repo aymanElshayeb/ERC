@@ -432,5 +432,15 @@
 
     <string name="item_not_found">Item not found</string>
 
+    //sync
+    <string name="download_synchronization">Download Synchronization</string>
+    <string name="upload_synchronization">Upload Synchronization</string>
 
+
+    //error
+    <string name="no_printer_found">no printer found</string>
+    <string name="transaction_declined">Transaction Declined</string>
+    <string name="your_cart_is_empty">Your cart is empty!</string>
+    <string name="card_payment_is_offline_please_choose_cash">Card payment is offline please choose cash</string>
+    <string name="please_select_payment_method">Please select Payment Method</string>
 </resources>

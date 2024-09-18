@@ -380,9 +380,9 @@
     <string name="receipt_number_">رقم الإيصال:</string>
     <string name="view_receipt">عرض الإيصال</string>
     <string name="view_all_receipt">عرض جميع الإيصالات</string>
-    <string name="or">OR</string>
-    <string name="card">Card</string>
-    <string name="refunded">Refunded</string>
+    <string name="or">أو</string>
+    <string name="card">كارت</string>
+    <string name="refunded">استرجاع</string>
     <string name="view">View</string>
     <string name="select_which_item_you_want_to_refund">حدد العنصر الذي تريد استرداده</string>
     <string name="refund_total">إجمالي المبلغ المسترد</string>
@@ -425,4 +425,14 @@
 
     <string name="item_not_found">لم يتم العثور على العنصر</string>
 
+    //sync
+    <string name="download_synchronization">مزامنة التنزيل</string>
+    <string name="upload_synchronization">مزامنة التحميل</string>
+
+    //error
+    <string name="no_printer_found">لم يتم العثور على طابعة</string>
+    <string name="transaction_declined">رفضت المعاملة</string>
+    <string name="your_cart_is_empty">عربة التسوق الخاصة بك فارغة!</string>
+    <string name="card_payment_is_offline_please_choose_cash">الدفع بالبطاقة غير متصل بالإنترنت، يرجى اختيار الدفع نقدًا</string>
+    <string name="please_select_payment_method">يرجى تحديد طريقة الدفع</string>
 </resources>

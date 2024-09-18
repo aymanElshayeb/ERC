@@ -134,7 +134,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         try {
             device.printZReport(endShiftModel);
         }catch (Exception e){
-            Toast.makeText(this, "no printer found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -74,7 +74,7 @@ public class Cart extends AppCompatActivity {
         backIm.setOnClickListener(view -> finish());
         confirmTv.setOnClickListener(view -> {
             if (productCartAdapter.getItemCount() == 0) {
-                Toast.makeText(Cart.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Cart.this, R.string.your_cart_is_empty, Toast.LENGTH_SHORT).show();
             } else {
                 finish();
                 startActivity(new Intent(this, NewCheckout.class));

@@ -816,7 +816,7 @@ public class ProductCart extends BaseActivity {
                             proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
                             alertDialog.dismiss();
                         } else if(resultStatus.equals("Declined")) {
-                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     }
                     catch (Exception e){

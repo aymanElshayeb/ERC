@@ -8,80 +8,65 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.annotation.StringDef;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class LocaleManager {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ FRENCH,ARABIC,ENGLISH, BANGLA,SPANISH,HINDI})
-    public @interface LocaleDef {
-        String[] SUPPORTED_LOCALES = {FRENCH,ARABIC, ENGLISH, BANGLA,SPANISH,HINDI};
+    private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
+
+    public static void onCreate(Context context) {
+
+        String lang;
+        if(getLanguage(context).isEmpty()){
+            lang = getPersistedData(context, Locale.getDefault().getLanguage());
+        }else {
+            lang = getLanguage(context);
+        }
+
+        setLocale(context, lang);
     }
 
-    static public final String FRENCH = "fr";
-    static public final String ARABIC = "ar";
-    static public final String ENGLISH = "en";
-    static public final String BANGLA = "bn";
-    static public final String SPANISH = "es";
-    static public final String HINDI = "hi";
-
-    /**
-     * SharedPreferences Key
-     */
-    private static final String LANGUAGE_KEY = "language_key";
-
-    /**
-     * set current pref locale
-     */
-    public static Context setLocale(Context mContext) {
-        return updateResources(mContext, getLanguagePref(mContext));
+    public static void onCreate(Context context, String defaultLanguage) {
+        String lang = getPersistedData(context, defaultLanguage);
+        setLocale(context, lang);
     }
 
-    /**
-     * Set new Locale with context
-     */
-    public static Context setNewLocale(Context mContext, @LocaleDef String language) {
-        setLanguagePref(mContext, language);
-        return updateResources(mContext, language);
+    public static String getLanguage(Context context) {
+        return getPersistedData(context, Locale.getDefault().getLanguage());
     }
 
-    public static void resetApp(Activity activity){
-        PackageManager pm = activity.getPackageManager();
-        Intent intent = pm.getLaunchIntentForPackage(activity.getPackageName());
-        activity.finishAffinity(); // Finishes all activities.
-        activity.startActivity(intent);    // Start the launch activity
-        activity.overridePendingTransition(0, 0);
+    public static void setLocale(Context context, String language) {
+        persist(context, language);
+        updateResources(context, language);
     }
 
-    /**
-     * Get saved Locale from SharedPreferences
-     *
-     * @param mContext current context
-     * @return current locale key by default return english locale
-     */
-    public static String getLanguagePref(Context mContext) {
-        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mPreferences.getString(LANGUAGE_KEY, ENGLISH);
+    private static String getPersistedData(Context context, String defaultLanguage) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(SELECTED_LANGUAGE, defaultLanguage);
     }
 
-    /**
-     * set pref key
-     */
-    private static void setLanguagePref(Context mContext, String localeKey) {
-        SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mPreferences.edit().putString(LANGUAGE_KEY, localeKey).apply();
+    private static void persist(Context context, String language) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(SELECTED_LANGUAGE, language);
+        editor.apply();
     }
 
-    /**
-     * update resource
-     */
-    public static Context updateResources(Context context, String language) {
+    private static void updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Resources res = context.getResources();
@@ -94,16 +79,40 @@ public class LocaleManager {
             config.locale = locale;
             res.updateConfiguration(config, res.getDisplayMetrics());
         }
-        return context;
+        //resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+
     }
 
-    /**
-     * get current locale
-     */
-    public static Locale getLocale(Resources res) {
-        Configuration config = res.getConfiguration();
-        return Build.VERSION.SDK_INT >= 24 ? config.getLocales().get(0) : config.locale;
+    public static void updateLocale(Context context,String lang) {
+        persist(context, lang);
+        Log.i("datadata_new_lang",lang);
+        String patern = "###.##"; //your pattern as per need
+
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
+            Locale locale=new Locale(lang);
+            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+            decimalFormat.applyPattern(patern);
+            Locale.setDefault(locale);
+            Configuration configuration=context.getResources().getConfiguration();
+            configuration.setLocale(locale);
+            context.getResources().updateConfiguration(configuration,context.getResources().getDisplayMetrics());
+        }else{
+            LocaleListCompat localeListCompat=LocaleListCompat.forLanguageTags(lang);
+            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(localeListCompat.get(0));
+            decimalFormat.applyPattern(patern);
+            Handler handler=new Handler(Looper.getMainLooper());
+            handler.post(() -> AppCompatDelegate.setApplicationLocales(localeListCompat));
+        }
+
+
     }
-
-
+    public static void resetApp(Activity activity){
+        PackageManager pm = activity.getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(activity.getPackageName());
+        activity.finishAffinity(); // Finishes all activities.
+        activity.startActivity(intent);    // Start the launch activity
+        activity.overridePendingTransition(0, 0);
+    }
 }

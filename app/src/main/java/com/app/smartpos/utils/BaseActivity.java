@@ -17,14 +17,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        LocaleManager.onCreate(this);
         super.onCreate(savedInstanceState);
         resetTitles();
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleManager.setLocale(base));
-    }
+
 
     protected void resetTitles() {
         try {
@@ -42,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     //for Android Android N
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        Locale locale = new Locale(LocaleManager.getLanguagePref(this));
+        Locale locale = new Locale(LocaleManager.getLanguage(this));
         Locale.setDefault(locale);
         overrideConfiguration.setLocale(locale);
         super.applyOverrideConfiguration(overrideConfiguration);

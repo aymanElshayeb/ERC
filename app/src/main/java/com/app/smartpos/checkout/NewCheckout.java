@@ -83,7 +83,7 @@ public class NewCheckout extends AppCompatActivity {
                             proceedOrder("", "CARD", "", totalTax, "0", code, ApprovalCode, Double.parseDouble(PurchaseAmount), 0);
 
                         } else if (resultStatus.equals("Declined")) {
-                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         if (statusCode.equals(Constant.REJECTED_STATUS_CODE))
@@ -155,10 +155,10 @@ public class NewCheckout extends AppCompatActivity {
                     Intent intent = device.pay((long) totalAmount);
                     launcher.launch(intent);
                 }catch (Exception e){
-                    Toast.makeText(this, "Card payment is offline please choose cash", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toasty.info(this, "Please select Payment Method",
+                Toasty.info(this, R.string.please_select_payment_method,
                         Toast.LENGTH_SHORT).show();
             }
         });

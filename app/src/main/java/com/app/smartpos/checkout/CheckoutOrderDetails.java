@@ -92,7 +92,7 @@ public class CheckoutOrderDetails extends AppCompatActivity {
             try {
                 device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax()+"", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
             }catch (Exception e){
-                Toast.makeText(this, "no printer found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });
 

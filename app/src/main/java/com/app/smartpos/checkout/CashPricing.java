@@ -43,7 +43,6 @@ public class CashPricing extends AppCompatActivity {
 
         totalAmountTv = findViewById(R.id.total_amount_tv);
         cashGivingTv = findViewById(R.id.cash_giving_tv);
-        TextView currencyTv = findViewById(R.id.currency_tv);
         changeTv = findViewById(R.id.change_tv);
         TextView payTv = findViewById(R.id.pay_tv);
         ImageView backIm = findViewById(R.id.back_im);
@@ -53,7 +52,8 @@ public class CashPricing extends AppCompatActivity {
         databaseAccess.open();
         currency = databaseAccess.getCurrency();
 
-        currencyTv.setText(currency);
+        changeTv.setMaxEms(7+currency.length());
+
         totalAmountTv.setText(Utils.trimLongDouble(totalAmount) + " " + currency);
 
         TextView num0 = findViewById(R.id.num_0);
@@ -83,7 +83,7 @@ public class CashPricing extends AppCompatActivity {
         del.setOnClickListener(view -> del());
 
         payTv.setOnClickListener(view -> {
-            double changeResult = Double.parseDouble(Utils.trimLongDouble(changeTv.getText().toString().split(" ")[0]));
+            //double changeResult = Double.parseDouble(Utils.trimLongDouble(changeTv.getText().toString().split(" ")[0]));
             double cashResult = Double.parseDouble(Utils.trimLongDouble(cashGivingTv.getText().toString().split(" ")[0]));
             if (cashResult >= Double.parseDouble(Utils.trimLongDouble(totalAmount))) {
                 Intent intent = new Intent();
@@ -95,7 +95,7 @@ public class CashPricing extends AppCompatActivity {
             }
         });
 
-        cashGivingTv.setText("0");
+        cashGivingTv.setText("0"+ " " + currency);
         change = 0;
         changeTv.setText(change + " " + currency);
 
@@ -104,7 +104,7 @@ public class CashPricing extends AppCompatActivity {
     }
 
     private void setNumber(String number) {
-        if (cashGivingTv.getText().toString().length() == 6) {
+        if (cashGivingTv.getText().toString().length() == 7+currency.length()) {
             return;
         }
         if (cash.equals("0")) {
@@ -117,7 +117,7 @@ public class CashPricing extends AppCompatActivity {
             number = "";
         }
         cash += number;
-        cashGivingTv.setText(cash);
+        cashGivingTv.setText(cash+ " " + currency);
         change = totalAmount - Double.parseDouble(cash);
         changeTv.setText(Utils.trimLongDouble(change) + " " + currency);
     }
@@ -125,11 +125,11 @@ public class CashPricing extends AppCompatActivity {
     private void del() {
         if (cash.length() <= 1) {
             cash = "";
-            cashGivingTv.setText("0");
+            cashGivingTv.setText("0"+ " " + currency);
             change = 0;
         } else {
-            cash = cash.substring(0, cash.length() - 1);
-            cashGivingTv.setText(cash);
+            cash = cash.substring(0, cash.length()- 1);
+            cashGivingTv.setText(cash+ " " + currency);
             change = totalAmount - Double.parseDouble(cash);
         }
 

@@ -1,7 +1,5 @@
 package com.app.smartpos;
 
-import static com.app.smartpos.utils.LocaleManager.setNewLocale;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -25,7 +23,6 @@ import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class NewHomeActivity extends BaseActivity {
 
@@ -33,7 +30,7 @@ public class NewHomeActivity extends BaseActivity {
     TextView currentShiftSarTv;
     String currency;
     private DatabaseAccess databaseAccess;
-    private HashMap<String, String>  configuration;
+    private HashMap<String, String> configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +61,7 @@ public class NewHomeActivity extends BaseActivity {
         databaseAccess.open();
         HashMap<String, String> shop = databaseAccess.getShopInformation();
         String shopLocation = String.valueOf(shop.get("shop_address"));
-         locationTv.setText(shopLocation);
+        locationTv.setText(shopLocation);
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
@@ -83,7 +80,7 @@ public class NewHomeActivity extends BaseActivity {
         });
 
         billsLl.setOnClickListener(view -> {
-            startActivity(new Intent(this, QuickBill.class).putExtra("type","quickBill"));
+            startActivity(new Intent(this, QuickBill.class).putExtra("type", "quickBill"));
         });
 
 
@@ -96,17 +93,16 @@ public class NewHomeActivity extends BaseActivity {
         });
 
         endOfShiftLl.setOnClickListener(v -> {
-            setNewLocale(this, LocaleManager.ARABIC);
             startActivity(new Intent(this, EndShiftStep1.class));
         });
 
         changeLangTv.setOnClickListener(v -> {
-            Locale locale=LocaleManager.getLocale(getResources());
-            LocaleManager.setNewLocale(this, locale.getLanguage().equals("en")?LocaleManager.ARABIC:LocaleManager.ENGLISH);
+            String language = LocaleManager.getLanguage(this);
+            LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
             LocaleManager.resetApp(this);
         });
 
-         databaseAccess.open();
+        databaseAccess.open();
 
         currency = databaseAccess.getCurrency();
         currentShiftSarTv.setText(currency);

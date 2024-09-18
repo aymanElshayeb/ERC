@@ -147,46 +147,7 @@ public class HomeActivity extends BaseActivity {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-
-
-
-
-            case R.id.local_french:
-                setNewLocale(this, LocaleManager.FRENCH);
-                return true;
-
-
-            case R.id.local_english:
-                setNewLocale(this, LocaleManager.ENGLISH);
-                return true;
-
-
-            case R.id.local_bangla:
-                setNewLocale(this, LocaleManager.BANGLA);
-                return true;
-
-            case R.id.local_spanish:
-                setNewLocale(this, LocaleManager.SPANISH);
-                return true;
-
-            case R.id.local_hindi:
-                setNewLocale(this, LocaleManager.HINDI);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    private void setNewLocale(AppCompatActivity mContext, @LocaleManager.LocaleDef String language) {
-        LocaleManager.setNewLocale(this, language);
-        Intent intent = mContext.getIntent();
-        startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
+   
 
     
 
