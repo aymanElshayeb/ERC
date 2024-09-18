@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">ECR</string>
+
+    <string name="text_french" translatable="false">French</string>
+    <string name="text_english" translatable="false">English</string>
+    <string name="text_bangla" translatable="false">বাংলা</string>
+    <string name="text_spanish" translatable="false">Spanish</string>
+    <string name="text_hindi" translatable="false">हिन्दी</string>
+
+    <!--استبدل معرف تطبيق adMob الخاص بك هنا -->
+    <string name="admob_application_id" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+
+    <!--استبدل معرف إعلانات بانر adMob الخاص بك هنا -->
+    <string name="admob_banner_ads_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+
+    <!--استبدل معرف إعلانات AdMob البينية هنا -->
+    <string name="admob_interstitial_ads_id" translatable="false">"ca-app-pub-3940256099942544/1033173712"</string>
+
+    <string name="action_settings">الإعدادات</string>
+    <string name="products">المنتجات</string>
+    <string name="suppliers">الموردون</string>
+    <string name="customers">العملاء</string>
+    <string name="pos">نقاط البيع</string>
+    <string name="expense">المصروفات</string>
+    <string name="report">التقرير</string>
+    <string name="all_orders">جميع الطلبات</string>
+    <string name="orders">الطلبات</string>
+    <string name="all_sales">جميع المبيعات</string>
+    <string name="daily">يومي</string>
+    <string name="monthly">شهري</string>
+    <string name="yearly">سنوي</string>
+    <string name="customer_name">اسم العميل</string>
+    <string name="customer_cell">رقم العميل الخلوي</string>
+    <string name="customer_email">بريد العميل الإلكتروني</string>
+    <string name="customer_address">العميل العنوان</string>
+    <string name="add_customer">إضافة عميل</string>
+    <string name="enter_customer_name">إدخال اسم العميل</string>
+    <string name="enter_customer_cell">إدخال خلية العميل</string>
+    <string name="enter_customer_address">إدخال عنوان العميل</string>
+    <string name="customer_successfully_added">تمت إضافة العميل بنجاح</string>
+    <string name="hello">مرحبًا</string>
+    <string name="sync">مزامنة</string>
+    <string name="current_shift_sales">مبيعات الوردية الحالية</string>
+    <string name="sar">SAR</string>
+    <string name="items">العناصر</string>
+    <string name="quick_bills">الفواتير السريعة</string>
+    <string name="refund">استرداد الأموال</string>
+    <string name="end_of_shift">نهاية الوردية</string>
+    <string name="confirmation_refund">تأكيد استرداد الأموال</string>
+    <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد استرداد أموال هذا الطلب؟</string>
+    <string name="items_successfully_refunded">تم استرداد أموال العناصر بنجاح</string>
+    <string name="cutom_item_already_added">تمت إضافة عنصر مخصص بالفعل</string>
+
+    <string name="cart">عربة التسوق</string>
+    <string name="order_summary">ملخص الطلب</string>
+    <string name="payment_summary">ملخص الدفع</string>
+    <string name="vat_exclusive">(باستثناء ضريبة القيمة المضافة)</string>
+    <string name="total_vat">إجمالي ضريبة القيمة المضافة</string>
+    <string name="add_items">إضافة عناصر</string>
+    <string name="confirm">تأكيد</string>
+    <string name="confirm_with_error">تأكيد باستخدام خطأ</string>
+
+    <string name="checkout">الدفع</string>
+    <string name="cash">النقد</string>
+    <string name="cash_details">تفاصيل النقد</string>
+    <string name="cash_given">النقد الممنوح</string>
+    <string name="change">تغيير</string>
+    <string name="pay">الدفع</string>
+    <string name="cash_given_must_be_equal_or_more_than_total_amount">يجب أن يكون النقد الممنوح أكبر من أو يساوي المبلغ الإجمالي</string>
+
+    <string name="all_customer">جميع العملاء</string>
+    <string name="no_customer_found">لم يتم العثور على أي عميل!</string>
+    <string name="all_suppliers">جميع الموردين</string>
+    <string name="no_suppliers_found">لم يتم العثور على أي موردين!</string>
+
+    <string name="add_suppliers">إضافة الموردون</string>
+    <string name="enter_suppliers_name">أدخل اسم المورد</string>
+    <string name="enter_suppliers_contact_person_name">أدخل اسم جهة الاتصال للموردين</string>
+    <string name="enter_suppliers_cell">أدخل خلية المورد</string>
+    <string name="enter_valid_email">أدخل بريدًا إلكترونيًا صالحًا</string>
+    <string name="enter_suppliers_address">أدخل عنوان المورد</string>
+    <string name="suppliers_successfully_added">تمت إضافة الموردين بنجاح</string>
+    <string name="failed">فشل</string>
+
+    <string name="product_name_cannot_be_empty">لا يمكن أن يكون اسم المنتج فارغًا!</string>
+    <string name="product_category_cannot_be_empty">لا يمكن أن تكون فئة المنتج فارغة!</string>
+    <string name="product_sell_price_cannot_be_empty">لا يمكن أن يكون سعر بيع المنتج فارغًا!</string>
+    <string name="product_stock_cannot_be_empty">لا يمكن أن يكون مخزون المنتج فارغًا!</string>
+    <string name="product_supplier_cannot_be_empty">لا يمكن أن يكون مورد المنتج فارغًا!</string>
+    <string name="product_weight_cannot_be_empty">لا يمكن أن يكون وزن المنتج فارغًا!</string>
+    <string name="product_successfully_added">تمت إضافة المنتج بنجاح</string>
+    <string name="something_went_wrong">حدث خطأ ما</string>
+
+    <string name="add_product">إضافة منتج</string>
+    <string name="product_details">تفاصيل المنتج</string>
+    <string name="product_code">كود المنتج</string>
+    <string name="product_description">وصف المنتج</string>
+    <string name="unit_product_sell_price">سعر بيع المنتج للوحدة</string>
+    <string name="product_sell_price">سعر بيع المنتج</string>
+    <string name="product_stock">مخزون المنتج</string>
+    <string name="product_weight">وزن المنتج</string>
+    <string name="select_product_weight_unit">حدد وحدة وزن المنتج</string>
+    <string name="product_weight_unit">وحدة وزن المنتج</string>
+    <string name="select_supplier">اختر المورد</string>
+    <string name="product_supplier">مورد المنتج</string>
+    <string name="choose_product_image">اختر صورة المنتج</string>
+    <string name="database_backup">مزامنة قاعدة البيانات</string>
+    <string name="database_import">استيراد قاعدة البيانات</string>
+
+    <string name="year_2020">عام 2020</string>
+    <string name="total_sales">إجمالي المبيعات: </string>
+    <string name="search_here">ابحث هنا. . . .</string>
+    <string name="no_order_found">لم يتم العثور على طلب</string>
+    <string name="no_product_found">لم يتم العثور على منتج</string>
+    <string name="submit_order">إرسال الطلب</string>
+    <string name="all_sales_report">تقرير جميع المبيعات</string>
+    <string name="all_expense_report">تقرير جميع النفقات</string>
+    <string name="monthly_sales_graph">رسم بياني للمبيعات الشهرية</string>
+    <string name="monthly_expense_graph">رسم بياني للنفقات الشهرية</string>
+    <string name="no_data_found">لم يتم العثور على بيانات</string>
+
+    <string name="shop_information">معلومات المتجر</string>
+    <string name="data_backup">مزامنة البيانات</string>
+    <string name="end_shift">إنهاء التحول</string>
+    <string name="shop_name">المتجر الاسم</string>
+    <string name="shop_contact_number">رقم اتصال المتجر</string>
+    <string name="shop_email">بريد المتجر الإلكتروني</string>
+    <string name="shop_address">عنوان المتجر</string>
+    <string name="currency_symbol">رمز العملة</string>
+    <string name="shop_currency">عملة المتجر</string>
+    <string name="edit">تعديل</string>
+    <string name="update_information">تحديث المعلومات</string>
+    <string name="product_category">فئة المنتج</string>
+    <string name="cancel">إلغاء</string>
+    <string name="payment">الدفع</string>
+    <string name="submit">إرسال</string>
+    <string name="add_to_cart">إضافة إلى عربة التسوق</string>
+    <string name="product_status">حالة المنتج</string>
+    <string name="product_name">اسم المنتج</string>
+    <string name="arabic_product_name">اسم المنتج باللغة العربية</string>
+    <string name="product_uuid">معرف المنتج العالمي</string>
+    <string name="weight">الوزن:</string>
+    <string name="price">السعر</string>
+
+    <string name="unit_product_buy_price">سعر شراء المنتج للوحدة </string>
+    <string name="supplier_name">اسم المورد</string>
+    <string name="supplier_contact_person">شخص الاتصال بالمورد</string>
+
+    <string name="supplier_cell">رقم المورد</string>
+
+    <string name="supplier_email">بريد المورد الإلكتروني</string>
+
+    <string name="supplier_address">عنوان المورد</string>
+
+    <string name="add_supplier">إضافة مورد</string>
+    <string name="monthly_expense_in_graph">المصروفات الشهرية في الرسم البياني</string>
+    <string name="year">السنة</string>
+    <string name="monthly_expense_report">تقرير المصروفات الشهرية</string>
+    <string name="total_expense">إجمالي المصروفات: </string>
+    <string name="monthly_sales_report">تقرير المبيعات الشهرية</string>
+    <string name="all_expense">كل المصروفات</string>
+    <string name="shop_name_cannot_be_empty">لا يمكن أن يكون اسم المتجر فارغًا</string>
+    <string name="shop_contact_cannot_be_empty">لا يمكن أن يكون جهة اتصال المتجر فارغة</string>
+    <string name="shop_address_cannot_be_empty">لا يمكن أن يكون عنوان المتجر فارغًا</string>
+    <string name="shop_currency_cannot_be_empty">عملة المتجر لا يمكن أن يكون فارغًا</string>
+    <string name="shop_information_updated_successfully">تم تحديث معلومات المتجر بنجاح</string>
+    <string name="enter_local_database_backup_name">أدخل اسم مزامنة قاعدة البيانات المحلية</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="unable_to_create_directory_retry">تعذر إنشاء الدليل. أعد المحاولة</string>
+    <string name="database_restore">استعادة قاعدة البيانات:</string>
+    <string name="unable_to_restore_retry">تعذر الاستعادة. أعد المحاولة</string>
+    <string name="backup_folder_not_present">مجلد المزامنة غير موجود</string>
+    <string name="all_product">كل المنتجات</string>
+    <string name="product_cart">عربة المنتجات</string>
+    <string name="no_product_in_cart">لا يوجد منتج في عربة التسوق</string>
+    <string name="order_done_successful">تم تنفيذ الطلب بنجاح</string>
+    <string name="select_payment_method">اختر طريقة الدفع</string>
+    <string name="select_order_type">اختر نوع الطلب</string>
+    <string name="select_customer">اختر العميل</string>
+    <string name="order_history">سجل الطلبات</string>
+    <string name="order_details">تفاصيل الطلب</string>
+    <string name="invoice">الفاتورة</string>
+    <string name="total_price">السعر الإجمالي: </string>
+    <string name="add_expense">إضافة مصروف</string>
+    <string name="hi_welcome">مرحبا! مرحبًا</string>
+    <string name="product_removed_from_cart">تمت إزالة المنتج من عربة التسوق</string>
+    <string name="backup_completed_successfully">تمت عملية المزامنة بنجاح</string>
+    <string name="unable_to_backup_database_retry">تعذر مزامنة قاعدة البيانات. أعد المحاولة</string>
+    <string name="database_Import_completed">تم استيراد قاعدة البيانات</string>
+    <string name="unable_to_import_database_retry">تعذر استيراد قاعدة البيانات. إعادة المحاولة</string>
+    <string name="want_to_delete_customer">هل تريد حذف العميل؟</string>
+    <string name="customer_deleted">تم حذف العميل</string>
+    <string name="note">ملاحظة: </string>
+    <string name="note_">ملاحظة</string>
+    <string name="add_notes_for_shift">إضافة ملاحظات قبل انتهاء المناوبة (اختياري)</string>
+    <string name="done">تم</string>
+    <string name="want_to_delete_expense">هل تريد حذف النفقات؟</string>
+    <string name="expense_deleted">تم حذف النفقات</string>
+    <string name="order_id">معرف الطلب:</string>
+    <string name="payment_method">طريقة الدفع:</string>
+    <string name="order_type">نوع الطلب </string>
+    <string name="want_to_delete_supplier">هل تريد حذف المورد؟</string>
+    <string name="supplier_deleted">تم حذف المورد</string>
+    <string name="quantity">الكمية:</string>
+    <string name="date">التاريخ:</string>
+    <string name="supplier">المورد: </string>
+    <string name="buy_price">سعر الشراء:</string>
+    <string name="sell_price">سعر البيع:</string>
+    <string name="want_to_delete_product">هل تريد حذف المنتج؟</string>
+    <string name="product_deleted">تم حذف المنتج</string>
+    <string name="product_added_to_cart">تم إضافة المنتج إلى سلة التسوق</string>
+    <string name="product_already_added_to_cart">تم إضافة المنتج بالفعل إلى سلة التسوق</string>
+    <string name="product_added_to_cart_failed_try_again">فشلت إضافة المنتج إلى سلة التسوق! حاول مرة أخرى</string>
+    <string name="press_once_again_to_exit">اضغط مرة أخرى للخروج!</string>
+    <string name="type_something_to_search">اكتب شيئًا للبحث عنه</string>
+    <string name="expense_name_cannot_be_empty">لا يمكن أن يكون اسم المصروفات فارغًا</string>
+    <string name="expense_amount_cannot_be_empty">لا يمكن أن يكون مبلغ المصروفات فارغًا</string>
+    <string name="expense_successfully_added">تمت إضافة المصروفات بنجاح</string>
+
+    <string name="qr_barcode_scanner">QR أو ماسح الباركود</string>
+    <string name="camera_permission">مطلوب إذن الكاميرا</string>
+    <string name="export_data_to_excel">تصدير البيانات إلى Excel</string>
+    <string name="import_from_excel">استيراد من Excel</string>
+    <string name="data">البيانات</string>
+    <string name="export_all_data_to_excel">تصدير كل البيانات إلى Excel</string>
+    <string name="data_export_fail">فشل تصدير البيانات</string>
+    <string name="data_successfully_exported">تم تصدير البيانات بنجاح</string>
+    <string name="data_exporting_please_wait">جاري تصدير البيانات. يرجى الانتظار. . .</string>
+    <string name="no_file_found">لم يتم العثور على ملف</string>
+    <string name="data_importing_please_wait">جاري استيراد البيانات. يرجى الانتظار. . .</string>
+    <string name="data_successfully_imported">تم استيراد البيانات بنجاح</string>
+    <string name="data_import_fail">فشل استيراد البيانات</string>
+    <string name="error">خطأ</string>
+    <string name="order_receipt">إيصال الطلب</string>
+    <string name="print">طباعة</string>
+    <string name="share">مشاركة</string>
+    <string name="open_pdf">فتح ملف PDF</string>
+    <string name="open_with_external_pdf_reader">فتح باستخدام قارئ PDF خارجي</string>
+    <string name="generate_pdf_receipt">إيصال PDF</string>
+    <string name="edit_customer">تحرير العميل</string>
+    <string name="edit_suppliers">تحرير الموردين</string>
+    <string name="expense_name">اسم المصروفات</string>
+    <string name="expense_note_if_any">ملاحظة المصروفات (إن وجدت)</string>
+    <string name="expense_note">ملاحظة المصروفات</string>
+    <string name="expense_amount">مبلغ المصروفات</string>
+    <string name="expense_date">تاريخ المصروفات</string>
+    <string name="expense_time">وقت المصروفات</string>
+    <string name="edit_expense">تحرير المصروفات</string>
+    <string name="update_successfully">تحديث بنجاح</string>
+    <string name="categories">الفئات</string>
+    <string name="category_name">اسم الفئة</string>
+    <string name="category_deleted">تم حذف الفئة</string>
+    <string name="want_to_delete_category">هل تريد حذف الفئة؟</string>
+    <string name="add_category">إضافة فئة</string>
+    <string name="enter_category_name">أدخل اسم الفئة</string>
+    <string name="category_added_successfully">تمت إضافة الفئة بنجاح</string>
+    <string name="update_category">تحديث الفئة</string>
+    <string name="category_updated">تم تحديث الفئة</string>
+    <string name="edit_category">تحرير الفئة</string>
+    <string name="payment_method_deleted">تم حذف طريقة الدفع</string>
+    <string name="want_to_delete">هل تريد الحذف؟</string>
+    <string name="all_payment_method">جميع طرق الدفع</string>
+    <string name="payment_method_name">اسم طريقة الدفع</string>
+    <string name="add_payment_method">إضافة طريقة دفع</string>
+    <string name="enter_payment_method_name">أدخل اسم طريقة الدفع</string>
+    <string name="successfully_added">تمت الإضافة بنجاح</string>
+    <string name="update_payment_method">تحديث طريقة الدفع</string>
+    <string name="successfully_updated">تم التحديث بنجاح</string>
+    <string name="payment_methods">طرق الدفع</string>
+    <string name="tax_in_percentage">الضريبة كنسبة مئوية (%)</string>
+    <string name="sub_total">الإجمالي الفرعي</string>
+    <string name="total_tax">إجمالي الضريبة</string>
+    <string name="discount">الخصم</string>
+    <string name="discount_cant_be_greater_than_total_price">لا يمكن أن يكون الخصم أكبر من السعر الإجمالي</string>
+    <string name="tax">الضريبة</string>
+    <string name="stock">المخزون</string>
+    <string name="stock_is_low_please_update_stock">المخزون هو منخفض. يرجى تحديث المخزون</string>
+    <string name="available_stock">المخزون المتوفر</string>
+    <string name="tatal_discount">إجمالي الخصم</string>
+    <string name="net_sales">صافي المبيعات</string>
+    <string name="total_discount">إجمالي الخصم</string>
+
+    <string name="connect_fail">خطأ في اتصال الطابعة</string>
+    <string name="connect_lost">غير متصل</string>
+    <string name="not_connected">لم يتم إنشاء الاتصال</string>
+    <string name="title_paired_devices">الأجهزة المقترنة</string>
+    <string name="title_other_devices">أجهزة أخرى</string>
+    <string name="button_scan">أجهزة المسح الضوئي</string>
+    <string name="none_paired">لم يتم العثور على أي جهاز</string>
+    <string name="scanning">جاري البحث&#8230;</string>
+    <string name="select_device">حدد الجهاز</string>
+    <string name="none_found">لم يتم العثور على أي جهاز</string>
+    <string name="connected">الاتصال بـ</string>
+    <string name="bluetooth_not_available">البلوتوث غير متاح</string>
+    <string name="turnon_bluetooth">تشغيل البلوتوث</string>
+    <string name="pic_load_error">خطأ في تحميل الصورة</string>
+    <string name="print_succ">تمت الطباعة بنجاح</string>
+    <string name="print_error">خطأ في الطباعة</string>
+
+    <string name="reset">إعادة التعيين</string>
+    <string name="change_order_status">تغيير حالة الطلب</string>
+    <string name="please_change_order_status_to_complete_or_cancel">يرجى تغيير حالة الطلب لإكماله أو إلغائه. في حالة الإلغاء، لن يؤثر ذلك على المخزون</string>
+    <string name="cancel_order">إلغاء الطلب</string>
+    <string name="order_completed">تم إكمال الطلب</string>
+    <string name="order_updated">تم تحديث الطلب</string>
+    <string name="backup_to_google_drive">المزامنة مع Google Drive/الآخرين</string>
+    <string name="order_status">حالة الطلب</string>
+    <string name="select_year">حدد السنة</string>
+    <string name="order_type_deleted">تم حذف نوع الطلب</string>
+    <string name="update_order_type">تحديث نوع الطلب</string>
+    <string name="order_type_name">اسم نوع الطلب</string>
+    <string name="unit">الوحدة</string>
+    <string name="unit_deleted">تم حذف الوحدة</string>
+    <string name="weight_unit_name">اسم وحدة الوزن</string>
+    <string name="update">تحديث</string>
+    <string name="update_unit">تحديث الوحدة</string>
+    <string name="add_order_type">إضافة نوع الطلب</string>
+    <string name="add_unit">إضافة وحدة</string>
+
+    <string name="welcome_to_qaema">مرحبًا بك في qaema ECR</string>
+    <string name="Please_enter_your_login_info">يرجى إدخال معلومات تسجيل الدخول الخاصة بك</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="forget_password">نسيت كلمة المرور؟</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="wrong_username_password">اسم المستخدم أو كلمة المرور خاطئان</string>
+    <string name="wrong_email_password">بريد إلكتروني أو كلمة مرور خاطئة</string>
+
+    <string name="synchronization">المزامنة</string>
+    <string name="confirm_synchronization">ستقوم بمزامنة بياناتك مع الخادم</string>
+
+    <string name="admin_email">اسم مستخدم المسؤول</string>
+    <string name="admin_password">كلمة مرور المسؤول</string>
+    <string name="download_data">تنزيل البيانات</string>
+
+    <string name="end_shift_report">تقرير نهاية الوردية</string>
+    <string name="end_my_shift">إنهاء ورديتي</string>
+    <string name="print_z_report">طباعة تقرير Z</string>
+    <string name="shift_summary_details">تفاصيل ملخص الوردية</string>
+    <string name="total_cash">إجمالي النقد</string>
+    <string name="total_card_amount">إجمالي مبلغ البطاقة</string>
+    <string name="number_of_sales">عدد المبيعات</string>
+    <string name="wrong_cash_data">يبدو أن هناك بعض بيانات النقد الخاطئة\nهل أنت متأكد من أنك تريد إنهاء الوردية؟</string>
+    <string name="real">حقيقي</string>
+    <string name="input">إدخال</string>
+    <string name="diff">اختلاف</string>
+    <string name="total_amount">إجمالي المبلغ</string>
+    <string name="total_transactions_number">إجمالي عدد المعاملات</string>
+    <string name="total_sales_transactions">إجمالي معاملات المبيعات</string>
+    <string name="total_refunds">إجمالي معاملات الاسترداد</string>
+    <string name="total_cash_amount">إجمالي مبلغ المبيعات</string>
+    <string name="total_refunds_amount">إجمالي مبلغ المبالغ المستردة</string>
+    <string name="start_cash">بدء إيداع النقود في الخزينة</string>
+    <string name="start_shift_date">تاريخ بدء الوردية</string>
+    <string name="end_shift_date">تاريخ انتهاء الوردية</string>
+    <string name="user_id">معرف المستخدم</string>
+    <string name="user_mail">بريد المستخدم</string>
+    <string name="shift_id">معرف الوردية</string>
+    <string name="shift_sequence">تسلسل الوردية</string>
+    <string name="leave_cash">ترك النقود للوردية التالية</string>
+
+    <string name="profile">الملف الشخصي</string>
+    <string name="mobile">الجوال</string>
+    <string name="app_settings">إعدادات التطبيق</string>
+    <string name="language">اللغة</string>
+    <string name="need_a_help">هل تحتاج إلى مساعدة؟</string>
+    <string name="contact_us_on">اتصل بنا على</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <string name="search">بحث</string>
+    <string name="view_cart">عرض عربة التسوق</string>
+    <string name="clear">مسح</string>
+
+    <string name="receipt_details">تفاصيل الإيصال</string>
+    <string name="all_receipts">جميع الإيصالات</string>
+    <string name="receipt_number">رقم الإيصال</string>
+    <string name="receipt_number_">رقم الإيصال:</string>
+    <string name="view_receipt">عرض الإيصال</string>
+    <string name="view_all_receipt">عرض جميع الإيصالات</string>
+    <string name="or">OR</string>
+    <string name="card">Card</string>
+    <string name="refunded">Refunded</string>
+    <string name="view">View</string>
+    <string name="select_which_item_you_want_to_refund">حدد العنصر الذي تريد استرداده</string>
+    <string name="refund_total">إجمالي المبلغ المسترد</string>
+    <string name="total_qty">إجمالي الكمية:</string>
+    <string name="how_many_items_want_to_refund">كم عدد العناصر التي تريد استردادها؟</string>
+
+    <string name="registration">التسجيل</string>
+    <string name="merchant_id">معرف التاجر</string>
+    <string name="register">التسجيل</string>
+    <string name="demo">العرض التجريبي</string>
+    <string name="user_name_empty">حقل اسم المستخدم فارغ</string>
+    <string name="password_empty">حقل كلمة المرور فارغ</string>
+    <string name="merchant_empty">حقل معرف التاجر فارغ</string>
+    <string name="leave_cash_empty">يرجى إضافة أموال نقدية للخزنة</string>
+
+    <string name="options">الخيارات</string>
+    <string name="custom_items">عنصر مخصص</string>
+    <string name="clear_all_items">مسح جميع العناصر</string>
+
+    <string name="confirmation_for_ending_your_shift">هل تريد تأكيد إنهاء ورديتك؟</string>
+    <string name="confirmation_for_ending_your_shift_desc">هل أنت متأكد من أنك تريد إنهاء ورديتك الحالية وإرسال التفاصيل؟</string>
+
+    <string name="have_a_good_day">أتمنى لك يومًا طيبًا!</string>
+    <string name="you_will_be_logged_out_in">سيتم تسجيل خروجك in</string>
+    <string name="seconds">ثواني</string>
+    <string name="second">ثانية</string>
+
+    <string name="payment_success">نجاح الدفع</string>
+
+    <string name="print_receipt">طباعة الإيصال</string>
+    <string name="no_receipt">لا يوجد إيصال</string>
+    <string name="close">إغلاق</string>
+
+    <string name="amount">المبلغ</string>
+    <string name="custom_item">عنصر مخصص</string>
+    <string name="description">الوصف</string>
+    <string name="optional">(اختياري)</string>
+    <string name="amount_must_be_more_than_zero">يجب أن يكون المبلغ أكبر من الصفر</string>
+    <string name="please_add_decription">الرجاء إضافة وصف</string>
+
+    <string name="item_not_found">لم يتم العثور على العنصر</string>
+
+</resources>
