@@ -40,6 +40,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
@@ -191,7 +192,8 @@ public class RegistrationDialog extends DialogFragment {
             showMessage("Registration Successful");
             SharedPrefUtils.setIsRegistered(requireContext(),true);
             SharedPrefUtils.setStartDateTime(requireContext());
-
+            byte[] bytes=Hasher.encryptMsg(usernameEt.getText().toString().trim()+"-"+passwordEt.getText().toString().trim());
+            SharedPrefUtils.setAuthData(requireContext(),bytes);
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure

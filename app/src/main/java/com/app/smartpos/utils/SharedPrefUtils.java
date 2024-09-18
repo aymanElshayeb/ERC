@@ -9,6 +9,8 @@ import com.app.smartpos.R;
 
 import java.util.Date;
 
+import kotlin.text.Charsets;
+
 public class SharedPrefUtils {
 
     public static boolean isRegistered(Context context){
@@ -53,15 +55,6 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_email","");
     }
 
-    public static String getAuthEmail(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
-        return sharedPreferences.getString("auth_email","");
-    }
-
-    public static String getAuthPassword(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
-        return sharedPreferences.getString("auth_password","");
-    }
     public static String getUserId(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_id","");
@@ -71,14 +64,14 @@ public class SharedPrefUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
         editor.putString("user_name", userName).commit();
     }
-    public static void setAuthEmail(Context context,String email){
-        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("auth_email", email).commit();
-    }
 
-    public static void setAuthPasword(Context context,String password){
+    public static byte[] getAuthData(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("auth_data","").getBytes(Charsets.ISO_8859_1);
+    }
+    public static void setAuthData(Context context,byte[] data){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("auth_password", password).commit();
+        editor.putString("auth_data", new String(data, Charsets.ISO_8859_1)).commit();
     }
 
     public static void setUserId(Context context,String userID){

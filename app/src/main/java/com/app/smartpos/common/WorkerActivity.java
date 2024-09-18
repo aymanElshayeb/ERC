@@ -6,7 +6,6 @@ import static com.app.smartpos.Constant.LAST_SYNC_URL;
 import static com.app.smartpos.Constant.LOGIN_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
-import static com.app.smartpos.utils.SharedPrefUtils.getAuthEmail;
 
 import android.app.Activity;
 import android.os.Build;
@@ -30,6 +29,7 @@ import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
 import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -113,11 +113,12 @@ public class WorkerActivity extends AppCompatActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
+        String authData= Hasher.decryptMsg(SharedPrefUtils.getAuthData(this));
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", SharedPrefUtils.getAuthEmail(this)).
-                putString("password", SharedPrefUtils.getAuthPassword(this)).
+                putString("email", authData.split("-")[0]).
+                putString("password", authData.split("-")[1]).
                 build();
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
@@ -171,11 +172,12 @@ public class WorkerActivity extends AppCompatActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
+        String authData= Hasher.decryptMsg(SharedPrefUtils.getAuthData(this));
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", SharedPrefUtils.getAuthEmail(this)).
-                putString("password", SharedPrefUtils.getAuthPassword(this)).
+                putString("email", authData.split("-")[0]).
+                putString("password", authData.split("-")[1]).
                 build();
 
         Data lastSync = null;
