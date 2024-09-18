@@ -220,7 +220,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Card types breakdown")));
 
         printLine();
-        double totalCard = 0.0;
+        double totalCard = 0.00;
         for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()) {
             if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")) {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
@@ -243,7 +243,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Payment details")));
 
         printLine();
-        double totalPayments = 0.0;
+        double totalPayments = 0.00;
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total cash"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
@@ -342,7 +342,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.00"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -370,7 +370,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTax(double tax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? Utils.trimLongDouble(tax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? Utils.trimLongDouble(tax) : "0.00"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -378,7 +378,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printDiscount(String discount) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? Utils.trimLongDouble(discount) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? Utils.trimLongDouble(discount) : "0.00"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -386,7 +386,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.0"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.00"));
         newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -455,7 +455,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
 
     private String zeroChecker(String valueToBePrinted) {
-        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.0") ? "0" : valueToBePrinted;
+        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.00") ? "0" : valueToBePrinted;
     }
 
     private void printLine() {

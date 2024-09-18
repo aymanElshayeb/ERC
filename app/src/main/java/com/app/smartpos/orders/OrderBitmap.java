@@ -171,7 +171,7 @@ public class OrderBitmap extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Card types breakdown")));
 
         printLine();
-        double totalCard = 0.0;
+        double totalCard = 0.00;
         for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()) {
             if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")) {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
@@ -194,7 +194,7 @@ public class OrderBitmap extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Payment details")));
 
         printLine();
-        double totalPayments = 0.0;
+        double totalPayments = 0.00;
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total cash"));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
@@ -405,7 +405,7 @@ public class OrderBitmap extends BaseActivity {
     }
 
     private String zeroChecker(String valueToBePrinted) {
-        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.0") ? "0" : valueToBePrinted;
+        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.00") ? "0" : valueToBePrinted;
     }
 
     private void printLine() {

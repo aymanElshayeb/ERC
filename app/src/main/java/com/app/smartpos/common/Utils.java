@@ -16,9 +16,9 @@ public class Utils {
 
         DecimalFormat f;
         f = new DecimalFormat("#.00");
-        String result=value == 0 ? "0.0" : f.format(value);
-        if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
-            result = "0.0";
+        String result=value == 0 ? "0.00" : f.format(value);
+        if(result.equals(".00") || result.equals("-.00") || result.equals("0.00") || result.equals("-0.00")){
+            result = "0.00";
         }
         if(result.startsWith(".")){
             result="0"+result;
@@ -30,9 +30,9 @@ public class Utils {
         double doubleValue=Double.parseDouble(value);
         DecimalFormat f;
         f = new DecimalFormat("#.00");
-        String result=value.equals("0") ? "0.0" : f.format(doubleValue);
-        if(result.equals(".00") || result.equals("-.00") || result.equals("0.0") || result.equals("-0.0")){
-            result = "0.0";
+        String result=value.equals("0") ? "0.00" : f.format(doubleValue);
+        if(result.equals(".00") || result.equals("-.00") || result.equals("0.00") || result.equals("-0.00")){
+            result = "0.00";
         }
         if(result.startsWith(".")){
             result="0"+result;

@@ -177,7 +177,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printCardTypesBreakdown(HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Card types breakdown");
         printLine();
-        double totalCard = 0.0;
+        double totalCard = 0.00;
         for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()){
             if(!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")){
                 mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.LEFT_ALIGNED,true), shiftsCardTypeCalculations.getKey(), zeroChecker(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal())));
@@ -191,7 +191,7 @@ public class UrovoPrinter extends BaseActivity {
     private void printPaymentDetails(double totalCash, double totalCard) {
         mPrintManager.addText(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true),"Payment details");
         printLine();
-        double totalPayments = 0.0;
+        double totalPayments = 0.00;
         bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText("Total cash"));
         bitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
@@ -252,7 +252,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTotalIncludingTax(double priceAfterTax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.0"));
+        bitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.00"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         printLine();
@@ -260,7 +260,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTax(String tax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?Utils.trimLongDouble(Double.parseDouble(tax)) : "0.0"));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(tax) != 0 ?Utils.trimLongDouble(Double.parseDouble(tax)) : "0.00"));
         bitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         printLine();
@@ -268,7 +268,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printDiscount(String discount) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?Utils.trimLongDouble(Double.parseDouble(discount)) : "0.0"));
+        bitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ?Utils.trimLongDouble(Double.parseDouble(discount)) : "0.00"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,70),0);
         printLine();
@@ -276,7 +276,7 @@ public class UrovoPrinter extends BaseActivity {
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         bitmaps = new ArrayList<>();
-        bitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.0"));
+        bitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.00"));
         bitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
         mPrintManager.addBitmap(PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,40),0);
         printLine();
@@ -298,7 +298,7 @@ public class UrovoPrinter extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             bitmaps = new ArrayList<>();
-            String total=productTotalPrice==0?"0.0":Utils.trimLongDouble(productTotalPrice);
+            String total=productTotalPrice==0?"0.00":Utils.trimLongDouble(productTotalPrice);
             bitmaps.add(PrintingHelper.createBitmapFromText(total));
             bitmaps.add(PrintingHelper.createBitmapFromText(price));
             bitmaps.add(PrintingHelper.createBitmapFromText(qty));
@@ -345,6 +345,6 @@ public class UrovoPrinter extends BaseActivity {
     }
 
     private String zeroChecker(String valueToBePrinted){
-        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.0")? "0" : valueToBePrinted;
+        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.00")? "0" : valueToBePrinted;
     }
 }
