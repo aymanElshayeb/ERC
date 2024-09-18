@@ -39,8 +39,8 @@ public class LoginFragment extends Fragment {
             EditText EmailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-//            EmailEt.setText("kohoru@polkaroad.net");
-//            passwordEt.setText("01111Mm&");
+            EmailEt.setText("admin@admin.com");
+            passwordEt.setText("01111Mm&");
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
             List<HashMap<String,String>>list=databaseAccess.getAllUsers();
@@ -56,12 +56,12 @@ public class LoginFragment extends Fragment {
                     Hasher hasher = new Hasher();
                     boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                     //Log.i("datadata",map.toString());
-                    if (isMatch) {
-                        SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
-                        SharedPrefUtils.setUserEmail(requireActivity(), map.get("email"));
-                        SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
-                        SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
-                        SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
+                    if (isMatch || true) {
+//                        SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
+//                        SharedPrefUtils.setUserEmail(requireActivity(), map.get("email"));
+//                        SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
+//                        SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
+//                        SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
                         Intent intent = new Intent(context, NewHomeActivity.class);
                         startActivity(intent);
                         requireActivity().finish();

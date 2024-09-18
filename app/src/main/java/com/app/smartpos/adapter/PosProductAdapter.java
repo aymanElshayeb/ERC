@@ -90,16 +90,16 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         holder.txtPrice.setText(currency + trimLongDouble(product_price));
         holder.txtCount.setText(product_count);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                player.start();
-                Intent intent=new Intent(productActivity, EditProductActivity.class);
-                intent.putExtra("product_id",product_id);
-                productActivity.startActivity(intent);
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                player.start();
+//                Intent intent=new Intent(productActivity, EditProductActivity.class);
+//                intent.putExtra("product_id",product_id);
+//                productActivity.startActivity(intent);
+//            }
+//        });
 
 
 

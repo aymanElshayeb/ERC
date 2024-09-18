@@ -424,6 +424,7 @@
     <string name="amount">Amount</string>
     <string name="custom_item">Custom Item</string>
     <string name="description">Description</string>
+    <string name="optional">(Optional)</string>
     <string name="amount_must_be_more_than_zero">Amount must be more than zero</string>
     <string name="please_add_decription">Please add description</string>
 
