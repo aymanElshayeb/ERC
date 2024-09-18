@@ -428,6 +428,8 @@
     //sync
     <string name="download_synchronization">مزامنة التنزيل</string>
     <string name="upload_synchronization">مزامنة التحميل</string>
+    <string name="data_synced_successfully">تمت مزامنة البيانات بنجاح</string>
+    <string name="error_in_syncing_data">خطأ في مزامنة البيانات</string>
 
     //error
     <string name="no_printer_found">لم يتم العثور على طابعة</string>

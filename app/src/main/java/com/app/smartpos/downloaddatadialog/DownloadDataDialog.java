@@ -397,13 +397,13 @@ public class DownloadDataDialog extends DialogFragment {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Data Synced Successfully");
+            showMessage(requireActivity().getString(R.string.data_synced_successfully));
             Log.i("datadata","here");
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             downloadBtn.setVisibility(View.VISIBLE);
-            showMessage("Error in Syncing data");
+            showMessage(requireActivity().getString(R.string.error_in_syncing_data));
         }
     }
 

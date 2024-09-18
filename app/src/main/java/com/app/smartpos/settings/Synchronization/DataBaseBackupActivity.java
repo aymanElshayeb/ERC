@@ -8,22 +8,26 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
+import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.settings.backup.LocalBackup;
 import com.app.smartpos.utils.BaseActivity;
 
-public class DataBaseBackupActivity extends BaseActivity {
+public class DataBaseBackupActivity extends WorkerActivity {
 
+    LinearLayout loadingLl;
     ProgressDialog loading;
     private LocalBackup localBackup;
     CardView cardLocalBackUp, cardLocalImport, cardExportToExcel, cardBackupToDrive;
@@ -33,6 +37,7 @@ public class DataBaseBackupActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
 
+        loadingLl=findViewById(R.id.loading_ll);
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.data_backup);
@@ -51,8 +56,8 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
-                dialog.show(getSupportFragmentManager(),"dialog");
+                loadingLl.setVisibility(View.VISIBLE);
+                enqueueUploadWorkers();
             }
         });
 
@@ -60,15 +65,26 @@ public class DataBaseBackupActivity extends BaseActivity {
         cardLocalBackUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_DOWNLOAD);
-                dialog.show(getSupportFragmentManager(),"dialog");
+                loadingLl.setVisibility(View.VISIBLE);
+                enqueueDownloadAndReadWorkers();
 
             }
         });
 
     }
 
-
+    @Override
+    public void handleWorkCompletion(WorkInfo workInfo) {
+        super.handleWorkCompletion(workInfo);
+        loadingLl.setVisibility(View.GONE);
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+            // Work succeeded, handle success
+            showMessage(getString(R.string.data_synced_successfully));
+        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+            // Work failed, handle failure
+            showMessage(getString(R.string.error_in_syncing_data));
+        }
+    }
 
 
     //for back button

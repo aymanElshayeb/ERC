@@ -53,6 +53,15 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_email","");
     }
 
+    public static String getAuthEmail(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("auth_email","");
+    }
+
+    public static String getAuthPassword(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("auth_password","");
+    }
     public static String getUserId(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_id","");
@@ -62,9 +71,14 @@ public class SharedPrefUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
         editor.putString("user_name", userName).commit();
     }
-    public static void setUserEmail(Context context,String email){
+    public static void setAuthEmail(Context context,String email){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("user_email", email).commit();
+        editor.putString("auth_email", email).commit();
+    }
+
+    public static void setAuthPasword(Context context,String password){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("auth_password", password).commit();
     }
 
     public static void setUserId(Context context,String userID){

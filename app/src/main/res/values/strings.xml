@@ -435,6 +435,8 @@
     //sync
     <string name="download_synchronization">Download Synchronization</string>
     <string name="upload_synchronization">Upload Synchronization</string>
+    <string name="data_synced_successfully">Data Synced Successfully</string>
+    <string name="error_in_syncing_data">Error in Syncing data</string>
 
 
     //error

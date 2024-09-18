@@ -216,7 +216,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 //                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
 //                dialog.show(getSupportFragmentManager(), "dialog");
                 loadingLl.setVisibility(View.VISIBLE);
-                enqueueCreateAndUploadWorkers(this);
+                enqueueCreateAndUploadWorkers();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -230,11 +230,11 @@ public class RefundOrOrderDetails extends WorkerActivity {
         loadingLl.setVisibility(View.GONE);
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Data Synced Successfully");
+            showMessage(getString(R.string.data_synced_successfully));
             redirectToSuccess();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            showMessage("Error in Syncing data");
+            showMessage(getString(R.string.error_in_syncing_data));
         }
     }
 

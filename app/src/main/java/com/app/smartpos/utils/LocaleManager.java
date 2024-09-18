@@ -19,8 +19,6 @@ import androidx.core.os.LocaleListCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Locale;
 
 public class LocaleManager {
@@ -86,22 +84,15 @@ public class LocaleManager {
 
     public static void updateLocale(Context context,String lang) {
         persist(context, lang);
-        Log.i("datadata_new_lang",lang);
-        String patern = "###.##"; //your pattern as per need
-
 
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
             Locale locale=new Locale(lang);
-            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(locale);
-            decimalFormat.applyPattern(patern);
             Locale.setDefault(locale);
             Configuration configuration=context.getResources().getConfiguration();
             configuration.setLocale(locale);
             context.getResources().updateConfiguration(configuration,context.getResources().getDisplayMetrics());
         }else{
             LocaleListCompat localeListCompat=LocaleListCompat.forLanguageTags(lang);
-            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(localeListCompat.get(0));
-            decimalFormat.applyPattern(patern);
             Handler handler=new Handler(Looper.getMainLooper());
             handler.post(() -> AppCompatDelegate.setApplicationLocales(localeListCompat));
         }

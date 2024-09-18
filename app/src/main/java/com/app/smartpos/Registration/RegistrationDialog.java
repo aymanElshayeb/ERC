@@ -191,6 +191,7 @@ public class RegistrationDialog extends DialogFragment {
             showMessage("Registration Successful");
             SharedPrefUtils.setIsRegistered(requireContext(),true);
             SharedPrefUtils.setStartDateTime(requireContext());
+
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
