@@ -41,6 +41,7 @@
     <string name="customer_successfully_added">Customer Successfully Added</string>
     <string name="hello">Hello</string>
     <string name="sync">Sync</string>
+    <string name="change_language">Change Language</string>
     <string name="current_shift_sales">Current Shift Sales</string>
     <string name="sar">SAR</string>
     <string name="items">Items</string>

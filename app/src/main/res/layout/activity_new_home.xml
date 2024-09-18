@@ -76,6 +76,22 @@
             app:layout_constraintTop_toTopOf="@id/circle_name_ll" />
 
         <TextView
+            android:id="@+id/change_lang_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="19dp"
+            android:layout_marginTop="16dp"
+            android:drawableStart="@drawable/ic_lang"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_medium"
+            android:includeFontPadding="false"
+            android:text="@string/change_language"
+            android:textColor="#F4F4F4"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@id/sync_tv"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
             android:id="@+id/current_shift_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

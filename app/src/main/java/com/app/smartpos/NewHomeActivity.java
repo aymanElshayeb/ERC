@@ -1,5 +1,7 @@
 package com.app.smartpos;
 
+import static com.app.smartpos.utils.LocaleManager.setNewLocale;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -18,10 +20,12 @@ import com.app.smartpos.refund.RefundOrOrderList;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftStep1;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class NewHomeActivity extends BaseActivity {
 
@@ -47,6 +51,7 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout refundLL = findViewById(R.id.refund_ll);
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
+        TextView changeLangTv = findViewById(R.id.change_lang_tv);
         TextView nameTv = findViewById(R.id.name_tv);
         TextView locationTv = findViewById(R.id.location_tv);
         TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
@@ -91,7 +96,14 @@ public class NewHomeActivity extends BaseActivity {
         });
 
         endOfShiftLl.setOnClickListener(v -> {
+            setNewLocale(this, LocaleManager.ARABIC);
             startActivity(new Intent(this, EndShiftStep1.class));
+        });
+
+        changeLangTv.setOnClickListener(v -> {
+            Locale locale=LocaleManager.getLocale(getResources());
+            LocaleManager.setNewLocale(this, locale.getLanguage().equals("en")?LocaleManager.ARABIC:LocaleManager.ENGLISH);
+            LocaleManager.resetApp(this);
         });
 
          databaseAccess.open();

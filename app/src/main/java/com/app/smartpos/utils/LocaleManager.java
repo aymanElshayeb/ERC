@@ -1,7 +1,10 @@
 package com.app.smartpos.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -16,12 +19,13 @@ import java.util.Locale;
 public class LocaleManager {
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ FRENCH,ENGLISH, BANGLA,SPANISH,HINDI})
+    @StringDef({ FRENCH,ARABIC,ENGLISH, BANGLA,SPANISH,HINDI})
     public @interface LocaleDef {
-        String[] SUPPORTED_LOCALES = {FRENCH, ENGLISH, BANGLA,SPANISH,HINDI};
+        String[] SUPPORTED_LOCALES = {FRENCH,ARABIC, ENGLISH, BANGLA,SPANISH,HINDI};
     }
 
     static public final String FRENCH = "fr";
+    static public final String ARABIC = "ar";
     static public final String ENGLISH = "en";
     static public final String BANGLA = "bn";
     static public final String SPANISH = "es";
@@ -45,6 +49,14 @@ public class LocaleManager {
     public static Context setNewLocale(Context mContext, @LocaleDef String language) {
         setLanguagePref(mContext, language);
         return updateResources(mContext, language);
+    }
+
+    public static void resetApp(Activity activity){
+        PackageManager pm = activity.getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(activity.getPackageName());
+        activity.finishAffinity(); // Finishes all activities.
+        activity.startActivity(intent);    // Start the launch activity
+        activity.overridePendingTransition(0, 0);
     }
 
     /**

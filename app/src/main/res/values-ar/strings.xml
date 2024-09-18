@@ -41,6 +41,7 @@
     <string name="customer_successfully_added">تمت إضافة العميل بنجاح</string>
     <string name="hello">مرحبًا</string>
     <string name="sync">مزامنة</string>
+    <string name="change_language">تغيير اللغة</string>
     <string name="current_shift_sales">مبيعات الوردية الحالية</string>
     <string name="sar">SAR</string>
     <string name="items">العناصر</string>
