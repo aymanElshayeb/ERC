@@ -57,7 +57,7 @@ public class LoginFragment extends Fragment {
                     boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                     //Log.i("datadata",map.toString());
                     if (isMatch || true) {
-//                        SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
+                        SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
 //                        SharedPrefUtils.setUserEmail(requireActivity(), map.get("email"));
 //                        SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
 //                        SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
