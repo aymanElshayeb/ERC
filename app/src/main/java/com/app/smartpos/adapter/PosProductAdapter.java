@@ -87,7 +87,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
         holder.txtCategory.setText(categoryName);
         holder.txtDesc.setText(product_desc);
-        holder.txtPrice.setText(currency + trimLongDouble(product_price));
+        holder.txtPrice.setText(trimLongDouble(product_price)+" "+currency);
         holder.txtCount.setText(product_count);
 
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {

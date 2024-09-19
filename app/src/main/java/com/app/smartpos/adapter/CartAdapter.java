@@ -112,7 +112,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
         holder.txtItemName.setText(product_name);
-        holder.txtPrice.setText(currency + trimLongDouble(getPrice));
+        holder.txtPrice.setText(trimLongDouble(getPrice)+" "+currency);
 //        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
