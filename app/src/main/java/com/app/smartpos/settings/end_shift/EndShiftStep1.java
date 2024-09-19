@@ -149,7 +149,7 @@ public class EndShiftStep1 extends AppCompatActivity {
                 TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
                 EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);
                 TextView paymentTypeAmountErrorTv = root_view.findViewById(R.id.payment_type_amount_error_tv);
-                paymentTypeTv.setText("Total cash on hand");
+                paymentTypeTv.setText(getString(R.string.total_cash_on_hand));
 
                 String cash = cardTypes.get(i).get("CASH");
                 if (cash == null) {

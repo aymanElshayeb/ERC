@@ -59,9 +59,9 @@ public class EndShiftStep2 extends AppCompatActivity {
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
             if( keys.get(i).equals("CASH")){
-                addView("Total Cash Sales Amount", trimLongDouble(shiftDifferences.getReal()));
-                addView("Input Total Cash", trimLongDouble(shiftDifferences.getInput()));
-                addView("Cash Amount Discrepancy", trimLongDouble(shiftDifferences.getDiff()));
+                addView(getString(R.string.total_cash_sales_amount), trimLongDouble(shiftDifferences.getReal()));
+                addView(getString(R.string.input_total_cash), trimLongDouble(shiftDifferences.getInput()));
+                addView(getString(R.string.cash_amount_discrepancy), trimLongDouble(shiftDifferences.getDiff()));
             }else{
                 totalCard+=shiftDifferences.getReal();
             }

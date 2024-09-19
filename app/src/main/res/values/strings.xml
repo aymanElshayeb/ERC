@@ -368,6 +368,9 @@
     <string name="shift_id">Shift ID</string>
     <string name="shift_sequence">Shift Sequence</string>
     <string name="leave_cash">Leave Cash For next shift</string>
+    <string name="total_cash_on_hand">Total cash on hand</string>
+    <string name="total_cash_sales_amount">Total Cash Sales Amount</string>
+    <string name="cash_amount_discrepancy">Cash Amount Discrepancy</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>
