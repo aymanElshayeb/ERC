@@ -17,6 +17,7 @@ import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
@@ -53,11 +54,11 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     int width = 0;
     String line = "--------------------------------------------";
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
-    Activity activity;
-    public NewLandEnhancedPrinter(Activity activity) {
+    MultiLanguageApp activity;
+    public NewLandEnhancedPrinter() {
         ModuleManage.getInstance().init();
         mPrintManager = ModuleManage.getInstance().getPrinterModule();
-        this.activity=activity;
+        this.activity= MultiLanguageApp.getApp();
     }
 
     private String getDateTime(Long dateTimeMillisecond) {
@@ -434,7 +435,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(price))));
             //ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
             bitmaps.add(new PrinterModel(ProductBitmap.get(0), ProductBitmap.get(1), ProductBitmap.get(2)));
-            bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(name)));
+            bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(name)));
             bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
         }
     }

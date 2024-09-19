@@ -14,6 +14,7 @@ import java.util.Locale;
 
 public class MultiLanguageApp extends Application {
 
+    public static MultiLanguageApp app;
 //    @Override
 //    protected void attachBaseContext(Context base) {
 //        super.attachBaseContext(LocaleManager.setLocale(base));
@@ -29,5 +30,10 @@ public class MultiLanguageApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        app=this;
+    }
+
+    public static MultiLanguageApp getApp() {
+        return app;
     }
 }
