@@ -43,6 +43,7 @@
     <string name="sync">Sync</string>
     <string name="change_language">Change Language</string>
     <string name="current_shift_sales">Current Shift Sales</string>
+    <string name="guest">Guest</string>
     <string name="sar">SAR</string>
     <string name="items">Items</string>
     <string name="quick_bills">Quick Bills</string>
@@ -445,4 +446,5 @@
     <string name="your_cart_is_empty">Your cart is empty!</string>
     <string name="card_payment_is_offline_please_choose_cash">Card payment is offline please choose cash</string>
     <string name="please_select_payment_method">Please select Payment Method</string>
+
 </resources>

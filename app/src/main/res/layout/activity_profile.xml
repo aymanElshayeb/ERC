@@ -66,7 +66,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/inter_bold"
                 android:includeFontPadding="false"
-                android:text="fahd ahmed"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="22sp" />
 
@@ -144,6 +144,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/language_cl"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="24dp"
@@ -166,6 +167,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/language_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"

@@ -55,6 +55,11 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_email","");
     }
 
+    public static void setEmail(Context context,String email){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("user_email", email).commit();
+    }
+
     public static String getUserId(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_id","");

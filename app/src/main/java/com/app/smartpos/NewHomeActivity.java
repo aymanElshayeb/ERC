@@ -18,7 +18,6 @@ import com.app.smartpos.refund.RefundOrOrderList;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftStep1;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -48,14 +47,16 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout refundLL = findViewById(R.id.refund_ll);
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
-        TextView changeLangTv = findViewById(R.id.change_lang_tv);
         TextView nameTv = findViewById(R.id.name_tv);
         TextView locationTv = findViewById(R.id.location_tv);
         TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
-        ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
-
-        nameTv.setText(SharedPrefUtils.getName(this));
-
+        if (!SharedPrefUtils.getName(this).isEmpty()) {
+            ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+            nameTv.setText(SharedPrefUtils.getName(this));
+        }else{
+            ha_name_tv.setText("G");
+            nameTv.setText(R.string.guest);
+        }
         databaseAccess = DatabaseAccess.getInstance(this);
 
         databaseAccess.open();
@@ -94,12 +95,6 @@ public class NewHomeActivity extends BaseActivity {
 
         endOfShiftLl.setOnClickListener(v -> {
             startActivity(new Intent(this, EndShiftStep1.class));
-        });
-
-        changeLangTv.setOnClickListener(v -> {
-            String language = LocaleManager.getLanguage(this);
-            LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
-            LocaleManager.resetApp(this);
         });
 
         databaseAccess.open();

@@ -58,10 +58,10 @@ public class LoginFragment extends Fragment {
                     //Log.i("datadata",map.toString());
                     if (isMatch || true) {
                         SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
-//                        SharedPrefUtils.setUserEmail(requireActivity(), map.get("email"));
-//                        SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
-//                        SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
-//                        SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
+                        SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
+                        SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
+                        SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
+                        SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
                         Intent intent = new Intent(context, NewHomeActivity.class);
                         startActivity(intent);
                         requireActivity().finish();

@@ -2,6 +2,7 @@ package com.app.smartpos.profile;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 public class Profile extends AppCompatActivity {
@@ -29,13 +31,28 @@ public class Profile extends AppCompatActivity {
         TextView usernameTv=findViewById(R.id.username_tv);
         TextView flNameTv=findViewById(R.id.fl_name_tv);
         TextView emailTv=findViewById(R.id.email_tv);
+        ConstraintLayout languageCl=findViewById(R.id.language_cl);
+        TextView languageTv=findViewById(R.id.language_tv);
         LinearLayout logoutLl=findViewById(R.id.logout_ll);
         ImageView closeIm=findViewById(R.id.close_im);
         usernameTv.setText(SharedPrefUtils.getName(this));
         TextView mobileTv=findViewById(R.id.mobile_tv);
         mobileTv.setText(SharedPrefUtils.getMobileNumber(this));
         emailTv.setText(SharedPrefUtils.getEmail(this));
-        flNameTv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+        if (SharedPrefUtils.getName(this).isEmpty()) {
+            flNameTv.setText("G");
+            usernameTv.setText(R.string.guest);
+        }else{
+            flNameTv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+        }
+        String language = LocaleManager.getLanguage(this);
+        languageTv.setText(language.equals("en") ? "English" : "عربى");
+
+        languageCl.setOnClickListener(view -> {
+
+            LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
+            LocaleManager.resetApp(this);
+        });
         closeIm.setOnClickListener(view -> {
             finish();
         });
