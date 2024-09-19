@@ -56,7 +56,7 @@ public class SuccessfulPayment extends AppCompatActivity {
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
             Log.i("datadata_type",getIntent().getStringExtra("printType"));
-            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
+            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this,getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
         String amount = getIntent().getStringExtra("amount").split(" ")[0];

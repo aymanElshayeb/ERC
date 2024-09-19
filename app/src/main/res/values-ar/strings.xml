@@ -205,7 +205,7 @@
     <string name="order_type">نوع الطلب </string>
     <string name="want_to_delete_supplier">هل تريد حذف المورد؟</string>
     <string name="supplier_deleted">تم حذف المورد</string>
-    <string name="quantity">الكمية:</string>
+    <string name="quantity_">الكمية:</string>
     <string name="date">التاريخ:</string>
     <string name="supplier">المورد: </string>
     <string name="buy_price">سعر الشراء:</string>
@@ -438,4 +438,8 @@
     <string name="your_cart_is_empty">عربة التسوق الخاصة بك فارغة!</string>
     <string name="card_payment_is_offline_please_choose_cash">الدفع بالبطاقة غير متصل بالإنترنت، يرجى اختيار الدفع نقدًا</string>
     <string name="please_select_payment_method">يرجى تحديد طريقة الدفع</string>
+
+
+    //reports
+
 </resources>

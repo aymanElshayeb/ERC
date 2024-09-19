@@ -207,7 +207,7 @@
     <string name="order_type">Order Type </string>
     <string name="want_to_delete_supplier">Want to Delete Supplier ?</string>
     <string name="supplier_deleted">Supplier Deleted</string>
-    <string name="quantity">Quantity:</string>
+    <string name="quantity_">Quantity:</string>
     <string name="date">Date:</string>
     <string name="supplier">Supplier: </string>
     <string name="buy_price">Buy Price:</string>
@@ -447,4 +447,34 @@
     <string name="card_payment_is_offline_please_choose_cash">Card payment is offline please choose cash</string>
     <string name="please_select_payment_method">Please select Payment Method</string>
 
+
+    //reports
+    <string name="shift_no">Shift no</string>
+    <string name="username">Username</string>
+    <string name="transactions_amount_breakdown">Transactions amount breakdown</string>
+    <string name="sales_amount">Sales amount</string>
+    <string name="refunded_amount">Refunded amount</string>
+    <string name="total">Total</string>
+    <string name="cash_discrepancies">Cash discrepancies</string>
+    <string name="actual_total_cash">Actual total cash</string>
+    <string name="input_total_cash">Input total cash</string>
+    <string name="transactions_number_breakdown">Transactions number breakdown</string>
+    <string name="successful_transactions">Successful transactions</string>
+    <string name="refunded_transactions">Refunded transactions</string>
+    <string name="card_types_breakdown">Card types breakdown</string>
+    <string name="payment_details">Payment details</string>
+    <string name="total_card">Total card</string>
+    <string name="shift_start_date_time">Shift start date time</string>
+    <string name="shift_end_date_time">Shift end date time</string>
+    <string name="final_total">Final total</string>
+    <string name="total_paid">Total paid</string>
+    <string name="net_amount">Net amount</string>
+    <string name="remaining">Remaining</string>
+    <string name="value_added_tax">Value Added Tax</string>
+    <string name="total_before_tax">Total before tax</string>
+    <string name="receipt_no">Receipt No</string>
+    <string name="simplified_tax_invoice">Simplified tax invoice</string>
+    <string name="commercial_registration_number_">Commercial registration number:</string>
+    <string name="tax_number_">Tax number:</string>
+    <string name="quantity">Quantity</string>
 </resources>

@@ -152,7 +152,7 @@
     <string name="order_type">Type de commande:</string>
     <string name="want_to_delete_supplier">Voulez supprimer le fournisseur ?</string>
     <string name="supplier_deleted">Fournisseur supprimé</string>
-    <string name="quantity">Quantité:</string>
+    <string name="quantity_">Quantité:</string>
     <string name="date">Date:</string>
     <string name="supplier">Fournisseuse: </string>
     <string name="buy_price">Prix ​​d\'achat:</string>

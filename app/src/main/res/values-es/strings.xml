@@ -154,7 +154,7 @@
     <string name="order_type">Tipo de orden:</string>
     <string name="want_to_delete_supplier">¿Quieres eliminar al proveedor?</string>
     <string name="supplier_deleted">Proveedor eliminado</string>
-    <string name="quantity">Cantidad:</string>
+    <string name="quantity_">Cantidad:</string>
     <string name="date">Fecha:</string>
     <string name="supplier">Proveedora: </string>
     <string name="buy_price">Precio de compra:</string>
