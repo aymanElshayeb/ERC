@@ -441,5 +441,34 @@
 
 
     //reports
-
+    <string name="shift_no">رقم التحويل</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="transactions_amount_breakdown">تفاصيل مبلغ المعاملات</string>
+    <string name="sales_amount">مبلغ المبيعات</string>
+    <string name="refunded_amount">المبلغ المسترد</string>
+    <string name="total">الإجمالي</string>
+    <string name="cash_discrepancies">اختلافات نقدية</string>
+    <string name="actual_total_cash">إجمالي النقد الفعلي</string>
+    <string name="input_total_cash">إدخال إجمالي النقد</string>
+    <string name="transactions_number_breakdown">تفاصيل رقم المعاملات</string>
+    <string name="successful_transactions">المعاملات الناجحة</string>
+    <string name="refunded_transactions">المسترد المعاملات</string>
+    <string name="card_types_breakdown">تفاصيل أنواع البطاقات</string>
+    <string name="payment_details">تفاصيل الدفع</string>
+    <string name="total_card">إجمالي البطاقة</string>
+    <string name="shift_start_date_time">تاريخ البدء</string>
+    <string name="shift_end_date_time">تاريخ الانتهاء</string>
+    <string name="final_total">الإجمالي النهائي</string>
+    <string name="total_paid">إجمالي المبلغ المدفوع</string>
+    <string name="net_amount">المبلغ الصافي</string>
+    <string name="value_added_tax">ضريبة القيمة المضافة</string>
+    <string name="total_before_tax">الإجمالي قبل الضريبة</string>
+    <string name="receipt_no">رقم الإيصال</string>
+    <string name="simplified_tax_invoice">فاتورة ضريبية مبسط</string>
+    <string name="commercial_registration_number_">رقم التسجيل التجاري:</string>
+    <string name="tax_number_">رقم الضريبة:</string>
+    <string name="quantity">الكمية</string>
+    <string name="receipt_copy">نسخة إضافية</string>
+    <string name="receipt_refunded">مسترجع</string>
+    <string name="receipt_change">الباقى</string>
 </resources>

@@ -282,7 +282,7 @@ public class OrderBitmap extends BaseActivity {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
                 if(language.equals("ar")){
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, 0, lastY, new Paint());
-                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmap2.getWidth(), lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
                 }else {
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
@@ -293,7 +293,7 @@ public class OrderBitmap extends BaseActivity {
                 if(language.equals("ar")){
                     canvas.drawBitmap(bitmaps.get(i).bitmap3, 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
-                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmap3.getWidth(), lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
                 }else {
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
@@ -326,13 +326,13 @@ public class OrderBitmap extends BaseActivity {
             newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
             bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
             printLine();
-            List<Bitmap> newBitmaps2 = new ArrayList<>();
-            newBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.net_amount)));
-            newBitmaps2.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(priceAfterTax)));
-            bitmaps.add(new PrinterModel(newBitmaps2.get(0), newBitmaps2.get(1)));
-            printLine();
+//            List<Bitmap> newBitmaps2 = new ArrayList<>();
+//            newBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.net_amount)));
+//            newBitmaps2.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(priceAfterTax)));
+//            bitmaps.add(new PrinterModel(newBitmaps2.get(0), newBitmaps2.get(1)));
+//            printLine();
             List<Bitmap> newBitmaps3 = new ArrayList<>();
-            newBitmaps3.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.remaining)));
+            newBitmaps3.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.receipt_change)));
             newBitmaps3.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(-1 * Double.parseDouble(changeAmount))));
             bitmaps.add(new PrinterModel(newBitmaps3.get(0), newBitmaps3.get(1)));
             printLine();

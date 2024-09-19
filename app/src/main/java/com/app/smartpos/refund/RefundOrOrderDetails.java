@@ -141,7 +141,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
-                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType", "نسخة إضافية"));
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType", getString(R.string.receipt_copy)));
             } else {
                 refundPressed();
             }
@@ -239,7 +239,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     }
 
     public void redirectToSuccess() {
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id", refundSequence).putExtra("printType", "مسترجع");
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id", refundSequence).putExtra("printType", getString(R.string.receipt_refunded));
         startActivity(intent);
         finish();
     }
