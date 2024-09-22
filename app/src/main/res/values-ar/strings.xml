@@ -49,9 +49,9 @@
     <string name="quick_bills">الفواتير السريعة</string>
     <string name="refund">مرتجعات</string>
     <string name="end_of_shift">نهاية الوردية</string>
-    <string name="confirmation_refund">تأكيد المرتجعات</string>
+    <string name="confirmation_refund">يرجى تأكيد استرجاع الصنف / الأصناف بقيمة</string>
     <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد مرتجعات هذا الطلب؟</string>
-    <string name="items_successfully_refunded">تم مرتجعات العناصر بنجاح</string>
+    <string name="items_successfully_refunded">تم إسترجاع العناصر بنجاح</string>
     <string name="cutom_item_already_added">تمت إضافة عنصر مخصص بالفعل</string>
 
     <string name="cart">عربة التسوق</string>
