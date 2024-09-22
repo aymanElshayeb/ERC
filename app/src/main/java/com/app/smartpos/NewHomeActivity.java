@@ -53,7 +53,7 @@ public class NewHomeActivity extends BaseActivity {
         if (!SharedPrefUtils.getName(this).isEmpty()) {
             ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
             nameTv.setText(SharedPrefUtils.getName(this));
-        }else{
+        } else {
             ha_name_tv.setText("G");
             nameTv.setText(R.string.guest);
         }

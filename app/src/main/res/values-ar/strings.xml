@@ -47,7 +47,7 @@
     <string name="sar">SAR</string>
     <string name="items">العناصر</string>
     <string name="quick_bills">الفواتير السريعة</string>
-    <string name="refund">استرداد الأموال</string>
+    <string name="refund">مرتجعات</string>
     <string name="end_of_shift">نهاية الوردية</string>
     <string name="confirmation_refund">تأكيد استرداد الأموال</string>
     <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد استرداد أموال هذا الطلب؟</string>
