@@ -340,6 +340,7 @@ public class NewCheckout extends AppCompatActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
 
         String orderId = sequenceMap.get("sequence");
+        Log.i("datadata_seq",orderId);
         databaseAccess.open();
         databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill,databaseAccess);
 

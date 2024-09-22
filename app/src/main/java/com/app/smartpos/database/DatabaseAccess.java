@@ -2935,7 +2935,7 @@ public class DatabaseAccess {
         }
         database.close();
         try {
-            sequence = ecrCode + "-001-" + prefix + String.format("%010d", nextValue);
+            sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US,"%010d", nextValue);
             sequenceMap.put("sequence", sequence);
             sequenceMap.put("next_value", String.valueOf(nextValue));
             sequenceMap.put("sequence_id", String.valueOf(sequenceId));
