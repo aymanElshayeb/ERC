@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
 import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -98,6 +100,11 @@ public class DownloadDataDialog extends DialogFragment {
             progressBar = root.findViewById(R.id.progress);
 //            usernameEt.setText("admin@admin.com");
 //            passwordEt.setText("01111Mm&");
+
+            String lang = LocaleManager.getLanguage(requireActivity());
+            emailEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+
             if (getArguments() != null)
                 operationType = getArguments().getString(ARG_OPERATION_TYPE);
             else {

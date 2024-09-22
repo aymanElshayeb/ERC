@@ -123,6 +123,9 @@ public class QuickBill extends Activity {
     }
 
     private void setNumber(String number){
+        if(amountTv.getText().toString().length()==6){
+            return;
+        }
         if(cash.equals("0")){
             cash="";
         }

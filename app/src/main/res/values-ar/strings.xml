@@ -417,7 +417,7 @@
     <string name="payment_success">نجاح الدفع</string>
 
     <string name="print_receipt">طباعة الإيصال</string>
-    <string name="no_receipt">لا يوجد إيصال</string>
+    <string name="no_receipt">عدم طباعة إيصال</string>
     <string name="close">إغلاق</string>
 
     <string name="amount">المبلغ</string>
@@ -474,4 +474,15 @@
     <string name="receipt_copy">نسخة إضافية</string>
     <string name="receipt_refunded">مسترجع</string>
     <string name="receipt_change">الباقى</string>
+    <string name="_1">١</string>
+    <string name="_2">٢</string>
+    <string name="_3">٣</string>
+    <string name="_4">٤</string>
+    <string name="_5">٥</string>
+    <string name="_6">٦</string>
+    <string name="_7">٧</string>
+    <string name="_8">٨</string>
+    <string name="_9">٩</string>
+    <string name="_0">٠</string>
+    <string name="del">مسح</string>
 </resources>
