@@ -342,7 +342,7 @@
     <string name="print_z_report">طباعة تقرير Z</string>
     <string name="shift_summary_details">تفاصيل ملخص الوردية</string>
     <string name="total_cash">إجمالي النقد</string>
-    <string name="total_card_amount">إجمالي مبلغ البطاقة</string>
+    <string name="total_card_amount">إجمالي المدفوع بالبطاقة</string>
     <string name="number_of_sales">عدد المبيعات</string>
     <string name="wrong_cash_data">يبدو أن هناك بعض بيانات النقد الخاطئة\nهل أنت متأكد من أنك تريد إنهاء الوردية؟</string>
     <string name="real">حقيقي</string>
@@ -350,21 +350,21 @@
     <string name="diff">اختلاف</string>
     <string name="total_amount">إجمالي المبلغ</string>
     <string name="total_transactions_number">إجمالي عدد المعاملات</string>
-    <string name="total_sales_transactions">إجمالي معاملات المبيعات</string>
-    <string name="total_refunds">إجمالي المرتجعات</string>
-    <string name="total_cash_amount">إجمالي مبلغ المبيعات</string>
-    <string name="total_refunds_amount">إجمالي مبلغ المرتجعات</string>
-    <string name="start_cash">بدء إيداع النقود في الخزينة</string>
+    <string name="total_sales_transactions">عدد عمليات البيع</string>
+    <string name="total_refunds">عدد عمليات المرتجع</string>
+    <string name="total_cash_amount">إجمالي التحصيل</string>
+    <string name="total_refunds_amount">إجمالي المسترد</string>
+    <string name="start_cash">نقدية بداية الوردية</string>
     <string name="start_shift_date">تاريخ بدء الوردية</string>
     <string name="end_shift_date">تاريخ انتهاء الوردية</string>
     <string name="user_id">معرف المستخدم</string>
     <string name="user_mail">بريد المستخدم</string>
     <string name="shift_id">معرف الوردية</string>
-    <string name="shift_sequence">تسلسل الوردية</string>
+    <string name="shift_sequence">مسلسل الوردية</string>
     <string name="leave_cash">ترك النقود للوردية التالية</string>
     <string name="total_cash_on_hand">إجمالي النقد المتوفر</string>
     <string name="total_cash_sales_amount">إجمالي مبلغ المبيعات النقدية</string>
-    <string name="cash_amount_discrepancy">اختلاف المبلغ النقدي</string>
+    <string name="cash_amount_discrepancy">فروق نقدية</string>
 
     <string name="profile">الملف الشخصي</string>
     <string name="mobile">الجوال</string>
@@ -452,7 +452,7 @@
     <string name="total">الإجمالي</string>
     <string name="cash_discrepancies">اختلافات نقدية</string>
     <string name="actual_total_cash">إجمالي النقد الفعلي</string>
-    <string name="input_total_cash">إدخال إجمالي النقد</string>
+    <string name="input_total_cash">إجمالي النقد الحالى</string>
     <string name="transactions_number_breakdown">تفاصيل رقم المعاملات</string>
     <string name="successful_transactions">المعاملات الناجحة</string>
     <string name="refunded_transactions">المعاملات المسترده</string>
