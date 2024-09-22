@@ -49,9 +49,9 @@
     <string name="quick_bills">الفواتير السريعة</string>
     <string name="refund">مرتجعات</string>
     <string name="end_of_shift">نهاية الوردية</string>
-    <string name="confirmation_refund">تأكيد استرداد الأموال</string>
-    <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد استرداد أموال هذا الطلب؟</string>
-    <string name="items_successfully_refunded">تم استرداد أموال العناصر بنجاح</string>
+    <string name="confirmation_refund">تأكيد المرتجعات</string>
+    <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد مرتجعات هذا الطلب؟</string>
+    <string name="items_successfully_refunded">تم مرتجعات العناصر بنجاح</string>
     <string name="cutom_item_already_added">تمت إضافة عنصر مخصص بالفعل</string>
 
     <string name="cart">عربة التسوق</string>
@@ -351,9 +351,9 @@
     <string name="total_amount">إجمالي المبلغ</string>
     <string name="total_transactions_number">إجمالي عدد المعاملات</string>
     <string name="total_sales_transactions">إجمالي معاملات المبيعات</string>
-    <string name="total_refunds">إجمالي معاملات الاسترداد</string>
+    <string name="total_refunds">إجمالي المرتجعات</string>
     <string name="total_cash_amount">إجمالي مبلغ المبيعات</string>
-    <string name="total_refunds_amount">إجمالي مبلغ المبالغ المستردة</string>
+    <string name="total_refunds_amount">إجمالي مبلغ المرتجعات</string>
     <string name="start_cash">بدء إيداع النقود في الخزينة</string>
     <string name="start_shift_date">تاريخ بدء الوردية</string>
     <string name="end_shift_date">تاريخ انتهاء الوردية</string>
@@ -386,7 +386,7 @@
     <string name="view_all_receipt">عرض جميع الإيصالات</string>
     <string name="or">أو</string>
     <string name="card">كارت</string>
-    <string name="refunded">استرجاع</string>
+    <string name="refunded">مرتجع</string>
     <string name="view">عرض</string>
     <string name="select_which_item_you_want_to_refund">حدد العنصر الذي تريد استرداده</string>
     <string name="refund_total">إجمالي المبلغ المسترد</string>
@@ -455,7 +455,7 @@
     <string name="input_total_cash">إدخال إجمالي النقد</string>
     <string name="transactions_number_breakdown">تفاصيل رقم المعاملات</string>
     <string name="successful_transactions">المعاملات الناجحة</string>
-    <string name="refunded_transactions">المسترد المعاملات</string>
+    <string name="refunded_transactions">المعاملات المسترده</string>
     <string name="card_types_breakdown">تفاصيل أنواع البطاقات</string>
     <string name="payment_details">تفاصيل الدفع</string>
     <string name="total_card">إجمالي البطاقة</string>
@@ -472,7 +472,7 @@
     <string name="tax_number_">رقم الضريبة:</string>
     <string name="quantity">الكمية</string>
     <string name="receipt_copy">نسخة إضافية</string>
-    <string name="receipt_refunded">مسترجع</string>
+    <string name="receipt_refunded">مرتجع</string>
     <string name="receipt_change">الباقى</string>
     <string name="_1">١</string>
     <string name="_2">٢</string>
