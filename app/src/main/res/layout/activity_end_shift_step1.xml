@@ -24,7 +24,7 @@
                 android:backgroundTint="@color/white"
                 android:layout_marginStart="24dp"
                 android:padding="8dp"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
