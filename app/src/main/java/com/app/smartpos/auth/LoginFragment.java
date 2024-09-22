@@ -43,8 +43,8 @@ public class LoginFragment extends Fragment {
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
-            emailEt.setText("admin@admin.com");
-            passwordEt.setText("01111Mm&");
+//            emailEt.setText("admin@admin.com");
+//            passwordEt.setText("01111Mm&");
 
             String lang = LocaleManager.getLanguage(requireActivity());
             emailEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
@@ -65,7 +65,7 @@ public class LoginFragment extends Fragment {
                     Hasher hasher = new Hasher();
                     boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                     //Log.i("datadata",map.toString());
-                    if (isMatch || true) {
+                    if (isMatch) {
                         SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
                         SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
                         SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
