@@ -145,9 +145,7 @@ public class SplashActivity extends AppCompatActivity {
                     return true;
                 }
             });
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }

@@ -66,8 +66,8 @@
     <string name="checkout">الدفع</string>
     <string name="cash">النقد</string>
     <string name="cash_details">تفاصيل النقد</string>
-    <string name="cash_given">النقد الممنوح</string>
-    <string name="change">تغيير</string>
+    <string name="cash_given">المدفوع</string>
+    <string name="change">الباقى</string>
     <string name="pay">الدفع</string>
     <string name="cash_given_must_be_equal_or_more_than_total_amount">يجب أن يكون النقد الممنوح أكبر من أو يساوي المبلغ الإجمالي</string>
 
