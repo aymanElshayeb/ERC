@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,12 @@ public class RegistrationDialog extends DialogFragment {
             registerBtn =root.findViewById(R.id.register_btn);
             demoBtn =root.findViewById(R.id.demo_btn);
             progressBar=root.findViewById(R.id.progress);
+            String lang = LocaleManager.getLanguage(requireActivity());
+
+            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            usernameEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            merchantEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+
             ConstraintLayout languageCl=root.findViewById(R.id.language_cl);
             registerBtn.setOnClickListener(view -> {
                 if(usernameEt.getText().toString().isEmpty()){
