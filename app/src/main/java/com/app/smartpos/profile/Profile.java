@@ -49,7 +49,6 @@ public class Profile extends AppCompatActivity {
         languageTv.setText(language.equals("en") ? "English" : "عربى");
 
         languageCl.setOnClickListener(view -> {
-
             LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
             LocaleManager.resetApp(this);
         });

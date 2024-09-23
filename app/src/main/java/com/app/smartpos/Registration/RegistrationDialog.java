@@ -19,10 +19,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -41,6 +43,7 @@ import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.utils.Hasher;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
@@ -72,6 +75,7 @@ public class RegistrationDialog extends DialogFragment {
             registerBtn =root.findViewById(R.id.register_btn);
             demoBtn =root.findViewById(R.id.demo_btn);
             progressBar=root.findViewById(R.id.progress);
+            ConstraintLayout languageCl=root.findViewById(R.id.language_cl);
             registerBtn.setOnClickListener(view -> {
                 if(usernameEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
@@ -85,7 +89,12 @@ public class RegistrationDialog extends DialogFragment {
                     enqueueDownloadAndReadWorkers();
                 }
             });
+            String language = LocaleManager.getLanguage(root.getContext());
 
+            languageCl.setOnClickListener(view -> {
+                LocaleManager.updateLocale(root.getContext(), language.equals("en") ? "ar" : "en");
+                LocaleManager.resetApp(getActivity());
+            });
             demoBtn.setOnClickListener(view -> {
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
                 databaseAccess.open();
