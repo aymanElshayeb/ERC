@@ -1,10 +1,6 @@
 package com.app.smartpos.Registration;
 
 import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
-import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
-import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
-import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
-import static com.app.smartpos.Constant.SYNC_URL;
 
 import android.Manifest;
 import android.content.Intent;
@@ -38,9 +34,6 @@ import androidx.work.WorkManager;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.Synchronization.DecompressWorker;
-import com.app.smartpos.settings.Synchronization.DownloadWorker;
-import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;

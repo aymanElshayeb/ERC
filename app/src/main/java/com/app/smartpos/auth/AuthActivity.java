@@ -34,7 +34,7 @@ public class AuthActivity extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf=databaseAccess.getConfiguration();
-        if (conf.isEmpty() && SharedPrefUtils.isRegistered(this)) {
+        if (conf.isEmpty() && !SharedPrefUtils.isRegistered(this)) {
 //            RegistrationDialog dialog = new RegistrationDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
             CompanyCheckDialog dialog = new CompanyCheckDialog();
