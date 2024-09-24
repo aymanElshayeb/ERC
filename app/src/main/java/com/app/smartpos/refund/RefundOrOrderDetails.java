@@ -232,6 +232,9 @@ public class RefundOrOrderDetails extends WorkerActivity {
             // Work succeeded, handle success
             showMessage(getString(R.string.data_synced_successfully));
             redirectToSuccess();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                AuthoruzationHolder.resetAuthorization();
+            }
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             showMessage(getString(R.string.error_in_syncing_data));

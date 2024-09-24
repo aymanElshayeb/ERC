@@ -21,6 +21,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -28,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class EndShiftStep2 extends AppCompatActivity {
+public class EndShiftStep2 extends WorkerActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
@@ -88,6 +89,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
+            enqueueUploadWorkers();
         });
         printZReport.setOnClickListener(view -> {
             onPrintZReport();
