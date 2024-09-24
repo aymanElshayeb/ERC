@@ -9,6 +9,7 @@ import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.app.Activity;
 import android.os.Build;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
@@ -113,12 +114,13 @@ public class WorkerActivity extends AppCompatActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
-        String authData= Hasher.decryptMsg(SharedPrefUtils.getAuthData(this));
+        String ecr= conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", authData.split("-")[0]).
-                putString("password", authData.split("-")[1]).
+                putString("email", ecr).
+                putString("password", deviceId).
                 build();
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
@@ -172,12 +174,14 @@ public class WorkerActivity extends AppCompatActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
-        String authData= Hasher.decryptMsg(SharedPrefUtils.getAuthData(this));
+
+        String ecr= conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
                 putString("tenantId", conf.get("merchant_id")).
-                putString("email", authData.split("-")[0]).
-                putString("password", authData.split("-")[1]).
+                putString("email", ecr).
+                putString("password", deviceId).
                 build();
 
         Data lastSync = null;

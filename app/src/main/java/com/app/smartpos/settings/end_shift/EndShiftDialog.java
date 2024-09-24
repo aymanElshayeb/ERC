@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.SettingsActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -191,8 +192,7 @@ public class EndShiftDialog extends DialogFragment {
                         errorLl.setVisibility(View.VISIBLE);
                     }
                 }
-                String android_id = Settings.Secure.getString(getContext().getContentResolver(),
-                        Settings.Secure.ANDROID_ID);
+                String android_id = Utils.getDeviceId(requireActivity());
                 databaseAccess.open();
                 HashMap<String, String> configuration = databaseAccess.getConfiguration();
                 String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code").toString();

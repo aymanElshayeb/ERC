@@ -39,6 +39,7 @@ import com.app.smartpos.HomeActivity;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
@@ -67,8 +68,7 @@ public class RegistrationDialog extends DialogFragment {
             root=inflater.inflate(R.layout.dialog_registration,container,false);
             setCancelable(false);
 
-            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+            deviceId =  Utils.getDeviceId(requireActivity());
 
             usernameEt=root.findViewById(R.id.username_et);
             passwordEt=root.findViewById(R.id.password_et);

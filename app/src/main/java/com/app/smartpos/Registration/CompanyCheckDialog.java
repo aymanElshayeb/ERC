@@ -33,6 +33,7 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
@@ -59,8 +60,7 @@ public class CompanyCheckDialog extends DialogFragment {
             root = inflater.inflate(R.layout.company_check_registration, container, false);
             setCancelable(false);
 
-            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+            deviceId = Utils.getDeviceId(requireActivity());
 
             usernameEt = root.findViewById(R.id.username_et);
             registerBtn = root.findViewById(R.id.register_btn);

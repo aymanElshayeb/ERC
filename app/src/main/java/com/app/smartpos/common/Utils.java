@@ -1,5 +1,8 @@
 package com.app.smartpos.common;
 
+import android.app.Activity;
+import android.provider.Settings;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -44,5 +47,10 @@ public class Utils {
             result="0"+result;
         }
         return result;
+    }
+
+    public static String getDeviceId(Activity activity){
+        return Settings.Secure.getString(activity.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 }
