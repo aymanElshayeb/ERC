@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.R;
+import com.app.smartpos.Registration.CompanyCheckDialog;
 import com.app.smartpos.Registration.RegistrationDialog;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
@@ -33,8 +34,10 @@ public class AuthActivity extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf=databaseAccess.getConfiguration();
-        if (conf.isEmpty()) {
-            RegistrationDialog dialog = new RegistrationDialog();
+        if (conf.isEmpty() && SharedPrefUtils.isRegistered(this)) {
+//            RegistrationDialog dialog = new RegistrationDialog();
+//            dialog.show(getSupportFragmentManager(), "register dialog");
+            CompanyCheckDialog dialog = new CompanyCheckDialog();
             dialog.show(getSupportFragmentManager(), "register dialog");
         }else {
             String merchantId=conf.get("merchant_id");
