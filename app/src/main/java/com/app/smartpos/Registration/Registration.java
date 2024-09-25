@@ -97,7 +97,7 @@ public class Registration extends AppCompatActivity {
                 tenantId = "";
                 spinner.setVisibility(View.GONE);
                 password.setVisibility(View.GONE);
-                actionBtn.setText(getString(R.string.check_email));
+                actionBtn.setText(getResources().getString(R.string.check_email));
             }
         });
         password.addTextChangedListener(new TextWatcher() {
@@ -123,18 +123,13 @@ public class Registration extends AppCompatActivity {
         actionBtn.setOnClickListener(view -> {
             if (!email.getText().toString().isEmpty() && !tenantId.isEmpty() && !password.getText().toString().isEmpty()) {
                 actionBtn.setVisibility(View.GONE);
-//                demoBtn.setEnabled(false);
                 enqueueDownloadAndReadWorkers();
             } else {
                 if (email.getText().toString().isEmpty()) {
                     Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 }
-//            else if(password.getText().toString().isEmpty()){
-//                Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
-//            }
                 else {
                     actionBtn.setVisibility(View.GONE);
-//                demoBtn.setEnabled(false);
                     companiesViewModel.start(email.getText().toString().trim());
                 }
             }
@@ -159,7 +154,7 @@ public class Registration extends AppCompatActivity {
                 spinner.setVisibility(View.VISIBLE);
                 password.setVisibility(View.VISIBLE);
                 password.setText("");
-                actionBtn.setText("Register");
+                actionBtn.setText(getString(R.string.register));
                 ArrayList<String> arrayList = new ArrayList<>();
 
                 for (int i = 0; i < companyModels.size(); i++) {
