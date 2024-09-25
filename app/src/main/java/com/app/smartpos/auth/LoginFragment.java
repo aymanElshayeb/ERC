@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.NewHomeActivity;
@@ -43,6 +44,13 @@ public class LoginFragment extends Fragment {
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
+            ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
+            String language = LocaleManager.getLanguage(getContext());
+
+            languageCl.setOnClickListener(view -> {
+                LocaleManager.updateLocale(getContext(), language.equals("en") ? "ar" : "en");
+                LocaleManager.resetApp(getActivity());
+            });
 //            emailEt.setText("admin@admin.com");
 //            passwordEt.setText("01111Mm&");
 

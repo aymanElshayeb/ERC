@@ -5,12 +5,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grey_f9">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/language_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_globe" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <ImageView
         android:id="@+id/logo_im"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_qaema_logo"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/language_cl"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="37dp"
         android:layout_marginStart="24dp"/>
