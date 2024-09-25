@@ -65,6 +65,7 @@
 
     <string name="checkout">الدفع</string>
     <string name="cash">النقد</string>
+    <string name="cash_ar">Cash / كاش</string>
     <string name="cash_details">تفاصيل النقد</string>
     <string name="cash_given">المدفوع</string>
     <string name="change">الباقى</string>
@@ -386,6 +387,7 @@
     <string name="view_all_receipt">عرض جميع الإيصالات</string>
     <string name="or">أو</string>
     <string name="card">كارت</string>
+    <string name="card_ar">Card / كارت</string>
     <string name="refunded">مسرتجع</string>
     <string name="view">عرض</string>
     <string name="select_which_item_you_want_to_refund">حدد العنصر الذي تريد استرجاعه</string>
