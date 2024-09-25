@@ -53,7 +53,11 @@ public class CartPaymentMethodAdapter extends RecyclerView.Adapter<CartPaymentMe
         String payment_method_name = paymentMethodData.get(position).get("payment_method_name");
         int status=Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
 
-        holder.text.setText(payment_method_name);
+        if(payment_method_name.toLowerCase().equals("cash")) {
+            holder.text.setText(payment_method_name + " / " + checkout.getString(R.string.cash));
+        }else{
+            holder.text.setText(payment_method_name + " / " + checkout.getString(R.string.card));
+        }
         holder.image.setImageResource(payment_method_name.equals("CASH")?R.drawable.ic_cash:R.drawable.ic_card);
 
         holder.itemView.setBackgroundResource(selectedItem==position ? R.drawable.custom_payment_method_selected_item : R.drawable.custom_payment_method_item);
