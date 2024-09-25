@@ -8,6 +8,7 @@ import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +33,7 @@ import androidx.work.WorkManager;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.auth.LoginFragment;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
@@ -46,7 +48,7 @@ import java.util.LinkedList;
 public class Registration extends AppCompatActivity {
     EditText email;
     Spinner spinner;
-    EditText password ;
+    EditText password;
     Button actionBtn;
     private String deviceId;
     CheckCompaniesViewModel companiesViewModel;
@@ -72,30 +74,38 @@ public class Registration extends AppCompatActivity {
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         email.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
-                if (email.getText().toString().trim().matches(emailPattern)) {
-                    actionBtn.setEnabled(true);
-                    actionBtn.setAlpha(1);
-                } else {
-                    actionBtn.setEnabled(false);
-                    actionBtn.setAlpha(0.5f);
 
-                }
-                spinner.setVisibility(View.GONE);
-                password.setVisibility(View.GONE);
-                actionBtn.setText(getString(R.string.check_email));
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (email.getText().toString().trim().matches(emailPattern) ) {
+                    actionBtn.setEnabled(true);
+                    actionBtn.setAlpha(1);
+
+                } else {
+                    actionBtn.setEnabled(false);
+                    actionBtn.setAlpha(0.5f);
+                }
+                tenantId = "";
+                password.setText("");
+                spinner.setVisibility(View.GONE);
+                password.setVisibility(View.GONE);
+                actionBtn.setText(getString(R.string.check_email));
             }
         });
         password.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!password.getText().toString().trim().isEmpty()) {
                     actionBtn.setEnabled(true);
                     actionBtn.setAlpha(1);
@@ -104,18 +114,15 @@ public class Registration extends AppCompatActivity {
                     actionBtn.setEnabled(false);
                     actionBtn.setAlpha(0.5f);
                 }
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 
         actionBtn.setOnClickListener(view -> {
-            if(email.getText().toString().isEmpty() || tenantId.isEmpty() || password.getText().toString().isEmpty()){
+            if (!email.getText().toString().isEmpty() && !tenantId.isEmpty() && !password.getText().toString().isEmpty()) {
+                actionBtn.setVisibility(View.GONE);
+//                demoBtn.setEnabled(false);
+                enqueueDownloadAndReadWorkers();
+            } else {
                 if (email.getText().toString().isEmpty()) {
                     Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 }
@@ -127,10 +134,6 @@ public class Registration extends AppCompatActivity {
 //                demoBtn.setEnabled(false);
                     companiesViewModel.start(email.getText().toString().trim());
                 }
-            } else {
-                actionBtn.setVisibility(View.GONE);
-//                demoBtn.setEnabled(false);
-                enqueueDownloadAndReadWorkers();
             }
         });
         String language = LocaleManager.getLanguage(this);
@@ -152,6 +155,7 @@ public class Registration extends AppCompatActivity {
             } else {
                 spinner.setVisibility(View.VISIBLE);
                 password.setVisibility(View.VISIBLE);
+                password.setText("");
                 ArrayList<String> arrayList = new ArrayList<>();
 
                 for (int i = 0; i < companyModels.size(); i++) {
@@ -236,10 +240,12 @@ public class Registration extends AppCompatActivity {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage("Registration Successful");
-            SharedPrefUtils.setIsRegistered(this,true);
+            SharedPrefUtils.setIsRegistered(this, true);
             SharedPrefUtils.setStartDateTime(this);
-            byte[] bytes= Hasher.encryptMsg(email.getText().toString().trim()+"-"+password.getText().toString().trim());
-            SharedPrefUtils.setAuthData(this,bytes);
+            byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
+            SharedPrefUtils.setAuthData(this, bytes);
+            Intent intent = new Intent(Registration.this, LoginFragment.class);
+            startActivity(intent);
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -250,7 +256,7 @@ public class Registration extends AppCompatActivity {
         }
     }
 
-//    private void closePendingScreen() {
+    //    private void closePendingScreen() {
 //        dismissAllowingStateLoss();
 //    }
     private void observeWorker(OneTimeWorkRequest workRequest) {
@@ -259,7 +265,7 @@ public class Registration extends AppCompatActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage( (errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
                         }
                     }
                 });
