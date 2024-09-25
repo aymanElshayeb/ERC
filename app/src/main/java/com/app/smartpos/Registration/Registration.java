@@ -244,7 +244,7 @@ public class Registration extends BaseActivity {
             SharedPrefUtils.setStartDateTime(this);
             byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
             SharedPrefUtils.setAuthData(this, bytes);
-            Intent intent = new Intent(Registration.this, LoginFragment.class);
+            Intent intent = new Intent(Registration.this, AuthActivity.class);
             startActivity(intent);
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {

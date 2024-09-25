@@ -50,6 +50,7 @@ public class Items extends BaseActivity {
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
     boolean firstOpen=true;
+    String currency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,9 @@ public class Items extends BaseActivity {
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
+        currency=databaseAccess.getCurrency();
+
+        databaseAccess.open();
         productList = databaseAccess.getProducts(true);
 
         productCartAdapter = new PosProductAdapter(this, productList);
@@ -196,7 +200,7 @@ public class Items extends BaseActivity {
         }
         Log.i("datadata_count", count + "");
         cartCountTv.setText("" + count);
-        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " SAR");
+        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " "+currency);
 
 
         if (count > 0) {

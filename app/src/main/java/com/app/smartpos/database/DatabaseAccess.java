@@ -10,10 +10,13 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.Registration.dto.RegistrationResponseDto;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
+import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1643,7 +1646,9 @@ public class DatabaseAccess {
 
 
                 currency = cursor.getString(cursor.getColumnIndex("shop_currency")) + " ";
-
+                if(LocaleManager.getLanguage(MultiLanguageApp.getApp()).equals("ar")){
+                    currency = MultiLanguageApp.getApp().getString(R.string.sar)+" ";
+                }
 
             } while (cursor.moveToNext());
         }
