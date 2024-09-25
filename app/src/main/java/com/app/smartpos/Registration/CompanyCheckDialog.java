@@ -14,9 +14,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,11 +36,14 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.Utils;
+import com.app.smartpos.Registration.Model.CompanyModel;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class CompanyCheckDialog extends DialogFragment {
 
@@ -49,8 +55,11 @@ public class CompanyCheckDialog extends DialogFragment {
     ProgressBar progressBar;
     Button registerBtn;
     Button demoBtn;
-
+    Spinner company_spinner;
     private String deviceId;
+    CheckCompaniesViewModel companiesViewModel;
+    String tenantId;
+    LinkedList<CompanyModel> companyList = new LinkedList<>();
 
     @Nullable
     @Override
@@ -59,11 +68,13 @@ public class CompanyCheckDialog extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             root = inflater.inflate(R.layout.company_check_registration, container, false);
             setCancelable(false);
-
-            deviceId = Utils.getDeviceId(requireActivity());
+            companiesViewModel = new CheckCompaniesViewModel();
+            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
 
             usernameEt = root.findViewById(R.id.username_et);
             registerBtn = root.findViewById(R.id.register_btn);
+            company_spinner = root.findViewById(R.id.company_spinner);
             demoBtn = root.findViewById(R.id.demo_btn);
             progressBar = root.findViewById(R.id.progress);
             String lang = LocaleManager.getLanguage(requireActivity());
@@ -77,9 +88,12 @@ public class CompanyCheckDialog extends DialogFragment {
                 } else {
                     registerBtn.setVisibility(View.GONE);
                     demoBtn.setEnabled(false);
-                    enqueueDownloadAndReadWorkers();
+                    companiesViewModel.start(usernameEt.getText().toString().trim());
+
                 }
+
             });
+
             String language = LocaleManager.getLanguage(root.getContext());
 
             languageCl.setOnClickListener(view -> {
@@ -96,7 +110,42 @@ public class CompanyCheckDialog extends DialogFragment {
                 requireActivity().startActivity(new Intent(requireActivity(), NewHomeActivity.class));
             });
 
-            requestForStoragePermissions();
+
+            companiesViewModel.getLiveData().observe(this, companyModels -> {
+                registerBtn.setVisibility(View.VISIBLE);
+                companyList = companyModels;
+                if (companyModels.size() > 0) {
+                    tenantId = companyModels.get(0).getCompanyCode();
+                }
+
+                if (companyModels.isEmpty()) {
+                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.no_data_found), Toast.LENGTH_SHORT).show();
+                } else {
+                    company_spinner.setVisibility(View.VISIBLE);
+
+                    ArrayList<String> arrayList = new ArrayList<>();
+
+                    for (int i = 0; i < companyModels.size(); i++) {
+                        arrayList.add(companyModels.get(i).getCompanyName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, arrayList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    company_spinner.setAdapter(adapter);
+                }
+            });
+            company_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    tenantId = companyList.get(i).getCompanyCode();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
 
         return root;
@@ -111,84 +160,10 @@ public class CompanyCheckDialog extends DialogFragment {
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
 
-    private void requestForStoragePermissions() {
-        //Android is 11 (R) or above
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) || Build.VERSION.SDK_INT >= 35) {
-            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        new String[]{
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                        },
-                        STORAGE_PERMISSION_CODE
-                );
-            }
-
-        }
-
-    }
 
 
-    private void enqueueDownloadAndReadWorkers() {
-        //username Admin
-        //password 01111Mm&
-        Data register = new Data.Builder().
-                putString("url", CHECK_COMPANY_URL).
-                putString("email", usernameEt.getText().toString()).
-                putString("deviceId", deviceId).
-                build();
 
 
-        OneTimeWorkRequest registerRequest = new OneTimeWorkRequest.Builder(CheckCompanyWorker.class)
-                .setInputData(register)
-                .build();
 
-
-        WorkContinuation continuation = WorkManager.getInstance(requireActivity())
-                .beginWith(registerRequest);
-
-        continuation.enqueue();
-        observeWorker(registerRequest);
-
-    }
-
-    private void handleWorkCompletion(WorkInfo workInfo) {
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-            // Work succeeded, handle success
-            showMessage("Registration Successful");
-
-            SharedPrefUtils.setStartDateTime(requireContext());
-            byte[] bytes = Hasher.encryptMsg(usernameEt.getText().toString().trim() + "-" + passwordEt.getText().toString().trim());
-            SharedPrefUtils.setAuthData(requireContext(), bytes);
-            closePendingScreen();
-        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-            // Work failed, handle failure
-            showMessage("Error in Syncing data");
-            registerBtn.setVisibility(View.VISIBLE);
-            demoBtn.setEnabled(true);
-
-        }
-    }
-
-    private void closePendingScreen() {
-        dismissAllowingStateLoss();
-    }
-
-    private void observeWorker(OneTimeWorkRequest workRequest) {
-        WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(workRequest.getId())
-                .observe(this, workInfo -> {
-                    if (workInfo != null && workInfo.getState().isFinished()) {
-                        if (workInfo.getState() == WorkInfo.State.FAILED) {
-                            String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
-                        }
-                    }
-                });
-    }
-
-    private void showMessage(String message) {
-        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
-    }
 
 }

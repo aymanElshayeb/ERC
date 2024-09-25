@@ -329,6 +329,7 @@
 
     <string name="welcome_to_qaema">Welcome to qaema ECR</string>
     <string name="Please_enter_your_login_info">Please enter your login info</string>
+    <string name="Please_enter_your_registration_info">Please enter your registration info</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
@@ -402,6 +403,7 @@
     <string name="registration">Registration</string>
     <string name="merchant_id">Merchant ID</string>
     <string name="register">Register</string>
+    <string name="check_email">Check Email</string>
     <string name="demo">Demo</string>
     <string name="user_name_empty">Username field is empty</string>
     <string name="password_empty">password field is empty</string>

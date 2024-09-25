@@ -396,11 +396,13 @@
     <string name="registration">التسجيل</string>
     <string name="merchant_id">معرف التاجر</string>
     <string name="register">التسجيل</string>
+    <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="demo">العرض التجريبي</string>
     <string name="user_name_empty">حقل اسم المستخدم فارغ</string>
     <string name="password_empty">حقل كلمة المرور فارغ</string>
     <string name="merchant_empty">حقل معرف التاجر فارغ</string>
     <string name="leave_cash_empty">يرجى إضافة أموال نقدية للخزنة</string>
+    <string name="Please_enter_your_registration_info">برجاء إدخال معلومات التسجيل الخاصة بك</string>
 
     <string name="options">الخيارات</string>
     <string name="custom_items">عنصر مخصص</string>
