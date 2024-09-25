@@ -91,7 +91,6 @@ public class Registration extends AppCompatActivity {
                     actionBtn.setAlpha(0.5f);
                 }
                 tenantId = "";
-                password.setText("");
                 spinner.setVisibility(View.GONE);
                 password.setVisibility(View.GONE);
                 actionBtn.setText(getString(R.string.check_email));
