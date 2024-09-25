@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class Registration extends BaseActivity {
     Spinner spinner;
     EditText password;
     Button actionBtn;
+    ProgressBar loadingPb;
     private String deviceId;
     CheckCompaniesViewModel companiesViewModel;
     LinkedList<CompanyModel> companyList = new LinkedList<>();
@@ -74,6 +76,7 @@ public class Registration extends BaseActivity {
         spinner = findViewById(R.id.company_spinner);
         password = findViewById(R.id.password_et);
         actionBtn = findViewById(R.id.action_btn);
+        loadingPb = findViewById(R.id.loading_pb);
         String lang = LocaleManager.getLanguage(this);
 
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
@@ -124,6 +127,7 @@ public class Registration extends BaseActivity {
         actionBtn.setOnClickListener(view -> {
             if (!email.getText().toString().isEmpty() && !tenantId.isEmpty() && !password.getText().toString().isEmpty()) {
                 actionBtn.setVisibility(View.GONE);
+                loadingPb.setVisibility(View.VISIBLE);
                 enqueueDownloadAndReadWorkers();
             } else {
                 if (email.getText().toString().isEmpty()) {
@@ -131,6 +135,7 @@ public class Registration extends BaseActivity {
                 }
                 else {
                     actionBtn.setVisibility(View.GONE);
+                    loadingPb.setVisibility(View.VISIBLE);
                     companiesViewModel.start(email.getText().toString().trim());
                 }
             }
@@ -144,6 +149,7 @@ public class Registration extends BaseActivity {
 
         companiesViewModel.getLiveData().observe(this, companyModels -> {
             actionBtn.setVisibility(View.VISIBLE);
+            loadingPb.setVisibility(View.GONE);
             companyList = companyModels;
             if (companyModels.size() > 0) {
                 tenantId = companyModels.get(0).getCompanyCode();
@@ -251,6 +257,7 @@ public class Registration extends BaseActivity {
             // Work failed, handle failure
             showMessage("Error in Syncing data");
             actionBtn.setVisibility(View.VISIBLE);
+            loadingPb.setVisibility(View.GONE);
 //            demoBtn.setEnabled(true);
 
         }

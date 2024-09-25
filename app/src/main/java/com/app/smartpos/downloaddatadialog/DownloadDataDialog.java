@@ -117,6 +117,7 @@ public class DownloadDataDialog extends DialogFragment {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
                 } else {
                     downloadBtn.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
                     if (OPERATION_UPLOAD.equals(operationType)) {
                         enqueueCreateAndUploadWorkers(requireActivity());
                     } else if (OPERATION_DOWNLOAD.equals(operationType)) {
@@ -410,6 +411,7 @@ public class DownloadDataDialog extends DialogFragment {
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             downloadBtn.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
             showMessage(requireActivity().getString(R.string.error_in_syncing_data));
         }
     }

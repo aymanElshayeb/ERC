@@ -125,6 +125,7 @@
             android:drawablePadding="8dp"
             android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
+            android:visibility="invisible"
             android:text="King Abdullah Road, La Vally Store"
             android:textColor="#F4F4F4"
             android:textSize="15sp"
