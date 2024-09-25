@@ -39,6 +39,7 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -46,7 +47,7 @@ import com.app.smartpos.utils.SharedPrefUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Registration extends AppCompatActivity {
+public class Registration extends BaseActivity {
     EditText email;
     Spinner spinner;
     EditText password;
