@@ -14,10 +14,11 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

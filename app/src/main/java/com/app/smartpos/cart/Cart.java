@@ -21,11 +21,12 @@ import com.app.smartpos.checkout.NewCheckout;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Cart extends AppCompatActivity {
+public class Cart extends BaseActivity {
 
     CartAdapter productCartAdapter;
 

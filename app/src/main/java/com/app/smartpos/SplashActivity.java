@@ -14,6 +14,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 
 import org.apache.http.auth.AUTH;
@@ -35,7 +36,7 @@ import kotlin.text.Charsets;
 import okhttp3.OkHttpClient;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
 
     public static int splashTimeOut = 2000;

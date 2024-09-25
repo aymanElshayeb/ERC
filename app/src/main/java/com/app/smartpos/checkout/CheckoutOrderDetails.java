@@ -22,12 +22,13 @@ import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
 import java.util.HashMap;
 
-public class CheckoutOrderDetails extends AppCompatActivity {
+public class CheckoutOrderDetails extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     Device device;

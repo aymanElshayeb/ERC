@@ -18,8 +18,9 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.utils.BaseActivity;
 
-public class ShiftEndedSuccessfully extends AppCompatActivity {
+public class ShiftEndedSuccessfully extends BaseActivity {
 
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;

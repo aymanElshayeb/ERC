@@ -23,10 +23,11 @@ import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
-public class SuccessfulPayment extends AppCompatActivity {
+public class SuccessfulPayment extends BaseActivity {
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;
     TextView amountTv;

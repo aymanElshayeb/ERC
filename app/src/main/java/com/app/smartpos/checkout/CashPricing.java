@@ -15,10 +15,11 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.text.DecimalFormat;
 
-public class CashPricing extends AppCompatActivity {
+public class CashPricing extends BaseActivity {
 
     double totalAmount = 0;
     String cash = "";

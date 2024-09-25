@@ -22,11 +22,12 @@ import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.refund.Model.RefundModel;
 import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Refund extends AppCompatActivity {
+public class Refund extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     RefundDetailsViewModel model;

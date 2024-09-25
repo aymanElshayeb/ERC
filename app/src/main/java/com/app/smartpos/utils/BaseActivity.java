@@ -5,6 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +46,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         Locale.setDefault(locale);
         overrideConfiguration.setLocale(locale);
         super.applyOverrideConfiguration(overrideConfiguration);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(getCurrentFocus()!=null){
+            InputMethodManager imm= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
 

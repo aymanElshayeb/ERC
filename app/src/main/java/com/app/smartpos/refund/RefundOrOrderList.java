@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class RefundOrOrderList extends AppCompatActivity {
+public class RefundOrOrderList extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     String currency;

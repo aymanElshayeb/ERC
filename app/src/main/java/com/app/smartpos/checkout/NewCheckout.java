@@ -25,6 +25,7 @@ import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,7 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class NewCheckout extends AppCompatActivity {
+public class NewCheckout extends BaseActivity {
 
     TextView totalAmountWithoutVatTv;
     TextView totalAmountTv;

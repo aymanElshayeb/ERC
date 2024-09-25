@@ -30,12 +30,13 @@ import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
 import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 
-public class WorkerActivity extends AppCompatActivity {
+public class WorkerActivity extends BaseActivity {
 
 
     public void enqueueCreateAndUploadWorkers() {
