@@ -396,6 +396,7 @@
     <string name="registration">التسجيل</string>
     <string name="merchant_id">معرف التاجر</string>
     <string name="register">التسجيل</string>
+    <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="demo">العرض التجريبي</string>
     <string name="user_name_empty">حقل اسم المستخدم فارغ</string>
     <string name="password_empty">حقل كلمة المرور فارغ</string>
