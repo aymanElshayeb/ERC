@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.work.Data;
@@ -57,9 +58,12 @@ public class Registration extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registartion);
+
         deviceId = Utils.getDeviceId(this);
         ConstraintLayout languageCl = findViewById(R.id.language_cl);
         companiesViewModel = new CheckCompaniesViewModel();
@@ -82,7 +86,7 @@ public class Registration extends AppCompatActivity {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (email.getText().toString().trim().matches(emailPattern) ) {
+                if (email.getText().toString().trim().matches(emailPattern)) {
                     actionBtn.setEnabled(true);
                     actionBtn.setAlpha(1);
 
@@ -108,7 +112,7 @@ public class Registration extends AppCompatActivity {
                 if (!password.getText().toString().trim().isEmpty()) {
                     actionBtn.setEnabled(true);
                     actionBtn.setAlpha(1);
-                    actionBtn.setText("Register");
+
                 } else {
                     actionBtn.setEnabled(false);
                     actionBtn.setAlpha(0.5f);
@@ -155,6 +159,7 @@ public class Registration extends AppCompatActivity {
                 spinner.setVisibility(View.VISIBLE);
                 password.setVisibility(View.VISIBLE);
                 password.setText("");
+                actionBtn.setText("Register");
                 ArrayList<String> arrayList = new ArrayList<>();
 
                 for (int i = 0; i < companyModels.size(); i++) {
