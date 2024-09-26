@@ -35,8 +35,8 @@ import androidx.work.WorkManager;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
 import com.app.smartpos.auth.AuthActivity;
-import com.app.smartpos.auth.LoginFragment;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.settings.Synchronization.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
@@ -132,19 +132,19 @@ public class Registration extends BaseActivity {
             } else {
                 if (email.getText().toString().isEmpty()) {
                     Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     actionBtn.setVisibility(View.GONE);
                     loadingPb.setVisibility(View.VISIBLE);
                     companiesViewModel.start(email.getText().toString().trim());
                 }
             }
         });
-        String language = LocaleManager.getLanguage(this);
+
+        ChangeLanguageDialog dialog = new ChangeLanguageDialog();
+
 
         languageCl.setOnClickListener(view -> {
-            LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
-            LocaleManager.resetApp(this);
+            dialog.show(getSupportFragmentManager(), "change language dialog");
         });
 
         companiesViewModel.getLiveData().observe(this, companyModels -> {

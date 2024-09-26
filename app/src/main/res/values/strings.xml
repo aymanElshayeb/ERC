@@ -418,6 +418,9 @@
 
     <string name="confirmation_for_ending_your_shift">Confirmation for ending your shift?</string>
     <string name="confirmation_for_ending_your_shift_desc">Are you sure you want to end your current shift and submit details?</string>
+    <string name="confirmation_for_change_language">Confirm change language??</string>
+    <string name="confirmation_for_change_language_desc">Are you sure you want to change your language to arabic?</string>
+
 
     <string name="have_a_good_day">Have a good day!</string>
     <string name="you_will_be_logged_out_in">You will be logged out in</string>

@@ -21,11 +21,11 @@ import androidx.fragment.app.Fragment;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-import org.apache.poi.sl.usermodel.TextShape;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,31 +45,30 @@ public class LoginFragment extends Fragment {
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
-            String language = LocaleManager.getLanguage(getContext());
+            ChangeLanguageDialog dialog = new ChangeLanguageDialog();
+
 
             languageCl.setOnClickListener(view -> {
-                LocaleManager.updateLocale(getContext(), language.equals("en") ? "ar" : "en");
-                LocaleManager.resetApp(getActivity());
+                dialog.show(getParentFragmentManager(), "change language dialog");
             });
-//            emailEt.setText("admin@admin.com");
-//            passwordEt.setText("01111Mm&");
+
 
             String lang = LocaleManager.getLanguage(requireActivity());
-            emailEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
-            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            emailEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            passwordEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireActivity());
             databaseAccess.open();
-            List<HashMap<String,String>>list=databaseAccess.getAllUsers();
-            for(int i=0;i<list.size();i++) {
-                Log.i("datadata",list.get(i).toString());
+            List<HashMap<String, String>> list = databaseAccess.getAllUsers();
+            for (int i = 0; i < list.size(); i++) {
+                Log.i("datadata", list.get(i).toString());
             }
 
             loginBtn.setOnClickListener(view -> {
 
                 databaseAccess.open();
                 HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString());
-                if(map!=null) {
+                if (map != null) {
                     Hasher hasher = new Hasher();
                     boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                     //Log.i("datadata",map.toString());
@@ -85,7 +84,7 @@ public class LoginFragment extends Fragment {
                     } else {
                         Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                } else {
                     Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
 
                 }

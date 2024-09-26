@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -48,10 +49,10 @@ public class Profile extends BaseActivity {
         }
         String language = LocaleManager.getLanguage(this);
         languageTv.setText(language.equals("en") ? "English" : "عربى");
+        ChangeLanguageDialog dialog = new ChangeLanguageDialog();
 
         languageCl.setOnClickListener(view -> {
-            LocaleManager.updateLocale(this, language.equals("en") ? "ar" : "en");
-            LocaleManager.resetApp(this);
+            dialog.show(getSupportFragmentManager(), "change language dialog");
         });
         closeIm.setOnClickListener(view -> {
             finish();

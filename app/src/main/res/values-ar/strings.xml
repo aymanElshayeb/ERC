@@ -413,6 +413,9 @@
     <string name="confirmation_for_ending_your_shift">هل تريد تأكيد إنهاء ورديتك؟</string>
     <string name="confirmation_for_ending_your_shift_desc">هل أنت متأكد من أنك تريد إنهاء ورديتك الحالية وإرسال التفاصيل؟</string>
 
+    <string name="confirmation_for_change_language">تأكيد تغيير اللغة؟</string>
+    <string name="confirmation_for_change_language_desc">هل أنت متأكد أنك تريد تغيير لغتك إلى الإنجليزية؟</string>
+
     <string name="have_a_good_day">أتمنى لك يومًا طيبًا!</string>
     <string name="you_will_be_logged_out_in">سيتم تسجيل خروجك فى</string>
     <string name="seconds">ثواني</string>
