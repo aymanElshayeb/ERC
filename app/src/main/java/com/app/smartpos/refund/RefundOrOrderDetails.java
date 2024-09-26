@@ -163,11 +163,13 @@ public class RefundOrOrderDetails extends WorkerActivity {
         for (int i = 0; i < orderDetailsList.size(); i++) {
             double product_price = Double.parseDouble(orderDetailsList.get(i).get("product_price"));
             int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
-            double product_qty = Double.parseDouble(orderDetailsList.get(i).get("product_qty"));
+            double product_qty = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
             String item_checked = orderDetailsList.get(i).get("item_checked");
 
             if (!isRefund) {
                 total += product_qty * product_price;
+                total = Double.parseDouble(Utils.trimLongDouble(total));
+                Log.i("datadata_total",total+" "+(product_qty * product_price));
             } else {
                 if (item_checked.equals("1") && refund_qty > 0) {
                     total += refund_qty * product_price;

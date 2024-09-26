@@ -45,6 +45,9 @@ public class CashPricing extends BaseActivity {
         totalAmountTv = findViewById(R.id.total_amount_tv);
         cashGivingTv = findViewById(R.id.cash_giving_tv);
         changeTv = findViewById(R.id.change_tv);
+        TextView totalAmountSarTv = findViewById(R.id.total_amount_sar_tv);
+        TextView cashGivingSarTv = findViewById(R.id.cash_giving_sar_tv);
+        TextView changeSarTv = findViewById(R.id.change_sar_tv);
         TextView payTv = findViewById(R.id.pay_tv);
         ImageView backIm = findViewById(R.id.back_im);
 
@@ -53,9 +56,13 @@ public class CashPricing extends BaseActivity {
         databaseAccess.open();
         currency = databaseAccess.getCurrency();
 
+        totalAmountSarTv.setText(currency);
+        changeSarTv.setText(currency);
+        cashGivingSarTv.setText(currency);
+
         changeTv.setMaxEms(7+currency.length());
 
-        totalAmountTv.setText(Utils.trimLongDouble(totalAmount) + " " + currency);
+        totalAmountTv.setText(Utils.trimLongDouble(totalAmount));
 
         TextView num0 = findViewById(R.id.num_0);
         TextView num1 = findViewById(R.id.num_1);
@@ -96,16 +103,16 @@ public class CashPricing extends BaseActivity {
             }
         });
 
-        cashGivingTv.setText("0"+ " " + currency);
+        cashGivingTv.setText("0");
         change = 0;
-        changeTv.setText(change + " " + currency);
+        changeTv.setText(change+"");
 
         backIm.setOnClickListener(view -> finish());
 
     }
 
     private void setNumber(String number) {
-        if (cashGivingTv.getText().toString().length() == 7+currency.length()) {
+        if (cashGivingTv.getText().toString().length() == 7) {
             return;
         }
         if (cash.equals("0")) {
@@ -118,22 +125,22 @@ public class CashPricing extends BaseActivity {
             number = "";
         }
         cash += number;
-        cashGivingTv.setText(cash+ " " + currency);
+        cashGivingTv.setText(cash);
         change = totalAmount - Double.parseDouble(cash);
-        changeTv.setText(Utils.trimLongDouble(change) + " " + currency);
+        changeTv.setText(Utils.trimLongDouble(change));
     }
 
     private void del() {
         if (cash.length() <= 1) {
             cash = "";
-            cashGivingTv.setText("0"+ " " + currency);
+            cashGivingTv.setText("0");
             change = 0;
         } else {
             cash = cash.substring(0, cash.length()- 1);
-            cashGivingTv.setText(cash+ " " + currency);
+            cashGivingTv.setText(cash);
             change = totalAmount - Double.parseDouble(cash);
         }
 
-        changeTv.setText(Utils.trimLongDouble(change) + " " + currency);
+        changeTv.setText(Utils.trimLongDouble(change));
     }
 }

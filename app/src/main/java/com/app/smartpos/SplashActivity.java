@@ -13,6 +13,7 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.checkout.SuccessfulPayment;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
@@ -74,7 +75,6 @@ public class SplashActivity extends BaseActivity {
                 finish();
             }
         }, splashTimeOut);
-
 
     }
 

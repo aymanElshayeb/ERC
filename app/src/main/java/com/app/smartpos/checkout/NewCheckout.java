@@ -253,6 +253,7 @@ public class NewCheckout extends BaseActivity {
                     if(fromQuickBill){
                         totalPriceWithTax=Double.parseDouble(cartProductList.get(0).get("product_price"));
                     }
+                    Log.i("datadata_total_cart",totalPriceWithTax+"");
                     obj.put("in_tax_total", totalPriceWithTax);
 
                     databaseAccess.open();

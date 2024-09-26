@@ -94,8 +94,10 @@ public class Cart extends BaseActivity {
             double productTax = 1+databaseAccess.getProductTax(productId)/100;
             totalWithoutTax+= (productPrice/productTax)*productCount;
             total+=productPrice*productCount;
-            Log.i("datadata",productTax+" "+totalWithoutTax+" "+total);
+            Log.i("datadata",(productPrice*productCount)+" "+productTax+" "+totalWithoutTax+" "+total);
         }
+        Log.i("datadata_total",totalWithoutTax+" "+total);
+
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
         totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
         totalAmountTv.setText(Utils.trimLongDouble(total)+" "+currency);

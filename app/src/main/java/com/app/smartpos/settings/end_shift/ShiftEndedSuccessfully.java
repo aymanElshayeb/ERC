@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 public class ShiftEndedSuccessfully extends BaseActivity {
 
@@ -50,6 +51,7 @@ public class ShiftEndedSuccessfully extends BaseActivity {
 
             @Override
             public void onFinish() {
+                SharedPrefUtils.setIsLoggedIn(ShiftEndedSuccessfully.this, true);
                 finish();
                 startActivity(new Intent(ShiftEndedSuccessfully.this, AuthActivity.class));
             }
