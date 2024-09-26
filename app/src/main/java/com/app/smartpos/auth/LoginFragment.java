@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment {
                         SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
                         SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
                         SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
+                        SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
                         Intent intent = new Intent(context, NewHomeActivity.class);
                         startActivity(intent);
                         requireActivity().finish();

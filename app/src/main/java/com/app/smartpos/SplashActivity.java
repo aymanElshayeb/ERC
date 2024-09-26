@@ -16,6 +16,7 @@ import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.apache.http.auth.AUTH;
 
@@ -56,14 +57,20 @@ public class SplashActivity extends BaseActivity {
         Log.i("end_date", endDateString);
 
         disableSSLCertificateChecking();
-        AndroidNetworking.initialize(this,getUnsafeOkHttpClient());
+        AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
                 Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
-                startActivity(intent);
+                Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
+
+                if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
+                    startActivity(intentHome);
+                } else {
+                    startActivity(intent);
+                }
                 finish();
             }
         }, splashTimeOut);
@@ -74,7 +81,7 @@ public class SplashActivity extends BaseActivity {
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -98,7 +105,7 @@ public class SplashActivity extends BaseActivity {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {

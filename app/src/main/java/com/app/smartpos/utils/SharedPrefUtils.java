@@ -123,6 +123,15 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("username","");
     }
 
+    public static void setIsLoggedIn(Context context,Boolean flag){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putBoolean("loggedIn", flag).commit();
+    }
+
+    public static boolean getIsLoggedIn(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getBoolean("loggedIn",false);
+    }
 
 
 }

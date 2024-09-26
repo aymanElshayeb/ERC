@@ -61,6 +61,7 @@ public class Profile extends BaseActivity {
         logoutLl.setOnClickListener(view -> {
             Intent intent = new Intent(this, AuthActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            SharedPrefUtils.setIsLoggedIn(this, false);
             startActivity(intent);
             finish();
         });
