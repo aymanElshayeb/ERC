@@ -211,11 +211,11 @@ public class DatabaseAccess {
             total_cash = shiftDifferences.getReal();
             diff_cash = shiftDifferences.getDiff();
         }
-        values.put("total_cash", Utils.trimLongDouble(total_cash));
-        values.put("difference_cash", Utils.trimLongDouble(diff_cash));
+        values.put("total_cash", total_cash);
+        values.put("difference_cash", diff_cash);
 
-        values.put("start_cash", Utils.trimLongDouble(endShiftModel.getStartCash()));
-        values.put("leave_cash", Utils.trimLongDouble(endShiftModel.getLeaveCash()));
+        values.put("start_cash", endShiftModel.getStartCash());
+        values.put("leave_cash", endShiftModel.getLeaveCash());
 
         values.put("num_successful_transaction", endShiftModel.getNum_successful_transaction());
         values.put("num_canceled_transaction", endShiftModel.getNum_canceled_transaction());
@@ -245,9 +245,9 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
         values.put("shift_id", id);
-        values.put("total", Utils.trimLongDouble(shiftDifference.getReal()));
+        values.put("total", shiftDifference.getReal());
         values.put("credit_code", shiftDifference.getCode());
-        values.put("difference", Utils.trimLongDouble(shiftDifference.getDiff()));
+        values.put("difference", shiftDifference.getDiff());
 
         //Log.i("datadata_shift_diff", values.toString());
 
@@ -937,12 +937,12 @@ public class DatabaseAccess {
             values.put("approval_code", approval_code);
             values.put("operation_sub_type", operation_sub_type);
             values.put("ecr_code", ecr_code);
-            values.put("tax", Utils.trimLongDouble(tax));
-            values.put("discount", Utils.trimLongDouble(discount));
-            values.put("in_tax_total", Utils.trimLongDouble(in_tax_total));
-            values.put("ex_tax_total", Utils.trimLongDouble(ex_tax_total));
-            values.put("paid_amount", Utils.trimLongDouble(paid_amount));
-            values.put("change_amount", Utils.trimLongDouble(change_amount));
+            values.put("tax", tax);
+            values.put("discount", discount);
+            values.put("in_tax_total", in_tax_total);
+            values.put("ex_tax_total", ex_tax_total);
+            values.put("paid_amount", paid_amount);
+            values.put("change_amount", change_amount);
 //            values.put("tax_number", tax_number);
             values.put("operation_type", operation_type);
             values.put("original_order_id", original_order_id);
@@ -996,11 +996,11 @@ public class DatabaseAccess {
                 values2.put("product_name_ar", product_name_ar);
                 values2.put("product_uuid", product_uuid);
                 values2.put("product_weight", product_weight);
-                values2.put("in_tax_total", Utils.trimLongDouble(in_tax_total));
-                values2.put("ex_tax_total", Utils.trimLongDouble(ex_tax_total));
-                values2.put("tax_amount", Utils.trimLongDouble(in_tax_total - ex_tax_total));
+                values2.put("in_tax_total", in_tax_total);
+                values2.put("ex_tax_total", ex_tax_total);
+                values2.put("tax_amount", in_tax_total - ex_tax_total);
                 values2.put("product_qty", product_qty);
-                values2.put("product_price", Utils.trimLongDouble(product_price));
+                values2.put("product_price", product_price);
                 values2.put("tax_percentage", getProductTax(product_id));
                 values2.put("product_image", product_image);
                 values2.put("product_order_date", product_order_date);
