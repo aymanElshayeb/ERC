@@ -26,9 +26,8 @@ import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.refund.Model.RefundModel;
-import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -234,9 +233,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             // Work succeeded, handle success
             showMessage(getString(R.string.data_synced_successfully));
             redirectToSuccess();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                AuthoruzationHolder.resetAuthorization();
-            }
+            SharedPrefUtils.resetAuthorization();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             showMessage(getString(R.string.error_in_syncing_data));

@@ -54,33 +54,24 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
 
 
-        cardLocalImport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingLl.setVisibility(View.VISIBLE);
-                enqueueUploadWorkers();
-            }
+        cardLocalImport.setOnClickListener(v -> {
+            loadingLl.setVisibility(View.VISIBLE);
+            enqueueUploadWorkers();
         });
 
 
-        cardLocalBackUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingLl.setVisibility(View.VISIBLE);
-                enqueueDownloadAndReadWorkers();
+        cardLocalBackUp.setOnClickListener(v -> {
+            loadingLl.setVisibility(View.VISIBLE);
+            enqueueDownloadAndReadWorkers();
 
-            }
         });
 
-        downloadProductsImages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingLl.setVisibility(View.VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    enqueueDownloadProductsImagesWorkers();
-                }
-
+        downloadProductsImages.setOnClickListener(v -> {
+            loadingLl.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                enqueueDownloadProductsImagesWorkers();
             }
+
         });
 
     }

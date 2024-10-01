@@ -33,7 +33,7 @@ import com.app.smartpos.settings.Synchronization.ExportFileWorker;
 import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
-import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -52,7 +52,7 @@ public class WorkerActivity extends BaseActivity {
 
         Data lastSync = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if(AuthoruzationHolder.getAuthorization().isEmpty()){
+            if(SharedPrefUtils.getAuthorization().isEmpty()){
                 lastSync = new Data.Builder().
                         putString("url", LAST_SYNC_URL).
                         putString("tenantId", conf.get("merchant_id")).
@@ -63,7 +63,7 @@ public class WorkerActivity extends BaseActivity {
                         putString("url", LAST_SYNC_URL).
                         putString("tenantId", conf.get("merchant_id")).
                         putString("ecrCode", conf.get("ecr_code")).
-                        putString("Authorization",AuthoruzationHolder.getAuthorization()).
+                        putString("Authorization",SharedPrefUtils.getAuthorization()).
                         build();
             }
         }
@@ -88,7 +88,7 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && AuthoruzationHolder.getAuthorization().isEmpty()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && SharedPrefUtils.getAuthorization().isEmpty()) {
             continuation = WorkManager.getInstance(this)
                     .beginWith(lastSyncRequest)
                     .then(exportRequest)
@@ -191,7 +191,7 @@ public class WorkerActivity extends BaseActivity {
 
         Data lastSync = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if(AuthoruzationHolder.getAuthorization().isEmpty()){
+            if(SharedPrefUtils.getAuthorization().isEmpty()){
                 lastSync = new Data.Builder().
                         putString("url", LAST_SYNC_URL).
                         putString("tenantId", conf.get("merchant_id")).
@@ -202,7 +202,7 @@ public class WorkerActivity extends BaseActivity {
                         putString("url", LAST_SYNC_URL).
                         putString("tenantId", conf.get("merchant_id")).
                         putString("ecrCode", conf.get("ecr_code")).
-                        putString("Authorization",AuthoruzationHolder.getAuthorization()).
+                        putString("Authorization",SharedPrefUtils.getAuthorization()).
                         build();
             }
         }
@@ -229,7 +229,7 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && AuthoruzationHolder.getAuthorization().isEmpty()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && SharedPrefUtils.getAuthorization().isEmpty()) {
             continuation = WorkManager.getInstance(this)
                     .beginWith(loginRequest)
                     .then(lastSyncRequest)
@@ -277,7 +277,7 @@ public class WorkerActivity extends BaseActivity {
                 .putString("url",PRODUCT_IMAGES_SIZE)
                 .putString("apikey", API_KEY)
                 .putString("tenantId", conf.get("merchant_id"))
-                .putString("Authorization", AuthoruzationHolder.getAuthorization())
+                .putString("Authorization", SharedPrefUtils.getAuthorization())
                 .build();
 
 
@@ -303,8 +303,8 @@ public class WorkerActivity extends BaseActivity {
                             Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
 //                        authorization= workInfo.getOutputData().getString("Authorization");
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                AuthoruzationHolder.setAuthorization(workInfo.getOutputData().getString("Authorization"));
-                                Log.i("WORK AUTH", AuthoruzationHolder.getAuthorization());
+                                SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
+                                Log.i("WORK AUTH", SharedPrefUtils.getAuthorization());
                             }
 
                         }

@@ -58,7 +58,6 @@ import com.app.smartpos.settings.Synchronization.ExportFileWorker;
 import com.app.smartpos.settings.Synchronization.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.UploadWorker;
-import com.app.smartpos.utils.AuthoruzationHolder;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -123,9 +122,7 @@ public class DownloadDataDialog extends DialogFragment {
                     } else if (OPERATION_DOWNLOAD.equals(operationType)) {
                         enqueueDownloadAndReadWorkers();
                     } else if (OPERATION_REFUND.equals(operationType)) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            enqueueRefundWorkers();
-                        }
+                        enqueueRefundWorkers();
                     }
                 }
             });
@@ -235,21 +232,19 @@ public class DownloadDataDialog extends DialogFragment {
                 build();
 
         Data lastSync = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if(AuthoruzationHolder.getAuthorization().isEmpty()){
-                lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        build();
-            } else{
-                lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        putString("Authorization",AuthoruzationHolder.getAuthorization()).
-                        build();
-            }
+        if(SharedPrefUtils.getAuthorization().isEmpty()){
+            lastSync = new Data.Builder().
+                    putString("url", LAST_SYNC_URL).
+                    putString("tenantId", conf.get("merchant_id")).
+                    putString("ecrCode", conf.get("ecr_code")).
+                    build();
+        } else{
+            lastSync = new Data.Builder().
+                    putString("url", LAST_SYNC_URL).
+                    putString("tenantId", conf.get("merchant_id")).
+                    putString("ecrCode", conf.get("ecr_code")).
+                    putString("Authorization",SharedPrefUtils.getAuthorization()).
+                    build();
         }
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
@@ -274,7 +269,7 @@ public class DownloadDataDialog extends DialogFragment {
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && AuthoruzationHolder.getAuthorization().isEmpty()) {
+        if (SharedPrefUtils.getAuthorization().isEmpty()) {
             continuation = WorkManager.getInstance(activity)
                     .beginWith(loginRequest)
                     .then(lastSyncRequest)
@@ -301,7 +296,6 @@ public class DownloadDataDialog extends DialogFragment {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void enqueueRefundWorkers() {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
         databaseAccess.open();
@@ -387,8 +381,8 @@ public class DownloadDataDialog extends DialogFragment {
                         if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
                             Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
 //                        authorization= workInfo.getOutputData().getString("Authorization");
-                            AuthoruzationHolder.setAuthorization(workInfo.getOutputData().getString("Authorization"));
-                            Log.i("WORK AUTH", AuthoruzationHolder.getAuthorization());
+                            SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
+                            Log.i("WORK AUTH", SharedPrefUtils.getAuthorization());
                         }
                     }
                 });
@@ -396,7 +390,7 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        Log.i("log_auth",AuthoruzationHolder.getAuthorization());
+                        Log.i("log_auth",SharedPrefUtils.getAuthorization());
                         handleWorkCompletion(workInfo);
                     }
                 });
@@ -417,10 +411,7 @@ public class DownloadDataDialog extends DialogFragment {
     }
 
     private void closePendingScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.i("LOG AUTHINSIDE Close ",AuthoruzationHolder.getAuthorization());
-        }
-
+        Log.i("LOG AUTHINSIDE Close ",SharedPrefUtils.getAuthorization());
         if (getActivity() instanceof Refund) {
             ((Refund) getActivity()).callApi();
         } else if (getActivity() instanceof RefundOrOrderList) {

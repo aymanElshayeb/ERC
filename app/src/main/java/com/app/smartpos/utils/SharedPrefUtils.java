@@ -134,4 +134,19 @@ public class SharedPrefUtils {
     }
 
 
+    public static void setAuthorization(String auth){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("ecr_auth", "Bearer "+auth).commit();
+    }
+
+    public static String getAuthorization(){
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_auth","");
+    }
+
+    public static void resetAuthorization(){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("ecr_auth", "").commit();
+    }
+
 }

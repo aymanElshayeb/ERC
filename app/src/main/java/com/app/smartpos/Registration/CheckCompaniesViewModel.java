@@ -15,9 +15,8 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.app.smartpos.Registration.Model.CompanyModel;
-import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.refund.Model.RefundModel;
-import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.MultiLanguageApp;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,10 +37,9 @@ public class CheckCompaniesViewModel extends ViewModel {
     }
 
     public void start(String email) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
                     .addHeaders("apikey", API_KEY)
-                    .addHeaders("Authorization", AuthoruzationHolder.getAuthorization())
+                    .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
                     .setTag("GET INVOICE DETAILS")
                     .setPriority(Priority.HIGH)
                     .build().getAsJSONObject(new JSONObjectRequestListener() {
@@ -70,6 +68,6 @@ public class CheckCompaniesViewModel extends ViewModel {
                             Log.i("datadata_error", anError.getMessage() + " ");
                         }
                     });
-        }
+
     }
 }
