@@ -439,6 +439,7 @@
     //sync
     <string name="download_synchronization">مزامنة التنزيل</string>
     <string name="upload_synchronization">مزامنة التحميل</string>
+    <string name="download_product_images">تحميل صور المنتجات</string>
     <string name="data_synced_successfully">تمت مزامنة البيانات بنجاح</string>
     <string name="error_in_syncing_data">خطأ في مزامنة البيانات</string>
 

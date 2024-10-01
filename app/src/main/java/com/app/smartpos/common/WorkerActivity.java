@@ -1,18 +1,22 @@
 package com.app.smartpos.common;
 
+import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.LAST_SYNC_URL;
 import static com.app.smartpos.Constant.LOGIN_URL;
+import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.app.Activity;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -245,6 +249,72 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                        handleWorkCompletion(workInfo);
+                    }
+                });
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void enqueueDownloadProductsImagesWorkers() {
+        //username Admin
+        //password 01111Mm&
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+
+        Data lastSync = null;
+        String ecr= conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", ecr).
+                putString("password", deviceId).
+                build();
+        Data SizeData = new Data.Builder()
+                .putString("url",PRODUCT_IMAGES_SIZE)
+                .putString("apikey", API_KEY)
+                .putString("tenantId", conf.get("merchant_id"))
+                .putString("Authorization", AuthoruzationHolder.getAuthorization())
+                .build();
+
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+
+        OneTimeWorkRequest lastSyncRequest = new OneTimeWorkRequest.Builder(LastSyncWorker.class).
+                setInputData(SizeData).
+                build();
+
+        WorkContinuation  continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(lastSyncRequest);
+
+        continuation.enqueue();
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(lastSyncRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                        if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
+                            Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
+//                        authorization= workInfo.getOutputData().getString("Authorization");
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                AuthoruzationHolder.setAuthorization(workInfo.getOutputData().getString("Authorization"));
+                                Log.i("WORK AUTH", AuthoruzationHolder.getAuthorization());
+                            }
+
+                        }
+                    }
+                });
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(lastSyncRequest.getId())
+                .observeForever(workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        Log.i("datadata",workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);
                     }

@@ -30,7 +30,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
     LinearLayout loadingLl;
     ProgressDialog loading;
     private LocalBackup localBackup;
-    CardView cardLocalBackUp, cardLocalImport, cardExportToExcel, cardBackupToDrive;
+    CardView cardLocalBackUp, cardLocalImport, downloadProductsImages, cardBackupToDrive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
         final DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
         cardLocalBackUp = findViewById(R.id.download_backup);
         cardLocalImport = findViewById(R.id.upload_backup);
+        downloadProductsImages = findViewById(R.id.download_products_images);
 
 
 
@@ -67,6 +68,17 @@ public class DataBaseBackupActivity extends WorkerActivity {
             public void onClick(View v) {
                 loadingLl.setVisibility(View.VISIBLE);
                 enqueueDownloadAndReadWorkers();
+
+            }
+        });
+
+        downloadProductsImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingLl.setVisibility(View.VISIBLE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    enqueueDownloadProductsImagesWorkers();
+                }
 
             }
         });
