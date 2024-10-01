@@ -129,6 +129,9 @@ public class QuickBill extends Activity {
         if(cash.equals("0")){
             cash="";
         }
+        if(amountTv.getText().toString().contains(".") && amountTv.getText().toString().split("\\.").length==2 && amountTv.getText().toString().split("\\.")[1].length()==2){
+            return;
+        }
         if(cash.isEmpty() && number.equals(".")){
             number="0.";
         }

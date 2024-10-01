@@ -118,6 +118,9 @@ public class CashPricing extends BaseActivity {
         if (cash.equals("0")) {
             cash = "";
         }
+        if(cashGivingTv.getText().toString().contains(".") && cashGivingTv.getText().toString().split("\\.").length==2 && cashGivingTv.getText().toString().split("\\.")[1].length()==2){
+            return;
+        }
         if (cash.isEmpty() && number.equals(".")) {
             number = "0.";
         }
