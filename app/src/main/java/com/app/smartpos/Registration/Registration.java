@@ -281,4 +281,9 @@ public class Registration extends BaseActivity {
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onBackPressed() {
+        
+    }
 }

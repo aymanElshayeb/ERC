@@ -47,9 +47,8 @@ public class AuthActivity extends BaseActivity {
 //            dialog.show(getSupportFragmentManager(), "register dialog");
         }else {
             String merchantId=conf.get("merchant_id");
-            String ecrCode=conf.get("ecr_code");
+            //String ecrCode=conf.get("ecr_code");
             SharedPrefUtils.setMerchantId(this,merchantId);
-            SharedPrefUtils.setEcrCode(this,ecrCode);
         }
 
         final PackageManager pm = getPackageManager();
