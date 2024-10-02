@@ -1,18 +1,13 @@
 package com.app.smartpos.Registration;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,12 +17,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -37,12 +29,11 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
-import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.ChangeLanguageDialog;
-import com.app.smartpos.settings.Synchronization.DecompressWorker;
-import com.app.smartpos.settings.Synchronization.DownloadWorker;
-import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
+import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
+import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;

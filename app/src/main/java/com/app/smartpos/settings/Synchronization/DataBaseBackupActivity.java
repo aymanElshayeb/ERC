@@ -21,9 +21,8 @@ import androidx.work.WorkManager;
 import com.app.smartpos.R;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseOpenHelper;
-import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
+import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.backup.LocalBackup;
-import com.app.smartpos.utils.BaseActivity;
 
 public class DataBaseBackupActivity extends WorkerActivity {
 

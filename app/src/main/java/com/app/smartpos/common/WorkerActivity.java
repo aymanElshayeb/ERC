@@ -9,15 +9,11 @@ import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
-import android.app.Activity;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -26,17 +22,16 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.Synchronization.CompressWorker;
-import com.app.smartpos.settings.Synchronization.DecompressWorker;
-import com.app.smartpos.settings.Synchronization.DownloadWorker;
-import com.app.smartpos.settings.Synchronization.ExportFileWorker;
-import com.app.smartpos.settings.Synchronization.LastSyncWorker;
-import com.app.smartpos.settings.Synchronization.ReadFileWorker;
-import com.app.smartpos.settings.Synchronization.UploadWorker;
+import com.app.smartpos.settings.Synchronization.workers.CompressWorker;
+import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
+import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
+import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
+import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker;
+import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
 import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.Hasher;
-import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 
@@ -277,7 +272,6 @@ public class WorkerActivity extends BaseActivity {
                 .putString("url",PRODUCT_IMAGES_SIZE)
                 .putString("apikey", API_KEY)
                 .putString("tenantId", conf.get("merchant_id"))
-                .putString("Authorization", SharedPrefUtils.getAuthorization())
                 .build();
 
 
@@ -285,33 +279,17 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(loginInputData).
                 build();
 
-        OneTimeWorkRequest lastSyncRequest = new OneTimeWorkRequest.Builder(LastSyncWorker.class).
+        OneTimeWorkRequest productImagesSizeRequest = new OneTimeWorkRequest.Builder(ProductImagesSizeWorker.class).
                 setInputData(SizeData).
                 build();
 
         WorkContinuation  continuation = WorkManager.getInstance(this)
                 .beginWith(loginRequest)
-                .then(lastSyncRequest);
+                .then(productImagesSizeRequest);
 
         continuation.enqueue();
 
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(lastSyncRequest.getId())
-                .observe(this, workInfo -> {
-                    if (workInfo != null && workInfo.getState().isFinished()) {
-                        // Work is finished, close pending screen or perform any action
-                        if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
-                            Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
-//                        authorization= workInfo.getOutputData().getString("Authorization");
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
-                                Log.i("WORK AUTH", SharedPrefUtils.getAuthorization());
-                            }
-
-                        }
-                    }
-                });
-
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(lastSyncRequest.getId())
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(productImagesSizeRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         Log.i("datadata",workInfo.getOutputData().toString());

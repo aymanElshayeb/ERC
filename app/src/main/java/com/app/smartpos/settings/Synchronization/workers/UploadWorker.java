@@ -1,10 +1,9 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.workers;
 
 import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;

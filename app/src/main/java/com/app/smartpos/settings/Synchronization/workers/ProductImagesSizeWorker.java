@@ -1,4 +1,4 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.workers;
 
 import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
@@ -10,6 +10,8 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.settings.Synchronization.dtos.LastSyncResponseDto;
+import com.app.smartpos.settings.Synchronization.dtos.ProductImagesResponseDto;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,8 +23,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LastSyncWorker extends Worker  {
-    public LastSyncWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+public class ProductImagesSizeWorker extends Worker {
+
+    public ProductImagesSizeWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -33,8 +36,7 @@ public class LastSyncWorker extends Worker  {
         String tenantId= getInputData().getString("tenantId");
         String authorization= getInputData().getString("Authorization");
 
-        String ecrCode= getInputData().getString("ecrCode");
-        if (urL==null || tenantId==null || authorization==null||ecrCode==null) {
+        if (urL==null || tenantId==null || authorization==null) {
             return Result.failure();
         }
         OkHttpClient client = getUnsafeOkHttpClient();
@@ -42,7 +44,6 @@ public class LastSyncWorker extends Worker  {
                 add("tenantId", tenantId).
                 add("Authorization",authorization).
                 add("apikey",API_KEY).
-                add("ecrCode",ecrCode).
                 build();
         Request request = new Request.Builder()
                 .url(urL) // Replace with your server's upload endpoint
@@ -53,14 +54,13 @@ public class LastSyncWorker extends Worker  {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
                 Gson gson=new Gson();
-                ServiceResult<LastSyncResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<LastSyncResponseDto>>(){}.getType());
-                LastSyncResponseDto lastSyncResponseDto=result.getData().getReturnedObj().get(0);
+                ServiceResult<ProductImagesResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<LastSyncResponseDto>>(){}.getType());
+                ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
                 Data data=new Data.Builder().
-                        putString("invoiceBusinessId",lastSyncResponseDto.getInvoiceBusinessId()).
-                        putString("shiftBusinessId",lastSyncResponseDto.getShiftBusinessId()).
-                        putString("Authorization",authorization).
+                        putLong("imagesSize",productImagesResponseDto.getImagesSize()).
+                        putString("lastUpdateTimeStamp",productImagesResponseDto.getLastUpdateTimestamp()).
                         build();
-                return Result.success(data); // Return success if the upload is successful
+                return Result.success(data); // Return success if the response is successful
             } else {
                 return Result.failure(); // Retry the work if the server returns an error
             }
