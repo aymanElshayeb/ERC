@@ -136,7 +136,7 @@ public class SharedPrefUtils {
 
     public static void setAuthorization(String auth){
         SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("ecr_auth", "Bearer "+auth).commit();
+        editor.putString("ecr_auth", auth).commit();
     }
 
     public static String getAuthorization(){
