@@ -367,8 +367,8 @@ public class OrderBitmap extends BaseActivity {
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.quantity)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.price)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
         //newBitmaps.add(PrintingHelper.createBitmapFromText("    "));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1), newBitmaps.get(2)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
@@ -381,8 +381,8 @@ public class OrderBitmap extends BaseActivity {
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(productTotalPrice)));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(price))));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(productTotalPrice)));
             //ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
             bitmaps.add(new PrinterModel(ProductBitmap.get(0), ProductBitmap.get(1), ProductBitmap.get(2)));
             bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(name)));
