@@ -58,7 +58,7 @@ public class RefundDetailsViewModel extends ViewModel {
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.i("datadata_error", anError.getMessage() + " ");
+                        Log.i("datadata_error", anError.getMessage() + " "+anError.getErrorDetail()+" "+anError.getErrorCode());
                     }
                 });
 
