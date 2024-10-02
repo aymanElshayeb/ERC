@@ -3,6 +3,7 @@ package com.app.smartpos.settings.end_shift;
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
@@ -134,7 +136,8 @@ public class EndShiftStep2 extends WorkerActivity {
     private void onPrintZReport () {
         Device device = DeviceFactory.getDevice();
         try {
-            device.printZReport(endShiftModel);
+            Bitmap bitmap=new OrderBitmap(this).shiftZReport(endShiftModel);
+            device.printZReport(bitmap);
         }catch (Exception e){
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }

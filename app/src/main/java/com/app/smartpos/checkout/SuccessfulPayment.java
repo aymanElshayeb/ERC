@@ -71,7 +71,7 @@ public class SuccessfulPayment extends BaseActivity {
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
             try {
-                device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency(), getIntent().getStringExtra("printType"));
+                device.printReceipt(printerData.getBitmap());
             }catch (Exception e){
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }

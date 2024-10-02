@@ -59,6 +59,19 @@ public class PrintingHelper {
         format.putString("fontName", fontPath);
         return format;
     }
+    public static Bundle getImageBundle(Bitmap bitmap) {
+        Bundle format = new Bundle();
+        format.putInt("align", 1);
+        format.putInt("offset", 50);
+        format.putInt("width", bitmap.getWidth());
+        format.putInt("height", bitmap.getHeight());
+        format.putString("text", "ACHAT");
+        format.putInt("YAlign", 1);
+        format.putInt("font", 2);
+        format.putBoolean("fontBold", true);
+        format.putString("fontName", fontPath);
+        return format;
+    }
 
     public static Bundle getTextBundle(int align, boolean newLine) {
         Bundle format = new Bundle();

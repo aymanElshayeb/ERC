@@ -33,7 +33,7 @@ public class RefundDetailsViewModel extends ViewModel {
     }
 
     public void start(String sequenceId, DatabaseAccess databaseAccess) {
-        Log.i("datadata",SharedPrefUtils.getAuthorization());
+        //Log.i("datadata",SharedPrefUtils.getAuthorization());
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
         AndroidNetworking.get(BASE_URL + "/invoice/refund/" + sequenceId)

@@ -2,6 +2,7 @@ package com.app.smartpos.common.DeviceFactory;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
@@ -38,15 +39,15 @@ public class UrovoDevice implements Device{
     }
 
     @Override
-    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType) {
+    public boolean printReceipt(Bitmap bitmap) {
         UrovoPrinter urovoPrinter = new UrovoPrinter();
-        return urovoPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency,printType);
+        return urovoPrinter.printReceipt(bitmap);
     }
 
     @Override
-    public boolean printZReport(EndShiftModel endShiftModel) {
+    public boolean printZReport(Bitmap bitmap) {
         UrovoPrinter urovoPrinter = new UrovoPrinter();
-        return urovoPrinter.printZReport(endShiftModel);
+        return urovoPrinter.printZReport(bitmap);
     }
 
     @SuppressLint("NewApi")

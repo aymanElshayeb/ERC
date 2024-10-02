@@ -1,6 +1,7 @@
 package com.app.smartpos.common.DeviceFactory;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Base64;
 
 import com.app.smartpos.common.Consts;
@@ -39,15 +40,15 @@ public class NewLandDevice implements Device{
     }
 
     @Override
-    public boolean printReciept(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency,String printType) {
+    public boolean printReceipt(Bitmap bitmap) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
-        return newLandPrinter.printReceipt(invoiceId,orderDate,orderTime,priceBeforeTax,priceAfterTax,tax,discount,currency,printType);
+        return newLandPrinter.printReceipt(bitmap);
     }
 
     @Override
-    public boolean printZReport(EndShiftModel endShiftModel) {
+    public boolean printZReport(Bitmap bitmap) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
-        return newLandPrinter.printZReport(endShiftModel);
+        return newLandPrinter.printZReport(bitmap);
     }
 
     @Override

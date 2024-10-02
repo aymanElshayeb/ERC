@@ -97,8 +97,8 @@ public class DownloadDataDialog extends DialogFragment {
             passwordEt = root.findViewById(R.id.password_et);
             downloadBtn = root.findViewById(R.id.download_btn);
             progressBar = root.findViewById(R.id.progress);
-            emailEt.setText("lolo2@gmail.com");
-            passwordEt.setText("01111Mm&");
+//            emailEt.setText("lolo2@gmail.com");
+//            passwordEt.setText("01111Mm&");
 
             String lang = LocaleManager.getLanguage(requireActivity());
             emailEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
