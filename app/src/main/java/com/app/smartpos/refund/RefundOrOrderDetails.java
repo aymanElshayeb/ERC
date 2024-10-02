@@ -167,7 +167,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
             if (!isRefund) {
                 total += product_qty * product_price;
-                total = Double.parseDouble(Utils.trimLongDouble(total));
+                total = Double.parseDouble(Utils.trimLongDoubleFor3(total));
                 Log.i("datadata_total",total+" "+(product_qty * product_price));
             } else {
                 if (item_checked.equals("1") && refund_qty > 0) {

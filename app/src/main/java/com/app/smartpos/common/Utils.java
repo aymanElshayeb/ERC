@@ -49,6 +49,30 @@ public class Utils {
         return result;
     }
 
+    public static String trimLongDoubleFor3(double value){
+//        String stringValue=value+"";
+//        String partOne=stringValue.split("\\.")[0];
+//        String partTwo=stringValue.split("\\.")[1];
+//        if(partTwo.length()<=2){
+//            return stringValue;
+//        }else{
+//            return partOne+"."+partTwo.charAt(0)+partTwo.charAt(1);
+//        }
+
+        String pattern = "#.000"; //your pattern as per need
+        Locale locale = new Locale("en", "US");
+        DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        f.applyPattern(pattern);
+        String result=value == 0 ? "0.000" : f.format(value);
+        if(result.equals(".000") || result.equals("-.000") || result.equals("0.000") || result.equals("-0.000")){
+            result = "0.000";
+        }
+        if(result.startsWith(".")){
+            result="0"+result;
+        }
+        return result;
+    }
+
     public static String getDeviceId(Activity activity){
         return Settings.Secure.getString(activity.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
