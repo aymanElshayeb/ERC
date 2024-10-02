@@ -76,6 +76,8 @@ public class SplashActivity extends BaseActivity {
             }
         }, splashTimeOut);
 
+        Log.i("datadata",Utils.trimLongDouble(8.625));
+        Log.i("datadata",Utils.trimLongDouble(8.623));
     }
 
     private OkHttpClient getUnsafeOkHttpClient() {

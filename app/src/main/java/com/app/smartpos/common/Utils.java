@@ -3,6 +3,7 @@ package com.app.smartpos.common;
 import android.app.Activity;
 import android.provider.Settings;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -22,6 +23,7 @@ public class Utils {
         String pattern = "#.00"; //your pattern as per need
         Locale locale = new Locale("en", "US");
         DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        f.setRoundingMode(RoundingMode.HALF_UP);
         f.applyPattern(pattern);
         String result=value == 0 ? "0.00" : f.format(value);
         if(result.equals(".00") || result.equals("-.00") || result.equals("0.00") || result.equals("-0.00")){
@@ -38,49 +40,11 @@ public class Utils {
         String pattern = "#.00"; //your pattern as per need
         Locale locale = new Locale("en", "US");
         DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        f.setRoundingMode(RoundingMode.HALF_UP);
         f.applyPattern(pattern);
         String result=value.equals("0") ? "0.00" : f.format(doubleValue);
         if(result.equals(".00") || result.equals("-.00") || result.equals("0.00") || result.equals("-0.00")){
             result = "0.00";
-        }
-        if(result.startsWith(".")){
-            result="0"+result;
-        }
-        return result;
-    }
-
-    public static String trimLongDoubleFor3(String value){
-        double doubleValue=Double.parseDouble(value);
-        String pattern = "#.000"; //your pattern as per need
-        Locale locale = new Locale("en", "US");
-        DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
-        f.applyPattern(pattern);
-        String result=doubleValue == 0 ? "0.000" : f.format(value);
-        if(result.equals(".000") || result.equals("-.000") || result.equals("0.000") || result.equals("-0.000")){
-            result = "0.000";
-        }
-        if(result.startsWith(".")){
-            result="0"+result;
-        }
-        return result;
-    }
-    public static String trimLongDoubleFor3(double value){
-//        String stringValue=value+"";
-//        String partOne=stringValue.split("\\.")[0];
-//        String partTwo=stringValue.split("\\.")[1];
-//        if(partTwo.length()<=2){
-//            return stringValue;
-//        }else{
-//            return partOne+"."+partTwo.charAt(0)+partTwo.charAt(1);
-//        }
-
-        String pattern = "#.000"; //your pattern as per need
-        Locale locale = new Locale("en", "US");
-        DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
-        f.applyPattern(pattern);
-        String result=value == 0 ? "0.000" : f.format(value);
-        if(result.equals(".000") || result.equals("-.000") || result.equals("0.000") || result.equals("-0.000")){
-            result = "0.000";
         }
         if(result.startsWith(".")){
             result="0"+result;
