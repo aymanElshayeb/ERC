@@ -130,7 +130,7 @@ public class CashPricing extends BaseActivity {
         }
         cash += number;
         cashGivingTv.setText(cash);
-        change = totalAmount - Double.parseDouble(cash);
+        change = Double.parseDouble(Utils.trimLongDouble(totalAmount)) - Double.parseDouble(cash);
         Log.i("datadata_trim",""+change);
         Log.i("datadata_trim",Utils.trimLongDouble(change));
         changeTv.setText(Utils.trimLongDouble(change));
