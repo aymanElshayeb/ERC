@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -130,6 +131,8 @@ public class CashPricing extends BaseActivity {
         cash += number;
         cashGivingTv.setText(cash);
         change = totalAmount - Double.parseDouble(cash);
+        Log.i("datadata_trim",""+change);
+        Log.i("datadata_trim",Utils.trimLongDouble(change));
         changeTv.setText(Utils.trimLongDouble(change));
     }
 
