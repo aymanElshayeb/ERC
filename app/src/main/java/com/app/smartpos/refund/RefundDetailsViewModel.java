@@ -38,7 +38,7 @@ public class RefundDetailsViewModel extends ViewModel {
         AndroidNetworking.get(BASE_URL + "/invoice/refund/" + sequenceId)
                 .addHeaders("apikey", API_KEY)
                 .addHeaders("tenantId", conf.get("merchant_id"))
-                .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
+                .addHeaders("Authorization", "Bearer "+SharedPrefUtils.getAuthorization())
                 .setTag("GET INVOICE DETAILS")
                 .setPriority(Priority.HIGH)
                 .build().getAsJSONObject(new JSONObjectRequestListener() {
