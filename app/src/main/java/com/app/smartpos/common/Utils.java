@@ -49,6 +49,21 @@ public class Utils {
         return result;
     }
 
+    public static String trimLongDoubleFor3(String value){
+        double doubleValue=Double.parseDouble(value);
+        String pattern = "#.000"; //your pattern as per need
+        Locale locale = new Locale("en", "US");
+        DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        f.applyPattern(pattern);
+        String result=doubleValue == 0 ? "0.000" : f.format(value);
+        if(result.equals(".000") || result.equals("-.000") || result.equals("0.000") || result.equals("-0.000")){
+            result = "0.000";
+        }
+        if(result.startsWith(".")){
+            result="0"+result;
+        }
+        return result;
+    }
     public static String trimLongDoubleFor3(double value){
 //        String stringValue=value+"";
 //        String partOne=stringValue.split("\\.")[0];

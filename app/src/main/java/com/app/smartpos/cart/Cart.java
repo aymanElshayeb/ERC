@@ -97,6 +97,7 @@ public class Cart extends BaseActivity {
             Log.i("datadata",(productPrice*productCount)+" "+productTax+" "+totalWithoutTax+" "+total);
         }
         Log.i("datadata_total",totalWithoutTax+" "+total);
+        Log.i("datadata_total",Utils.trimLongDouble(total));
 
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
         totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
