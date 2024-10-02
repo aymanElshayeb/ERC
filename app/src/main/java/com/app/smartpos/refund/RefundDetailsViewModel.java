@@ -33,12 +33,13 @@ public class RefundDetailsViewModel extends ViewModel {
     }
 
     public void start(String sequenceId, DatabaseAccess databaseAccess) {
+        Log.i("datadata",SharedPrefUtils.getAuthorization());
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
         AndroidNetworking.get(BASE_URL + "/invoice/refund/" + sequenceId)
                 .addHeaders("apikey", API_KEY)
                 .addHeaders("tenantId", conf.get("merchant_id"))
-                .addHeaders("Authorization", "Bearer "+SharedPrefUtils.getAuthorization())
+                .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
                 .setTag("GET INVOICE DETAILS")
                 .setPriority(Priority.HIGH)
                 .build().getAsJSONObject(new JSONObjectRequestListener() {
