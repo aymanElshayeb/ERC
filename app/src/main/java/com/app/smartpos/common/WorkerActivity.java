@@ -5,6 +5,7 @@ import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.LAST_SYNC_URL;
 import static com.app.smartpos.Constant.LOGIN_URL;
+import static com.app.smartpos.Constant.PRODUCT_IMAGES;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
@@ -13,7 +14,6 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -28,6 +28,7 @@ import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker;
+import com.app.smartpos.settings.Synchronization.workers.ProductImagesWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 
 public class WorkerActivity extends BaseActivity {
 
+    long imagesSize;
+    String lastUpdated;
 
     public void enqueueCreateAndUploadWorkers() {
         //username Admin
@@ -251,8 +254,7 @@ public class WorkerActivity extends BaseActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void enqueueDownloadProductsImagesWorkers() {
+    public void enqueueDownloadProductsImagesSizeWorkers() {
         //username Admin
         //password 01111Mm&
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
@@ -268,8 +270,10 @@ public class WorkerActivity extends BaseActivity {
                 putString("email", ecr).
                 putString("password", deviceId).
                 build();
+        String lastUpdateTimeStamp=SharedPrefUtils.getProductLastUpdatedTimeStamp();
+
         Data SizeData = new Data.Builder()
-                .putString("url",PRODUCT_IMAGES_SIZE)
+                .putString("url",PRODUCT_IMAGES_SIZE+lastUpdateTimeStamp)
                 .putString("apikey", API_KEY)
                 .putString("tenantId", conf.get("merchant_id"))
                 .build();
@@ -294,7 +298,72 @@ public class WorkerActivity extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         Log.i("datadata",workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
+                        imagesSize=workInfo.getOutputData().getLong("imagesSize",0);
+                        lastUpdated=workInfo.getOutputData().getString("lastUpdateTimeStamp");
                         handleWorkCompletion(workInfo);
+                    }
+                    if (workInfo.getState() == WorkInfo.State.FAILED) {
+                        Log.i("datadata_worker",workInfo.getOutputData().toString());
+                        String errorMessage = workInfo.getOutputData().getString("errorMessage");
+                        showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                    }
+                });
+
+    }
+
+    public void enqueueDownloadProductsImagesWorkers() {
+        //username Admin
+        //password 01111Mm&
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+
+        Data lastSync = null;
+        String ecr= conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", ecr).
+                putString("password", deviceId).
+                build();
+        String lastUpdateTimeStamp=SharedPrefUtils.getProductLastUpdatedTimeStamp();
+
+        Data SizeData = new Data.Builder()
+                .putString("url",PRODUCT_IMAGES+lastUpdateTimeStamp)
+                .putString("apikey", API_KEY)
+                .putString("ecrCode", ecr)
+                .putString("tenantId", conf.get("merchant_id"))
+                .build();
+
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+
+        OneTimeWorkRequest productImagesSizeRequest = new OneTimeWorkRequest.Builder(ProductImagesWorker.class).
+                setInputData(SizeData).
+                build();
+
+        WorkContinuation  continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(productImagesSizeRequest);
+
+        continuation.enqueue();
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(productImagesSizeRequest.getId())
+                .observeForever(workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        Log.i("datadata",workInfo.getOutputData().toString());
+                        // Work is finished, close pending screen or perform any action
+                        imagesSize=workInfo.getOutputData().getLong("imagesSize",0);
+                        lastUpdated=workInfo.getOutputData().getString("lastUpdateTimeStamp");
+                        handleWorkCompletion(workInfo);
+                    }
+                    if (workInfo.getState() == WorkInfo.State.FAILED) {
+                        Log.i("datadata_worker",workInfo.getOutputData().toString());
+                        String errorMessage = workInfo.getOutputData().getString("errorMessage");
+                        showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
                     }
                 });
 

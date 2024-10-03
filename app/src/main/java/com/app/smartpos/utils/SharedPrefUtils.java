@@ -149,4 +149,13 @@ public class SharedPrefUtils {
         editor.putString("ecr_auth", "").commit();
     }
 
+    public static void setProductLastUpdatedTimeStamp(String lastUpdatedTimeStamp){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("last_updated_time_stamp", lastUpdatedTimeStamp).commit();
+    }
+
+    public static String getProductLastUpdatedTimeStamp(){
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("last_updated_time_stamp","");
+    }
 }

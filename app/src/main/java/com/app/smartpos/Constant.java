@@ -16,6 +16,7 @@ public class Constant {
     public static final String CHECK_COMPANY_URL=BASE_URL + "/user/companies";
 
     public static final String PRODUCT_IMAGES_SIZE=BASE_URL + "/sync/products/images/size";
+    public static final String PRODUCT_IMAGES=BASE_URL + "/sync/products/images";
 
     //File names
     public static final String DOWNLOAD_FILE_NAME_GZIP = "download.db.gz";

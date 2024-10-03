@@ -11,7 +11,6 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.app.smartpos.settings.Synchronization.dtos.LastSyncResponseDto;
 import com.app.smartpos.settings.Synchronization.dtos.ProductImagesResponseDto;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
@@ -23,12 +22,11 @@ import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ProductImagesSizeWorker extends Worker {
+public class ProductImagesWorker extends Worker {
 
-    public ProductImagesSizeWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public ProductImagesWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -38,6 +36,7 @@ public class ProductImagesSizeWorker extends Worker {
         String urL = getInputData().getString("url");
         String tenantId= getInputData().getString("tenantId");
         String authorization= getInputData().getString("Authorization");
+        String ecrCode= getInputData().getString("ecrCode");
 
         if (urL==null || tenantId==null || authorization==null) {
             Log.i("datadata_worker","fail");
@@ -67,13 +66,8 @@ public class ProductImagesSizeWorker extends Worker {
                 String responseBody = response.body().string();
                 Log.i("datadata_worker",responseBody);
                 Gson gson=new Gson();
-                ServiceResult<ProductImagesResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<ProductImagesResponseDto>>(){}.getType());
-                ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
-                Data data=new Data.Builder().
-                        putLong("imagesSize",productImagesResponseDto.getImagesSize()).
-                        putString("lastUpdateTimeStamp",productImagesResponseDto.getLastUpdateTimestamp()).
-                        build();
-                return Result.success(data); // Return success if the response is successful
+
+                return Result.success(null); // Return success if the response is successful
             } else {
 
                 return Result.failure(); // Retry the work if the server returns an error
