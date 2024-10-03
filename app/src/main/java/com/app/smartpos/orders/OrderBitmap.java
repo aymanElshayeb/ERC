@@ -392,7 +392,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printInvoiceBarcode(String invoiceId) throws WriterException {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 400, 100)));
+        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 300, 100)));
     }
 
     private void printReceiptNo(String invoiceId) {
@@ -429,7 +429,7 @@ public class OrderBitmap extends BaseActivity {
     }
 
     private void printLine() {
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("----------------------------------------")));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("------------------------------")));
     }
 
     private String getDateTime(Long dateTimeMillisecond) {

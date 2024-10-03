@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
@@ -19,7 +20,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -132,6 +133,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public void exportTablesToNewDatabase(String newDbFilePath,String[] lastSync ) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
+        Log.i("datadata_base",newDbFilePath);
         if (dbFile.exists()) {
             dbFile.delete();
         }
@@ -213,11 +215,14 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             // Copy rows from the existing database table to the new one
             String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > %s", lastSyncId);
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
+                Log.i("datadata_shift",shiftCursor.toString());
                 while (shiftCursor.moveToNext()) {
                     ContentValues orderListValues = new ContentValues();
                     for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
+                        Log.i("datadata_value",shiftCursor.getColumnName(i)+" "+shiftCursor.getString(i));
                         orderListValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
                     }
+                    Log.i("datadata_base_list",orderListValues.toString());
                     newDb.insert("order_list", null, orderListValues);
                     @SuppressLint("Range") String orderListId = shiftCursor.getString(shiftCursor.getColumnIndex("invoice_id"));
                     String orderDetails = String.format("SELECT * FROM order_details WHERE invoice_id = '%s'", orderListId);
@@ -227,6 +232,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                             for (int i = 0; i < creditCursor.getColumnCount(); i++) {
                                 detailsValues.put(creditCursor.getColumnName(i), creditCursor.getString(i));
                             }
+                            Log.i("datadata_base_details",detailsValues.toString());
+
                             newDb.insert("order_details", null, detailsValues);
                         }
                     }
@@ -248,9 +255,10 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         while (cursor.moveToNext()) {
             @SuppressLint("Range") String columnName = cursor.getString(cursor.getColumnIndex("name"));
             @SuppressLint("Range") String columnType = cursor.getString(cursor.getColumnIndex("type"));
+            Log.i("datadata_table",columnName+" "+columnType);
             createTableQuery.append(columnName).append(" ").append(columnType).append(", ");
         }
-
+        Log.i("datadata_table",createTableQuery.toString());
         // Remove trailing comma and space
         if (createTableQuery.length() > 0) {
             createTableQuery.setLength(createTableQuery.length() - 2);
