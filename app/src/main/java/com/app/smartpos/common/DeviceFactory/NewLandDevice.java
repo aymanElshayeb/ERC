@@ -55,4 +55,9 @@ public class NewLandDevice implements Device{
     public String zatcaQrCodeGeneration(byte[] byteArray) {
         return Base64.encodeToString(byteArray,Base64.DEFAULT);
     }
+
+    @Override
+    public int getSpacingToBeDecreased() {
+        return 0;
+    }
 }

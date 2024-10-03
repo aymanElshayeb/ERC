@@ -13,4 +13,5 @@ public interface Device{
     boolean printReceipt(Bitmap bitmap);
     boolean printZReport(Bitmap bitmap);
     String zatcaQrCodeGeneration(byte[] byteArray);
+    int getSpacingToBeDecreased();
 }

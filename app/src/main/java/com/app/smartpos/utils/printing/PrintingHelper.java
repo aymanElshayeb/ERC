@@ -13,6 +13,8 @@ import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.orders.PrinterModel;
@@ -157,7 +159,8 @@ public class PrintingHelper {
         double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap(activity);
-        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType);
+        Device device = DeviceFactory.getDevice();
+        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType,device.getSpacingToBeDecreased());
         return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
 
     }

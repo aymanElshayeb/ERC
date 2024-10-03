@@ -55,7 +55,7 @@ public class OrderBitmap extends BaseActivity {
     }
 
 
-    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency, String printType) {
+    public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency, String printType, int spacingToBeDecreased) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -412,15 +412,15 @@ public class OrderBitmap extends BaseActivity {
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
     private void printMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr","")));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 

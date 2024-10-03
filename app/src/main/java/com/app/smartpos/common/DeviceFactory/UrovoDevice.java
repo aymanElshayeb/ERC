@@ -55,4 +55,9 @@ public class UrovoDevice implements Device{
     public String zatcaQrCodeGeneration(byte[] byteArray) {
         return Base64.getEncoder().encodeToString(byteArray);
     }
+
+    @Override
+    public int getSpacingToBeDecreased() {
+        return 20;
+    }
 }
