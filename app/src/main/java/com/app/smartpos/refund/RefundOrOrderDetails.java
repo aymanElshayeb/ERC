@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
@@ -98,7 +97,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
             orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
-
+            Log.i("datadata_test", operation_sub_type + " " + operation_type);
             for (int i = 0; i < orderDetailsList.size(); i++) {
                 orderDetailsList.get(i).put("refund_qty", "0");
                 orderDetailsList.get(i).put("item_checked", "0");
@@ -140,7 +139,9 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
-                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType", getString(R.string.receipt_copy)));
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
+                operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
+                ;
             } else {
                 refundPressed();
             }
@@ -168,7 +169,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             if (!isRefund) {
                 total += product_qty * product_price;
                 total = Double.parseDouble(Utils.trimLongDouble(total));
-                Log.i("datadata_total",total+" "+(product_qty * product_price));
+                Log.i("datadata_total", total + " " + (product_qty * product_price));
             } else {
                 if (item_checked.equals("1") && refund_qty > 0) {
                     total += refund_qty * product_price;
@@ -303,9 +304,9 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price")) * refund_qty;
                         //ToDo tax amount should be divided by the total qantity of the order line before multiplying
                         int quantity = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
-                        Log.i("datadata_qty",quantity+" "+orderDetailsList.get(i).get("tax_amount"));
-                        total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))/quantity) * refund_qty;
-                        Log.i("datadata_qty",quantity+" "+total_tax);
+                        Log.i("datadata_qty", quantity + " " + orderDetailsList.get(i).get("tax_amount"));
+                        total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount")) / quantity) * refund_qty;
+                        Log.i("datadata_qty", quantity + " " + total_tax);
                     }
                 }
                 obj.put("in_tax_total", -totalPriceWithTax);

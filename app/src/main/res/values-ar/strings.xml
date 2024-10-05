@@ -479,7 +479,8 @@
     <string name="commercial_registration_number_">رقم التسجيل التجاري:</string>
     <string name="tax_number_">رقم الضريبة:</string>
     <string name="quantity">الكمية</string>
-    <string name="receipt_copy">نسخة إضافية</string>
+    <string name="receipt_copy">فاتورة ضريبية مبسط نسخة إضافية</string>
+    <string name="receipt_refund_copy">مسترجع نسخة إضافية</string>
     <string name="receipt_refunded">مسترجع</string>
     <string name="receipt_change">المتبقى</string>
     <string name="_1">١</string>

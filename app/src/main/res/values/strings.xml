@@ -488,6 +488,7 @@
     <string name="tax_number_">Tax number:</string>
     <string name="quantity">Quantity</string>
     <string name="receipt_copy">Copy</string>
+    <string name="receipt_refund_copy">Refund Copy</string>
     <string name="receipt_refunded">Refunded</string>
     <string name="receipt_change">Remaining</string>
     <string name="_1">1</string>
