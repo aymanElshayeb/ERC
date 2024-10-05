@@ -470,7 +470,7 @@
     <string name="shift_start_date_time">تاريخ البدء</string>
     <string name="shift_end_date_time">تاريخ الانتهاء</string>
     <string name="final_total">الإجمالي النهائي</string>
-    <string name="total_paid">إجمالي المبلغ المدفوع</string>
+    <string name="total_paid">إجمالي المدفوع</string>
     <string name="net_amount">المبلغ الصافي</string>
     <string name="value_added_tax">ضريبة القيمة المضافة</string>
     <string name="total_before_tax">الإجمالي قبل الضريبة</string>
@@ -481,7 +481,7 @@
     <string name="quantity">الكمية</string>
     <string name="receipt_copy">نسخة إضافية</string>
     <string name="receipt_refunded">مسترجع</string>
-    <string name="receipt_change">الباقى</string>
+    <string name="receipt_change">المتبقى</string>
     <string name="_1">١</string>
     <string name="_2">٢</string>
     <string name="_3">٣</string>
