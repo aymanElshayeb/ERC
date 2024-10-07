@@ -13,12 +13,12 @@ import java.util.Base64;
 
 public class UrovoDevice implements Device{
     @Override
-    public Intent pay(long total) {
+    public Intent pay(double total) {
         Intent intent = new Intent();
         intent.setPackage(Consts.PACKAGE_UROVO);
         intent.setAction(Consts.CARD_ACTION_UROVO_PURCHASE);
         intent.putExtra(ThirdTag.TRANS_TYPE, "2");
-        intent.putExtra(ThirdTag.AMOUNT, String.valueOf(Long.valueOf(total)));
+        intent.putExtra(ThirdTag.AMOUNT, String.valueOf(Double.valueOf(total)));
         intent.putExtra(ThirdTag.IS_APP_2_APP, true);
         return intent;
     }
@@ -57,7 +57,7 @@ public class UrovoDevice implements Device{
     }
 
     @Override
-    public int getSpacingToBeDecreased() {
-        return 20;
+    public String getPrintLine() {
+        return "------------------------------------------";
     }
 }

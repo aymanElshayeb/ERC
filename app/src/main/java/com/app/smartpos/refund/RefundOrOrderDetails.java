@@ -347,7 +347,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         String englishName = product.get(0).get("product_name_en");
                         String arabicName = product.get(0).get("product_name_ar");
-                        if (product.get(0).get("product_uuid").equals("CUSTOM_ITEM")) {
+                        if (product.get(0).get("product_uuid").equals("CUSTOM_ITEM") && !orderDetailsList.get(i).get("product_description").isEmpty()) {
                             englishName = orderDetailsList.get(i).get("product_description");
                             arabicName = orderDetailsList.get(i).get("product_description");
                         }

@@ -87,7 +87,7 @@ public class EndShiftStep2 extends WorkerActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getUserName(this));
+        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));

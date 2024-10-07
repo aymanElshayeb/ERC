@@ -210,7 +210,7 @@ public class EndShiftDialog extends DialogFragment {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getUserName(requireContext()), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),"" , totalRefundsAmount, totalCardsAmount);
+                endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(requireContext()), total_transactions, 0, 0, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),"" , totalRefundsAmount, totalCardsAmount);
                 if (hasError) {
                     errorLl.setVisibility(View.VISIBLE);
                 } else {

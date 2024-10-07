@@ -11,7 +11,7 @@ import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 public class NewLandDevice implements Device{
     @Override
-    public Intent pay(long total) {
+    public Intent pay(double total) {
         Intent intent = new Intent();
         intent.setPackage(Consts.PACKAGE);
         intent.setAction(Consts.CARD_ACTION);
@@ -57,7 +57,7 @@ public class NewLandDevice implements Device{
     }
 
     @Override
-    public int getSpacingToBeDecreased() {
-        return 0;
+    public String getPrintLine() {
+        return "-----------------------------------";
     }
 }

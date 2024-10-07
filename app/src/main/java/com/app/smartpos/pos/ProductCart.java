@@ -671,7 +671,7 @@ public class ProductCart extends BaseActivity {
 
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
-                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax();
+                    double totalPriceWithTax = databaseAccess.getTotalPriceWithTax();
 
                     Intent intent=device.pay(totalPriceWithTax);
 //                    if(){

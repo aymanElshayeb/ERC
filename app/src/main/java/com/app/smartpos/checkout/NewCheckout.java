@@ -153,7 +153,7 @@ public class NewCheckout extends BaseActivity {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
                 try {
-                    Intent intent = device.pay((long) totalAmount);
+                    Intent intent = device.pay(totalAmount);
                     launcher.launch(intent);
                 }catch (Exception e){
                     Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
@@ -349,7 +349,7 @@ public class NewCheckout extends BaseActivity {
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType",getString(R.string.invoice));
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType",getString(R.string.simplified_tax_invoice));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -363,7 +363,10 @@ public class NewCheckout extends BaseActivity {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("product_id", product.get("product_id"));
         map.put("product_price", amount);
-        map.put("product_description", description);
+        if(description.isEmpty())
+            map.put("product_description", product.get("product_name_ar"));
+        else
+            map.put("product_description", description);
         map.put("product_qty", "1");
         map.put("weight_unit_id",product.get("product_weight"));
         map.put("product_stock",product.get("product_stock"));

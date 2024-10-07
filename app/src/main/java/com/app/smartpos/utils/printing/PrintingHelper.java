@@ -159,8 +159,7 @@ public class PrintingHelper {
         double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap(activity);
-        Device device = DeviceFactory.getDevice();
-        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType,device.getSpacingToBeDecreased());
+        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType);
         return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
 
     }
