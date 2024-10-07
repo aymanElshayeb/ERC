@@ -20,7 +20,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {

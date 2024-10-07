@@ -156,6 +156,7 @@ public class PrintingHelper {
         String discount = orderLitItem.get("discount");
         databaseAccess.open();
         double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
+        Log.i("datadata_total_2",price_after_tax+"");
         double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap(activity);

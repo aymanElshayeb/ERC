@@ -212,12 +212,14 @@ public class Items extends BaseActivity {
 
     public Boolean checkCartTotalPrice(int pos) {
         double total = 0;
-        for (int i = 0; i < productList.size(); i++) {
-            double productPrice = Double.parseDouble(productList.get(i).get("product_price"));
-            double productCount = Double.parseDouble(productList.get(i).get("product_qty"));
-            total += productPrice * (productCount+(i==pos ? 1:0));
+        for (int i = 0; i < selectedProductList.size(); i++) {
+            double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
+            total += productPrice * productCount;
             Log.i("datadata_total",(i==pos)+" "+(productPrice*productCount));
         }
+        total += Double.parseDouble(productList.get(pos).get("product_sell_price"));
+        Log.i("datadata_total",total+"");
         return total>999999999.99;
     }
 

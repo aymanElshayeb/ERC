@@ -317,7 +317,8 @@ public class OrderBitmap extends BaseActivity {
         if (orderPaymentMethod.equalsIgnoreCase("cash")) {
             List<Bitmap> newBitmaps1 = new ArrayList<>();
             newBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_paid)));
-            newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            Log.i("datadata_amount",paidAmount+" "+Utils.trimLongDouble(paidAmount)+" "+(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(paidAmount)));
             bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
             printLine();
             List<Bitmap> newBitmaps3 = new ArrayList<>();

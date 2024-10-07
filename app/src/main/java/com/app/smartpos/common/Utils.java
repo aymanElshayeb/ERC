@@ -2,6 +2,7 @@ package com.app.smartpos.common;
 
 import android.app.Activity;
 import android.provider.Settings;
+import android.util.Log;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -19,7 +20,6 @@ public class Utils {
 //        }else{
 //            return partOne+"."+partTwo.charAt(0)+partTwo.charAt(1);
 //        }
-
         String pattern = "#.00"; //your pattern as per need
         Locale locale = new Locale("en", "US");
         DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
@@ -37,6 +37,7 @@ public class Utils {
 
     public static String trimLongDouble(String value){
         double doubleValue=Double.parseDouble(value);
+        Log.i("datadata_amount",value+" "+doubleValue);
         String pattern = "#.00"; //your pattern as per need
         Locale locale = new Locale("en", "US");
         DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
