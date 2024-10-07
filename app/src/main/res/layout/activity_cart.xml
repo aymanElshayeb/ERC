@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
-                android:text="@string/total_amount"
+                android:text="@string/total_before_tax"
                 android:textColor="@color/light_purple"
                 android:textSize="16dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,6 +104,7 @@
                 android:text="@string/vat_exclusive"
                 android:textColor="@color/light_purple"
                 android:textSize="13dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/total_amount_text"
                 app:layout_constraintTop_toTopOf="parent" />
