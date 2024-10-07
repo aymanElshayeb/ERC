@@ -49,9 +49,9 @@ public class Profile extends BaseActivity {
         }
         String language = LocaleManager.getLanguage(this);
         languageTv.setText(language.equals("en") ? "English" : "عربى");
-        ChangeLanguageDialog dialog = new ChangeLanguageDialog();
 
         languageCl.setOnClickListener(view -> {
+            ChangeLanguageDialog dialog = new ChangeLanguageDialog();
             dialog.show(getSupportFragmentManager(), "change language dialog");
         });
         closeIm.setOnClickListener(view -> {

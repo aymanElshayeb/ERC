@@ -82,20 +82,21 @@ public class LocaleManager {
 
     }
 
+    public static void changeLang(){
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
+            Locale locale=new Locale(getLanguage(MultiLanguageApp.getApp()));
+            Locale.setDefault(locale);
+            Configuration configuration=MultiLanguageApp.getApp().getResources().getConfiguration();
+            configuration.setLocale(locale);
+            MultiLanguageApp.getApp().getResources().updateConfiguration(configuration,MultiLanguageApp.getApp().getResources().getDisplayMetrics());
+        }
+    }
     public static void updateLocale(Context context,String lang) {
         persist(context, lang);
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
-            Locale locale=new Locale(lang);
-            Locale.setDefault(locale);
-            Configuration configuration=context.getResources().getConfiguration();
-            configuration.setLocale(locale);
-            context.getResources().updateConfiguration(configuration,context.getResources().getDisplayMetrics());
-        }else{
-            LocaleListCompat localeListCompat=LocaleListCompat.forLanguageTags(lang);
-            Handler handler=new Handler(Looper.getMainLooper());
-            handler.post(() -> AppCompatDelegate.setApplicationLocales(localeListCompat));
-        }
+        LocaleListCompat localeListCompat=LocaleListCompat.forLanguageTags(lang);
+        Handler handler=new Handler(Looper.getMainLooper());
+        handler.post(() -> AppCompatDelegate.setApplicationLocales(localeListCompat));
 
 
     }

@@ -14,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
+import static com.app.smartpos.utils.LocaleManager.changeLang;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LocaleManager.onCreate(this);
+        changeLang();
         super.onCreate(savedInstanceState);
         resetTitles();
     }
