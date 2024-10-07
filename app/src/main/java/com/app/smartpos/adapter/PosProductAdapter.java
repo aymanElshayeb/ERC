@@ -127,9 +127,15 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
             }
             else {
                 int product_count_int = Integer.parseInt(product_count)+1;
-                productData.get(position).put("product_count",""+product_count_int);
-                notifyItemChanged(position);
-                ((Items)productActivity).updateCart(productData.get(position),position);
+                if(product_count_int* Double.parseDouble(product_price)>999999999.99){
+                    Toast.makeText(productActivity, R.string.price_total_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else if(((Items)productActivity).checkCartTotalPrice(position)){
+                    Toast.makeText(productActivity, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else {
+                    productData.get(position).put("product_count", "" + product_count_int);
+                    notifyItemChanged(position);
+                    ((Items) productActivity).updateCart(productData.get(position), position);
+                }
             }
         });
 

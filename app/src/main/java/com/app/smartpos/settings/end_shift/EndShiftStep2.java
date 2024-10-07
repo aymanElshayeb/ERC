@@ -5,6 +5,7 @@ import static com.app.smartpos.common.Utils.trimLongDouble;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -25,6 +26,7 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
@@ -105,6 +107,7 @@ public class EndShiftStep2 extends WorkerActivity {
         TextView textTv = root_view.findViewById(R.id.text_tv);
         TextView valueTv = root_view.findViewById(R.id.value_tv);
 
+        valueTv.setGravity(LocaleManager.getLanguage(this).equals("ar") ? Gravity.START : Gravity.END);
         textTv.setText(text);
         valueTv.setText(value);
 

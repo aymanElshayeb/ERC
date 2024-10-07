@@ -457,7 +457,8 @@
     <string name="your_cart_is_empty">Your cart is empty!</string>
     <string name="card_payment_is_offline_please_choose_cash">Card payment is offline please choose cash</string>
     <string name="please_select_payment_method">Please select Payment Method</string>
-
+    <string name="price_total_cannot_exceed">Price total cannot exceed 999999999.99</string>
+    <string name="total_price_cannot_exceed">Total price cannot exceed 999999999.99</string>
 
     //reports
     <string name="z_report">Z Report</string>

@@ -449,7 +449,8 @@
     <string name="your_cart_is_empty">عربة التسوق الخاصة بك فارغة!</string>
     <string name="card_payment_is_offline_please_choose_cash">الدفع بالبطاقة غير متصل بالإنترنت، يرجى اختيار الدفع نقدًا</string>
     <string name="please_select_payment_method">يرجى تحديد طريقة الدفع</string>
-
+    <string name="price_total_cannot_exceed">إجمالى سعر المنتج لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
+    <string name="total_price_cannot_exceed">إجمالى السعر لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
 
     //reports
     <string name="z_report">تقرير إنهاء الوردية</string>

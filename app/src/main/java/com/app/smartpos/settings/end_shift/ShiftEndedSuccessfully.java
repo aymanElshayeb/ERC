@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -42,7 +43,7 @@ public class ShiftEndedSuccessfully extends BaseActivity {
     }
 
     private void startTimer(){
-        new CountDownTimer(5000,1000) {
+        new CountDownTimer(6000,1000) {
             @Override
             public void onTick(long l) {
                 int time=(int)(l/1000);

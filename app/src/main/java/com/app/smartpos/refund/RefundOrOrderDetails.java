@@ -252,8 +252,6 @@ public class RefundOrOrderDetails extends WorkerActivity {
         //boolean success=true;
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
-
-        databaseAccess.open();
         //get data from local database
         String sequence = null;
         if (orderDetailsList.isEmpty()) {

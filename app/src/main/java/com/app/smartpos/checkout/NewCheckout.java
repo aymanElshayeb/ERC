@@ -262,6 +262,7 @@ public class NewCheckout extends BaseActivity {
                         databaseAccess.open();
                         totalPriceWithoutTax=totalPriceWithTax/(1.0+databaseAccess.getShopTax()/100.0);
                     }
+                    databaseAccess.open();
                     obj.put("ex_tax_total", totalPriceWithoutTax);
 
                     obj.put("paid_amount", total == 0 ? totalPriceWithTax : total);

@@ -123,7 +123,7 @@ public class QuickBill extends Activity {
     }
 
     private void setNumber(String number){
-        if(amountTv.getText().toString().length()==6){
+        if ((amountTv.getText().toString().length() == 10 && amountTv.getText().toString().split("\\.").length == 2) || (amountTv.getText().toString().split("\\.").length == 1 && amountTv.getText().toString().split("\\.")[0].length() == 7) && !number.equals(".") && !amountTv.getText().toString().endsWith(".")) {
             return;
         }
         if(cash.equals("0")){

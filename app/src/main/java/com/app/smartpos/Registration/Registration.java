@@ -134,10 +134,8 @@ public class Registration extends BaseActivity {
             }
         });
 
-        ChangeLanguageDialog dialog = new ChangeLanguageDialog();
-
-
         languageCl.setOnClickListener(view -> {
+            ChangeLanguageDialog dialog = new ChangeLanguageDialog();
             dialog.show(getSupportFragmentManager(), "change language dialog");
         });
 

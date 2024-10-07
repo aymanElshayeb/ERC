@@ -74,7 +74,6 @@
                 android:gravity="end"
                 android:maxLines="1"
                 android:text="0"
-                android:maxLength="6"
                 android:textColor="@color/white"
                 android:textSize="45sp"
                 app:layout_constraintEnd_toEndOf="parent"
