@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -133,21 +132,21 @@ public class ExpenseGraphActivity extends BaseActivity {
         findViewById(R.id.txt_select_year).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ExpenseGraphActivity.this, new MonthPickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(int selectedMonth, int selectedYear) {
-                        txtSelectYear.setText(getString(R.string.year)+" "+selectedYear);
-                        mYear = selectedYear;
-
-                        getGraphData(mYear);
-                    }
-                }, mYear, 0);
-
-                builder.showYearOnly()
-                        .setTitle(getString(R.string.select_year))
-                        .setYearRange(1990, 2099)
-                        .build()
-                        .show();
+//                MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ExpenseGraphActivity.this, new MonthPickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(int selectedMonth, int selectedYear) {
+//                        txtSelectYear.setText(getString(R.string.year)+" "+selectedYear);
+//                        mYear = selectedYear;
+//
+//                        getGraphData(mYear);
+//                    }
+//                }, mYear, 0);
+//
+//                builder.showYearOnly()
+//                        .setTitle(getString(R.string.select_year))
+//                        .setYearRange(1990, 2099)
+//                        .build()
+//                        .show();
 
 
             }

@@ -25,7 +25,6 @@ import androidx.core.content.FileProvider;
 
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
-import com.github.barteksc.pdfviewer.PDFView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +36,7 @@ import java.io.OutputStream;
 public class ViewPDFActivity extends BaseActivity {
 
 
-    private PDFView pdfView;
+    //private PDFView pdfView;
     private File file;
     private Context primaryBaseActivity;
 
@@ -46,7 +45,7 @@ public class ViewPDFActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_p_d_f);
 
-        pdfView = findViewById(R.id.pdfView);
+       // pdfView = findViewById(R.id.pdfView);
 
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
@@ -65,12 +64,12 @@ public class ViewPDFActivity extends BaseActivity {
 
         }
 
-        pdfView.fromFile(file)
-                .enableSwipe(true)
-                .swipeHorizontal(false)
-                .enableDoubletap(true)
-                .enableAntialiasing(true)
-                .load();
+//        pdfView.fromFile(file)
+//                .enableSwipe(true)
+//                .swipeHorizontal(false)
+//                .enableDoubletap(true)
+//                .enableAntialiasing(true)
+//                .load();
 
 
     }
