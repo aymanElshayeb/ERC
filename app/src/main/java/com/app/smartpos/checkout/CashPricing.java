@@ -1,8 +1,5 @@
 package com.app.smartpos.checkout;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pos.ProductCart;
 import com.app.smartpos.utils.BaseActivity;
-
-import java.text.DecimalFormat;
 
 public class CashPricing extends BaseActivity {
 
@@ -61,7 +57,7 @@ public class CashPricing extends BaseActivity {
         changeSarTv.setText(currency);
         cashGivingSarTv.setText(currency);
 
-        changeTv.setMaxEms(7+currency.length());
+        changeTv.setMaxEms(7 + currency.length());
 
         totalAmountTv.setText(Utils.trimLongDouble(totalAmount));
 
@@ -106,20 +102,21 @@ public class CashPricing extends BaseActivity {
 
         cashGivingTv.setText("0");
         change = 0;
-        changeTv.setText(change+"");
+        changeTv.setText(change + "");
 
         backIm.setOnClickListener(view -> finish());
 
     }
 
     private void setNumber(String number) {
-        if (cashGivingTv.getText().toString().length() == 7) {
+        Log.i("datadata_length",cashGivingTv.getText().toString().split("\\.").length+"");
+        if ((cashGivingTv.getText().toString().length() == 13 && cashGivingTv.getText().toString().split("\\.").length == 2) || (cashGivingTv.getText().toString().split("\\.").length == 1 && cashGivingTv.getText().toString().split("\\.")[0].length() == 10) && !number.equals(".") && !cashGivingTv.getText().toString().endsWith(".")) {
             return;
         }
         if (cash.equals("0")) {
             cash = "";
         }
-        if(cashGivingTv.getText().toString().contains(".") && cashGivingTv.getText().toString().split("\\.").length==2 && cashGivingTv.getText().toString().split("\\.")[1].length()==2){
+        if (cashGivingTv.getText().toString().contains(".") && cashGivingTv.getText().toString().split("\\.").length == 2 && cashGivingTv.getText().toString().split("\\.")[1].length() == 2) {
             return;
         }
         if (cash.isEmpty() && number.equals(".")) {
@@ -131,8 +128,8 @@ public class CashPricing extends BaseActivity {
         cash += number;
         cashGivingTv.setText(cash);
         change = Double.parseDouble(Utils.trimLongDouble(totalAmount)) - Double.parseDouble(cash);
-        Log.i("datadata_trim",""+change);
-        Log.i("datadata_trim",Utils.trimLongDouble(change));
+        Log.i("datadata_trim", "" + change);
+        Log.i("datadata_trim", Utils.trimLongDouble(change));
         changeTv.setText(Utils.trimLongDouble(change));
     }
 
@@ -142,7 +139,7 @@ public class CashPricing extends BaseActivity {
             cashGivingTv.setText("0");
             change = 0;
         } else {
-            cash = cash.substring(0, cash.length()- 1);
+            cash = cash.substring(0, cash.length() - 1);
             cashGivingTv.setText(cash);
             change = totalAmount - Double.parseDouble(cash);
         }

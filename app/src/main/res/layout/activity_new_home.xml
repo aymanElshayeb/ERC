@@ -117,6 +117,52 @@
             app:layout_constraintTop_toTopOf="@id/current_shift_number_tv" />
 
         <TextView
+            android:id="@+id/start_cash_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="@string/start_cash"
+            android:textColor="#F4F4F4"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/circle_name_ll" />
+
+        <TextView
+            android:id="@+id/start_cash_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/inter_bold"
+            android:includeFontPadding="false"
+            android:text="0.00"
+            android:textColor="#F4F4F4"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/start_cash_sar_tv"
+            app:layout_constraintTop_toBottomOf="@id/start_cash_text" />
+
+        <TextView
+            android:id="@+id/start_cash_sar_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/inter_regular"
+            android:includeFontPadding="false"
+            android:text="@string/sar"
+            android:textColor="#F4F4F4"
+            android:textSize="17sp"
+            android:visibility="gone"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/start_cash_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/start_cash_tv" />
+
+        <TextView
             android:id="@+id/location_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

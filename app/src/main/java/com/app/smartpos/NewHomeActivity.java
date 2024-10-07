@@ -27,6 +27,8 @@ public class NewHomeActivity extends BaseActivity {
 
     TextView currentShiftNumberTv;
     TextView currentShiftSarTv;
+    TextView startCashTv;
+    TextView startCashSarTv;
     String currency;
     private DatabaseAccess databaseAccess;
     private HashMap<String, String> configuration;
@@ -67,6 +69,9 @@ public class NewHomeActivity extends BaseActivity {
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
 
+        startCashTv = findViewById(R.id.start_cash_tv);
+        startCashSarTv = findViewById(R.id.start_cash_sar_tv);
+
         circleNameLl.setOnClickListener(view -> {
             startActivity(new Intent(this, Profile.class));
         });
@@ -101,6 +106,7 @@ public class NewHomeActivity extends BaseActivity {
 
         currency = databaseAccess.getCurrency();
         currentShiftSarTv.setText(currency);
+        startCashSarTv.setText(currency);
     }
 
     @Override
@@ -119,6 +125,11 @@ public class NewHomeActivity extends BaseActivity {
             total_amount += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
         }
         currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount) + "");
+
+        databaseAccess.open();
+        String startCashString = databaseAccess.getLastShift("leave_cash");
+        double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
+        startCashTv.setText(Utils.trimLongDouble(startCash));
     }
 
     @Override

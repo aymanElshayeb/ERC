@@ -65,7 +65,7 @@
 
     <string name="checkout">Checkout</string>
     <string name="cash">Cash</string>
-    <string name="cash_ar">Cash / كاش</string>
+    <string name="cash_ar">Cash / نقد</string>
     <string name="cash_details">Cash Details</string>
     <string name="cash_given">Cash Given</string>
     <string name="change">Change</string>
@@ -394,7 +394,7 @@
     <string name="view_all_receipt">View All Receipt</string>
     <string name="or">OR</string>
     <string name="card">Card</string>
-    <string name="card_ar">Card / كارت</string>
+    <string name="card_ar">Card / بطاقة</string>
     <string name="refunded">Refunded</string>
     <string name="view">View</string>
     <string name="select_which_item_you_want_to_refund">Select which item you want to refund</string>
