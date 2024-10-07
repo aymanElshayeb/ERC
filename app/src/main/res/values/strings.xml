@@ -402,7 +402,7 @@
     <string name="total_qty">Total Qty:</string>
     <string name="how_many_items_want_to_refund">How many items you want to refund?</string>
 
-    <string name="registration">Registration</string>
+    <string name="registration">Register device</string>
     <string name="merchant_id">Merchant ID</string>
     <string name="register">Register</string>
     <string name="check_email">Check Email</string>
