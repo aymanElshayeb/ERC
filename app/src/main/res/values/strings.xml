@@ -467,6 +467,7 @@
     <string name="sales_amount">Sales Amount</string>
     <string name="refunded_amount">Refunded amount</string>
     <string name="total">Total</string>
+    <string name="total_product_invoice">Total</string>
     <string name="cash_discrepancies">Cash Discrepancies</string>
     <string name="total_cash_sales">Total Cash Sales</string>
     <string name="input_total_cash">Total Cash On Hand</string>

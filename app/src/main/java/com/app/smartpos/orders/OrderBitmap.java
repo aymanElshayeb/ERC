@@ -357,7 +357,7 @@ public class OrderBitmap extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.quantity)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.price)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_product_invoice)));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1), newBitmaps.get(2)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
 

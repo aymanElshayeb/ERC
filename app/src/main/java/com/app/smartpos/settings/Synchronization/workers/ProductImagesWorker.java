@@ -51,6 +51,7 @@ public class ProductImagesWorker extends Worker {
                 add("tenantId", tenantId).
                 add("Authorization",authorization).
                 add("apikey",API_KEY).
+                add("ecrCode",ecrCode).
                 build();
         Log.i("datadata_worker",headers.toString());
         Log.i("datadata_worker",authorization);
