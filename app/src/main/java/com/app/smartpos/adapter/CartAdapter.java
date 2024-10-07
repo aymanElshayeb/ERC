@@ -169,7 +169,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
                 if (get_qty >= getStock) {
                     Toasty.error(productCart, productCart.getString(R.string.available_stock) + " " + getStock, Toast.LENGTH_SHORT).show();
-                } else {
+                }else if(productCart.checkCartTotalPrice(position)){
+                    Toast.makeText(productCart, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else {
                     get_qty++;
 
 

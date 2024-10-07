@@ -107,4 +107,14 @@ public class Cart extends BaseActivity {
             finish();
         }
     }
+
+    public Boolean checkCartTotalPrice(int pos) {
+        double total = 0;
+        for (int i = 0; i < cartProductList.size(); i++) {
+            double productPrice = Double.parseDouble(cartProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(cartProductList.get(i).get("product_qty"));
+            total += productPrice * (productCount+(i==pos ? 1:0));
+        }
+        return total>999999999.99;
+    }
 }

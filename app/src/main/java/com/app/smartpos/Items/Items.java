@@ -218,6 +218,16 @@ public class Items extends BaseActivity {
             total += productPrice * (productCount+(i==pos ? 1:0));
         }
         return total>999999999.99;
+    }
+
+    public Boolean checkCartTotalPriceForCustomItem(double amount) {
+        double total = 0;
+        for (int i = 0; i < selectedProductList.size(); i++) {
+            double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
+            total += productPrice * productCount;
+        }
+        return (total+amount)>999999999.99;
 
     }
 
@@ -283,6 +293,10 @@ public class Items extends BaseActivity {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if (!isItemExist) {
+            if(checkCartTotalPriceForCustomItem(Double.parseDouble(amount))){
+                Toast.makeText(this, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                return;
+            }
             databaseAccess.open();
             HashMap<String, String> product = databaseAccess.getCustomProduct();
             String product_id = product.get("product_id");
