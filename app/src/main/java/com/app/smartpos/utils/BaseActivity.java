@@ -1,9 +1,15 @@
 package com.app.smartpos.utils;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -18,12 +24,17 @@ import static com.app.smartpos.utils.LocaleManager.changeLang;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    boolean isConnected = false;
+    ConnectivityManager connectivityManager;
+    NetworkInfo activeNetworkInfo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LocaleManager.onCreate(this);
         changeLang();
         super.onCreate(savedInstanceState);
         resetTitles();
+        connectivityManager = (ConnectivityManager) getSystemService(
+                Context.CONNECTIVITY_SERVICE);
     }
 
 
@@ -59,5 +70,49 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+    private ConnectivityManager.NetworkCallback connectivityCallback
+            = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(Network network) {
+            isConnected = true;
+            connectionChanged(isConnected);
+        }
 
+        @Override
+        public void onLost(Network network) {
+            isConnected = false;
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+            connectionChanged(isConnected);
+            //Log.i("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
+        }
+    };
+
+    public void connectionChanged(boolean state){
+
+    }
+
+    private void checkConnectivity() {
+        connectivityManager.registerNetworkCallback(
+                new NetworkRequest.Builder()
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .build(), connectivityCallback);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkConnectivity();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        connectivityManager.unregisterNetworkCallback(connectivityCallback);
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
 }

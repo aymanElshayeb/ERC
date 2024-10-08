@@ -428,22 +428,63 @@ public class DatabaseAccess {
     }
 
 
-    public boolean updateProductImage(String product_uuid, String product_image) {
+    public boolean updateProductImage(ContentValues productValues) {
 
         ContentValues values = new ContentValues();
 
-        values.put("product_image", product_image);
+        values.put("image_url", productValues.get("image_url")==null?null:productValues.get("image_url").toString());
+        values.put("base64_image", productValues.get("base64_image")==null?null:productValues.get("base64_image").toString());
+        values.put("image_thumbnail_url", productValues.get("image_thumbnail_url")==null?null:productValues.get("image_thumbnail_url").toString());
+        values.put("image_thumbnail", productValues.get("image_thumbnail")==null?null:productValues.get("image_thumbnail").toString());
+        values.put("product_uuid", productValues.get("product_uuid")==null?null:productValues.get("product_uuid").toString());
 
+        Log.i("datadata",productValues.toString());
+        Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + productValues.get("product_uuid").toString() + "'", null);
 
-        long check = database.update("products", values, "product_uuid=?", new String[]{product_uuid});
+        long check;
+        if (cursor.moveToFirst()) {
+            do {
+                check = database.update("product_image", values, "product_uuid=?", new String[]{productValues.get("product_uuid").toString()});
+                Log.i("datadata_check",check+"");
+            } while (cursor.moveToNext());
+        }else{
+            check=database.insert("product_image",null,values);
+        }
+
         database.close();
 
+        return check!=-1;
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
+
+    }
+
+    public String getProductImage(boolean isInternetConnected,String product_uuid) {
+
+        Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + product_uuid + "'", null);
+        String image=null;
+        if (cursor.moveToFirst()) {
+            do {
+                if(isInternetConnected){
+                    image=cursor.getString(cursor.getColumnIndex("image_thumbnail_url"));
+                    if (image==null){
+                        image=cursor.getString(cursor.getColumnIndex("image_url"));
+                    }
+                }
+                if(image==null) {
+                    image = cursor.getString(cursor.getColumnIndex("image_thumbnail"));
+                    if (image==null) {
+                        image= cursor.getString(cursor.getColumnIndex("base64_image"));
+                    }
+                }
+
+            } while (cursor.moveToNext());
         }
+
+        database.close();
+
+        return image;
+        //if data insert success, its return 1, if failed return -1
+
     }
 
     //insert products
@@ -578,28 +619,28 @@ public class DatabaseAccess {
 
 
     //get product image base 64
-    @SuppressLint("Range")
-    public String getProductImage(String product_id) {
-
-        String image = "n/a";
-        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
-
-
-        if (cursor.moveToFirst()) {
-            do {
-
-
-                image = cursor.getString(cursor.getColumnIndex("product_image"));
-
-
-            } while (cursor.moveToNext());
-        }
-
-
-        cursor.close();
-        database.close();
-        return image;
-    }
+//    @SuppressLint("Range")
+//    public String getProductImage(String product_id) {
+//
+//        String image = "n/a";
+//        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
+//
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//
+//
+//                image = cursor.getString(cursor.getColumnIndex("product_image"));
+//
+//
+//            } while (cursor.moveToNext());
+//        }
+//
+//
+//        cursor.close();
+//        database.close();
+//        return image;
+//    }
 
     @SuppressLint("Range")
     public int getShiftWithTimestamp(long timeStamp) {

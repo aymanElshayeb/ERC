@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -74,6 +75,10 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
     }
 
+    public void showLoading(){
+        loadingLl.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
@@ -82,9 +87,13 @@ public class DataBaseBackupActivity extends WorkerActivity {
             // Work succeeded, handle success
             showMessage(getString(R.string.data_synced_successfully));
             if(workerType==3){
-                DownloadProductImagesConfirmationDialog dialog=new DownloadProductImagesConfirmationDialog();
-                dialog.setData(this,formatSize(imagesSize));
-                dialog.show(getSupportFragmentManager(),"dialog");
+                if(imagesSize==0){
+                    Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
+                }else {
+                    DownloadProductImagesConfirmationDialog dialog = new DownloadProductImagesConfirmationDialog();
+                    dialog.setData(this, formatSize(imagesSize));
+                    dialog.show(getSupportFragmentManager(), "dialog");
+                }
             }
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure

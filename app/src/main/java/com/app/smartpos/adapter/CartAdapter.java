@@ -77,7 +77,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         //  Log.d("unit_ID ", weight_unit_id);
 
         databaseAccess.open();
-        String base64Image = databaseAccess.getProductImage(product_id);
+        String base64Image = databaseAccess.getProductImage(productCart.isConnected(),product_id);
 
 //        databaseAccess.open();
 //        String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);

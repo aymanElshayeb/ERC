@@ -24,6 +24,8 @@ import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.product.EditProductActivity;
+import com.app.smartpos.utils.BaseActivity;
+import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +36,12 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
 
     private List<HashMap<String, String>> productData;
-    private Activity productActivity;
+    private BaseActivity productActivity;
     MediaPlayer player;
     public static int count;
     DatabaseAccess databaseAccess;
 
-    public PosProductAdapter(Activity productActivity, List<HashMap<String, String>> productData) {
+    public PosProductAdapter(BaseActivity productActivity, List<HashMap<String, String>> productData) {
         this.productActivity = productActivity;
         this.productData = productData;
         player = MediaPlayer.create(productActivity, R.raw.delete_sound);
@@ -64,6 +66,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         String currency = databaseAccess.getCurrency();
 
         final String product_id = productData.get(position).get("product_id");
+        final String product_uuid = productData.get(position).get("product_uuid");
         String name = productData.get(position).get("product_name_en");
         final String product_category = productData.get(position).get("product_category");
         final String product_weight = productData.get(position).get("product_weight");
@@ -72,8 +75,9 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 //        final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
         final String product_price = productData.get(position).get("product_sell_price");
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
-        String base64Image = productData.get(position).get("product_image");
-
+        databaseAccess.open();
+        String base64Image = databaseAccess.getProductImage(productActivity.isConnected(),product_uuid);
+        Log.i("datadata_url",base64Image+"");
 
 
 
@@ -101,15 +105,15 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 //            }
 //        });
 
-
-
-        if (base64Image != null) {
+        if(base64Image != null && base64Image.startsWith("http")){
+            Glide.with(productActivity).load(base64Image).into(holder.product_image);
+        }else if (base64Image != null) {
             if (base64Image.length() < 6) {
                 holder.product_image.setImageResource(R.drawable.image_placeholder);
                 holder.product_image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
 
-
+                Log.i("datadata_64",base64Image);
                 byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                 holder.product_image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 

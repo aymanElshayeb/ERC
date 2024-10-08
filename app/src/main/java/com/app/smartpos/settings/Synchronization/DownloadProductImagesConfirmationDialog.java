@@ -38,6 +38,7 @@ public class DownloadProductImagesConfirmationDialog extends DialogFragment {
             title_tv.setText(requireContext().getString(R.string.confirmation_for_download_product_images_text)+" "+size);
             confirmTv.setOnClickListener(view -> {
                 dataBaseBackupActivity.workerType=4;
+                dataBaseBackupActivity.showLoading();
                 dataBaseBackupActivity.enqueueDownloadProductsImagesWorkers();
                 dismiss();
             });

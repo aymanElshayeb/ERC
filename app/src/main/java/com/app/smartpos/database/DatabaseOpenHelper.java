@@ -21,7 +21,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 52;
+    private static final int DATABASE_VERSION = 54;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -153,11 +153,10 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                         int columnCount = cursor.getColumnCount();
                         for (int i = 0; i < columnCount; i++) {
                             values.put(cursor.getColumnName(i), cursor.getString(i));
-                            databaseAccess.open();
-                            databaseAccess.updateProductImage(cursor.getString(cursor.getColumnIndex("product_uuid")),cursor.getString(cursor.getColumnIndex("base64_image")));
                         }
+                        databaseAccess.open();
+                        databaseAccess.updateProductImage(values);
                         Log.i("datadata",values.toString());
-
                     }
                 }
             }

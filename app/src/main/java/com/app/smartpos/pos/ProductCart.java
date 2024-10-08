@@ -74,6 +74,7 @@ public class ProductCart extends BaseActivity {
     double total_tax;
     AlertDialog alertDialog;
     Device device;
+    boolean checkConnectionOnce=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +127,6 @@ public class ProductCart extends BaseActivity {
             imgNoProduct.setVisibility(View.GONE);
             //productCartAdapter = new CartAdapter(ProductCart.this, cartProductList,txt_total_price,btnSubmitOrder,imgNoProduct,txt_no_product);
 
-            recyclerView.setAdapter(productCartAdapter);
-
 
         }
 
@@ -146,10 +145,16 @@ public class ProductCart extends BaseActivity {
 
     }
 
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            recyclerView.setAdapter(productCartAdapter);
+        }
+    }
 
-
-
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String card_type_code,String approval_code,double total) throws JSONException {
+    public void proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();

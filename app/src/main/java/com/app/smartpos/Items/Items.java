@@ -44,6 +44,7 @@ public class Items extends BaseActivity {
     PosProductAdapter productCartAdapter;
     List<HashMap<String, String>> productList;
     List<HashMap<String, String>> selectedProductList = new LinkedList<>();
+    private RecyclerView recycler;
     TextView cartCountTv;
     TextView cartTotalPriceTv;
     ConstraintLayout viewCartCl;
@@ -51,6 +52,7 @@ public class Items extends BaseActivity {
     DatabaseAccess databaseAccess;
     boolean firstOpen=true;
     String currency;
+    boolean checkConnectionOnce=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class Items extends BaseActivity {
         ImageView scannerIm = findViewById(R.id.img_scanner);
         ImageView backIm = findViewById(R.id.back_im);
         ImageView moreIm = findViewById(R.id.more_im);
-        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler = findViewById(R.id.recycler);
         cartCountTv = findViewById(R.id.cart_count_tv);
         cartTotalPriceTv = findViewById(R.id.cart_total_price_tv);
         viewCartCl = findViewById(R.id.view_cart_cl);
@@ -85,7 +87,7 @@ public class Items extends BaseActivity {
         productList = databaseAccess.getProducts(true);
 
         productCartAdapter = new PosProductAdapter(this, productList);
-        recycler.setAdapter(productCartAdapter);
+
 
         openCartCl.setOnClickListener(view -> {
             Intent intent = new Intent(Items.this, Cart.class);
@@ -146,6 +148,15 @@ public class Items extends BaseActivity {
         updateCartUI();
         firstOpen=false;
         productCartAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            recycler.setAdapter(productCartAdapter);
+        }
     }
 
     public void updateCart(HashMap<String, String> product, int position) {

@@ -386,7 +386,7 @@ public class WorkerActivity extends BaseActivity {
                         showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
                     }
                     if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                        //SharedPrefUtils.setProductLastUpdatedTimeStamp(lastUpdated);
+                        SharedPrefUtils.setProductLastUpdatedTimeStamp(lastUpdated);
                     }
                 });
 
