@@ -156,6 +156,7 @@ public class SharedPrefUtils {
 
     public static String getProductLastUpdatedTimeStamp(){
         SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE);
-        return sharedPreferences.getString("last_updated_time_stamp","");
+        String data=sharedPreferences.getString("last_updated_time_stamp","");
+        return data.isEmpty()?"":"?lastUpdateTimestamp="+data;
     }
 }
