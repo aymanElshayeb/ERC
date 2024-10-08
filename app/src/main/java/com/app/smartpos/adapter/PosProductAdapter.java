@@ -118,7 +118,10 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
                 holder.product_image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
             }
+        }else{
+            holder.product_image.setImageResource(R.drawable.image_placeholder);
         }
+        Log.i("datadata_image",position+" "+product_uuid+" "+base64Image);
 
 
         holder.plusIm.setOnClickListener(v -> {

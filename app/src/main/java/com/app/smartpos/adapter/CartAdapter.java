@@ -22,6 +22,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.cart.Cart;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
+import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         //  Log.d("unit_ID ", weight_unit_id);
 
         databaseAccess.open();
-        String base64Image = databaseAccess.getProductImage(productCart.isConnected(),product_id);
+        String base64Image = databaseAccess.getProductImage(productCart.isConnected(),uuid);
 
 //        databaseAccess.open();
 //        String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);
@@ -95,16 +96,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         if(uuid.equals("CUSTOM_ITEM")){
             holder.imgProduct.setImageResource(R.drawable.ic_custom_option_gray);
         }else {
-            if (base64Image != null) {
-                if (base64Image.isEmpty() || base64Image.length() < 6) {
+            if(base64Image != null && base64Image.startsWith("http")){
+                Glide.with(productCart).load(base64Image).into(holder.imgProduct);
+            }else if (base64Image != null) {
+                if (base64Image.length() < 6) {
                     holder.imgProduct.setImageResource(R.drawable.image_placeholder);
+                    holder.imgProduct.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 } else {
 
-
+                    Log.i("datadata_64",base64Image);
                     byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                     holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
                 }
+            }else{
+                holder.imgProduct.setImageResource(R.drawable.image_placeholder);
             }
         }
 
