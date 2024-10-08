@@ -11,6 +11,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
@@ -86,10 +87,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             connectionChanged(isConnected);
             //Log.i("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
         }
+
     };
 
     public void connectionChanged(boolean state){
-
     }
 
     private void checkConnectivity() {

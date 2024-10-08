@@ -148,14 +148,24 @@ public class Items extends BaseActivity {
         updateCartUI();
         firstOpen=false;
         productCartAdapter.notifyDataSetChanged();
+        if(!isConnected()){
+            setAdapter();
+        }
     }
 
     @Override
     public void connectionChanged(boolean state) {
         super.connectionChanged(state);
+        Log.i("datadata_connection",""+state);
+        setAdapter();
+    }
+
+    private void setAdapter(){
         if(checkConnectionOnce){
             checkConnectionOnce=false;
-            recycler.setAdapter(productCartAdapter);
+            runOnUiThread(() -> {
+                recycler.setAdapter(productCartAdapter);
+            });
         }
     }
 

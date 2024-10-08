@@ -37,6 +37,9 @@ public class Cart extends BaseActivity {
 
     String currency;
     DatabaseAccess databaseAccess;
+    boolean checkConnectionOnce=true;
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,7 @@ public class Cart extends BaseActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_cart);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         ImageView backIm = findViewById(R.id.back_im);
         totalAmountWithoutVatTv = findViewById(R.id.total_amount_without_vat_tv);
         totalAmountTv = findViewById(R.id.total_amount_tv);
@@ -105,6 +108,29 @@ public class Cart extends BaseActivity {
 
         if(total==0){
             finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isConnected()){
+            setAdapter();
+        }
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        setAdapter();
+    }
+
+    private void setAdapter(){
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            runOnUiThread(() -> {
+                recyclerView.setAdapter(productCartAdapter);
+            });
         }
     }
 
