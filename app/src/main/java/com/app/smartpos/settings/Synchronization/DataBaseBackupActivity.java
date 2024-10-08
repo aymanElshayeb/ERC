@@ -29,6 +29,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
     LinearLayout loadingLl;
     ProgressDialog loading;
     private LocalBackup localBackup;
+    int workerType;
     CardView cardLocalBackUp, cardLocalImport, downloadProductsImages, cardBackupToDrive;
 
     @Override
@@ -51,26 +52,24 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
         localBackup = new LocalBackup(this);
 
-
-
-        cardLocalImport.setOnClickListener(v -> {
-            loadingLl.setVisibility(View.VISIBLE);
-            enqueueUploadWorkers();
-        });
-
-
         cardLocalBackUp.setOnClickListener(v -> {
+            workerType=1;
             loadingLl.setVisibility(View.VISIBLE);
             enqueueDownloadAndReadWorkers();
 
         });
 
+        cardLocalImport.setOnClickListener(v -> {
+            loadingLl.setVisibility(View.VISIBLE);
+            workerType=2;
+            enqueueUploadWorkers();
+        });
+
+
         downloadProductsImages.setOnClickListener(v -> {
             loadingLl.setVisibility(View.VISIBLE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                enqueueDownloadProductsImagesWorkers();
-            }
-
+            workerType=3;
+            enqueueDownloadProductsImagesSizeWorkers();
         });
 
     }
@@ -82,12 +81,29 @@ public class DataBaseBackupActivity extends WorkerActivity {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage(getString(R.string.data_synced_successfully));
+            if(workerType==3){
+                DownloadProductImagesConfirmationDialog dialog=new DownloadProductImagesConfirmationDialog();
+                dialog.setData(this,formatSize(imagesSize));
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             showMessage(getString(R.string.error_in_syncing_data));
         }
     }
 
+    private String formatSize(long size){
+        String result;
+        if(size>=1000000){
+            result = size/1000000 + "MB";
+        }else if(size>=1000){
+            result = size/1000 + "KB";
+        }else{
+            result = size + "B";
+        }
+
+        return result;
+    }
 
     //for back button
     @Override

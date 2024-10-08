@@ -3,6 +3,7 @@ package com.app.smartpos.settings.Synchronization.workers;
 import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -28,12 +29,14 @@ public class DownloadWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        Log.i("datadata_download","start");
         String urlString = getInputData().getString("url");
         String fileName = getInputData().getString("fileName");
         String authorization = getInputData().getString("Authorization");
         String tenantId = getInputData().getString("tenantId");
         String ecrCode=getInputData().getString("ecrCode");
         if (urlString == null || fileName == null) {
+            Log.i("datadata_download","failed 1");
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
@@ -48,18 +51,20 @@ public class DownloadWorker extends Worker {
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey",API_KEY);
             connection.setRequestProperty("ecrCode",ecrCode);
-
+            Log.i("datadata_download","request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
+                Log.i("datadata_download","loading");
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
+                Log.i("datadata_download","delete");
                 downloadFile(connection.getInputStream(),outputFile);
 
                 connection.disconnect();
                 return Result.success();
             } else {
+                Log.i("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
@@ -76,6 +81,7 @@ public class DownloadWorker extends Worker {
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
+                Log.i("datadata_download","downloading");
                 fos.write(buffer, 0, length);
             }
 

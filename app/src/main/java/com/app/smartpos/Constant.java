@@ -20,7 +20,9 @@ public class Constant {
 
     //File names
     public static final String DOWNLOAD_FILE_NAME_GZIP = "download.db.gz";
+    public static final String PRODUCT_IMAGES_FILE_NAME_GZIP = "ecrcode_upload.db.gz";
     public static final String DOWNLOAD_FILE_NAME = "download.db";
+    public static final String PRODUCT_IMAGES_FILE_NAME = "ecrcode_upload.db";
     public static final String UPLOAD_FILE_NAME = "upload.db";
     public static final String UPLOAD_FILE_NAME_GZIP = "upload.db.gz";
 

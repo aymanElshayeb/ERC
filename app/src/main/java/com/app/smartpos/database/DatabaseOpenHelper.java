@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
@@ -126,6 +127,44 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             existingDb.setTransactionSuccessful();
         } finally {
             existingDb.endTransaction();
+            newDb.close();
+        }
+    }
+
+    public void readProductDatabase(String newDbFilePath) {
+        //SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
+
+        try {
+           // existingDb.beginTransaction();
+
+            // Get tables from new database
+            String[] tables = {"product_image"};
+            for (String table : tables) {
+                // Delete all rows in the existing table
+                //existingDb.delete(table, null, null);
+
+                // Insert rows from the new database
+                String query = "SELECT * FROM " + table;
+                DatabaseAccess databaseAccess=DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+                try (Cursor cursor = newDb.rawQuery(query, null)) {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        int columnCount = cursor.getColumnCount();
+                        for (int i = 0; i < columnCount; i++) {
+                            values.put(cursor.getColumnName(i), cursor.getString(i));
+                            databaseAccess.open();
+                            databaseAccess.updateProductImage(cursor.getString(cursor.getColumnIndex("product_uuid")),cursor.getString(cursor.getColumnIndex("base64_image")));
+                        }
+                        Log.i("datadata",values.toString());
+
+                    }
+                }
+            }
+
+          //  existingDb.setTransactionSuccessful();
+        } finally {
+            //existingDb.endTransaction();
             newDb.close();
         }
     }

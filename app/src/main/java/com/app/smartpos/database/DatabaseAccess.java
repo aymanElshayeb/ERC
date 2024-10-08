@@ -428,6 +428,24 @@ public class DatabaseAccess {
     }
 
 
+    public boolean updateProductImage(String product_uuid, String product_image) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("product_image", product_image);
+
+
+        long check = database.update("products", values, "product_uuid=?", new String[]{product_uuid});
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        if (check == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //insert products
     public boolean updateProduct(String product_name, String product_code, String product_category, String product_description, String product_buy_price, String product_sell_price, String product_stock, String product_supplier, String product_image, String weight_unit_id, String product_weight, String product_id) {
 

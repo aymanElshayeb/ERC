@@ -9,4 +9,9 @@ public class DownloadSyncronization {
         System.out.println("Entered");
         db.mergeDatabases(filePath);
     }
+
+    public void productImagesSynchronizeDataBase (final DatabaseOpenHelper db,String filePath) {
+        System.out.println("Entered");
+        db.readProductDatabase(filePath);
+    }
 }

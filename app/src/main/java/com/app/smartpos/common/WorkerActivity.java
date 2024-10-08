@@ -6,6 +6,8 @@ import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.LAST_SYNC_URL;
 import static com.app.smartpos.Constant.LOGIN_URL;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES;
+import static com.app.smartpos.Constant.PRODUCT_IMAGES_FILE_NAME;
+import static com.app.smartpos.Constant.PRODUCT_IMAGES_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
@@ -30,6 +32,7 @@ import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.ReadProductImagesFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
 import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.BaseActivity;
@@ -38,7 +41,7 @@ import java.util.HashMap;
 
 public class WorkerActivity extends BaseActivity {
 
-    long imagesSize;
+    public long imagesSize;
     String lastUpdated;
 
     public void enqueueCreateAndUploadWorkers() {
@@ -329,11 +332,20 @@ public class WorkerActivity extends BaseActivity {
                 build();
         String lastUpdateTimeStamp=SharedPrefUtils.getProductLastUpdatedTimeStamp();
 
-        Data SizeData = new Data.Builder()
+        Data downloadInputData = new Data.Builder()
                 .putString("url",PRODUCT_IMAGES+lastUpdateTimeStamp)
                 .putString("apikey", API_KEY)
                 .putString("ecrCode", ecr)
                 .putString("tenantId", conf.get("merchant_id"))
+                .putString("fileName", PRODUCT_IMAGES_FILE_NAME_GZIP)
+                .build();
+
+        Data decompressInputData = new Data.Builder()
+                .putString("fileName", PRODUCT_IMAGES_FILE_NAME_GZIP)
+                .build();
+
+        Data readInputData = new Data.Builder()
+                .putString("fileName", PRODUCT_IMAGES_FILE_NAME)
                 .build();
 
 
@@ -341,29 +353,40 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(loginInputData).
                 build();
 
-        OneTimeWorkRequest productImagesSizeRequest = new OneTimeWorkRequest.Builder(ProductImagesWorker.class).
-                setInputData(SizeData).
-                build();
+        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(ProductImagesWorker.class)
+                .setInputData(downloadInputData)
+                .build();
 
-        WorkContinuation  continuation = WorkManager.getInstance(this)
+        OneTimeWorkRequest decompressRequest = new OneTimeWorkRequest.Builder(DecompressWorker.class)
+                .setInputData(decompressInputData)
+                .build();
+
+        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadProductImagesFileWorker.class)
+                .setInputData(readInputData)
+                .build();
+
+        WorkContinuation continuation = WorkManager.getInstance(this)
                 .beginWith(loginRequest)
-                .then(productImagesSizeRequest);
+                .then(downloadRequest)
+                .then(decompressRequest)
+                .then(readRequest);
 
         continuation.enqueue();
 
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(productImagesSizeRequest.getId())
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(readRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         Log.i("datadata",workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
-                        imagesSize=workInfo.getOutputData().getLong("imagesSize",0);
-                        lastUpdated=workInfo.getOutputData().getString("lastUpdateTimeStamp");
-                        handleWorkCompletion(workInfo);
+                       handleWorkCompletion(workInfo);
                     }
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
                         Log.i("datadata_worker",workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
                         showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                    }
+                    if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                        SharedPrefUtils.setProductLastUpdatedTimeStamp(lastUpdated);
                     }
                 });
 

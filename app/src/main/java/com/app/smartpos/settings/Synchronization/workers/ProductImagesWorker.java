@@ -1,28 +1,24 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
 import static com.app.smartpos.Constant.API_KEY;
-import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.app.smartpos.settings.Synchronization.dtos.ProductImagesResponseDto;
-import com.app.smartpos.utils.baseDto.ServiceResult;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.app.smartpos.utils.SSLUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-import okhttp3.FormBody;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import javax.net.ssl.HttpsURLConnection;
 
 public class ProductImagesWorker extends Worker {
 
@@ -33,49 +29,66 @@ public class ProductImagesWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String urL = getInputData().getString("url");
-        String tenantId= getInputData().getString("tenantId");
-        String authorization= getInputData().getString("Authorization");
-        String ecrCode= getInputData().getString("ecrCode");
-
-        if (urL==null || tenantId==null || authorization==null) {
-            Log.i("datadata_worker","fail");
+        Log.i("datadata_download","start");
+        String urlString = getInputData().getString("url");
+        String fileName = getInputData().getString("fileName");
+        String authorization = getInputData().getString("Authorization");
+        String tenantId = getInputData().getString("tenantId");
+        String ecrCode=getInputData().getString("ecrCode");
+        if (urlString == null || fileName == null) {
+            Log.i("datadata_download","failed 1");
             return Result.failure();
         }
-        FormBody formBody = new FormBody.Builder()
-                .add("email", "email")
-                .add("password","")
-                .build();
-        OkHttpClient client = getUnsafeOkHttpClient();
-        Headers headers=new Headers.Builder().
-                add("tenantId", tenantId).
-                add("Authorization",authorization).
-                add("apikey",API_KEY).
-                add("ecrCode",ecrCode).
-                build();
-        Log.i("datadata_worker",headers.toString());
-        Log.i("datadata_worker",authorization);
-        Request request = new Request.Builder()
-                .url(urL) // Replace with your server's upload endpoint
-                .post(formBody)
-                .headers(headers)
-                .build();
-        Log.i("datadata_worker",request.toString());
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                Log.i("datadata_worker","success");
-                String responseBody = response.body().string();
-                Log.i("datadata_worker",responseBody);
-                Gson gson=new Gson();
-
-                return Result.success(null); // Return success if the response is successful
-            } else {
-
-                return Result.failure(); // Retry the work if the server returns an error
+        SSLUtils.trustAllCertificates();
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            if (connection instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("tenantId", tenantId);
+            connection.setRequestProperty("Authorization", authorization);
+            connection.setRequestProperty("apikey",API_KEY);
+            connection.setRequestProperty("ecrCode",ecrCode);
+            Log.i("datadata_download","request");
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Log.i("datadata_download","loading");
+                File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
+                if (outputFile.exists()) {
+                    outputFile.delete();
+                }
+                Log.i("datadata_download","delete");
+                downloadFile(connection.getInputStream(),outputFile);
+
+                connection.disconnect();
+                return Result.success();
+            } else {
+                Log.i("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
+                // Handle error response
+                connection.disconnect();
+                return Result.failure();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure();
+        }
+    }
+
+    private boolean downloadFile(InputStream inputStream, File outputFile) {
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                Log.i("datadata_download","downloading");
+                fos.write(buffer, 0, length);
+            }
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return Result.failure(); // Return failure if there is an exception
+            return false;
         }
     }
 }
