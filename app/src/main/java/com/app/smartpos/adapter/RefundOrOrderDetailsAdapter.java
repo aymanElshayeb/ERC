@@ -82,7 +82,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
             holder.refund_qty_ll.setVisibility(View.GONE);
         }
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(refundOrOrderDetails);
-
+        databaseAccess.open();
         String base64Image = databaseAccess.getProductImage(refundOrOrderDetails.isConnected(), product_uuid);
         if (base64Image != null && base64Image.startsWith("http")) {
             Glide.with(refundOrOrderDetails).load(base64Image).into(holder.product_im);
