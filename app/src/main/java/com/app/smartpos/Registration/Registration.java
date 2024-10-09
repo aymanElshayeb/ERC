@@ -238,7 +238,7 @@ public class Registration extends BaseActivity {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Registration Successful");
+            showMessage(getString(R.string.registration_successful));
             SharedPrefUtils.setIsRegistered(this, true);
             SharedPrefUtils.setStartDateTime(this);
             byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
@@ -265,7 +265,7 @@ public class Registration extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });

@@ -452,6 +452,8 @@
     <string name="confirmation_for_download_product_images">Confirmation for download?</string>
     <string name="confirmation_for_download_product_images_text">The file size that you need to download is</string>
     <string name="no_product_images">No sync required</string>
+    <string name="registration_successful">Device registered successful</string>
+    <string name="unknown_error_occurred">Unknown error occurred</string>
 
 
 

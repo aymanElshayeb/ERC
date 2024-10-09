@@ -22,6 +22,7 @@ import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.Synchronization.workers.CompressWorker;
@@ -268,7 +269,7 @@ public class WorkerActivity extends BaseActivity {
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
                         Log.i("datadata_worker",workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                        showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                        showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }
                 });
 
@@ -343,7 +344,7 @@ public class WorkerActivity extends BaseActivity {
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
                         Log.i("datadata_worker",workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                        showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                        showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }
                     if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                         SharedPrefUtils.setProductLastUpdatedTimeStamp(lastUpdated);
@@ -362,7 +363,7 @@ public class WorkerActivity extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });

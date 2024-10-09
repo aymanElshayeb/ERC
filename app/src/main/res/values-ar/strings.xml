@@ -445,6 +445,8 @@
     <string name="confirmation_for_download_product_images">هل تريد تأكيد التنزيل؟</string>
     <string name="confirmation_for_download_product_images_text">حجم الملف الذي تحتاج إلى تنزيله هو</string>
     <string name="no_product_images">لا يتطلب المزامنة</string>
+    <string name="registration_successful">تم تسجيل الجهاز بنجاح</string>
+    <string name="unknown_error_occurred">حدث خطأ غير معروف</string>
 
     //error
     <string name="failed_to_register">فشل في تسجيل الجهاز</string>

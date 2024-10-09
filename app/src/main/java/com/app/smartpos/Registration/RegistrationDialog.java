@@ -202,7 +202,7 @@ public class RegistrationDialog extends DialogFragment {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Registration Successful");
+            showMessage(getString(R.string.registration_successful));
             SharedPrefUtils.setIsRegistered(requireContext(),true);
             SharedPrefUtils.setStartDateTime(requireContext());
             byte[] bytes=Hasher.encryptMsg(usernameEt.getText().toString().trim()+"-"+passwordEt.getText().toString().trim());
@@ -227,7 +227,7 @@ public class RegistrationDialog extends DialogFragment {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage( (errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage( (errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });

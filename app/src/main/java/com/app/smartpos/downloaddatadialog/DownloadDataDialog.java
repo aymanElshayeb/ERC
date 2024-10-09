@@ -424,7 +424,7 @@ public class DownloadDataDialog extends DialogFragment {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });
