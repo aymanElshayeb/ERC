@@ -98,33 +98,25 @@ public class Registration extends BaseActivity {
             email.setAlpha(1.0f);
             actionBtn.setText(getResources().getString(R.string.check_email));
         });
-//        email.addTextChangedListener(new TextWatcher() {
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (isValidEmail(email.getText().toString().trim())) {
-//                    actionBtn.setEnabled(true);
-//                    actionBtn.setAlpha(1);
-//
-//                } else {
-//                    actionBtn.setEnabled(false);
-//                    actionBtn.setAlpha(0.5f);
-//                }
-//                tenantId = "";
-//                spinner.setVisibility(View.GONE);
-//                password.setVisibility(View.GONE);
-//                eyeIm.setVisibility(View.GONE);
-//                changeEmailTv.setVisibility(View.GONE);
-//                email.setEnabled(true);
-//                email.setAlpha(1.0f);
-//                actionBtn.setText(getResources().getString(R.string.check_email));
-//            }
-//        });
+        email.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isValidEmail(email.getText().toString().trim())) {
+                    actionBtn.setEnabled(true);
+                    actionBtn.setAlpha(1);
+
+                } else {
+                    actionBtn.setEnabled(false);
+                    actionBtn.setAlpha(0.5f);
+                }
+            }
+        });
         password.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
 
