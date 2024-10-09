@@ -59,6 +59,8 @@ public class RefundOrOrderDetails extends WorkerActivity {
     private String order_payment_method;
     private String operation_type;
     private String refundSequence;
+    boolean checkConnectionOnce=true;
+    private RecyclerView recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
         TextView amount_tv = findViewById(R.id.amount_tv);
         LinearLayout btn_ll = findViewById(R.id.btn_ll);
         receipt_number_tv = findViewById(R.id.receipt_number_tv);
-        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler = findViewById(R.id.recycler);
         card_tv = findViewById(R.id.card_tv);
         cash_tv = findViewById(R.id.cash_tv);
         refunded_tv = findViewById(R.id.refunded_tv);
@@ -123,7 +125,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recycler.setAdapter(refundDetailsAdapter);
+
 
 
         updateTotalAmount();
@@ -147,6 +149,30 @@ public class RefundOrOrderDetails extends WorkerActivity {
             }
         });
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        Log.i("datadata_connection",""+state);
+        setAdapter();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isConnected()){
+            setAdapter();
+        }
+    }
+
+    private void setAdapter(){
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            runOnUiThread(() -> {
+                recycler.setAdapter(refundDetailsAdapter);
+            });
+        }
     }
 
     public boolean isRefund() {
