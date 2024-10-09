@@ -109,7 +109,7 @@ public class CashPricing extends BaseActivity {
     }
 
     private void setNumber(String number) {
-        Log.i("datadata_length",cashGivingTv.getText().toString().split("\\.").length+"");
+        Log.i("datadata_length", cashGivingTv.getText().toString().split("\\.").length + "");
         if ((cashGivingTv.getText().toString().length() == 13 && cashGivingTv.getText().toString().split("\\.").length == 2) || (cashGivingTv.getText().toString().split("\\.").length == 1 && cashGivingTv.getText().toString().split("\\.")[0].length() == 10) && !number.equals(".") && !cashGivingTv.getText().toString().endsWith(".")) {
             return;
         }
