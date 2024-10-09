@@ -4,10 +4,13 @@ import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
+import static com.app.smartpos.common.Utils.isValidEmail;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,7 +88,7 @@ public class Registration extends BaseActivity {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (email.getText().toString().trim().matches(emailPattern)) {
+                if ( isValidEmail(email.getText().toString().trim())) {
                     actionBtn.setEnabled(true);
                     actionBtn.setAlpha(1);
 
@@ -179,6 +182,7 @@ public class Registration extends BaseActivity {
             }
         });
     }
+
 
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
