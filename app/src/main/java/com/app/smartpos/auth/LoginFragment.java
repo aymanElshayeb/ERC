@@ -45,10 +45,11 @@ public class LoginFragment extends Fragment {
             EditText passwordEt = root.findViewById(R.id.password_et);
             Button loginBtn = root.findViewById(R.id.login_btn);
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
-            ChangeLanguageDialog dialog = new ChangeLanguageDialog();
+
 
 
             languageCl.setOnClickListener(view -> {
+                ChangeLanguageDialog dialog = new ChangeLanguageDialog();
                 dialog.show(getParentFragmentManager(), "change language dialog");
             });
 

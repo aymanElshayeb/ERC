@@ -66,7 +66,7 @@ public class SplashActivity extends BaseActivity {
                 //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
                 Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                 Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
-
+                Log.i("datadata_login",""+SharedPrefUtils.getIsLoggedIn(SplashActivity.this));
                 if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
                     startActivity(intentHome);
                 } else {
