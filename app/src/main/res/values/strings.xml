@@ -337,6 +337,7 @@
     <string name="login">Login</string>
     <string name="wrong_username_password">Wrong username or password</string>
     <string name="wrong_email_password">Wrong email or password</string>
+    <string name="please_enter_a_valid_email">Please enter a valid email address</string>
 
     <string name="synchronization">Synchronization</string>
     <string name="confirm_synchronization">you will synchronize your data with server</string>
@@ -405,7 +406,8 @@
     <string name="registration">Register device</string>
     <string name="merchant_id">Merchant ID</string>
     <string name="register">Register</string>
-    <string name="check_email">Check Email</string>
+    <string name="check_email">Check Email Address</string>
+    <string name="change_email">Change Email Address</string>
     <string name="demo">Demo</string>
     <string name="user_name_empty">Username field is empty</string>
     <string name="password_empty">password field is empty</string>

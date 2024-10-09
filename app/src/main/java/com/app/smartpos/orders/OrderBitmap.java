@@ -105,8 +105,9 @@ public class OrderBitmap extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.z_report))));
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(getDateTime(new Date().getTime()))));
         printLine();
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_no) +" " + endShiftModel.getSequence())));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.username) +" " + endShiftModel.getUserName())));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_no))));
+        bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(endShiftModel.getSequence())));
+        bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(activity.getString(R.string.username)),PrintingHelper.createBitmapFromText(endShiftModel.getUserName())));
 
         printStartAndEndShiftTime(endShiftModel.getStartDateTime(), endShiftModel.getEndDateTime());
         printLine();

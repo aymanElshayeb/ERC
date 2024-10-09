@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
@@ -17,8 +18,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -48,14 +51,17 @@ import java.util.LinkedList;
 
 public class Registration extends BaseActivity {
     EditText email;
+    ImageView eyeIm;
     Spinner spinner;
     EditText password;
     Button actionBtn;
+    TextView changeEmailTv;
     ProgressBar loadingPb;
     private String deviceId;
     CheckCompaniesViewModel companiesViewModel;
     LinkedList<CompanyModel> companyList = new LinkedList<>();
     String tenantId = "";
+    private boolean isPasswordShown=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +79,25 @@ public class Registration extends BaseActivity {
         email = findViewById(R.id.email_et);
         spinner = findViewById(R.id.company_spinner);
         password = findViewById(R.id.password_et);
+        changeEmailTv = findViewById(R.id.change_email_tv);
+        eyeIm = findViewById(R.id.eye_im);
         actionBtn = findViewById(R.id.action_btn);
         loadingPb = findViewById(R.id.loading_pb);
         String lang = LocaleManager.getLanguage(this);
 
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+
+        changeEmailTv.setOnClickListener(view -> {
+            tenantId = "";
+            spinner.setVisibility(View.GONE);
+            password.setVisibility(View.GONE);
+            eyeIm.setVisibility(View.GONE);
+            changeEmailTv.setVisibility(View.GONE);
+            email.setEnabled(true);
+            email.setAlpha(1.0f);
+            actionBtn.setText(getResources().getString(R.string.check_email));
+        });
         email.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
 
@@ -99,6 +118,10 @@ public class Registration extends BaseActivity {
                 tenantId = "";
                 spinner.setVisibility(View.GONE);
                 password.setVisibility(View.GONE);
+                eyeIm.setVisibility(View.GONE);
+                changeEmailTv.setVisibility(View.GONE);
+                email.setEnabled(true);
+                email.setAlpha(1.0f);
                 actionBtn.setText(getResources().getString(R.string.check_email));
             }
         });
@@ -143,6 +166,18 @@ public class Registration extends BaseActivity {
             dialog.show(getSupportFragmentManager(), "change language dialog");
         });
 
+        eyeIm.setOnClickListener(view -> {
+            isPasswordShown = !isPasswordShown;
+            if(isPasswordShown){
+                eyeIm.setAlpha(1.0f);
+                password.setTransformationMethod(null);
+            }else{
+                eyeIm.setAlpha(0.5f);
+                password.setTransformationMethod(new PasswordTransformationMethod());
+            }
+            password.setSelection(password.getText().length());
+        });
+
         companiesViewModel.getLiveData().observe(this, companyModels -> {
             actionBtn.setVisibility(View.VISIBLE);
             loadingPb.setVisibility(View.GONE);
@@ -152,10 +187,15 @@ public class Registration extends BaseActivity {
             }
 
             if (companyModels.isEmpty()) {
-                Toast.makeText(this, getResources().getString(R.string.no_data_found), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.please_enter_a_valid_email), Toast.LENGTH_SHORT).show();
             } else {
                 spinner.setVisibility(View.VISIBLE);
                 password.setVisibility(View.VISIBLE);
+                eyeIm.setVisibility(View.VISIBLE);
+                changeEmailTv.setVisibility(View.VISIBLE);
+                email.setEnabled(false);
+                email.setAlpha(0.5f);
+
                 password.setText("");
                 actionBtn.setText(getString(R.string.register));
                 ArrayList<String> arrayList = new ArrayList<>();

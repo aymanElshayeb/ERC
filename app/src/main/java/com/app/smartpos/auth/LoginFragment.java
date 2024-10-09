@@ -60,12 +60,13 @@ public class LoginFragment extends Fragment {
             eyeIm.setOnClickListener(view -> {
                 isPasswordShown = !isPasswordShown;
                 if(isPasswordShown){
-                    eyeIm.setAlpha(0.5f);
+                    eyeIm.setAlpha(1.0f);
                     passwordEt.setTransformationMethod(null);
                 }else{
-                    eyeIm.setAlpha(1.0f);
+                    eyeIm.setAlpha(0.5f);
                     passwordEt.setTransformationMethod(new PasswordTransformationMethod());
                 }
+                passwordEt.setSelection(passwordEt.getText().length());
             });
 
 

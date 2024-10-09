@@ -32,7 +32,10 @@ public class Utils {
             result = "0.00";
         }
         if(result.startsWith(".")){
-            result="0"+result;
+            result = "0"+result;
+        }
+        if(result.startsWith("-.")){
+            result = result.replace("-","-0");
         }
         return result;
     }
@@ -50,8 +53,12 @@ public class Utils {
             result = "0.00";
         }
         if(result.startsWith(".")){
-            result="0"+result;
+            result = "0"+result;
         }
+        if(result.startsWith("-.")){
+            result = result.replace("-","-0");
+        }
+
         return result;
     }
 

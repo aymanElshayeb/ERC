@@ -330,6 +330,7 @@
     <string name="login">تسجيل الدخول</string>
     <string name="wrong_username_password">اسم المستخدم أو كلمة المرور خاطئان</string>
     <string name="wrong_email_password">بريد إلكتروني أو كلمة مرور خاطئة</string>
+    <string name="please_enter_a_valid_email">يرجى إدخال بريد إلكتروني صحيح</string>
 
     <string name="synchronization">المزامنة</string>
     <string name="confirm_synchronization">ستقوم بمزامنة بياناتك مع الخادم</string>
@@ -399,6 +400,7 @@
     <string name="merchant_id">معرف التاجر</string>
     <string name="register">التسجيل</string>
     <string name="check_email">التحقق من البريد الإلكتروني</string>
+    <string name="change_email">تغيير البريد الإلكتروني</string>
     <string name="demo">العرض التجريبي</string>
     <string name="user_name_empty">حقل اسم المستخدم فارغ</string>
     <string name="password_empty">حقل كلمة المرور فارغ</string>

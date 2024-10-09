@@ -91,6 +91,7 @@
         android:layout_height="34dp"
         android:src="@drawable/ic_eye"
         android:padding="4dp"
+        android:alpha="0.5"
         app:layout_constraintTop_toTopOf="@id/password_et"
         app:layout_constraintBottom_toBottomOf="@id/password_et"
         app:layout_constraintEnd_toEndOf="@id/password_et"
