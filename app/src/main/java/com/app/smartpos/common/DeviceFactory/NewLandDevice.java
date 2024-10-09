@@ -58,6 +58,6 @@ public class NewLandDevice implements Device{
 
     @Override
     public String getPrintLine() {
-        return "-----------------------------------";
+        return "-------------------------------------------";
     }
 }

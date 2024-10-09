@@ -456,6 +456,9 @@
 
 
     //error
+    <string name="failed_to_register">Failed to register device</string>
+    <string name="non_admin_register">Can\'t register device with non admin user</string>
+    <string name="failed_to_login">Failed to login</string>
     <string name="no_printer_found">no printer found</string>
     <string name="transaction_declined">Transaction Declined</string>
     <string name="your_cart_is_empty">Your cart is empty!</string>

@@ -188,7 +188,6 @@ public class RefundOrOrderDetails extends WorkerActivity {
         dialog.show(getSupportFragmentManager(), "dialog");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void refundConfirmation() {
         boolean canRefund = false;
         double total_amount = 0;

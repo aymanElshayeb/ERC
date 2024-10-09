@@ -209,7 +209,8 @@ public class RegistrationDialog extends DialogFragment {
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            showMessage("Error in Syncing data");
+            if(workInfo.getOutputData().getKeyValueMap().isEmpty())
+                showMessage("Error in Syncing data");
             registerBtn.setVisibility(View.VISIBLE);
             demoBtn.setEnabled(true);
 

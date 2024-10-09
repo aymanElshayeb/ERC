@@ -243,7 +243,7 @@ public class OrderBitmap extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps = new ArrayList<>();
         combinedBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_card)));
         combinedBitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps, 105)));
+        bitmaps.add(new PrinterModel(combinedBitmaps.get(0), combinedBitmaps.get(1)));
         return totalCard;
     }
 

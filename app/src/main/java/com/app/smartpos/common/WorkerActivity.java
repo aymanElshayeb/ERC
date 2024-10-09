@@ -51,23 +51,12 @@ public class WorkerActivity extends BaseActivity {
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
 
-        Data lastSync = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if(SharedPrefUtils.getAuthorization().isEmpty()){
-                lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        build();
-            } else{
-                lastSync = new Data.Builder().
+        Data lastSync = new Data.Builder().
                         putString("url", LAST_SYNC_URL).
                         putString("tenantId", conf.get("merchant_id")).
                         putString("ecrCode", conf.get("ecr_code")).
                         putString("Authorization",SharedPrefUtils.getAuthorization()).
                         build();
-            }
-        }
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
                 .build();
@@ -88,26 +77,18 @@ public class WorkerActivity extends BaseActivity {
         OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
                 setInputData(uploadInputData).
                 build();
-        WorkContinuation continuation ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && SharedPrefUtils.getAuthorization().isEmpty()) {
-            continuation = WorkManager.getInstance(this)
+        WorkContinuation continuation = WorkManager.getInstance(this)
                     .beginWith(lastSyncRequest)
                     .then(exportRequest)
                     .then(compressRequest)
                     .then(uploadRequest);
-        } else {
-            continuation = WorkManager.getInstance(this)
-                    .beginWith(lastSyncRequest)
-                    .then(exportRequest)
-                    .then(compressRequest)
-                    .then(uploadRequest);
-        }
 
         continuation.enqueue();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
+                        SharedPrefUtils.resetAuthorization();
                         handleWorkCompletion(workInfo);
                     }
                 });
@@ -190,23 +171,11 @@ public class WorkerActivity extends BaseActivity {
                 putString("password", deviceId).
                 build();
 
-        Data lastSync = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if(SharedPrefUtils.getAuthorization().isEmpty()){
-                lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        build();
-            } else{
-                lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        putString("Authorization",SharedPrefUtils.getAuthorization()).
-                        build();
-            }
-        }
+        Data lastSync = new Data.Builder().
+                putString("url", LAST_SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                build();
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
                 .build();
@@ -229,21 +198,12 @@ public class WorkerActivity extends BaseActivity {
         OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
                 setInputData(uploadInputData).
                 build();
-        WorkContinuation continuation ;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && SharedPrefUtils.getAuthorization().isEmpty()) {
-            continuation = WorkManager.getInstance(this)
+        WorkContinuation continuation = WorkManager.getInstance(this)
                     .beginWith(loginRequest)
                     .then(lastSyncRequest)
                     .then(exportRequest)
                     .then(compressRequest)
                     .then(uploadRequest);
-        } else {
-            continuation = WorkManager.getInstance(this)
-                    .beginWith(lastSyncRequest)
-                    .then(exportRequest)
-                    .then(compressRequest)
-                    .then(uploadRequest);
-        }
 
         continuation.enqueue();
         observeWorker(loginRequest);

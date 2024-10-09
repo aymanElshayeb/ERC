@@ -9,6 +9,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.R;
 import com.app.smartpos.utils.SSLUtils;
 
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class LoginWithServerWorker extends Worker {
                 Data outputData = new Data.Builder().putString("Authorization", authorization).build();
                 return Result.success(outputData);
             } else {
-                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO LOGIN").build();
+                Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }
         } catch (IOException e) {

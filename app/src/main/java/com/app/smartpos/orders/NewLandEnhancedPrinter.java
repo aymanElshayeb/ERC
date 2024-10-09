@@ -67,7 +67,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         String bitmapName1 = "logo";
         bitmapResult.put(bitmapName1, bitmap);
         StringBuffer printDara = new StringBuffer();
-        printDara.append("*image c " + width + "*" + totalHeight + " path:" + bitmapName1 + "\n");
+        printDara.append("*image c " + bitmap.getWidth() + "*" + bitmap.getHeight() + " path:" + bitmapName1 + "\n");
         printDara.append("!hz s\n!asc s\n");
         mPrintManager.print(printDara.toString(), bitmapResult, new PrintListener() {
             @Override
@@ -92,7 +92,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             bitmapResult.put(bitmapName1, bitmap);
 
             StringBuffer printDara = new StringBuffer();
-            printDara.append("*image c " + width + "*" + totalHeight + " path:" + bitmapName1 + "\n");
+            printDara.append("*image c " + bitmap.getWidth() + "*" + bitmap.getHeight() + " path:" + bitmapName1 + "\n");
             printDara.append("!hz s\n!asc s\n");
             mPrintManager.print(printDara.toString(), bitmapResult, new PrintListener() {
                 @Override

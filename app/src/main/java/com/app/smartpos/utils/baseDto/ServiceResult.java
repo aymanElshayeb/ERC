@@ -10,6 +10,15 @@ public class ServiceResult <T>{
     private int code;
     private String status;
     private Data<T> data;
+    private Fault fault;
+
+    public Fault getFault() {
+        return fault;
+    }
+
+    public void setFault(Fault fault) {
+        this.fault = fault;
+    }
 
     public int getCode() {
         return code;

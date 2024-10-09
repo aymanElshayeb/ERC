@@ -11,6 +11,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.Registration.dto.RegistrationResponseDto;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.baseDto.ServiceRequest;
@@ -70,7 +71,7 @@ public class CheckCompanyWorker extends Worker {
                 Log.e("Result" , result.toString());
 
                 if(result.getCode()!=200){
-                    Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO REGISTER").build();
+                    Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                     return Result.failure(outputData);
                 }
                 RegistrationResponseDto registrationResponseDto=result.getData().getReturnedObj().get(0);
@@ -86,7 +87,7 @@ public class CheckCompanyWorker extends Worker {
                         build();
                 return Result.success(outputData);
             } else {
-                Data outputData = new Data.Builder().putString("errorMessage", "FAILED TO REGISTER").build();
+                Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
