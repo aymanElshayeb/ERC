@@ -17,6 +17,7 @@ import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.MultiLanguageApp;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -220,6 +221,7 @@ public class DatabaseAccess {
         values.put("num_successful_transaction", endShiftModel.getNum_successful_transaction());
         values.put("num_canceled_transaction", endShiftModel.getNum_canceled_transaction());
         values.put("num_returned_transaction", endShiftModel.getNum_returned_transaction());
+        values.put("user_mail", SharedPrefUtils.getEmail(MultiLanguageApp.getApp()));
 
         values.put("notes", endShiftModel.getNote());
 
