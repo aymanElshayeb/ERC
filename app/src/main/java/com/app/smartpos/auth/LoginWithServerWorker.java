@@ -71,7 +71,7 @@ public class LoginWithServerWorker extends Worker {
         try(Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String authorization=response.header("Authorization");
-                Data outputData = new Data.Builder().putString("Authorization", authorization).build();
+                Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email",email).build();
                 return Result.success(outputData);
             } else {
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();

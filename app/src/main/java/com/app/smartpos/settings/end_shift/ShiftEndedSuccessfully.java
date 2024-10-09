@@ -52,7 +52,7 @@ public class ShiftEndedSuccessfully extends BaseActivity {
 
             @Override
             public void onFinish() {
-                SharedPrefUtils.setIsLoggedIn(ShiftEndedSuccessfully.this, true);
+                SharedPrefUtils.setIsLoggedIn(ShiftEndedSuccessfully.this, false);
                 finish();
                 startActivity(new Intent(ShiftEndedSuccessfully.this, AuthActivity.class));
             }

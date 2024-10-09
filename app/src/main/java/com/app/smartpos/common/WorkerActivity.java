@@ -353,6 +353,40 @@ public class WorkerActivity extends BaseActivity {
 
     }
 
+    public void loginWorkers(String email,String password) {
+        //username Admin
+        //password 01111Mm&
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", email).
+                putString("password", password).
+                build();
+
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest);
+
+        continuation.enqueue();
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(loginRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                        handleWorkCompletion(workInfo);
+                    }
+                });
+
+    }
+
     public void handleWorkCompletion(WorkInfo workInfo) {
 
     }
