@@ -4,6 +4,7 @@ package com.app.smartpos.auth;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ public class LoginFragment extends Fragment {
 
     private View root;
     private Context context;
+    private boolean isPasswordShown=false;
 
     @Nullable
     @Override
@@ -43,6 +46,7 @@ public class LoginFragment extends Fragment {
             context = requireContext();
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
+            ImageView eyeIm = root.findViewById(R.id.eye_im);
             Button loginBtn = root.findViewById(R.id.login_btn);
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
 
@@ -51,6 +55,17 @@ public class LoginFragment extends Fragment {
             languageCl.setOnClickListener(view -> {
                 ChangeLanguageDialog dialog = new ChangeLanguageDialog();
                 dialog.show(getParentFragmentManager(), "change language dialog");
+            });
+
+            eyeIm.setOnClickListener(view -> {
+                isPasswordShown = !isPasswordShown;
+                if(isPasswordShown){
+                    eyeIm.setAlpha(0.5f);
+                    passwordEt.setTransformationMethod(null);
+                }else{
+                    eyeIm.setAlpha(1.0f);
+                    passwordEt.setTransformationMethod(new PasswordTransformationMethod());
+                }
             });
 
 
