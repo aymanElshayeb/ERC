@@ -17,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -67,6 +69,7 @@ public class DownloadDataDialog extends DialogFragment {
     EditText passwordEt;
     ProgressBar progressBar;
     Button downloadBtn;
+    private boolean isPasswordShown=false;
 
     private static final String ARG_OPERATION_TYPE = "operation_type";
     public static final String OPERATION_UPLOAD = "upload";
@@ -93,6 +96,7 @@ public class DownloadDataDialog extends DialogFragment {
             passwordEt = root.findViewById(R.id.password_et);
             downloadBtn = root.findViewById(R.id.download_btn);
             progressBar = root.findViewById(R.id.progress);
+            ImageView eyeIm = root.findViewById(R.id.eye_im);
 //            emailEt.setText("lolo2@gmail.com");
 //            passwordEt.setText("01111Mm&");
 
@@ -105,6 +109,19 @@ public class DownloadDataDialog extends DialogFragment {
             else {
                 operationType = "";
             }
+
+            eyeIm.setOnClickListener(view -> {
+                isPasswordShown = !isPasswordShown;
+                if(isPasswordShown){
+                    eyeIm.setAlpha(1.0f);
+                    passwordEt.setTransformationMethod(null);
+                }else{
+                    eyeIm.setAlpha(0.5f);
+                    passwordEt.setTransformationMethod(new PasswordTransformationMethod());
+                }
+                passwordEt.setSelection(passwordEt.getText().length());
+            });
+
             downloadBtn.setOnClickListener(view -> {
                 if (emailEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
