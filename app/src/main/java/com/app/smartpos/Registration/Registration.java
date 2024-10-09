@@ -37,6 +37,7 @@ import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.ArrayList;
@@ -247,7 +248,7 @@ public class Registration extends BaseActivity {
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             if(workInfo.getOutputData().getKeyValueMap().isEmpty())
-                showMessage("Error in Syncing data");
+                showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             actionBtn.setVisibility(View.VISIBLE);
             loadingPb.setVisibility(View.GONE);
 //            demoBtn.setEnabled(true);

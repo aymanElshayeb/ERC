@@ -42,6 +42,7 @@ import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
@@ -210,7 +211,7 @@ public class RegistrationDialog extends DialogFragment {
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
             if(workInfo.getOutputData().getKeyValueMap().isEmpty())
-                showMessage("Error in Syncing data");
+                showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             registerBtn.setVisibility(View.VISIBLE);
             demoBtn.setEnabled(true);
 

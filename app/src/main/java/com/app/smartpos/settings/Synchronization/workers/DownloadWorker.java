@@ -36,7 +36,6 @@ public class DownloadWorker extends Worker {
         String tenantId = getInputData().getString("tenantId");
         String ecrCode=getInputData().getString("ecrCode");
         if (urlString == null || fileName == null) {
-            Log.i("datadata_download","failed 1");
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
@@ -51,14 +50,11 @@ public class DownloadWorker extends Worker {
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey",API_KEY);
             connection.setRequestProperty("ecrCode",ecrCode);
-            Log.i("datadata_download","request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Log.i("datadata_download","loading");
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
-                Log.i("datadata_download","delete");
                 downloadFile(connection.getInputStream(),outputFile);
 
                 connection.disconnect();
