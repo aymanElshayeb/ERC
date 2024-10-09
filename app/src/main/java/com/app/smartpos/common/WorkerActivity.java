@@ -53,11 +53,11 @@ public class WorkerActivity extends BaseActivity {
         HashMap<String, String> conf = databaseAccess.getConfiguration();
 
         Data lastSync = new Data.Builder().
-                        putString("url", LAST_SYNC_URL).
-                        putString("tenantId", conf.get("merchant_id")).
-                        putString("ecrCode", conf.get("ecr_code")).
-                        putString("Authorization",SharedPrefUtils.getAuthorization()).
-                        build();
+                putString("url", LAST_SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                putString("Authorization", SharedPrefUtils.getAuthorization()).
+                build();
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
                 .build();
@@ -79,10 +79,10 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation = WorkManager.getInstance(this)
-                    .beginWith(lastSyncRequest)
-                    .then(exportRequest)
-                    .then(compressRequest)
-                    .then(uploadRequest);
+                .beginWith(lastSyncRequest)
+                .then(exportRequest)
+                .then(compressRequest)
+                .then(uploadRequest);
 
         continuation.enqueue();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
@@ -102,7 +102,7 @@ public class WorkerActivity extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
-        String ecr= conf.get("ecr_code");
+        String ecr = conf.get("ecr_code");
         String deviceId = Utils.getDeviceId(this);
         Data login = new Data.Builder().
                 putString("url", LOGIN_URL).
@@ -163,7 +163,7 @@ public class WorkerActivity extends BaseActivity {
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
 
-        String ecr= conf.get("ecr_code");
+        String ecr = conf.get("ecr_code");
         String deviceId = Utils.getDeviceId(this);
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
@@ -200,11 +200,11 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation = WorkManager.getInstance(this)
-                    .beginWith(loginRequest)
-                    .then(lastSyncRequest)
-                    .then(exportRequest)
-                    .then(compressRequest)
-                    .then(uploadRequest);
+                .beginWith(loginRequest)
+                .then(lastSyncRequest)
+                .then(exportRequest)
+                .then(compressRequest)
+                .then(uploadRequest);
 
         continuation.enqueue();
         observeWorker(loginRequest);
@@ -226,7 +226,7 @@ public class WorkerActivity extends BaseActivity {
         HashMap<String, String> conf = databaseAccess.getConfiguration();
 
         Data lastSync = null;
-        String ecr= conf.get("ecr_code");
+        String ecr = conf.get("ecr_code");
         String deviceId = Utils.getDeviceId(this);
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
@@ -234,10 +234,10 @@ public class WorkerActivity extends BaseActivity {
                 putString("email", ecr).
                 putString("password", deviceId).
                 build();
-        String lastUpdateTimeStamp=SharedPrefUtils.getProductLastUpdatedTimeStamp();
+        String lastUpdateTimeStamp = SharedPrefUtils.getProductLastUpdatedTimeStamp();
 
         Data SizeData = new Data.Builder()
-                .putString("url",PRODUCT_IMAGES_SIZE+lastUpdateTimeStamp)
+                .putString("url", PRODUCT_IMAGES_SIZE + lastUpdateTimeStamp)
                 .putString("apikey", API_KEY)
                 .putString("tenantId", conf.get("merchant_id"))
                 .build();
@@ -251,7 +251,7 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(SizeData).
                 build();
 
-        WorkContinuation  continuation = WorkManager.getInstance(this)
+        WorkContinuation continuation = WorkManager.getInstance(this)
                 .beginWith(loginRequest)
                 .then(productImagesSizeRequest);
 
@@ -260,14 +260,14 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(productImagesSizeRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
-                        Log.i("datadata",workInfo.getOutputData().toString());
+                        Log.i("datadata", workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
-                        imagesSize=workInfo.getOutputData().getLong("imagesSize",0);
-                        lastUpdated=workInfo.getOutputData().getString("lastUpdateTimeStamp");
+                        imagesSize = workInfo.getOutputData().getLong("imagesSize", 0);
+                        lastUpdated = workInfo.getOutputData().getString("newUpdateTimestamp");
                         handleWorkCompletion(workInfo);
                     }
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
-                        Log.i("datadata_worker",workInfo.getOutputData().toString());
+                        Log.i("datadata_worker", workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
                         showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }
@@ -283,7 +283,7 @@ public class WorkerActivity extends BaseActivity {
         HashMap<String, String> conf = databaseAccess.getConfiguration();
 
         Data lastSync = null;
-        String ecr= conf.get("ecr_code");
+        String ecr = conf.get("ecr_code");
         String deviceId = Utils.getDeviceId(this);
         Data loginInputData = new Data.Builder().
                 putString("url", LOGIN_URL).
@@ -291,10 +291,10 @@ public class WorkerActivity extends BaseActivity {
                 putString("email", ecr).
                 putString("password", deviceId).
                 build();
-        String lastUpdateTimeStamp=SharedPrefUtils.getProductLastUpdatedTimeStamp();
+        String lastUpdateTimeStamp = SharedPrefUtils.getProductLastUpdatedTimeStamp();
 
         Data downloadInputData = new Data.Builder()
-                .putString("url",PRODUCT_IMAGES+lastUpdateTimeStamp)
+                .putString("url", PRODUCT_IMAGES + lastUpdateTimeStamp)
                 .putString("apikey", API_KEY)
                 .putString("ecrCode", ecr)
                 .putString("tenantId", conf.get("merchant_id"))
@@ -337,12 +337,12 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(readRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
-                        Log.i("datadata",workInfo.getOutputData().toString());
+                        Log.i("datadata", workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
-                       handleWorkCompletion(workInfo);
+                        handleWorkCompletion(workInfo);
                     }
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
-                        Log.i("datadata_worker",workInfo.getOutputData().toString());
+                        Log.i("datadata_worker", workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
                         showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }

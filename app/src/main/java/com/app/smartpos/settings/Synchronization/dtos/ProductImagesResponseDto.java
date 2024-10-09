@@ -2,7 +2,7 @@ package com.app.smartpos.settings.Synchronization.dtos;
 
 public class ProductImagesResponseDto {
     private Long imagesSize;
-    private String lastUpdateTimestamp;
+    private String newUpdateTimestamp;
 
     public Long getImagesSize() {
         return imagesSize;
@@ -12,11 +12,11 @@ public class ProductImagesResponseDto {
         this.imagesSize = imagesSize;
     }
 
-    public String getLastUpdateTimestamp() {
-        return lastUpdateTimestamp;
+    public String getNewUpdateTimestamp() {
+        return newUpdateTimestamp;
     }
 
-    public void setLastUpdateTimestamp(String lastUpdateTimestamp) {
-        this.lastUpdateTimestamp = lastUpdateTimestamp;
+    public void setNewUpdateTimestamp(String newUpdateTimestamp) {
+        this.newUpdateTimestamp = newUpdateTimestamp;
     }
 }
