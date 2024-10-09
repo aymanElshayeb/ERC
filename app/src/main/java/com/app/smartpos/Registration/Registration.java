@@ -88,7 +88,7 @@ public class Registration extends BaseActivity {
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ( isValidEmail(email.getText().toString().trim())) {
+                if (isValidEmail(email.getText().toString().trim())) {
                     actionBtn.setEnabled(true);
                     actionBtn.setAlpha(1);
 
@@ -190,7 +190,7 @@ public class Registration extends BaseActivity {
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
                 putString("tenantId", tenantId).
-                putString("email", email.getText().toString()).
+                putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 putString("deviceId", deviceId).
                 build();
@@ -251,7 +251,7 @@ public class Registration extends BaseActivity {
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            if(workInfo.getOutputData().getKeyValueMap().isEmpty())
+            if (workInfo.getOutputData().getKeyValueMap().isEmpty())
                 showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             actionBtn.setVisibility(View.VISIBLE);
             loadingPb.setVisibility(View.GONE);

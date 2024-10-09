@@ -67,7 +67,7 @@ public class LoginFragment extends Fragment {
             loginBtn.setOnClickListener(view -> {
 
                 databaseAccess.open();
-                HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString());
+                HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString().trim());
                 if (map != null) {
                     Hasher hasher = new Hasher();
                     boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
