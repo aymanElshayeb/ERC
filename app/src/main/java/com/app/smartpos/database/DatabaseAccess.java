@@ -212,8 +212,8 @@ public class DatabaseAccess {
             total_cash = shiftDifferences.getReal();
             diff_cash = shiftDifferences.getDiff();
         }
-        values.put("total_cash", total_cash);
-        values.put("difference_cash", diff_cash);
+        values.put("total_cash", Utils.trimLongDouble(total_cash));
+        values.put("difference_cash", Utils.trimLongDouble(diff_cash));
 
         values.put("start_cash", endShiftModel.getStartCash());
         values.put("leave_cash", endShiftModel.getLeaveCash());
@@ -247,9 +247,9 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
         values.put("shift_id", id);
-        values.put("total", shiftDifference.getReal());
+        values.put("total", Utils.trimLongDouble(shiftDifference.getReal()));
         values.put("credit_code", shiftDifference.getCode());
-        values.put("difference", shiftDifference.getDiff());
+        values.put("difference", Utils.trimLongDouble(shiftDifference.getDiff()));
 
         //Log.i("datadata_shift_diff", values.toString());
 
