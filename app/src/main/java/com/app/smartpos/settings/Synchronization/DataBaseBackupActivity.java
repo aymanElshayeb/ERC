@@ -85,15 +85,18 @@ public class DataBaseBackupActivity extends WorkerActivity {
         loadingLl.setVisibility(View.GONE);
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage(getString(R.string.data_synced_successfully));
+
             if(workerType==3){
                 if(imagesSize==0){
                     Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
                 }else {
+                    showMessage(getString(R.string.data_synced_successfully));
                     DownloadProductImagesConfirmationDialog dialog = new DownloadProductImagesConfirmationDialog();
                     dialog.setData(this, formatSize(imagesSize));
                     dialog.show(getSupportFragmentManager(), "dialog");
                 }
+            }else{
+                showMessage(getString(R.string.data_synced_successfully));
             }
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
