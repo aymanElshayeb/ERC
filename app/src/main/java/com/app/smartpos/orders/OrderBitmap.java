@@ -253,13 +253,13 @@ public class OrderBitmap extends BaseActivity {
         int size = bitmaps.size();
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
-            Log.i("datadata_width", bitmap.getWidth() + "");
+            Utils.addLog("datadata_width", bitmap.getWidth() + "");
             totalHeight += bitmap.getHeight();
             if (bitmap.getWidth() > width) {
                 width = bitmap.getWidth();
             }
         }
-        //Log.i("datadata", totalHeight + "");
+        //Utils.addLog("datadata", totalHeight + "");
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(width, totalHeight, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
@@ -326,7 +326,7 @@ public class OrderBitmap extends BaseActivity {
         if (orderPaymentMethod.equalsIgnoreCase("cash")) {
             List<Bitmap> newBitmaps1 = new ArrayList<>();
             newBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_paid)));
-            Log.i("datadata_amount",paidAmount+" "+Utils.trimLongDouble(paidAmount)+" "+(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            Utils.addLog("datadata_amount",paidAmount+" "+Utils.trimLongDouble(paidAmount)+" "+(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
             newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(paidAmount)));
             bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
             printLine();

@@ -109,7 +109,7 @@ public class CashPricing extends BaseActivity {
     }
 
     private void setNumber(String number) {
-        Log.i("datadata_length", cashGivingTv.getText().toString().split("\\.").length + "");
+        Utils.addLog("datadata_length", cashGivingTv.getText().toString().split("\\.").length + "");
         if ((cashGivingTv.getText().toString().length() == 13 && cashGivingTv.getText().toString().split("\\.").length == 2) || (cashGivingTv.getText().toString().split("\\.").length == 1 && cashGivingTv.getText().toString().split("\\.")[0].length() == 10) && !number.equals(".") && !cashGivingTv.getText().toString().endsWith(".")) {
             return;
         }
@@ -128,8 +128,8 @@ public class CashPricing extends BaseActivity {
         cash += number;
         cashGivingTv.setText(cash);
         change = Double.parseDouble(Utils.trimLongDouble(totalAmount)) - Double.parseDouble(cash);
-        Log.i("datadata_trim", "" + change);
-        Log.i("datadata_trim", Utils.trimLongDouble(change));
+        Utils.addLog("datadata_trim", "" + change);
+        Utils.addLog("datadata_trim", Utils.trimLongDouble(change));
         changeTv.setText(Utils.trimLongDouble(change));
     }
 

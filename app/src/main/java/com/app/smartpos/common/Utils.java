@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.app.smartpos.BuildConfig;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -42,7 +44,7 @@ public class Utils {
 
     public static String trimLongDouble(String value){
         double doubleValue=Double.parseDouble(value);
-        Log.i("datadata_amount",value+" "+doubleValue);
+        Utils.addLog("datadata_amount",value+" "+doubleValue);
         String pattern = "#.00"; //your pattern as per need
         Locale locale = new Locale("en", "US");
         DecimalFormat f = (DecimalFormat) NumberFormat.getNumberInstance(locale);
@@ -68,5 +70,11 @@ public class Utils {
     }
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    public static void addLog(String key,String value){
+        if(BuildConfig.BUILD_TYPE=="debug") {
+            Log.i(key, value);
+        }
     }
 }

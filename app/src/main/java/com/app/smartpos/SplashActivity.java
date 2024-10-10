@@ -13,6 +13,7 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.checkout.SuccessfulPayment;
+import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
@@ -21,6 +22,7 @@ import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.apache.http.auth.AUTH;
 
+import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -55,26 +57,33 @@ public class SplashActivity extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         String endDateString = databaseAccess.getLastShift("end_date_time");
-        Log.i("end_date", endDateString);
+        Utils.addLog("end_date", endDateString);
 
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
-                Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
-                Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
-                Log.i("datadata_login",""+SharedPrefUtils.getIsLoggedIn(SplashActivity.this));
-                if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
-                    startActivity(intentHome);
-                } else {
-                    startActivity(intent);
+        boolean access=(BuildConfig.BUILD_TYPE == "debug" && Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==1 && !RootUtil.isDeviceRooted());
+        Utils.addLog("datadata_adb",access+" "+ RootUtil.isDeviceRooted());
+
+        if(!access){
+            finishAffinity();
+        }else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
+                    Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
+                    Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
+                    Utils.addLog("datadata_login", "" + SharedPrefUtils.getIsLoggedIn(SplashActivity.this));
+                    if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
+                        startActivity(intentHome);
+                    } else {
+                        startActivity(intent);
+                    }
+                    finish();
                 }
-                finish();
-            }
-        }, splashTimeOut);
+            }, splashTimeOut);
+        }
     }
 
     private OkHttpClient getUnsafeOkHttpClient() {
@@ -155,6 +164,8 @@ public class SplashActivity extends BaseActivity {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+
+
     }
 }
 

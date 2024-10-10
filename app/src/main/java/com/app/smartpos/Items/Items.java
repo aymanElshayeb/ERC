@@ -156,7 +156,7 @@ public class Items extends BaseActivity {
     @Override
     public void connectionChanged(boolean state) {
         super.connectionChanged(state);
-        Log.i("datadata_connection",""+state);
+        Utils.addLog("datadata_connection",""+state);
         setAdapter();
     }
 
@@ -219,7 +219,7 @@ public class Items extends BaseActivity {
             total += productPrice * productCount;
             count += productCount;
         }
-        Log.i("datadata_count", count + "");
+        Utils.addLog("datadata_count", count + "");
         cartCountTv.setText("" + count);
         cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " "+currency);
 
@@ -237,10 +237,10 @@ public class Items extends BaseActivity {
             double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
             double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
             total += productPrice * productCount;
-            Log.i("datadata_total",(i==pos)+" "+(productPrice*productCount));
+            Utils.addLog("datadata_total",(i==pos)+" "+(productPrice*productCount));
         }
         total += Double.parseDouble(productList.get(pos).get("product_sell_price"));
-        Log.i("datadata_total",total+"");
+        Utils.addLog("datadata_total",total+"");
         return total>999999999.99;
     }
 
@@ -272,7 +272,7 @@ public class Items extends BaseActivity {
         animator.setDuration(500);
         animator.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams params = viewCartCl.getLayoutParams();
-            Log.i("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
+            Utils.addLog("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
             params.height = (int) (float) valueAnimator.getAnimatedValue();
             viewCartCl.setLayoutParams(params);
         });
@@ -294,8 +294,8 @@ public class Items extends BaseActivity {
         for (int i = 0; i < selectedProductList.size(); i++) {
             if (selectedProductList.get(i).get("product_id").toString().equals(productList.get(position).get("product_id").toString())) {
                 count = selectedProductList.get(i).get("product_qty");
-                Log.i("datadata_count", selectedProductList.get(i).toString());
-                Log.i("datadata_count", count);
+                Utils.addLog("datadata_count", selectedProductList.get(i).toString());
+                Utils.addLog("datadata_count", count);
                 productList.get(position).put("product_count", count);
                 break;
             }
@@ -335,7 +335,7 @@ public class Items extends BaseActivity {
             databaseAccess.open();
             databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid,description);
             selectedProductList.add(convertProductToCartItem(product));
-            Log.i("datadata", selectedProductList.size() + "");
+            Utils.addLog("datadata", selectedProductList.size() + "");
             updateCartUI();
         }else{
             Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();

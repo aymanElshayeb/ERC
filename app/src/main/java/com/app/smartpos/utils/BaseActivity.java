@@ -85,7 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
             connectionChanged(isConnected);
-            //Log.i("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
+            //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
         }
 
     };

@@ -260,14 +260,14 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(productImagesSizeRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
-                        Log.i("datadata", workInfo.getOutputData().toString());
+                        Utils.addLog("datadata", workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
                         imagesSize = workInfo.getOutputData().getLong("imagesSize", 0);
                         lastUpdated = workInfo.getOutputData().getString("newUpdateTimestamp");
                         handleWorkCompletion(workInfo);
                     }
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
-                        Log.i("datadata_worker", workInfo.getOutputData().toString());
+                        Utils.addLog("datadata_worker", workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
                         showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }
@@ -337,12 +337,12 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(readRequest.getId())
                 .observeForever(workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
-                        Log.i("datadata", workInfo.getOutputData().toString());
+                        Utils.addLog("datadata", workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);
                     }
                     if (workInfo.getState() == WorkInfo.State.FAILED) {
-                        Log.i("datadata_worker", workInfo.getOutputData().toString());
+                        Utils.addLog("datadata_worker", workInfo.getOutputData().toString());
                         String errorMessage = workInfo.getOutputData().getString("errorMessage");
                         showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                     }

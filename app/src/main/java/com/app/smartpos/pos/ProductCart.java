@@ -32,6 +32,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -761,7 +762,7 @@ public class ProductCart extends BaseActivity {
 //        super.onActivityResult(requestCode, resultCode, data);
 ////        data.getStringExtra("123");
 ////        Log.d("DEBUG","11111111111111111111111111111111111");
-////        Log.i("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
+////        Utils.addLog("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
 //
 //        //tvResponse.setText("Sale Response："+data.getStringExtra(ThirdTag.JSON_DATA));
 //        // tvResponse.setText("Response："+data.getExtras().toString());
@@ -781,10 +782,10 @@ public class ProductCart extends BaseActivity {
 //
 //                String PurchaseAmount=result.getJSONObject("Amounts").getString("PurchaseAmount");
 //                String ApprovalCode=result.getString("ApprovalCode");
-//                Log.i("datadata",name+" "+code);
+//                Utils.addLog("datadata",name+" "+code);
 //                databaseAccess.open();
 //                //long id=databaseAccess.insertCardDetails(name,code);
-//                //Log.i("datadata",id+"");
+//                //Utils.addLog("datadata",id+"");
 //                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code,ApprovalCode,Double.parseDouble(PurchaseAmount));
 //                alertDialog.dismiss();
 //            }else{
@@ -814,10 +815,10 @@ public class ProductCart extends BaseActivity {
 
                             String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
                             String ApprovalCode = result.getString("ApprovalCode");
-                            Log.i("datadata", name + " " + code);
+                            Utils.addLog("datadata", name + " " + code);
 //                            databaseAccess.open();
                             //long id=databaseAccess.insertCardDetails(name,code);
-                            //Log.i("datadata",id+"");
+                            //Utils.addLog("datadata",id+"");
                             proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
                             alertDialog.dismiss();
                         } else if(resultStatus.equals("Declined")) {

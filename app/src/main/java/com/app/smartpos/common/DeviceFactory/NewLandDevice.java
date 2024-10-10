@@ -7,13 +7,14 @@ import android.util.Log;
 
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.orders.NewLandEnhancedPrinter;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 public class NewLandDevice implements Device{
     @Override
     public Intent pay(double total) {
-        Log.i("datadata_amount",total+"");
+        Utils.addLog("datadata_amount",total+"");
         Intent intent = new Intent();
         intent.setPackage(Consts.PACKAGE);
         intent.setAction(Consts.CARD_ACTION);

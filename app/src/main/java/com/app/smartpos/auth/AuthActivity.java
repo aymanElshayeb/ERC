@@ -60,9 +60,9 @@ public class AuthActivity extends WorkerActivity {
 //        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 //
 //        for (ApplicationInfo packageInfo : packages) {
-//            Log.i("datadata", "Installed package :" + packageInfo.packageName);
-//            Log.i("datadata", "Source dir : " + packageInfo.sourceDir);
-//            Log.i("datadata", "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
+//            Utils.addLog("datadata", "Installed package :" + packageInfo.packageName);
+//            Utils.addLog("datadata", "Source dir : " + packageInfo.sourceDir);
+//            Utils.addLog("datadata", "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
 //        }
 
     }

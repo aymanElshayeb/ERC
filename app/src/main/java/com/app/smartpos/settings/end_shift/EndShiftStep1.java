@@ -83,7 +83,7 @@ public class EndShiftStep1 extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> orderList;
         orderList = databaseAccess.getOrderListWithTime(lastShiftDate);
-        Log.i("datadata", orderList.size() + " " + lastShiftDate);
+        Utils.addLog("datadata", orderList.size() + " " + lastShiftDate);
         HashMap<String, String> paymentTypesCashMap = new HashMap<>();
 
         databaseAccess.open();
@@ -94,7 +94,7 @@ public class EndShiftStep1 extends BaseActivity {
 
         databaseAccess.open();
         for (int i = 0; i < orderList.size(); i++) {
-            Log.i("datadata_tax",orderList.get(i).toString());
+            Utils.addLog("datadata_tax",orderList.get(i).toString());
             databaseAccess.open();
             double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
             databaseAccess.open();
@@ -106,12 +106,12 @@ public class EndShiftStep1 extends BaseActivity {
             }
             total_amount += total_price;
             total_tax += tax;
-            Log.i("datadata_card",orderList.get(i).get("order_payment_method")+" "+orderList.get(i).get("card_type_code"));
+            Utils.addLog("datadata_card",orderList.get(i).get("order_payment_method")+" "+orderList.get(i).get("card_type_code"));
             double calculated_total_price = total_price - discount;
             if (orderList.get(i).get("order_payment_method").equals("CASH")) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get("CASH"));
                 double total = calculated_total_price + cash;
-                Log.i("datadata_shift",calculated_total_price+" "+cash+" "+totalRefundsAmount+" "+total);
+                Utils.addLog("datadata_shift",calculated_total_price+" "+cash+" "+totalRefundsAmount+" "+total);
                 paymentTypesCashMap.put("CASH", total + "");
             }else if (orderList.get(i).get("order_payment_method").equals("CARD") && paymentTypesCashMap.containsKey(orderList.get(i).get("card_type_code").toString())) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
@@ -122,7 +122,7 @@ public class EndShiftStep1 extends BaseActivity {
                 paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
             }
         }
-        Log.i("datadata_shift",total_amount+" "+totalRefundsAmount);
+        Utils.addLog("datadata_shift",total_amount+" "+totalRefundsAmount);
         totalAmountTv.setText(Utils.trimLongDouble(total_amount)+" "+currency);
         databaseAccess.open();
         List<HashMap<String, String>> cardTypes=new ArrayList<>();
@@ -138,7 +138,7 @@ public class EndShiftStep1 extends BaseActivity {
             String cash=paymentTypesCashMap.get(code);
             cardTypes.get(i).put("CASH",cash);
         }
-        Log.i("datadata",paymentTypesCashMap.get("CASH").toString());
+        Utils.addLog("datadata",paymentTypesCashMap.get("CASH").toString());
         LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
         for (int i = 0; i < cardTypes.size(); i++) {
             Log.w("datadata_cards", cardTypes.get(i).toString() + "");
@@ -205,7 +205,7 @@ public class EndShiftStep1 extends BaseActivity {
                 models.get(i).setError((employeeCash != models.get(i).real) && !value.equals("0.00"));
                 ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real),models.get(i).code);
                 map.put(models.get(i).type, shiftDifferences);
-                Log.i("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
+                Utils.addLog("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
                 if ((employeeCash != models.get(i).real) && !value.equals("0.00")){
                     if (employeeCash - models.get(i).real > 0) {
                         models.get(i).paymentCashErrorTv.setText("+" + value);
@@ -308,15 +308,15 @@ public class EndShiftStep1 extends BaseActivity {
             LinkedList<String>keys=new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
             for(int i=0;i<keys.size();i++) {
                 if(!keys.get(i).equals("CASH")) {
-                    Log.i("datadata",keys.get(i));
+                    Utils.addLog("datadata",keys.get(i));
                     databaseAccess.open();
                     boolean added = databaseAccess.addShiftCreditCalculations(endShiftModel.getSequence(), endShiftModel.getShiftDifferences().get(keys.get(i)), keys.get(i));
-                    Log.i("datadata", added + "");
+                    Utils.addLog("datadata", added + "");
                 }
             }
 
         }
-        Log.i("datadata", id + "");
+        Utils.addLog("datadata", id + "");
         startActivity(new Intent(this, EndShiftStep2.class).putExtra("model",endShiftModel));
 
     }

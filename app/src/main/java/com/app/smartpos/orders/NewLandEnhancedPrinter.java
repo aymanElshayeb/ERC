@@ -72,12 +72,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         mPrintManager.print(printDara.toString(), bitmapResult, new PrintListener() {
             @Override
             public void onSuccess() {
-                Log.i("datadata", "success");
+                Utils.addLog("datadata", "success");
             }
 
             @Override
             public void onError(ErrorCode errorCode, String s) {
-                Log.i("datadata_error", "error " + errorCode + " " + s);
+                Utils.addLog("datadata_error", "error " + errorCode + " " + s);
             }
         });
         return true;
@@ -97,12 +97,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             mPrintManager.print(printDara.toString(), bitmapResult, new PrintListener() {
                 @Override
                 public void onSuccess() {
-                    Log.i("datadata", "success");
+                    Utils.addLog("datadata", "success");
                 }
 
                 @Override
                 public void onError(ErrorCode errorCode, String s) {
-                    Log.i("datadata_error", "error " + errorCode + " " + s);
+                    Utils.addLog("datadata_error", "error " + errorCode + " " + s);
                 }
             });
         } catch (Exception e) {

@@ -68,7 +68,7 @@ public class SettingsActivity extends BaseActivity {
                         // The mInterstitialAd reference will be null until
                         // an ad is loaded.
                         mInterstitialAd = interstitialAd;
-                        //Log.i(TAG, "onAdLoaded");
+                        //Utils.addLog(TAG, "onAdLoaded");
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdDismissedFullScreenContent() {
@@ -102,7 +102,7 @@ public class SettingsActivity extends BaseActivity {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         // Handle the error
-                        //Log.i(TAG, loadAdError.getMessage());
+                        //Utils.addLog(TAG, loadAdError.getMessage());
                         mInterstitialAd = null;
                     }
                 });

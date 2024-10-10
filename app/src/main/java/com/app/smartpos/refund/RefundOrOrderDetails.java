@@ -99,11 +99,11 @@ public class RefundOrOrderDetails extends WorkerActivity {
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
             orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
-            Log.i("datadata_test", operation_sub_type + " " + operation_type);
+            Utils.addLog("datadata_test", operation_sub_type + " " + operation_type);
             for (int i = 0; i < orderDetailsList.size(); i++) {
                 orderDetailsList.get(i).put("refund_qty", "0");
                 orderDetailsList.get(i).put("item_checked", "0");
-                Log.i("datadata", "" + orderDetailsList.get(i).toString());
+                Utils.addLog("datadata", "" + orderDetailsList.get(i).toString());
             }
         } else {
             RefundModel refundModel = (RefundModel) getIntent().getSerializableExtra("refundModel");
@@ -154,7 +154,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     @Override
     public void connectionChanged(boolean state) {
         super.connectionChanged(state);
-        Log.i("datadata_connection",""+state);
+        Utils.addLog("datadata_connection",""+state);
         setAdapter();
     }
 
@@ -195,7 +195,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             if (!isRefund) {
                 total += product_qty * product_price;
                 total = Double.parseDouble(Utils.trimLongDouble(total));
-                Log.i("datadata_total", total + " " + (product_qty * product_price));
+                Utils.addLog("datadata_total", total + " " + (product_qty * product_price));
             } else {
                 if (item_checked.equals("1") && refund_qty > 0) {
                     total += refund_qty * product_price;
@@ -327,9 +327,9 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price")) * refund_qty;
                         //ToDo tax amount should be divided by the total qantity of the order line before multiplying
                         int quantity = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
-                        Log.i("datadata_qty", quantity + " " + orderDetailsList.get(i).get("tax_amount"));
+                        Utils.addLog("datadata_qty", quantity + " " + orderDetailsList.get(i).get("tax_amount"));
                         total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount")) / quantity) * refund_qty;
-                        Log.i("datadata_qty", quantity + " " + total_tax);
+                        Utils.addLog("datadata_qty", quantity + " " + total_tax);
                     }
                 }
                 obj.put("in_tax_total", -totalPriceWithTax);
@@ -397,7 +397,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 e.printStackTrace();
             }
 
-            Log.i("datadata", obj.toString());
+            Utils.addLog("datadata", obj.toString());
             sequence = saveOrderInOfflineDb(obj);
 
         }

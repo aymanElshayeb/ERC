@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.utils.Hasher;
@@ -78,7 +79,7 @@ public class LoginFragment extends Fragment {
             databaseAccess.open();
             List<HashMap<String, String>> list = databaseAccess.getAllUsers();
             for (int i = 0; i < list.size(); i++) {
-                Log.i("datadata", list.get(i).toString());
+                Utils.addLog("datadata", list.get(i).toString());
             }
 
             loginBtn.setOnClickListener(view -> {
@@ -91,7 +92,7 @@ public class LoginFragment extends Fragment {
                     }else {
                         Hasher hasher = new Hasher();
                         boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
-                        //Log.i("datadata",map.toString());
+                        //Utils.addLog("datadata",map.toString());
                         if (isMatch) {
                             SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
                             SharedPrefUtils.setEmail(requireActivity(), map.get("email"));

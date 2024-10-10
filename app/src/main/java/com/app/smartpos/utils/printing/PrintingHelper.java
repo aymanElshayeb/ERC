@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.orders.PrinterModel;
@@ -146,7 +147,7 @@ public class PrintingHelper {
         databaseAccess.open();
         //HashMap<String, String> orderDetails = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
         HashMap<String, String> orderLitItem = databaseAccess.getOrderListByOrderId(id);
-        //Log.i("datadata",map.toString());
+        //Utils.addLog("datadata",map.toString());
         String invoice_id = orderLitItem.get("invoice_id");
         String customer_name = orderLitItem.get("customer_name");
         String order_date = orderLitItem.get("order_date");
@@ -156,7 +157,7 @@ public class PrintingHelper {
         String discount = orderLitItem.get("discount");
         databaseAccess.open();
         double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
-        Log.i("datadata_total_2",price_after_tax+"");
+        Utils.addLog("datadata_total_2",price_after_tax+"");
         double price_before_tax = price_after_tax-tax;
 
         OrderBitmap orderBitmap = new OrderBitmap(activity);

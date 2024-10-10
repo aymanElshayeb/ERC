@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
 
 import java.io.File;
@@ -29,14 +30,14 @@ public class ProductImagesWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("datadata_download","start");
+        Utils.addLog("datadata_download","start");
         String urlString = getInputData().getString("url");
         String fileName = getInputData().getString("fileName");
         String authorization = getInputData().getString("Authorization");
         String tenantId = getInputData().getString("tenantId");
         String ecrCode=getInputData().getString("ecrCode");
         if (urlString == null || fileName == null) {
-            Log.i("datadata_download","failed 1");
+            Utils.addLog("datadata_download","failed 1");
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
@@ -51,20 +52,20 @@ public class ProductImagesWorker extends Worker {
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey",API_KEY);
             connection.setRequestProperty("ecrCode",ecrCode);
-            Log.i("datadata_download","request");
+            Utils.addLog("datadata_download","request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Log.i("datadata_download","loading");
+                Utils.addLog("datadata_download","loading");
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
-                Log.i("datadata_download","delete");
+                Utils.addLog("datadata_download","delete");
                 downloadFile(connection.getInputStream(),outputFile);
 
                 connection.disconnect();
                 return Result.success();
             } else {
-                Log.i("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
+                Utils.addLog("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
@@ -81,7 +82,7 @@ public class ProductImagesWorker extends Worker {
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
-                Log.i("datadata_download","downloading");
+                Utils.addLog("datadata_download","downloading");
                 fos.write(buffer, 0, length);
             }
 

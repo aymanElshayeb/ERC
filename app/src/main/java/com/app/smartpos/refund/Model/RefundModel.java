@@ -3,6 +3,7 @@ package com.app.smartpos.refund.Model;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 
 import org.json.JSONArray;
@@ -66,7 +67,7 @@ public class RefundModel implements Serializable {
                 }else{
                     map.put("product_original_refund_quantity", "0");
                 }
-                Log.i("datadata_map",map.toString());
+                Utils.addLog("datadata_map",map.toString());
                 orderDetailsItems.add(map);
             }
         } catch (JSONException e) {

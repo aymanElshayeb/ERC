@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class DownloadWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i("datadata_download","start");
+        Utils.addLog("datadata_download","start");
         String urlString = getInputData().getString("url");
         String fileName = getInputData().getString("fileName");
         String authorization = getInputData().getString("Authorization");
@@ -60,7 +61,7 @@ public class DownloadWorker extends Worker {
                 connection.disconnect();
                 return Result.success();
             } else {
-                Log.i("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
+                Utils.addLog("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
@@ -77,7 +78,7 @@ public class DownloadWorker extends Worker {
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
-                Log.i("datadata_download","downloading");
+                Utils.addLog("datadata_download","downloading");
                 fos.write(buffer, 0, length);
             }
 

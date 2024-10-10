@@ -15,6 +15,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.app.smartpos.Registration.Model.CompanyModel;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -45,7 +46,7 @@ public class CheckCompaniesViewModel extends ViewModel {
                     .build().getAsJSONObject(new JSONObjectRequestListener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.i("datadata", response.toString());
+                            Utils.addLog("datadata", response.toString());
                             try {
                                 LinkedList<CompanyModel> list = new LinkedList<>();
                                 if (response.getInt("code") == 200) {
@@ -65,7 +66,7 @@ public class CheckCompaniesViewModel extends ViewModel {
 
                         @Override
                         public void onError(ANError anError) {
-                            Log.i("datadata_error", anError.getMessage() + " ");
+                            Utils.addLog("datadata_error", anError.getMessage() + " ");
                         }
                     });
 

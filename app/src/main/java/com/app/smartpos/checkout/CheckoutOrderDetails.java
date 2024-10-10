@@ -60,7 +60,7 @@ public class CheckoutOrderDetails extends BaseActivity {
             public void onGlobalLayout() {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 printerData=PrintingHelper.createBitmap(databaseAccess,CheckoutOrderDetails.this,getIntent().getStringExtra("id"),getIntent().getStringExtra("printType"));
-                Log.i("datadata",printerData.toString());
+                Utils.addLog("datadata",printerData.toString());
                 Bitmap bitmap=printerData.getBitmap();
                 if (bitmap.getHeight() < scrollView.getHeight()) {
                     double scale=(double) scrollView.getHeight()/ bitmap.getHeight();

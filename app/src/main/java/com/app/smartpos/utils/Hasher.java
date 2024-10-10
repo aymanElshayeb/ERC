@@ -55,7 +55,7 @@ public class Hasher {
         passwordService.setHashService(defaultHashService);
         passwordService.setHashFormat(hashFormat);
         //String hash = passwordService.encryptPassword(password);
-        //Log.i("datadata",hash);
+        //Utils.addLog("datadata",hash);
         return passwordService.passwordsMatch(password, hashedDBPassword);
     }
 

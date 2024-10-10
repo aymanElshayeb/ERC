@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -91,7 +92,7 @@ public class Refund extends BaseActivity {
     }
 
     public void callApi(){
-        Log.i("INSIDE CALL API" , SharedPrefUtils.getAuthorization());
+        Utils.addLog("INSIDE CALL API" , SharedPrefUtils.getAuthorization());
 
         model.start(searchEt.getText().toString().trim(),databaseAccess);
     }

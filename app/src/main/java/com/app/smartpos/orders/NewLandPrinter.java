@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrintingHelper;
@@ -78,7 +79,7 @@ public class NewLandPrinter extends BaseActivity {
 
 
             Bitmap bitmapMerchant=printMerchantId(merchantId);
-            Log.i("datadata_size",bitmapMerchant.getWidth()+" "+bitmapMerchant.getHeight());
+            Utils.addLog("datadata_size",bitmapMerchant.getWidth()+" "+bitmapMerchant.getHeight());
 
             Bitmap bitmap=loadBitmapFromView(decodedByte,bitmapMerchant);
             bitmaps.put(bitmapName1, bitmap);
@@ -109,12 +110,12 @@ public class NewLandPrinter extends BaseActivity {
             mPrinterModule.print(printDara.toString(), bitmaps, new PrintListener() {
                 @Override
                 public void onSuccess() {
-                    Log.i("datadata","done");
+                    Utils.addLog("datadata","done");
                 }
 
                 @Override
                 public void onError(ErrorCode errorCode, String s) {
-                    Log.i("datadata_error","error "+errorCode+" "+s);
+                    Utils.addLog("datadata_error","error "+errorCode+" "+s);
                 }
             });
         } catch (Exception e) {

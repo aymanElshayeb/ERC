@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.cart.Cart;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
 import com.bumptech.glide.Glide;
@@ -104,7 +105,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     holder.imgProduct.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 } else {
 
-                    Log.i("datadata_64",base64Image);
+                    Utils.addLog("datadata_64",base64Image);
                     byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                     holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 

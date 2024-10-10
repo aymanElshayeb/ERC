@@ -11,6 +11,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.Synchronization.dtos.ProductImagesResponseDto;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
@@ -38,7 +39,7 @@ public class ProductImagesSizeWorker extends Worker {
         String authorization= getInputData().getString("Authorization");
 
         if (urL==null || tenantId==null || authorization==null) {
-            Log.i("datadata_worker","fail");
+            Utils.addLog("datadata_worker","fail");
             return Result.failure();
         }
         FormBody formBody = new FormBody.Builder()
@@ -51,19 +52,19 @@ public class ProductImagesSizeWorker extends Worker {
                 add("Authorization",authorization).
                 add("apikey",API_KEY).
                 build();
-        Log.i("datadata_worker",headers.toString());
-        Log.i("datadata_worker",authorization);
+        Utils.addLog("datadata_worker",headers.toString());
+        Utils.addLog("datadata_worker",authorization);
         Request request = new Request.Builder()
                 .url(urL) // Replace with your server's upload endpoint
                 .post(formBody)
                 .headers(headers)
                 .build();
-        Log.i("datadata_worker",request.toString());
+        Utils.addLog("datadata_worker",request.toString());
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                Log.i("datadata_worker","success");
+                Utils.addLog("datadata_worker","success");
                 String responseBody = response.body().string();
-                Log.i("datadata_worker",responseBody);
+                Utils.addLog("datadata_worker",responseBody);
                 Gson gson=new Gson();
                 ServiceResult<ProductImagesResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<ProductImagesResponseDto>>(){}.getType());
                 ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);

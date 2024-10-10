@@ -56,7 +56,7 @@ public class SuccessfulPayment extends BaseActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            Log.i("datadata_type",getIntent().getStringExtra("printType"));
+            Utils.addLog("datadata_type",getIntent().getStringExtra("printType"));
             printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this,getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }

@@ -92,7 +92,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
                 holder.product_im.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
 
-                Log.i("datadata_64", base64Image);
+                Utils.addLog("datadata_64", base64Image);
                 byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                 holder.product_im.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 

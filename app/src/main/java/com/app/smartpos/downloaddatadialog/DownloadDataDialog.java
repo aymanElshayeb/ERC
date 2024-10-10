@@ -45,6 +45,7 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.LoginWithServerWorker;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.Refund;
 import com.app.smartpos.refund.RefundOrOrderDetails;
@@ -392,10 +393,10 @@ public class DownloadDataDialog extends DialogFragment {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
                         if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
-                            Log.i("WORK INFO", workInfo.getOutputData().getString("Authorization"));
+                            Utils.addLog("WORK INFO", workInfo.getOutputData().getString("Authorization"));
 //                        authorization= workInfo.getOutputData().getString("Authorization");
                             SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
-                            Log.i("WORK AUTH", SharedPrefUtils.getAuthorization());
+                            Utils.addLog("WORK AUTH", SharedPrefUtils.getAuthorization());
                         }
                     }
                 });
@@ -403,7 +404,7 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        Log.i("log_auth",SharedPrefUtils.getAuthorization());
+                        Utils.addLog("log_auth",SharedPrefUtils.getAuthorization());
                         handleWorkCompletion(workInfo);
                     }
                 });
@@ -413,7 +414,7 @@ public class DownloadDataDialog extends DialogFragment {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage(requireActivity().getString(R.string.data_synced_successfully));
-            Log.i("datadata","here");
+            Utils.addLog("datadata","here");
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -424,7 +425,7 @@ public class DownloadDataDialog extends DialogFragment {
     }
 
     private void closePendingScreen() {
-        Log.i("LOG AUTHINSIDE Close ",SharedPrefUtils.getAuthorization());
+        Utils.addLog("LOG AUTHINSIDE Close ",SharedPrefUtils.getAuthorization());
         if (getActivity() instanceof Refund) {
             ((Refund) getActivity()).callApi();
         } else if (getActivity() instanceof RefundOrOrderList) {

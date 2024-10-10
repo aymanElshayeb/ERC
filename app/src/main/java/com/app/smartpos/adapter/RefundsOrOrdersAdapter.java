@@ -47,7 +47,7 @@ public class RefundsOrOrdersAdapter extends RecyclerView.Adapter<RefundsOrOrders
         String order_type=orderData.get(position).get("order_type");
         String orderStatus = orderData.get(position).get(Constant.ORDER_STATUS);
 
-        Log.i("datadata",orderData.get(position).toString());
+        Utils.addLog("datadata",orderData.get(position).toString());
 
         holder.amount_tv.setText(Utils.trimLongDouble(in_tax_total));
         holder.receipt_number_tv.setText(invoice_id);

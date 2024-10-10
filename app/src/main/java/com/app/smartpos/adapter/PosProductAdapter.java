@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.product.EditProductActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -79,7 +80,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
         databaseAccess.open();
         String base64Image = databaseAccess.getProductImage(productActivity.isConnected(),product_uuid);
-        Log.i("datadata_url",base64Image+"");
+        Utils.addLog("datadata_url",base64Image+"");
 
 
 
@@ -115,7 +116,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
                 holder.product_image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
 
-                Log.i("datadata_64",base64Image);
+                Utils.addLog("datadata_64",base64Image);
                 byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                 holder.product_image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
@@ -123,7 +124,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         }else{
             holder.product_image.setImageResource(R.drawable.image_placeholder);
         }
-        Log.i("datadata_image",position+" "+product_uuid+" "+base64Image);
+        Utils.addLog("datadata_image",position+" "+product_uuid+" "+base64Image);
 
 
         holder.plusIm.setOnClickListener(v -> {

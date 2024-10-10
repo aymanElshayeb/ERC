@@ -196,7 +196,7 @@ public class DatabaseAccess {
     }
 
     public int addShift(EndShiftModel endShiftModel) {
-        Log.i("datadata", endShiftModel.toString());
+        Utils.addLog("datadata", endShiftModel.toString());
         ContentValues values = new ContentValues();
 
         values.put("sequence", endShiftModel.getSequence());
@@ -229,7 +229,7 @@ public class DatabaseAccess {
         try {
             check = database.insertOrThrow("shift", null, values);
         } catch (Exception e) {
-            Log.i("datadata", e.getMessage() + "");
+            Utils.addLog("datadata", e.getMessage() + "");
         }
 
 
@@ -251,7 +251,7 @@ public class DatabaseAccess {
         values.put("credit_code", shiftDifference.getCode());
         values.put("difference", Utils.trimLongDouble(shiftDifference.getDiff()));
 
-        //Log.i("datadata_shift_diff", values.toString());
+        //Utils.addLog("datadata_shift_diff", values.toString());
 
         long check = database.insert("credit_calculations", null, values);
         database.close();
@@ -440,14 +440,14 @@ public class DatabaseAccess {
         values.put("image_thumbnail", productValues.get("image_thumbnail")==null?null:productValues.get("image_thumbnail").toString());
         values.put("product_uuid", productValues.get("product_uuid")==null?null:productValues.get("product_uuid").toString());
 
-        Log.i("datadata",productValues.toString());
+        Utils.addLog("datadata",productValues.toString());
         Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + productValues.get("product_uuid").toString() + "'", null);
 
         long check;
         if (cursor.moveToFirst()) {
             do {
                 check = database.update("product_image", values, "product_uuid=?", new String[]{productValues.get("product_uuid").toString()});
-                Log.i("datadata_check",check+"");
+                Utils.addLog("datadata_check",check+"");
             } while (cursor.moveToNext());
         }else{
             check=database.insert("product_image",null,values);
@@ -949,7 +949,7 @@ public class DatabaseAccess {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("datadata", id + "");
+        Utils.addLog("datadata", id + "");
 
 
         return id;
@@ -1074,7 +1074,7 @@ public class DatabaseAccess {
                 values3.put("product_stock", updated_stock);
                 //for order insert
                 long check = database.insert("order_details", null, values2);
-                Log.i("datadata", "insertOrder: " + check);
+                Utils.addLog("datadata", "insertOrder: " + check);
 
                 //updating stock
                 database.update("products", values3, "product_id=?", new String[]{product_id});
@@ -1315,7 +1315,7 @@ public class DatabaseAccess {
     public ArrayList<HashMap<String, String>> getOrderDetailsList(String order_id) {
         ArrayList<HashMap<String, String>> orderDetailsList = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + order_id + "' ORDER BY order_details_id DESC", null);
-        Log.i("datadata_result", cursor.moveToFirst() + " " + "SELECT * FROM order_details WHERE invoice_id= " + order_id + " ORDER BY order_details_id DESC");
+        Utils.addLog("datadata_result", cursor.moveToFirst() + " " + "SELECT * FROM order_details WHERE invoice_id= " + order_id + " ORDER BY order_details_id DESC");
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
@@ -2134,7 +2134,7 @@ public class DatabaseAccess {
 
 
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + invoice_id + "'", null);
-        Log.i("datadata_tax2",cursor.getCount()+"");
+        Utils.addLog("datadata_tax2",cursor.getCount()+"");
 
         if (cursor.moveToFirst()) {
             do {
@@ -2143,7 +2143,7 @@ public class DatabaseAccess {
                 @SuppressLint("Range") double tax = 1.0+Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax_percentage")))/100.0;
                 double sub_total = (price-(price/tax)) * qty;
                 total_price = total_price + sub_total;
-                Log.i("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
+                Utils.addLog("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
 
             } while (cursor.moveToNext());
         } else {
@@ -2262,12 +2262,12 @@ public class DatabaseAccess {
         int id = 0;
         Cursor cursor = database.rawQuery("SELECT * FROM users", null);
 
-        Log.i("datadata", "" + cursor.moveToFirst());
+        Utils.addLog("datadata", "" + cursor.moveToFirst());
         if (cursor.moveToFirst()) {
             do {
 
                 for (int i = 0; i < 3; i++) {
-                    Log.i("datadata", cursor.getColumnName(i));
+                    Utils.addLog("datadata", cursor.getColumnName(i));
                 }
                 id = cursor.getInt(0);
 
@@ -2547,7 +2547,7 @@ public class DatabaseAccess {
     public Boolean checkCustomProductInCart() {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'CUSTOM_ITEM'", null);
         boolean exist=cursor.moveToFirst();
-        Log.i("datadata_exist",exist+"");
+        Utils.addLog("datadata_exist",exist+"");
         cursor.close();
         database.close();
         return exist;
@@ -2999,7 +2999,7 @@ public class DatabaseAccess {
             if (cursor != null && cursor.moveToFirst()) {
                 nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value"))) + 1;
                 prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
-                Log.i("datadata_seq", nextValue + "");
+                Utils.addLog("datadata_seq", nextValue + "");
             }
         } catch (Exception e) {
             e.printStackTrace();

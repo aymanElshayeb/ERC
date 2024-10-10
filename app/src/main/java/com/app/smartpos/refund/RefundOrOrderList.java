@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
@@ -68,7 +69,7 @@ public class RefundOrOrderList extends BaseActivity {
 
         orderList.addAll(databaseAccess.getOrderListPaginated(offset,isRefund));
         for(int i=0;i<orderList.size();i++) {
-            Log.i("datadata_order", orderList.get(i).toString());
+            Utils.addLog("datadata_order", orderList.get(i).toString());
         }
         refundsOrOrdersAdapter = new RefundsOrOrdersAdapter(this, orderList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

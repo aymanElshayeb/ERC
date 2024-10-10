@@ -77,10 +77,10 @@ public class NewCheckout extends BaseActivity {
 
                             String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
                             String ApprovalCode = result.getString("ApprovalCode");
-                            Log.i("datadata", name + " " + code);
+                            Utils.addLog("datadata", name + " " + code);
 //                            databaseAccess.open();
                             //long id=databaseAccess.insertCardDetails(name,code);
-                            //Log.i("datadata",id+"");
+                            //Utils.addLog("datadata",id+"");
                             proceedOrder("", "CARD", "", totalTax, "0", code, ApprovalCode, Double.parseDouble(PurchaseAmount), 0);
 
                         } else if (resultStatus.equals("Declined")) {
@@ -170,7 +170,7 @@ public class NewCheckout extends BaseActivity {
     }
 
     public void updateTotalPrice(List<HashMap<String, String>> list) {
-        Log.i("datadata_size", list.size() + "");
+        Utils.addLog("datadata_size", list.size() + "");
         double totalWithoutTax = 0;
 
         for (int i = 0; i < list.size(); i++) {
@@ -253,7 +253,7 @@ public class NewCheckout extends BaseActivity {
                     if(fromQuickBill){
                         totalPriceWithTax=Double.parseDouble(cartProductList.get(0).get("product_price"));
                     }
-                    Log.i("datadata_total_cart",totalPriceWithTax+"");
+                    Utils.addLog("datadata_total_cart",totalPriceWithTax+"");
                     obj.put("in_tax_total", totalPriceWithTax);
 
                     databaseAccess.open();
@@ -321,7 +321,7 @@ public class NewCheckout extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                Log.i("datadata", obj.toString());
+                Utils.addLog("datadata", obj.toString());
                 saveOrderInOfflineDb(obj);
 
 
@@ -343,7 +343,7 @@ public class NewCheckout extends BaseActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
 
         String orderId = sequenceMap.get("sequence");
-        Log.i("datadata_seq",orderId);
+        Utils.addLog("datadata_seq",orderId);
         databaseAccess.open();
         databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill,databaseAccess);
 
@@ -382,7 +382,7 @@ public class NewCheckout extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12 && resultCode == Activity.RESULT_OK) {
             double change = data.getDoubleExtra("change", 0);
-             Log.i("datadata_details",change+" "+totalAmount);
+             Utils.addLog("datadata_details",change+" "+totalAmount);
             try {
                 proceedOrder("", "CASH", "", totalTax, "0", "", "", totalAmount, change);
             } catch (JSONException e) {

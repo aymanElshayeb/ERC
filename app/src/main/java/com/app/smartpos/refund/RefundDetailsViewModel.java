@@ -12,6 +12,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.Model.RefundModel;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -33,7 +34,7 @@ public class RefundDetailsViewModel extends ViewModel {
     }
 
     public void start(String sequenceId, DatabaseAccess databaseAccess) {
-        //Log.i("datadata",SharedPrefUtils.getAuthorization());
+        //Utils.addLog("datadata",SharedPrefUtils.getAuthorization());
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
         AndroidNetworking.get(BASE_URL + "/invoice/refund/" + sequenceId)
@@ -45,7 +46,7 @@ public class RefundDetailsViewModel extends ViewModel {
                 .build().getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("datadata", response.toString());
+                        Utils.addLog("datadata", response.toString());
                         try {
                             if (response.getInt("code") == 200) {
                                 liveData.postValue(new RefundModel(response.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString(), databaseAccess));
@@ -59,7 +60,7 @@ public class RefundDetailsViewModel extends ViewModel {
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.i("datadata_error", anError.getMessage() + " "+anError.getErrorDetail()+" "+anError.getErrorCode());
+                        Utils.addLog("datadata_error", anError.getMessage() + " "+anError.getErrorDetail()+" "+anError.getErrorCode());
                     }
                 });
 

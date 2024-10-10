@@ -19,6 +19,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderDetailsAdapter;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pdf_report.TemplatePDF;
 import com.app.smartpos.utils.BaseActivity;
@@ -108,7 +109,7 @@ public class OrderDetailsActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
-        Log.i("datadata_size",order_id+" "+orderDetailsList.size()+"");
+        Utils.addLog("datadata_size",order_id+" "+orderDetailsList.size()+"");
         if (orderDetailsList.isEmpty()) {
             //if no data in local db, then load data from server
             Toasty.info(OrderDetailsActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
