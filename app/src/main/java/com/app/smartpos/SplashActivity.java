@@ -62,7 +62,7 @@ public class SplashActivity extends BaseActivity {
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
-        boolean access=(BuildConfig.BUILD_TYPE == "debug" && Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==1 && !RootUtil.isDeviceRooted());
+        boolean access=(BuildConfig.BUILD_TYPE == "debug" || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
         Utils.addLog("datadata_adb",access+" "+ RootUtil.isDeviceRooted());
 
         if(!access){
