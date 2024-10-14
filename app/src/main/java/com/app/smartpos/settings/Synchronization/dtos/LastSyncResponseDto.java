@@ -1,4 +1,4 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.dtos;
 
 public class LastSyncResponseDto {
     private String invoiceBusinessId;

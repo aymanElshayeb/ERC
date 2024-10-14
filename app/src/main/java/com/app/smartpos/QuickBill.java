@@ -33,6 +33,7 @@ public class QuickBill extends Activity {
     String currency;
     DatabaseAccess databaseAccess;
 
+    String type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,7 @@ public class QuickBill extends Activity {
 
         totalAmount=(double) getIntent().getLongExtra("total_amount",0);
 
+        type=getIntent().getStringExtra("type");
 
 
         //rootCl=findViewById(R.id.root_cl);
@@ -54,10 +56,11 @@ public class QuickBill extends Activity {
         ImageView backIm=findViewById(R.id.back_im);
         EditText descriptionEt=findViewById(R.id.description_et);
 
-        if(getIntent().getStringExtra("type").equals("customItem")){
+        descriptionEt.setHint(getString(R.string.description)+" "+getString(R.string.optional));
+        if(type.equals("customItem")){
             titleTv.setText(getString(R.string.custom_item));
             payTv.setText(getString(R.string.add_to_cart));
-        }else if(getIntent().getStringExtra("type").equals("quickBill")){
+        }else if(type.equals("quickBill")){
             titleTv.setText(getString(R.string.quick_bills));
             payTv.setText(getString(R.string.pay));
         }
@@ -96,10 +99,7 @@ public class QuickBill extends Activity {
 
         payTv.setOnClickListener(view -> {
             double cashResult=Double.parseDouble(amountTv.getText().toString());
-            if(descriptionEt.getText().toString().trim().isEmpty()){
-                Toast.makeText(this, getString(R.string.please_add_decription), Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             if(cashResult>0) {
                 Intent intent = new Intent();
                 intent.putExtra("amount", Utils.trimLongDouble(amountTv.getText().toString()));
@@ -123,8 +123,14 @@ public class QuickBill extends Activity {
     }
 
     private void setNumber(String number){
+        if ((amountTv.getText().toString().length() == 10 && amountTv.getText().toString().split("\\.").length == 2) || (amountTv.getText().toString().split("\\.").length == 1 && amountTv.getText().toString().split("\\.")[0].length() == 7) && !number.equals(".") && !amountTv.getText().toString().endsWith(".")) {
+            return;
+        }
         if(cash.equals("0")){
             cash="";
+        }
+        if(amountTv.getText().toString().contains(".") && amountTv.getText().toString().split("\\.").length==2 && amountTv.getText().toString().split("\\.")[1].length()==2){
+            return;
         }
         if(cash.isEmpty() && number.equals(".")){
             number="0.";

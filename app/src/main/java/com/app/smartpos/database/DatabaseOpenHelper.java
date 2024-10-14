@@ -5,9 +5,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
@@ -19,7 +22,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 55;
     private Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -129,9 +132,47 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
+    public void readProductDatabase(String newDbFilePath) {
+        //SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
+
+        try {
+           // existingDb.beginTransaction();
+
+            // Get tables from new database
+            String[] tables = {"product_image"};
+            for (String table : tables) {
+                // Delete all rows in the existing table
+                //existingDb.delete(table, null, null);
+
+                // Insert rows from the new database
+                String query = "SELECT * FROM " + table;
+                DatabaseAccess databaseAccess=DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+                try (Cursor cursor = newDb.rawQuery(query, null)) {
+                    while (cursor.moveToNext()) {
+                        ContentValues values = new ContentValues();
+                        int columnCount = cursor.getColumnCount();
+                        for (int i = 0; i < columnCount; i++) {
+                            values.put(cursor.getColumnName(i), cursor.getString(i));
+                        }
+                        databaseAccess.open();
+                        databaseAccess.updateProductImage(values);
+                        Utils.addLog("datadata",values.toString());
+                    }
+                }
+            }
+
+          //  existingDb.setTransactionSuccessful();
+        } finally {
+            //existingDb.endTransaction();
+            newDb.close();
+        }
+    }
+
     public void exportTablesToNewDatabase(String newDbFilePath,String[] lastSync ) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
+        Utils.addLog("datadata_base",newDbFilePath);
         if (dbFile.exists()) {
             dbFile.delete();
         }
@@ -213,11 +254,14 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             // Copy rows from the existing database table to the new one
             String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > %s", lastSyncId);
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
+                Utils.addLog("datadata_shift",shiftCursor.toString());
                 while (shiftCursor.moveToNext()) {
                     ContentValues orderListValues = new ContentValues();
                     for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
+                        Utils.addLog("datadata_value",shiftCursor.getColumnName(i)+" "+shiftCursor.getString(i));
                         orderListValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
                     }
+                    Utils.addLog("datadata_base_list",orderListValues.toString());
                     newDb.insert("order_list", null, orderListValues);
                     @SuppressLint("Range") String orderListId = shiftCursor.getString(shiftCursor.getColumnIndex("invoice_id"));
                     String orderDetails = String.format("SELECT * FROM order_details WHERE invoice_id = '%s'", orderListId);
@@ -227,6 +271,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                             for (int i = 0; i < creditCursor.getColumnCount(); i++) {
                                 detailsValues.put(creditCursor.getColumnName(i), creditCursor.getString(i));
                             }
+                            Utils.addLog("datadata_base_details",detailsValues.toString());
+
                             newDb.insert("order_details", null, detailsValues);
                         }
                     }
@@ -248,9 +294,10 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         while (cursor.moveToNext()) {
             @SuppressLint("Range") String columnName = cursor.getString(cursor.getColumnIndex("name"));
             @SuppressLint("Range") String columnType = cursor.getString(cursor.getColumnIndex("type"));
+            Utils.addLog("datadata_table",columnName+" "+columnType);
             createTableQuery.append(columnName).append(" ").append(columnType).append(", ");
         }
-
+        Utils.addLog("datadata_table",createTableQuery.toString());
         // Remove trailing comma and space
         if (createTableQuery.length() > 0) {
             createTableQuery.setLength(createTableQuery.length() - 2);

@@ -21,11 +21,12 @@ import com.app.smartpos.checkout.NewCheckout;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Cart extends AppCompatActivity {
+public class Cart extends BaseActivity {
 
     CartAdapter productCartAdapter;
 
@@ -36,6 +37,9 @@ public class Cart extends AppCompatActivity {
 
     String currency;
     DatabaseAccess databaseAccess;
+    boolean checkConnectionOnce=true;
+    private RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +49,7 @@ public class Cart extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_cart);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         ImageView backIm = findViewById(R.id.back_im);
         totalAmountWithoutVatTv = findViewById(R.id.total_amount_without_vat_tv);
         totalAmountTv = findViewById(R.id.total_amount_tv);
@@ -74,7 +78,7 @@ public class Cart extends AppCompatActivity {
         backIm.setOnClickListener(view -> finish());
         confirmTv.setOnClickListener(view -> {
             if (productCartAdapter.getItemCount() == 0) {
-                Toast.makeText(Cart.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Cart.this, R.string.your_cart_is_empty, Toast.LENGTH_SHORT).show();
             } else {
                 finish();
                 startActivity(new Intent(this, NewCheckout.class));
@@ -93,8 +97,11 @@ public class Cart extends AppCompatActivity {
             double productTax = 1+databaseAccess.getProductTax(productId)/100;
             totalWithoutTax+= (productPrice/productTax)*productCount;
             total+=productPrice*productCount;
-            Log.i("datadata",productTax+" "+totalWithoutTax+" "+total);
+            Utils.addLog("datadata",(productPrice*productCount)+" "+productTax+" "+totalWithoutTax+" "+total);
         }
+        Utils.addLog("datadata_total",totalWithoutTax+" "+total);
+        Utils.addLog("datadata_total",Utils.trimLongDouble(total));
+
         totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
         totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
         totalAmountTv.setText(Utils.trimLongDouble(total)+" "+currency);
@@ -102,5 +109,38 @@ public class Cart extends AppCompatActivity {
         if(total==0){
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isConnected()){
+            setAdapter();
+        }
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        setAdapter();
+    }
+
+    private void setAdapter(){
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            runOnUiThread(() -> {
+                recyclerView.setAdapter(productCartAdapter);
+            });
+        }
+    }
+
+    public Boolean checkCartTotalPrice(int pos) {
+        double total = 0;
+        for (int i = 0; i < cartProductList.size(); i++) {
+            double productPrice = Double.parseDouble(cartProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(cartProductList.get(i).get("product_qty"));
+            total += productPrice * (productCount+(i==pos ? 1:0));
+        }
+        return total>999999999.99;
     }
 }

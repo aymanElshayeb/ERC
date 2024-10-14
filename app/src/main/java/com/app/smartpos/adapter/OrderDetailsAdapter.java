@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
 
         holder.txt_product_name.setText(orderData.get(position).get("product_name_en"));
 
-        holder.txt_product_qty.setText(context.getString(R.string.quantity) + orderData.get(position).get("product_qty"));
+        holder.txt_product_qty.setText(context.getString(R.string.quantity_) + orderData.get(position).get("product_qty"));
 //        holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
 
         String base64Image = orderData.get(position).get("product_image");

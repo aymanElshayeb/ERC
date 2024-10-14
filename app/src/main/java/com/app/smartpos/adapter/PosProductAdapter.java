@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.product.EditProductActivity;
+import com.app.smartpos.utils.BaseActivity;
+import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +39,12 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
 
     private List<HashMap<String, String>> productData;
-    private Activity productActivity;
+    private BaseActivity productActivity;
     MediaPlayer player;
     public static int count;
     DatabaseAccess databaseAccess;
 
-    public PosProductAdapter(Activity productActivity, List<HashMap<String, String>> productData) {
+    public PosProductAdapter(BaseActivity productActivity, List<HashMap<String, String>> productData) {
         this.productActivity = productActivity;
         this.productData = productData;
         player = MediaPlayer.create(productActivity, R.raw.delete_sound);
@@ -64,6 +69,7 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         String currency = databaseAccess.getCurrency();
 
         final String product_id = productData.get(position).get("product_id");
+        final String product_uuid = productData.get(position).get("product_uuid");
         String name = productData.get(position).get("product_name_en");
         final String product_category = productData.get(position).get("product_category");
         final String product_weight = productData.get(position).get("product_weight");
@@ -72,8 +78,9 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 //        final double product_stock = Double.parseDouble(productData.get(position).get("product_stock"));
         final String product_price = productData.get(position).get("product_sell_price");
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
-        String base64Image = productData.get(position).get("product_image");
-
+        databaseAccess.open();
+        String base64Image = databaseAccess.getProductImage(productActivity.isConnected(),product_uuid);
+        Utils.addLog("datadata_url",base64Image+"");
 
 
 
@@ -87,34 +94,37 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
 
         holder.txtCategory.setText(categoryName);
         holder.txtDesc.setText(product_desc);
-        holder.txtPrice.setText(currency + trimLongDouble(product_price));
+        holder.txtPrice.setText(trimLongDouble(product_price)+" "+currency);
         holder.txtCount.setText(product_count);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                player.start();
+//                Intent intent=new Intent(productActivity, EditProductActivity.class);
+//                intent.putExtra("product_id",product_id);
+//                productActivity.startActivity(intent);
+//            }
+//        });
 
-                player.start();
-                Intent intent=new Intent(productActivity, EditProductActivity.class);
-                intent.putExtra("product_id",product_id);
-                productActivity.startActivity(intent);
-            }
-        });
-
-
-
-        if (base64Image != null) {
+        if(base64Image != null && base64Image.startsWith("http")){
+            Glide.with(productActivity).load(base64Image).into(holder.product_image);
+        }else if (base64Image != null) {
             if (base64Image.length() < 6) {
                 holder.product_image.setImageResource(R.drawable.image_placeholder);
                 holder.product_image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
 
-
+                Utils.addLog("datadata_64",base64Image);
                 byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                 holder.product_image.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
             }
+        }else{
+            holder.product_image.setImageResource(R.drawable.image_placeholder);
         }
+        Utils.addLog("datadata_image",position+" "+product_uuid+" "+base64Image);
 
 
         holder.plusIm.setOnClickListener(v -> {
@@ -127,9 +137,15 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
             }
             else {
                 int product_count_int = Integer.parseInt(product_count)+1;
-                productData.get(position).put("product_count",""+product_count_int);
-                notifyItemChanged(position);
-                ((Items)productActivity).updateCart(productData.get(position),position);
+                if(product_count_int* Double.parseDouble(product_price)>999999999.99){
+                    Toast.makeText(productActivity, R.string.price_total_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else if(((Items)productActivity).checkCartTotalPrice(position)){
+                    Toast.makeText(productActivity, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else {
+                    productData.get(position).put("product_count", "" + product_count_int);
+                    notifyItemChanged(position);
+                    ((Items) productActivity).updateCart(productData.get(position), position);
+                }
             }
         });
 

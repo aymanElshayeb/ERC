@@ -14,6 +14,7 @@
         android:layout_marginTop="12dp"
         android:fontFamily="@font/inter_semibold"
         android:text="320.00"
+        android:textDirection="ltr"
         android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"

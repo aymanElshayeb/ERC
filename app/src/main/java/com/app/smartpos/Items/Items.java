@@ -32,23 +32,27 @@ import com.app.smartpos.cart.Cart;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Items extends AppCompatActivity {
+public class Items extends BaseActivity {
 
     public static EditText searchEt;
     PosProductAdapter productCartAdapter;
     List<HashMap<String, String>> productList;
     List<HashMap<String, String>> selectedProductList = new LinkedList<>();
+    private RecyclerView recycler;
     TextView cartCountTv;
     TextView cartTotalPriceTv;
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
     boolean firstOpen=true;
+    String currency;
+    boolean checkConnectionOnce=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class Items extends AppCompatActivity {
         ImageView scannerIm = findViewById(R.id.img_scanner);
         ImageView backIm = findViewById(R.id.back_im);
         ImageView moreIm = findViewById(R.id.more_im);
-        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler = findViewById(R.id.recycler);
         cartCountTv = findViewById(R.id.cart_count_tv);
         cartTotalPriceTv = findViewById(R.id.cart_total_price_tv);
         viewCartCl = findViewById(R.id.view_cart_cl);
@@ -77,10 +81,13 @@ public class Items extends AppCompatActivity {
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
+        currency=databaseAccess.getCurrency();
+
+        databaseAccess.open();
         productList = databaseAccess.getProducts(true);
 
         productCartAdapter = new PosProductAdapter(this, productList);
-        recycler.setAdapter(productCartAdapter);
+
 
         openCartCl.setOnClickListener(view -> {
             Intent intent = new Intent(Items.this, Cart.class);
@@ -141,6 +148,25 @@ public class Items extends AppCompatActivity {
         updateCartUI();
         firstOpen=false;
         productCartAdapter.notifyDataSetChanged();
+        if(!isConnected()){
+            setAdapter();
+        }
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        Utils.addLog("datadata_connection",""+state);
+        setAdapter();
+    }
+
+    private void setAdapter(){
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            runOnUiThread(() -> {
+                recycler.setAdapter(productCartAdapter);
+            });
+        }
     }
 
     public void updateCart(HashMap<String, String> product, int position) {
@@ -193,9 +219,9 @@ public class Items extends AppCompatActivity {
             total += productPrice * productCount;
             count += productCount;
         }
-        Log.i("datadata_count", count + "");
+        Utils.addLog("datadata_count", count + "");
         cartCountTv.setText("" + count);
-        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " SAR");
+        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " "+currency);
 
 
         if (count > 0) {
@@ -203,6 +229,30 @@ public class Items extends AppCompatActivity {
         } else if(!firstOpen){
             animateViewCartHeight(1f);
         }
+    }
+
+    public Boolean checkCartTotalPrice(int pos) {
+        double total = 0;
+        for (int i = 0; i < selectedProductList.size(); i++) {
+            double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
+            total += productPrice * productCount;
+            Utils.addLog("datadata_total",(i==pos)+" "+(productPrice*productCount));
+        }
+        total += Double.parseDouble(productList.get(pos).get("product_sell_price"));
+        Utils.addLog("datadata_total",total+"");
+        return total>999999999.99;
+    }
+
+    public Boolean checkCartTotalPriceForCustomItem(double amount) {
+        double total = 0;
+        for (int i = 0; i < selectedProductList.size(); i++) {
+            double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
+            double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
+            total += productPrice * productCount;
+        }
+        return (total+amount)>999999999.99;
+
     }
 
     private HashMap<String, String> convertProductToCartItem(HashMap<String, String> product) {
@@ -222,7 +272,7 @@ public class Items extends AppCompatActivity {
         animator.setDuration(500);
         animator.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams params = viewCartCl.getLayoutParams();
-            Log.i("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
+            Utils.addLog("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
             params.height = (int) (float) valueAnimator.getAnimatedValue();
             viewCartCl.setLayoutParams(params);
         });
@@ -244,8 +294,8 @@ public class Items extends AppCompatActivity {
         for (int i = 0; i < selectedProductList.size(); i++) {
             if (selectedProductList.get(i).get("product_id").toString().equals(productList.get(position).get("product_id").toString())) {
                 count = selectedProductList.get(i).get("product_qty");
-                Log.i("datadata_count", selectedProductList.get(i).toString());
-                Log.i("datadata_count", count);
+                Utils.addLog("datadata_count", selectedProductList.get(i).toString());
+                Utils.addLog("datadata_count", count);
                 productList.get(position).put("product_count", count);
                 break;
             }
@@ -267,6 +317,10 @@ public class Items extends AppCompatActivity {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if (!isItemExist) {
+            if(checkCartTotalPriceForCustomItem(Double.parseDouble(amount))){
+                Toast.makeText(this, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                return;
+            }
             databaseAccess.open();
             HashMap<String, String> product = databaseAccess.getCustomProduct();
             String product_id = product.get("product_id");
@@ -281,7 +335,7 @@ public class Items extends AppCompatActivity {
             databaseAccess.open();
             databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid,description);
             selectedProductList.add(convertProductToCartItem(product));
-            Log.i("datadata", selectedProductList.size() + "");
+            Utils.addLog("datadata", selectedProductList.size() + "");
             updateCartUI();
         }else{
             Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();

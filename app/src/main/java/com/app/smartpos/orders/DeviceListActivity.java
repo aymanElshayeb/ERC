@@ -22,10 +22,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.R;
+import com.app.smartpos.utils.BaseActivity;
 
 import java.util.Set;
 
-public class DeviceListActivity extends AppCompatActivity {
+public class DeviceListActivity extends BaseActivity {
 
 
     // Debugging

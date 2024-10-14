@@ -1,11 +1,8 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.workers;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -13,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 public class DecompressWorker extends Worker {

@@ -25,6 +25,7 @@ import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,7 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class NewCheckout extends AppCompatActivity {
+public class NewCheckout extends BaseActivity {
 
     TextView totalAmountWithoutVatTv;
     TextView totalAmountTv;
@@ -76,14 +77,14 @@ public class NewCheckout extends AppCompatActivity {
 
                             String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
                             String ApprovalCode = result.getString("ApprovalCode");
-                            Log.i("datadata", name + " " + code);
+                            Utils.addLog("datadata", name + " " + code);
 //                            databaseAccess.open();
                             //long id=databaseAccess.insertCardDetails(name,code);
-                            //Log.i("datadata",id+"");
+                            //Utils.addLog("datadata",id+"");
                             proceedOrder("", "CARD", "", totalTax, "0", code, ApprovalCode, Double.parseDouble(PurchaseAmount), 0);
 
                         } else if (resultStatus.equals("Declined")) {
-                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         if (statusCode.equals(Constant.REJECTED_STATUS_CODE))
@@ -151,10 +152,14 @@ public class NewCheckout extends AppCompatActivity {
             if (paymentType.equals("CASH")) {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
-                Intent intent = device.pay((long) totalAmount);
-                launcher.launch(intent);
+                try {
+                    Intent intent = device.pay(totalAmount);
+                    launcher.launch(intent);
+                }catch (Exception e){
+                    Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toasty.info(this, "Please select Payment Method",
+                Toasty.info(this, R.string.please_select_payment_method,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -165,7 +170,7 @@ public class NewCheckout extends AppCompatActivity {
     }
 
     public void updateTotalPrice(List<HashMap<String, String>> list) {
-        Log.i("datadata_size", list.size() + "");
+        Utils.addLog("datadata_size", list.size() + "");
         double totalWithoutTax = 0;
 
         for (int i = 0; i < list.size(); i++) {
@@ -248,6 +253,7 @@ public class NewCheckout extends AppCompatActivity {
                     if(fromQuickBill){
                         totalPriceWithTax=Double.parseDouble(cartProductList.get(0).get("product_price"));
                     }
+                    Utils.addLog("datadata_total_cart",totalPriceWithTax+"");
                     obj.put("in_tax_total", totalPriceWithTax);
 
                     databaseAccess.open();
@@ -256,6 +262,7 @@ public class NewCheckout extends AppCompatActivity {
                         databaseAccess.open();
                         totalPriceWithoutTax=totalPriceWithTax/(1.0+databaseAccess.getShopTax()/100.0);
                     }
+                    databaseAccess.open();
                     obj.put("ex_tax_total", totalPriceWithoutTax);
 
                     obj.put("paid_amount", total == 0 ? totalPriceWithTax : total);
@@ -314,7 +321,7 @@ public class NewCheckout extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.i("datadata", obj.toString());
+                Utils.addLog("datadata", obj.toString());
                 saveOrderInOfflineDb(obj);
 
 
@@ -336,13 +343,14 @@ public class NewCheckout extends AppCompatActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
 
         String orderId = sequenceMap.get("sequence");
+        Utils.addLog("datadata_seq",orderId);
         databaseAccess.open();
         databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill,databaseAccess);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType","invoice");
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType",getString(R.string.simplified_tax_invoice));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -356,7 +364,10 @@ public class NewCheckout extends AppCompatActivity {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("product_id", product.get("product_id"));
         map.put("product_price", amount);
-        map.put("product_description", description);
+        if(description.isEmpty())
+            map.put("product_description", product.get("product_name_ar"));
+        else
+            map.put("product_description", description);
         map.put("product_qty", "1");
         map.put("weight_unit_id",product.get("product_weight"));
         map.put("product_stock",product.get("product_stock"));
@@ -371,7 +382,7 @@ public class NewCheckout extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12 && resultCode == Activity.RESULT_OK) {
             double change = data.getDoubleExtra("change", 0);
-             Log.i("datadata",change+" "+totalAmount);
+             Utils.addLog("datadata_details",change+" "+totalAmount);
             try {
                 proceedOrder("", "CASH", "", totalTax, "0", "", "", totalAmount, change);
             } catch (JSONException e) {

@@ -2,6 +2,7 @@ package com.app.smartpos.adapter;
 
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.RefundOrOrderDetails;
+import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +62,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
 
         holder.line.setAlpha(position == orderData.size() - 1 ? 0f : 1.0f);
 
-        if(!refundOrOrderDetails.isRefund()){
+        if (!refundOrOrderDetails.isRefund()) {
             holder.checkbox_im.setVisibility(View.GONE);
         }
 
@@ -70,7 +73,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
             if (refund_qty[0] > 0) {
                 holder.amount_ll.setVisibility(View.VISIBLE);
                 holder.number_tv.setText(refund_qty[0] + "");
-                holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]) + " " + refundOrOrderDetails.getCurrency());
+                holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]));
             } else {
                 holder.amount_ll.setVisibility(View.GONE);
             }
@@ -78,22 +81,26 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
             holder.checkbox_im.setImageResource(R.drawable.ic_box_uncheck);
             holder.refund_qty_ll.setVisibility(View.GONE);
         }
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(refundOrOrderDetails);
+        databaseAccess.open();
+        String base64Image = databaseAccess.getProductImage(refundOrOrderDetails.isConnected(), product_uuid);
+        if (base64Image != null && base64Image.startsWith("http")) {
+            Glide.with(refundOrOrderDetails).load(base64Image).into(holder.product_im);
+        } else if (base64Image != null) {
+            if (base64Image.length() < 6) {
+                holder.product_im.setImageResource(R.drawable.image_placeholder);
+                holder.product_im.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
 
-        String base64Image = product_image;
+                Utils.addLog("datadata_64", base64Image);
+                byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
+                holder.product_im.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
-        if (product_uuid.equals("CUSTOM_ITEM")) {
-            holder.product_im.setImageResource(R.drawable.ic_custom_option_gray);
-        } else {
-            if (base64Image != null) {
-                if (base64Image.isEmpty() || base64Image.length() < 6) {
-                    holder.product_im.setImageResource(R.drawable.image_placeholder);
-                } else {
-                    byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
-                    holder.product_im.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-
-                }
             }
+        } else {
+            holder.product_im.setImageResource(R.drawable.image_placeholder);
         }
+
 
         holder.plus_im.setOnClickListener(view -> {
             if (refund_qty[0] < product_qty) {

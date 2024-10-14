@@ -2,6 +2,7 @@ package com.app.smartpos.profile;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.settings.ChangeLanguageDialog;
+import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +33,27 @@ public class Profile extends AppCompatActivity {
         TextView usernameTv=findViewById(R.id.username_tv);
         TextView flNameTv=findViewById(R.id.fl_name_tv);
         TextView emailTv=findViewById(R.id.email_tv);
+        ConstraintLayout languageCl=findViewById(R.id.language_cl);
+        TextView languageTv=findViewById(R.id.language_tv);
         LinearLayout logoutLl=findViewById(R.id.logout_ll);
         ImageView closeIm=findViewById(R.id.close_im);
         usernameTv.setText(SharedPrefUtils.getName(this));
         TextView mobileTv=findViewById(R.id.mobile_tv);
         mobileTv.setText(SharedPrefUtils.getMobileNumber(this));
         emailTv.setText(SharedPrefUtils.getEmail(this));
-        flNameTv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+        if (SharedPrefUtils.getName(this).isEmpty()) {
+            flNameTv.setText("G");
+            usernameTv.setText(R.string.guest);
+        }else{
+            flNameTv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+        }
+        String language = LocaleManager.getLanguage(this);
+        languageTv.setText(language.equals("en") ? "English" : "عربى");
+
+        languageCl.setOnClickListener(view -> {
+            ChangeLanguageDialog dialog = new ChangeLanguageDialog();
+            dialog.show(getSupportFragmentManager(), "change language dialog");
+        });
         closeIm.setOnClickListener(view -> {
             finish();
         });
@@ -43,6 +61,7 @@ public class Profile extends AppCompatActivity {
         logoutLl.setOnClickListener(view -> {
             Intent intent = new Intent(this, AuthActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            SharedPrefUtils.setIsLoggedIn(this, false);
             startActivity(intent);
             finish();
         });

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderAdapter;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 
@@ -84,8 +85,8 @@ public class OrdersActivity extends BaseActivity {
             imgNoProduct.setImageResource(R.drawable.not_found);
             txtNoProducts.setVisibility(View.VISIBLE);
         } else {
-            Log.i("datadata",orderList.get(0).get("invoice_id").toString());
-            Log.i("datadata",orderList.get(0).get("card_type_code").toString());
+            Utils.addLog("datadata",orderList.get(0).get("invoice_id").toString());
+            Utils.addLog("datadata",orderList.get(0).get("card_type_code").toString());
             orderAdapter = new OrderAdapter(OrdersActivity.this, orderList);
 
             recyclerView.setAdapter(orderAdapter);

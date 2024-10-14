@@ -27,9 +27,11 @@ public class NewHomeActivity extends BaseActivity {
 
     TextView currentShiftNumberTv;
     TextView currentShiftSarTv;
+    TextView startCashTv;
+    TextView startCashSarTv;
     String currency;
     private DatabaseAccess databaseAccess;
-    private HashMap<String, String>  configuration;
+    private HashMap<String, String> configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +52,25 @@ public class NewHomeActivity extends BaseActivity {
         TextView nameTv = findViewById(R.id.name_tv);
         TextView locationTv = findViewById(R.id.location_tv);
         TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
-        ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
-
-        nameTv.setText(SharedPrefUtils.getName(this));
-
+        if (!SharedPrefUtils.getName(this).isEmpty()) {
+            ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
+            nameTv.setText(SharedPrefUtils.getName(this));
+        } else {
+            ha_name_tv.setText("G");
+            nameTv.setText(R.string.guest);
+        }
         databaseAccess = DatabaseAccess.getInstance(this);
 
         databaseAccess.open();
         HashMap<String, String> shop = databaseAccess.getShopInformation();
         String shopLocation = String.valueOf(shop.get("shop_address"));
-         locationTv.setText(shopLocation);
+        locationTv.setText(shopLocation);
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
+
+        startCashTv = findViewById(R.id.start_cash_tv);
+        startCashSarTv = findViewById(R.id.start_cash_sar_tv);
 
         circleNameLl.setOnClickListener(view -> {
             startActivity(new Intent(this, Profile.class));
@@ -78,7 +86,7 @@ public class NewHomeActivity extends BaseActivity {
         });
 
         billsLl.setOnClickListener(view -> {
-            startActivity(new Intent(this, QuickBill.class).putExtra("type","quickBill"));
+            startActivity(new Intent(this, QuickBill.class).putExtra("type", "quickBill"));
         });
 
 
@@ -94,10 +102,11 @@ public class NewHomeActivity extends BaseActivity {
             startActivity(new Intent(this, EndShiftStep1.class));
         });
 
-         databaseAccess.open();
+        databaseAccess.open();
 
         currency = databaseAccess.getCurrency();
         currentShiftSarTv.setText(currency);
+        startCashSarTv.setText(currency);
     }
 
     @Override
@@ -116,6 +125,11 @@ public class NewHomeActivity extends BaseActivity {
             total_amount += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
         }
         currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount) + "");
+
+        databaseAccess.open();
+        String startCashString = databaseAccess.getLastShift("leave_cash");
+        double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
+        startCashTv.setText(Utils.trimLongDouble(startCash));
     }
 
     @Override

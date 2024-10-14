@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +22,13 @@ import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
 import java.util.HashMap;
 
-public class CheckoutOrderDetails extends AppCompatActivity {
+public class CheckoutOrderDetails extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     Device device;
@@ -57,8 +59,8 @@ public class CheckoutOrderDetails extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                printerData=PrintingHelper.createBitmap(databaseAccess,getIntent().getStringExtra("id"),getIntent().getStringExtra("printType"));
-                Log.i("datadata",printerData.toString());
+                printerData=PrintingHelper.createBitmap(databaseAccess,CheckoutOrderDetails.this,getIntent().getStringExtra("id"),getIntent().getStringExtra("printType"));
+                Utils.addLog("datadata",printerData.toString());
                 Bitmap bitmap=printerData.getBitmap();
                 if (bitmap.getHeight() < scrollView.getHeight()) {
                     double scale=(double) scrollView.getHeight()/ bitmap.getHeight();
@@ -88,7 +90,11 @@ public class CheckoutOrderDetails extends AppCompatActivity {
         });
 
         printReceipt.setOnClickListener(view -> {
-            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax()+"", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
+            try {
+                device.printReceipt(printerData.getBitmap());
+            }catch (Exception e){
+                Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
+            }
         });
 
     }

@@ -10,10 +10,14 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.Registration.dto.RegistrationResponseDto;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
+import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -192,7 +196,7 @@ public class DatabaseAccess {
     }
 
     public int addShift(EndShiftModel endShiftModel) {
-        Log.i("datadata", endShiftModel.toString());
+        Utils.addLog("datadata", endShiftModel.toString());
         ContentValues values = new ContentValues();
 
         values.put("sequence", endShiftModel.getSequence());
@@ -211,12 +215,13 @@ public class DatabaseAccess {
         values.put("total_cash", Utils.trimLongDouble(total_cash));
         values.put("difference_cash", Utils.trimLongDouble(diff_cash));
 
-        values.put("start_cash", Utils.trimLongDouble(endShiftModel.getStartCash()));
-        values.put("leave_cash", Utils.trimLongDouble(endShiftModel.getLeaveCash()));
+        values.put("start_cash", endShiftModel.getStartCash());
+        values.put("leave_cash", endShiftModel.getLeaveCash());
 
         values.put("num_successful_transaction", endShiftModel.getNum_successful_transaction());
         values.put("num_canceled_transaction", endShiftModel.getNum_canceled_transaction());
         values.put("num_returned_transaction", endShiftModel.getNum_returned_transaction());
+        values.put("user_mail", SharedPrefUtils.getEmail(MultiLanguageApp.getApp()));
 
         values.put("notes", endShiftModel.getNote());
 
@@ -224,7 +229,7 @@ public class DatabaseAccess {
         try {
             check = database.insertOrThrow("shift", null, values);
         } catch (Exception e) {
-            Log.i("datadata", e.getMessage() + "");
+            Utils.addLog("datadata", e.getMessage() + "");
         }
 
 
@@ -246,7 +251,7 @@ public class DatabaseAccess {
         values.put("credit_code", shiftDifference.getCode());
         values.put("difference", Utils.trimLongDouble(shiftDifference.getDiff()));
 
-        //Log.i("datadata_shift_diff", values.toString());
+        //Utils.addLog("datadata_shift_diff", values.toString());
 
         long check = database.insert("credit_calculations", null, values);
         database.close();
@@ -425,6 +430,65 @@ public class DatabaseAccess {
     }
 
 
+    public boolean updateProductImage(ContentValues productValues) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("image_url", productValues.get("image_url")==null?null:productValues.get("image_url").toString());
+        values.put("base64_image", productValues.get("base64_image")==null?null:productValues.get("base64_image").toString());
+        values.put("image_thumbnail_url", productValues.get("image_thumbnail_url")==null?null:productValues.get("image_thumbnail_url").toString());
+        values.put("image_thumbnail", productValues.get("image_thumbnail")==null?null:productValues.get("image_thumbnail").toString());
+        values.put("product_uuid", productValues.get("product_uuid")==null?null:productValues.get("product_uuid").toString());
+
+        Utils.addLog("datadata",productValues.toString());
+        Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + productValues.get("product_uuid").toString() + "'", null);
+
+        long check;
+        if (cursor.moveToFirst()) {
+            do {
+                check = database.update("product_image", values, "product_uuid=?", new String[]{productValues.get("product_uuid").toString()});
+                Utils.addLog("datadata_check",check+"");
+            } while (cursor.moveToNext());
+        }else{
+            check=database.insert("product_image",null,values);
+        }
+
+        database.close();
+
+        return check!=-1;
+        //if data insert success, its return 1, if failed return -1
+
+    }
+
+    public String getProductImage(boolean isInternetConnected,String product_uuid) {
+
+        Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + product_uuid + "'", null);
+        String image=null;
+        if (cursor.moveToFirst()) {
+            do {
+                if(isInternetConnected){
+                    image=cursor.getString(cursor.getColumnIndex("image_thumbnail_url"));
+                    if (image==null){
+                        image=cursor.getString(cursor.getColumnIndex("image_url"));
+                    }
+                }
+                if(image==null) {
+                    image = cursor.getString(cursor.getColumnIndex("image_thumbnail"));
+                    if (image==null) {
+                        image= cursor.getString(cursor.getColumnIndex("base64_image"));
+                    }
+                }
+
+            } while (cursor.moveToNext());
+        }
+
+        database.close();
+
+        return image;
+        //if data insert success, its return 1, if failed return -1
+
+    }
+
     //insert products
     public boolean updateProduct(String product_name, String product_code, String product_category, String product_description, String product_buy_price, String product_sell_price, String product_stock, String product_supplier, String product_image, String weight_unit_id, String product_weight, String product_id) {
 
@@ -557,28 +621,28 @@ public class DatabaseAccess {
 
 
     //get product image base 64
-    @SuppressLint("Range")
-    public String getProductImage(String product_id) {
-
-        String image = "n/a";
-        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
-
-
-        if (cursor.moveToFirst()) {
-            do {
-
-
-                image = cursor.getString(cursor.getColumnIndex("product_image"));
-
-
-            } while (cursor.moveToNext());
-        }
-
-
-        cursor.close();
-        database.close();
-        return image;
-    }
+//    @SuppressLint("Range")
+//    public String getProductImage(String product_id) {
+//
+//        String image = "n/a";
+//        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_id='" + product_id + "'", null);
+//
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//
+//
+//                image = cursor.getString(cursor.getColumnIndex("product_image"));
+//
+//
+//            } while (cursor.moveToNext());
+//        }
+//
+//
+//        cursor.close();
+//        database.close();
+//        return image;
+//    }
 
     @SuppressLint("Range")
     public int getShiftWithTimestamp(long timeStamp) {
@@ -885,7 +949,7 @@ public class DatabaseAccess {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("datadata", id + "");
+        Utils.addLog("datadata", id + "");
 
 
         return id;
@@ -934,12 +998,12 @@ public class DatabaseAccess {
             values.put("approval_code", approval_code);
             values.put("operation_sub_type", operation_sub_type);
             values.put("ecr_code", ecr_code);
-            values.put("tax", Utils.trimLongDouble(tax));
-            values.put("discount", Utils.trimLongDouble(discount));
-            values.put("in_tax_total", Utils.trimLongDouble(in_tax_total));
-            values.put("ex_tax_total", Utils.trimLongDouble(ex_tax_total));
-            values.put("paid_amount", Utils.trimLongDouble(paid_amount));
-            values.put("change_amount", Utils.trimLongDouble(change_amount));
+            values.put("tax", tax);
+            values.put("discount", discount);
+            values.put("in_tax_total", in_tax_total);
+            values.put("ex_tax_total", ex_tax_total);
+            values.put("paid_amount", paid_amount);
+            values.put("change_amount", change_amount);
 //            values.put("tax_number", tax_number);
             values.put("operation_type", operation_type);
             values.put("original_order_id", original_order_id);
@@ -975,10 +1039,10 @@ public class DatabaseAccess {
                 String product_description = jo.getString("product_description");
                 String product_id = getProductIdByUuid(product_uuid);
                 double taxPercentage;
+                databaseAccess.open();
                 if(!product_description.isEmpty()){
                     HashMap<String, String> shop = databaseAccess.getShopInformation();
                     taxPercentage = Double.parseDouble(shop.get("shop_tax"));
-                    databaseAccess.open();
                 }
                 else
                     taxPercentage= getProductTax(product_id);
@@ -993,12 +1057,14 @@ public class DatabaseAccess {
                 values2.put("product_name_ar", product_name_ar);
                 values2.put("product_uuid", product_uuid);
                 values2.put("product_weight", product_weight);
-                values2.put("in_tax_total", Utils.trimLongDouble(in_tax_total));
-                values2.put("ex_tax_total", Utils.trimLongDouble(ex_tax_total));
-                values2.put("tax_amount", Utils.trimLongDouble(in_tax_total - ex_tax_total));
+                values2.put("in_tax_total", in_tax_total);
+                values2.put("ex_tax_total", ex_tax_total);
+                values2.put("tax_amount", in_tax_total - ex_tax_total);
                 values2.put("product_qty", product_qty);
-                values2.put("product_price", Utils.trimLongDouble(product_price));
+                values2.put("product_price", product_price);
+                openDatabase();
                 values2.put("tax_percentage", getProductTax(product_id));
+                openDatabase();
                 values2.put("product_image", product_image);
                 values2.put("product_order_date", product_order_date);
                 values2.put("order_status", order_status);
@@ -1008,7 +1074,7 @@ public class DatabaseAccess {
                 values3.put("product_stock", updated_stock);
                 //for order insert
                 long check = database.insert("order_details", null, values2);
-                Log.i("datadata", "insertOrder: " + check);
+                Utils.addLog("datadata", "insertOrder: " + check);
 
                 //updating stock
                 database.update("products", values3, "product_id=?", new String[]{product_id});
@@ -1022,6 +1088,11 @@ public class DatabaseAccess {
         database.close();
     }
 
+    private void openDatabase() {
+        DatabaseAccess databaseAccess_ = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+        databaseAccess_.open();
+    }
+
     @SuppressLint("Range")
     public String getProductIdByUuid(String productUuid) {
         String product_id = "n/a";
@@ -1033,7 +1104,7 @@ public class DatabaseAccess {
                 product_id = cursor.getString(cursor.getColumnIndex("product_id"));
             } while (cursor.moveToNext());
         }
-
+        database.close();
         cursor.close();
         return product_id;
     }
@@ -1244,7 +1315,7 @@ public class DatabaseAccess {
     public ArrayList<HashMap<String, String>> getOrderDetailsList(String order_id) {
         ArrayList<HashMap<String, String>> orderDetailsList = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + order_id + "' ORDER BY order_details_id DESC", null);
-        Log.i("datadata_result", cursor.moveToFirst() + " " + "SELECT * FROM order_details WHERE invoice_id= " + order_id + " ORDER BY order_details_id DESC");
+        Utils.addLog("datadata_result", cursor.moveToFirst() + " " + "SELECT * FROM order_details WHERE invoice_id= " + order_id + " ORDER BY order_details_id DESC");
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
@@ -1291,7 +1362,7 @@ public class DatabaseAccess {
         values.put(column, value);
 
         long check = database.update("order_list", values, "invoice_id=?", new String[]{invoice_id});
-
+        database.close();
 
     }
 
@@ -1584,7 +1655,7 @@ public class DatabaseAccess {
         values.put("product_qty", qty);
 
         long check = database.update("product_cart", values, "cart_id=?", new String[]{id});
-
+        database.close();
 
     }
 
@@ -1624,7 +1695,7 @@ public class DatabaseAccess {
 
             } while (cursor.moveToNext());
         }
-
+        database.close();
         cursor.close();
         return product_Tax;
     }
@@ -1643,7 +1714,9 @@ public class DatabaseAccess {
 
 
                 currency = cursor.getString(cursor.getColumnIndex("shop_currency")) + " ";
-
+                if(LocaleManager.getLanguage(MultiLanguageApp.getApp()).equals("ar")){
+                    currency = MultiLanguageApp.getApp().getString(R.string.sar)+" ";
+                }
 
             } while (cursor.moveToNext());
         }
@@ -1670,7 +1743,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
 
-
+        database.close();
         cursor.close();
         return tax;
     }
@@ -1687,6 +1760,7 @@ public class DatabaseAccess {
             do {
                 String priceId = cursor.getString(cursor.getColumnIndex("product_id"));
                 double tax = 1 + getProductTax(priceId) / 100.0;
+                openDatabase();
                 double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price"))) / tax;
                 int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
                 double sub_total = price * qty;
@@ -2060,7 +2134,7 @@ public class DatabaseAccess {
 
 
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + invoice_id + "'", null);
-        Log.i("datadata_tax2",cursor.getCount()+"");
+        Utils.addLog("datadata_tax2",cursor.getCount()+"");
 
         if (cursor.moveToFirst()) {
             do {
@@ -2069,7 +2143,7 @@ public class DatabaseAccess {
                 @SuppressLint("Range") double tax = 1.0+Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax_percentage")))/100.0;
                 double sub_total = (price-(price/tax)) * qty;
                 total_price = total_price + sub_total;
-                Log.i("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
+                Utils.addLog("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
 
             } while (cursor.moveToNext());
         } else {
@@ -2188,12 +2262,12 @@ public class DatabaseAccess {
         int id = 0;
         Cursor cursor = database.rawQuery("SELECT * FROM users", null);
 
-        Log.i("datadata", "" + cursor.moveToFirst());
+        Utils.addLog("datadata", "" + cursor.moveToFirst());
         if (cursor.moveToFirst()) {
             do {
 
                 for (int i = 0; i < 3; i++) {
-                    Log.i("datadata", cursor.getColumnName(i));
+                    Utils.addLog("datadata", cursor.getColumnName(i));
                 }
                 id = cursor.getInt(0);
 
@@ -2473,7 +2547,7 @@ public class DatabaseAccess {
     public Boolean checkCustomProductInCart() {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'CUSTOM_ITEM'", null);
         boolean exist=cursor.moveToFirst();
-        Log.i("datadata_exist",exist+"");
+        Utils.addLog("datadata_exist",exist+"");
         cursor.close();
         database.close();
         return exist;
@@ -2925,7 +2999,7 @@ public class DatabaseAccess {
             if (cursor != null && cursor.moveToFirst()) {
                 nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value"))) + 1;
                 prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
-                Log.i("datadata_seq", nextValue + "");
+                Utils.addLog("datadata_seq", nextValue + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2935,7 +3009,7 @@ public class DatabaseAccess {
         }
         database.close();
         try {
-            sequence = ecrCode + "-001-" + prefix + String.format("%010d", nextValue);
+            sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US,"%010d", nextValue);
             sequenceMap.put("sequence", sequence);
             sequenceMap.put("next_value", String.valueOf(nextValue));
             sequenceMap.put("sequence_id", String.valueOf(sequenceId));
@@ -3114,6 +3188,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
         values.put("qr_code", qrCodeBase64);
         database.update("order_list", values, "invoice_id=? ", new String[]{orderId});
+        database.close();
     }
 
     public void addDemoConfiguration() {
@@ -3123,6 +3198,7 @@ public class DatabaseAccess {
         values.put("merchant_logo", "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");
         values.put("merchant_tax_number", "300000434710003");
         database.insert("configuration", null, values);
+        database.close();
     }
 
     public void addShop(RegistrationResponseDto registrationResponseDto, DatabaseAccess databaseAccess) {

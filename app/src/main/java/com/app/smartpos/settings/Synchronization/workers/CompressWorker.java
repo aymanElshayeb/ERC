@@ -1,7 +1,6 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.workers;
 
 import android.content.Context;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;

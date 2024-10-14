@@ -4,7 +4,6 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class AuthoruzationHolder {
     // Define a ThreadLocal variable for a String, initialized with an empty string
     private static ThreadLocal<String> authorization = ThreadLocal.withInitial(() -> "");

@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ajts.androidmads.library.SQLiteToExcel;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CustomerAdapter;
 import com.app.smartpos.database.DatabaseAccess;
@@ -222,45 +221,45 @@ public class  CustomersActivity extends BaseActivity {
             file.mkdirs();
         }
         // Export SQLite DB as EXCEL FILE
-        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, directory_path);
-        sqliteToExcel.exportSingleTable("customers", "customers.xls", new SQLiteToExcel.ExportListener() {
-            @Override
-            public void onStart() {
-
-                loading = new ProgressDialog(CustomersActivity.this);
-                loading.setMessage(getString(R.string.data_exporting_please_wait));
-                loading.setCancelable(false);
-                loading.show();
-            }
-
-            @Override
-            public void onCompleted(String filePath) {
-
-                Handler mHand = new Handler();
-                mHand.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        loading.dismiss();
-                        Toasty.success(CustomersActivity.this, R.string.data_successfully_exported, Toast.LENGTH_SHORT).show();
-
-
-
-                    }
-                }, 5000);
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-                loading.dismiss();
-                Toasty.error(CustomersActivity.this, R.string.data_export_fail, Toast.LENGTH_SHORT).show();
-
-                Log.d("Error",e.toString());
-            }
-        });
+//        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, directory_path);
+//        sqliteToExcel.exportSingleTable("customers", "customers.xls", new SQLiteToExcel.ExportListener() {
+//            @Override
+//            public void onStart() {
+//
+//                loading = new ProgressDialog(CustomersActivity.this);
+//                loading.setMessage(getString(R.string.data_exporting_please_wait));
+//                loading.setCancelable(false);
+//                loading.show();
+//            }
+//
+//            @Override
+//            public void onCompleted(String filePath) {
+//
+//                Handler mHand = new Handler();
+//                mHand.postDelayed(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//
+//                        loading.dismiss();
+//                        Toasty.success(CustomersActivity.this, R.string.data_successfully_exported, Toast.LENGTH_SHORT).show();
+//
+//
+//
+//                    }
+//                }, 5000);
+//
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//                loading.dismiss();
+//                Toasty.error(CustomersActivity.this, R.string.data_export_fail, Toast.LENGTH_SHORT).show();
+//
+//                Log.d("Error",e.toString());
+//            }
+//        });
     }
 
 

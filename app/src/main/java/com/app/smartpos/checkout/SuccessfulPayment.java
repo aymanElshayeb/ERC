@@ -13,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +23,11 @@ import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
-public class SuccessfulPayment extends AppCompatActivity {
+public class SuccessfulPayment extends BaseActivity {
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;
     TextView amountTv;
@@ -54,8 +56,8 @@ public class SuccessfulPayment extends AppCompatActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            Log.i("datadata_type",getIntent().getStringExtra("printType"));
-            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
+            Utils.addLog("datadata_type",getIntent().getStringExtra("printType"));
+            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this,getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
         String amount = getIntent().getStringExtra("amount").split(" ")[0];
@@ -68,7 +70,11 @@ public class SuccessfulPayment extends AppCompatActivity {
 
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
-            device.printReciept(printerData.getInvoice_id(), printerData.getOrder_date(), printerData.getOrder_time(), printerData.getPrice_before_tax(), printerData.getPrice_after_tax(), printerData.getTax() + "", printerData.getDiscount(), printerData.getCurrency(),getIntent().getStringExtra("printType"));
+            try {
+                device.printReceipt(printerData.getBitmap());
+            }catch (Exception e){
+                Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

@@ -17,16 +17,16 @@ import androidx.lifecycle.Observer;
 
 import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.pos.ScannerActivity;
-import com.app.smartpos.refund.Model.RefundModel;
-import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class Refund extends AppCompatActivity {
+public class Refund extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     RefundDetailsViewModel model;
@@ -92,9 +92,8 @@ public class Refund extends AppCompatActivity {
     }
 
     public void callApi(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.i("INSIDE CALL API" , AuthoruzationHolder.getAuthorization());
-        }
+        Utils.addLog("INSIDE CALL API" , SharedPrefUtils.getAuthorization());
+
         model.start(searchEt.getText().toString().trim(),databaseAccess);
     }
 }

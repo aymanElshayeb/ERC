@@ -1,4 +1,4 @@
-package com.app.smartpos.settings.Synchronization;
+package com.app.smartpos.settings.Synchronization.workers;
 
 import android.content.Context;
 import android.os.Environment;
@@ -23,6 +23,7 @@ public class ExportFileWorker extends Worker {
         String[] lastSync =new String[]{invoiceLastSync,shiftLastSync};
         try {
             DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
+            String path=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
             db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath()+"/"+fileName,lastSync);
         } catch (Exception e) {
             e.printStackTrace();

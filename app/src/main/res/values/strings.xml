@@ -41,7 +41,9 @@
     <string name="customer_successfully_added">Customer Successfully Added</string>
     <string name="hello">Hello</string>
     <string name="sync">Sync</string>
+    <string name="change_language">Change Language</string>
     <string name="current_shift_sales">Current Shift Sales</string>
+    <string name="guest">Guest</string>
     <string name="sar">SAR</string>
     <string name="items">Items</string>
     <string name="quick_bills">Quick Bills</string>
@@ -63,6 +65,7 @@
 
     <string name="checkout">Checkout</string>
     <string name="cash">Cash</string>
+    <string name="cash_ar">Cash / نقد</string>
     <string name="cash_details">Cash Details</string>
     <string name="cash_given">Cash Given</string>
     <string name="change">Change</string>
@@ -205,7 +208,7 @@
     <string name="order_type">Order Type </string>
     <string name="want_to_delete_supplier">Want to Delete Supplier ?</string>
     <string name="supplier_deleted">Supplier Deleted</string>
-    <string name="quantity">Quantity:</string>
+    <string name="quantity_">Quantity:</string>
     <string name="date">Date:</string>
     <string name="supplier">Supplier: </string>
     <string name="buy_price">Buy Price:</string>
@@ -327,12 +330,14 @@
 
     <string name="welcome_to_qaema">Welcome to qaema ECR</string>
     <string name="Please_enter_your_login_info">Please enter your login info</string>
+    <string name="Please_enter_your_registration_info">Please enter your registration info</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
     <string name="wrong_username_password">Wrong username or password</string>
     <string name="wrong_email_password">Wrong email or password</string>
+    <string name="please_enter_a_valid_email">Please enter a valid email address</string>
 
     <string name="synchronization">Synchronization</string>
     <string name="confirm_synchronization">you will synchronize your data with server</string>
@@ -346,7 +351,7 @@
     <string name="print_z_report">Print Z Report</string>
     <string name="shift_summary_details">Shift Summary Details</string>
     <string name="total_cash">Total Cash</string>
-    <string name="total_card">Total Card</string>
+    <string name="total_card_amount">Total card amount</string>
     <string name="number_of_sales">Number of Sales</string>
     <string name="wrong_cash_data">It appear that there are some wrong cash data\nAre you sure you want to end shift?</string>
     <string name="real">Real</string>
@@ -355,17 +360,20 @@
     <string name="total_amount">Total Amount</string>
     <string name="total_transactions_number">Total Transactions Number</string>
     <string name="total_sales_transactions">Total Sales Transactions</string>
-    <string name="total_refunds">Total Refunds</string>
+    <string name="total_refunds">Total Refunds Transactions</string>
     <string name="total_cash_amount">Total Sales Amount</string>
     <string name="total_refunds_amount">Total Refunds Amount</string>
-    <string name="start_cash">Start Cash</string>
+    <string name="start_cash">Start Cash In Safe</string>
     <string name="start_shift_date">Start Shift Date</string>
     <string name="end_shift_date">End Shift Date</string>
     <string name="user_id">User ID</string>
-    <string name="user_name">Username</string>
+    <string name="user_mail">User mail</string>
     <string name="shift_id">Shift ID</string>
     <string name="shift_sequence">Shift Sequence</string>
-    <string name="leave_cash">Leave Cash</string>
+    <string name="leave_cash">Leave Cash For Next Shift</string>
+    <string name="total_cash_on_hand">Total cash on hand</string>
+    <string name="total_cash_sales_amount">Total Cash Sales Amount</string>
+    <string name="cash_amount_discrepancy">Cash Amount Discrepancy</string>
 
     <string name="profile">Profile</string>
     <string name="mobile">Mobile</string>
@@ -387,6 +395,7 @@
     <string name="view_all_receipt">View All Receipt</string>
     <string name="or">OR</string>
     <string name="card">Card</string>
+    <string name="card_ar">Card / بطاقة</string>
     <string name="refunded">Refunded</string>
     <string name="view">View</string>
     <string name="select_which_item_you_want_to_refund">Select which item you want to refund</string>
@@ -394,14 +403,16 @@
     <string name="total_qty">Total Qty:</string>
     <string name="how_many_items_want_to_refund">How many items you want to refund?</string>
 
-    <string name="registration">Registration</string>
+    <string name="registration">Register device</string>
     <string name="merchant_id">Merchant ID</string>
     <string name="register">Register</string>
+    <string name="check_email">Check Email Address</string>
+    <string name="change_email">Change Email Address</string>
     <string name="demo">Demo</string>
     <string name="user_name_empty">Username field is empty</string>
     <string name="password_empty">password field is empty</string>
     <string name="merchant_empty">Merchant ID field is empty</string>
-    <string name="leave_cash_empty">Please add leave cash</string>
+    <string name="leave_cash_empty">Please add leave cash for safe</string>
 
     <string name="options">Options</string>
     <string name="custom_items">Custom Item</string>
@@ -409,6 +420,9 @@
 
     <string name="confirmation_for_ending_your_shift">Confirmation for ending your shift?</string>
     <string name="confirmation_for_ending_your_shift_desc">Are you sure you want to end your current shift and submit details?</string>
+    <string name="confirmation_for_change_language">Confirm change language??</string>
+    <string name="confirmation_for_change_language_desc">Are you sure you want to change your language to arabic?</string>
+
 
     <string name="have_a_good_day">Have a good day!</string>
     <string name="you_will_be_logged_out_in">You will be logged out in</string>
@@ -424,11 +438,83 @@
     <string name="amount">Amount</string>
     <string name="custom_item">Custom Item</string>
     <string name="description">Description</string>
+    <string name="optional">(Optional)</string>
     <string name="amount_must_be_more_than_zero">Amount must be more than zero</string>
     <string name="please_add_decription">Please add description</string>
 
 
     <string name="item_not_found">Item not found</string>
 
+    //sync
+    <string name="download_synchronization">Download Synchronization</string>
+    <string name="upload_synchronization">Upload Synchronization</string>
+    <string name="download_product_images">Download Products Images</string>
+    <string name="data_synced_successfully">Data Synced Successfully</string>
+    <string name="error_in_syncing_data">Error in Syncing data</string>
+    <string name="confirmation_for_download_product_images">Confirmation for download?</string>
+    <string name="confirmation_for_download_product_images_text">The file size that you need to download is</string>
+    <string name="no_product_images">No sync required</string>
+    <string name="registration_successful">Device registered successful</string>
+    <string name="unknown_error_occurred">Unknown error occurred</string>
 
+
+
+    //error
+    <string name="failed_to_register">Failed to register device</string>
+    <string name="non_admin_register">Can\'t register device with non admin user</string>
+    <string name="failed_to_login">Failed to login</string>
+    <string name="no_printer_found">no printer found</string>
+    <string name="transaction_declined">Transaction Declined</string>
+    <string name="your_cart_is_empty">Your cart is empty!</string>
+    <string name="card_payment_is_offline_please_choose_cash">Card payment is offline please choose cash</string>
+    <string name="please_select_payment_method">Please select Payment Method</string>
+    <string name="price_total_cannot_exceed">Price total cannot exceed 999999999.99</string>
+    <string name="total_price_cannot_exceed">Total price cannot exceed 999999999.99</string>
+
+    //reports
+    <string name="z_report">Z Report</string>
+    <string name="shift_no">Shift No</string>
+    <string name="username">Username</string>
+    <string name="transactions_amount_breakdown">Transactions Amount Breakdown</string>
+    <string name="sales_amount">Sales Amount</string>
+    <string name="refunded_amount">Refunded amount</string>
+    <string name="total">Total</string>
+    <string name="total_product_invoice">Total</string>
+    <string name="cash_discrepancies">Cash Discrepancies</string>
+    <string name="total_cash_sales">Total Cash Sales</string>
+    <string name="input_total_cash">Total Cash On Hand</string>
+    <string name="transactions_number_breakdown">Transactions Number Breakdown</string>
+    <string name="sales_transactions">Sales Transactions</string>
+    <string name="refunded_transactions">Refunded Transactions</string>
+    <string name="card_payments_breakdown">Card Payments Breakdown</string>
+    <string name="payment_details">Payment Details</string>
+    <string name="total_card_payments">Total</string>
+    <string name="total_card">Total Card</string>
+    <string name="shift_start_date_time">Shift Start Date Time</string>
+    <string name="shift_end_date_time">Shift End Date Time</string>
+    <string name="final_total">Total (inc. VAT)</string>
+    <string name="total_paid">Paid Amount</string>
+    <string name="net_amount">Net amount</string>
+    <string name="value_added_tax">VAT</string>
+    <string name="total_before_tax">Total (exc. VAT)</string>
+    <string name="receipt_no">Receipt No</string>
+    <string name="simplified_tax_invoice">Simplified Tax Invoice</string>
+    <string name="commercial_registration_number_">CRN</string>
+    <string name="tax_number_">VAT Reg. No</string>
+    <string name="quantity">Qty</string>
+    <string name="receipt_copy">Simplified Tax Invoice (Copy)</string>
+    <string name="receipt_refund_copy">Refund (Copy)</string>
+    <string name="receipt_refunded">Refund</string>
+    <string name="receipt_change">Remaining</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="_0">0</string>
+    <string name="del">Del</string>
 </resources>

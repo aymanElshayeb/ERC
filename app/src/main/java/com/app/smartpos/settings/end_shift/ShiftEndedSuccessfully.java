@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
-public class ShiftEndedSuccessfully extends AppCompatActivity {
+public class ShiftEndedSuccessfully extends BaseActivity {
 
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;
@@ -40,7 +43,7 @@ public class ShiftEndedSuccessfully extends AppCompatActivity {
     }
 
     private void startTimer(){
-        new CountDownTimer(5000,1000) {
+        new CountDownTimer(6000,1000) {
             @Override
             public void onTick(long l) {
                 int time=(int)(l/1000);
@@ -49,6 +52,7 @@ public class ShiftEndedSuccessfully extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                SharedPrefUtils.setIsLoggedIn(ShiftEndedSuccessfully.this, false);
                 finish();
                 startActivity(new Intent(ShiftEndedSuccessfully.this, AuthActivity.class));
             }

@@ -24,7 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ajts.androidmads.library.ExcelToSQLite;
 import com.app.smartpos.HomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
@@ -544,50 +543,50 @@ public class AddProductActivity extends BaseActivity {
 //         ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(),DatabaseOpenHelper.DATABASE_NAME);
 
         // if you want to add column in excel and import into DB, you must drop the table
-        ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, false);
-        // Import EXCEL FILE to SQLite
-        excelToSQLite.importFromFile(directory_path, new ExcelToSQLite.ImportListener() {
-            @Override
-            public void onStart() {
-
-                loading = new ProgressDialog(AddProductActivity.this);
-                loading.setMessage(getString(R.string.data_importing_please_wait));
-                loading.setCancelable(false);
-                loading.show();
-
-            }
-
-            @Override
-            public void onCompleted(String dbName) {
-
-
-                Handler mHand = new Handler();
-                mHand.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        loading.dismiss();
-                        Toasty.success(AddProductActivity.this, R.string.data_successfully_imported, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AddProductActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-
-
-                    }
-                }, 5000);
-
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-                loading.dismiss();
-                Log.d("Error : ", "" + e.getMessage());
-                Toasty.error(AddProductActivity.this, R.string.data_import_fail, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), DatabaseOpenHelper.DATABASE_NAME, false);
+//        // Import EXCEL FILE to SQLite
+//        excelToSQLite.importFromFile(directory_path, new ExcelToSQLite.ImportListener() {
+//            @Override
+//            public void onStart() {
+//
+//                loading = new ProgressDialog(AddProductActivity.this);
+//                loading.setMessage(getString(R.string.data_importing_please_wait));
+//                loading.setCancelable(false);
+//                loading.show();
+//
+//            }
+//
+//            @Override
+//            public void onCompleted(String dbName) {
+//
+//
+//                Handler mHand = new Handler();
+//                mHand.postDelayed(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//
+//                        loading.dismiss();
+//                        Toasty.success(AddProductActivity.this, R.string.data_successfully_imported, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(AddProductActivity.this, HomeActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//
+//
+//                    }
+//                }, 5000);
+//
+//
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//                loading.dismiss();
+//                Log.d("Error : ", "" + e.getMessage());
+//                Toasty.error(AddProductActivity.this, R.string.data_import_fail, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 

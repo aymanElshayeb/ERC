@@ -19,6 +19,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.OrderDetailsAdapter;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pdf_report.TemplatePDF;
 import com.app.smartpos.utils.BaseActivity;
@@ -108,7 +109,7 @@ public class OrderDetailsActivity extends BaseActivity {
         //get data from local database
         List<HashMap<String, String>> orderDetailsList;
         orderDetailsList = databaseAccess.getOrderDetailsList(order_id);
-        Log.i("datadata_size",order_id+" "+orderDetailsList.size()+"");
+        Utils.addLog("datadata_size",order_id+" "+orderDetailsList.size()+"");
         if (orderDetailsList.isEmpty()) {
             //if no data in local db, then load data from server
             Toasty.info(OrderDetailsActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
@@ -156,7 +157,7 @@ public class OrderDetailsActivity extends BaseActivity {
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(order_id);
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration);
+        Bitmap qrCodeBitmap = zatcaQRCodeGeneration.getQrCodeBitmap(orderList,databaseAccess,orderDetailsList,configuration,false);
 
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
@@ -183,16 +184,16 @@ public class OrderDetailsActivity extends BaseActivity {
 
 
         btnThermalPrinter.setOnClickListener(v -> {
-            Device device = DeviceFactory.getDevice();
-            boolean successfulPrint = device.printReciept(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency,"");
-            if(!successfulPrint){
-                //Check if the Bluetooth is available and on.
-                if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
-                PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
-                //Pick a Bluetooth device
-                Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
-                startActivityForResult(i, REQUEST_CONNECT);
-            }
+//            Device device = DeviceFactory.getDevice();
+//            boolean successfulPrint = device.printReceipt(order_id, order_date, order_time, total_price, calculated_total_price, tax, discount, currency,"");
+//            if(!successfulPrint){
+//                //Check if the Bluetooth is available and on.
+//                if (!Tools.isBlueToothOn(OrderDetailsActivity.this)) return;
+//                PrefMng.saveActivePrinter(OrderDetailsActivity.this, PrefMng.PRN_WOOSIM_SELECTED);
+//                //Pick a Bluetooth device
+//                Intent i = new Intent(OrderDetailsActivity.this, DeviceListActivity.class);
+//                startActivityForResult(i, REQUEST_CONNECT);
+//            }
         });
 
     }

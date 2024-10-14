@@ -172,7 +172,7 @@
     <string name="order_type">অর্ডার টাইপ:</string>
     <string name="want_to_delete_supplier">সাপ্লাইয়ারস ডিলেট করতে চান  ?</string>
     <string name="supplier_deleted">সাপ্লাইয়ারস ডিলেট </string>
-    <string name="quantity">পরিমান :</string>
+    <string name="quantity_">পরিমান :</string>
     <string name="date">তারিখ :</string>
     <string name="supplier">সাপ্লাইয়ারস : </string>
     <string name="buy_price">ক্রয় মূল্য :</string>

@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.cart.Cart;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ProductCart;
+import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -77,7 +79,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         //  Log.d("unit_ID ", weight_unit_id);
 
         databaseAccess.open();
-        String base64Image = databaseAccess.getProductImage(product_id);
+        String base64Image = databaseAccess.getProductImage(productCart.isConnected(),uuid);
 
 //        databaseAccess.open();
 //        String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);
@@ -95,16 +97,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         if(uuid.equals("CUSTOM_ITEM")){
             holder.imgProduct.setImageResource(R.drawable.ic_custom_option_gray);
         }else {
-            if (base64Image != null) {
-                if (base64Image.isEmpty() || base64Image.length() < 6) {
+            if(base64Image != null && base64Image.startsWith("http")){
+                Glide.with(productCart).load(base64Image).into(holder.imgProduct);
+            }else if (base64Image != null) {
+                if (base64Image.length() < 6) {
                     holder.imgProduct.setImageResource(R.drawable.image_placeholder);
+                    holder.imgProduct.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 } else {
 
-
+                    Utils.addLog("datadata_64",base64Image);
                     byte[] bytes = Base64.decode(base64Image, Base64.DEFAULT);
                     holder.imgProduct.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
                 }
+            }else{
+                holder.imgProduct.setImageResource(R.drawable.image_placeholder);
             }
         }
 
@@ -112,7 +119,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
 
         holder.txtItemName.setText(product_name);
-        holder.txtPrice.setText(currency + trimLongDouble(getPrice));
+        holder.txtPrice.setText(trimLongDouble(getPrice)+" "+currency);
 //        holder.txtWeight.setText(weight + " " + weight_unit_name);
         holder.txtQtyNumber.setText(qty);
 
@@ -169,7 +176,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
                 if (get_qty >= getStock) {
                     Toasty.error(productCart, productCart.getString(R.string.available_stock) + " " + getStock, Toast.LENGTH_SHORT).show();
-                } else {
+                }else if(productCart.checkCartTotalPrice(position)){
+                    Toast.makeText(productCart, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
+                }else {
                     get_qty++;
 
 

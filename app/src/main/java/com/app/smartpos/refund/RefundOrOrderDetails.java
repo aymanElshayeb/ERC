@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
@@ -26,9 +25,8 @@ import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 import com.app.smartpos.refund.Model.RefundModel;
-import com.app.smartpos.utils.AuthoruzationHolder;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +59,8 @@ public class RefundOrOrderDetails extends WorkerActivity {
     private String order_payment_method;
     private String operation_type;
     private String refundSequence;
+    boolean checkConnectionOnce=true;
+    private RecyclerView recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
         TextView amount_tv = findViewById(R.id.amount_tv);
         LinearLayout btn_ll = findViewById(R.id.btn_ll);
         receipt_number_tv = findViewById(R.id.receipt_number_tv);
-        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler = findViewById(R.id.recycler);
         card_tv = findViewById(R.id.card_tv);
         cash_tv = findViewById(R.id.cash_tv);
         refunded_tv = findViewById(R.id.refunded_tv);
@@ -99,11 +99,11 @@ public class RefundOrOrderDetails extends WorkerActivity {
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
             orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
-
+            Utils.addLog("datadata_test", operation_sub_type + " " + operation_type);
             for (int i = 0; i < orderDetailsList.size(); i++) {
                 orderDetailsList.get(i).put("refund_qty", "0");
                 orderDetailsList.get(i).put("item_checked", "0");
-                Log.i("datadata", "" + orderDetailsList.get(i).toString());
+                Utils.addLog("datadata", "" + orderDetailsList.get(i).toString());
             }
         } else {
             RefundModel refundModel = (RefundModel) getIntent().getSerializableExtra("refundModel");
@@ -125,7 +125,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refundDetailsAdapter = new RefundOrOrderDetailsAdapter(this, orderDetailsList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recycler.setAdapter(refundDetailsAdapter);
+
 
 
         updateTotalAmount();
@@ -141,12 +141,38 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
-                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType", "نسخة إضافية"));
+                startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
+                operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
+                ;
             } else {
                 refundPressed();
             }
         });
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
+    }
+
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        Utils.addLog("datadata_connection",""+state);
+        setAdapter();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isConnected()){
+            setAdapter();
+        }
+    }
+
+    private void setAdapter(){
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            runOnUiThread(() -> {
+                recycler.setAdapter(refundDetailsAdapter);
+            });
+        }
     }
 
     public boolean isRefund() {
@@ -163,11 +189,13 @@ public class RefundOrOrderDetails extends WorkerActivity {
         for (int i = 0; i < orderDetailsList.size(); i++) {
             double product_price = Double.parseDouble(orderDetailsList.get(i).get("product_price"));
             int refund_qty = Integer.parseInt(orderDetailsList.get(i).get("refund_qty"));
-            double product_qty = Double.parseDouble(orderDetailsList.get(i).get("product_qty"));
+            double product_qty = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
             String item_checked = orderDetailsList.get(i).get("item_checked");
 
             if (!isRefund) {
                 total += product_qty * product_price;
+                total = Double.parseDouble(Utils.trimLongDouble(total));
+                Utils.addLog("datadata_total", total + " " + (product_qty * product_price));
             } else {
                 if (item_checked.equals("1") && refund_qty > 0) {
                     total += refund_qty * product_price;
@@ -186,7 +214,6 @@ public class RefundOrOrderDetails extends WorkerActivity {
         dialog.show(getSupportFragmentManager(), "dialog");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void refundConfirmation() {
         boolean canRefund = false;
         double total_amount = 0;
@@ -216,7 +243,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 //                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
 //                dialog.show(getSupportFragmentManager(), "dialog");
                 loadingLl.setVisibility(View.VISIBLE);
-                enqueueCreateAndUploadWorkers(this);
+                enqueueCreateAndUploadWorkers();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -230,16 +257,17 @@ public class RefundOrOrderDetails extends WorkerActivity {
         loadingLl.setVisibility(View.GONE);
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Data Synced Successfully");
+            showMessage(getString(R.string.data_synced_successfully));
             redirectToSuccess();
+            SharedPrefUtils.resetAuthorization();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            showMessage("Error in Syncing data");
+            showMessage(getString(R.string.error_in_syncing_data));
         }
     }
 
     public void redirectToSuccess() {
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id", refundSequence).putExtra("printType", "مسترجع");
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", total_amount_tv.getText().toString()).putExtra("order_id", refundSequence).putExtra("printType", getString(R.string.receipt_refunded));
         startActivity(intent);
         finish();
     }
@@ -248,8 +276,6 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         //boolean success=true;
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-
         databaseAccess.open();
         //get data from local database
         String sequence = null;
@@ -301,9 +327,9 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         totalPriceWithTax += Double.parseDouble(orderDetailsList.get(i).get("product_price")) * refund_qty;
                         //ToDo tax amount should be divided by the total qantity of the order line before multiplying
                         int quantity = Integer.parseInt(orderDetailsList.get(i).get("product_qty"));
-                        Log.i("datadata_qty",quantity+" "+orderDetailsList.get(i).get("tax_amount"));
-                        total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount"))/quantity) * refund_qty;
-                        Log.i("datadata_qty",quantity+" "+total_tax);
+                        Utils.addLog("datadata_qty", quantity + " " + orderDetailsList.get(i).get("tax_amount"));
+                        total_tax += (Double.parseDouble(orderDetailsList.get(i).get("tax_amount")) / quantity) * refund_qty;
+                        Utils.addLog("datadata_qty", quantity + " " + total_tax);
                     }
                 }
                 obj.put("in_tax_total", -totalPriceWithTax);
@@ -344,7 +370,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         String englishName = product.get(0).get("product_name_en");
                         String arabicName = product.get(0).get("product_name_ar");
-                        if (product.get(0).get("product_uuid").equals("CUSTOM_ITEM")) {
+                        if (product.get(0).get("product_uuid").equals("CUSTOM_ITEM") && !orderDetailsList.get(i).get("product_description").isEmpty()) {
                             englishName = orderDetailsList.get(i).get("product_description");
                             arabicName = orderDetailsList.get(i).get("product_description");
                         }
@@ -371,7 +397,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 e.printStackTrace();
             }
 
-            Log.i("datadata", obj.toString());
+            Utils.addLog("datadata", obj.toString());
             sequence = saveOrderInOfflineDb(obj);
 
         }

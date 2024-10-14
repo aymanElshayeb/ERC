@@ -12,7 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -32,14 +33,16 @@ import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import com.app.smartpos.HomeActivity;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.auth.LoginWithServerWorker;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.Synchronization.DecompressWorker;
-import com.app.smartpos.settings.Synchronization.DownloadWorker;
-import com.app.smartpos.settings.Synchronization.ReadFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
+import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
+import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
+import com.app.smartpos.utils.Hasher;
+import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 public class RegistrationDialog extends DialogFragment {
@@ -62,8 +65,7 @@ public class RegistrationDialog extends DialogFragment {
             root=inflater.inflate(R.layout.dialog_registration,container,false);
             setCancelable(false);
 
-            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+            deviceId =  Utils.getDeviceId(requireActivity());
 
             usernameEt=root.findViewById(R.id.username_et);
             passwordEt=root.findViewById(R.id.password_et);
@@ -71,6 +73,13 @@ public class RegistrationDialog extends DialogFragment {
             registerBtn =root.findViewById(R.id.register_btn);
             demoBtn =root.findViewById(R.id.demo_btn);
             progressBar=root.findViewById(R.id.progress);
+            String lang = LocaleManager.getLanguage(requireActivity());
+
+            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            usernameEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            merchantEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+
+            ConstraintLayout languageCl=root.findViewById(R.id.language_cl);
             registerBtn.setOnClickListener(view -> {
                 if(usernameEt.getText().toString().isEmpty()){
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
@@ -84,7 +93,12 @@ public class RegistrationDialog extends DialogFragment {
                     enqueueDownloadAndReadWorkers();
                 }
             });
+            String language = LocaleManager.getLanguage(root.getContext());
 
+            languageCl.setOnClickListener(view -> {
+                LocaleManager.updateLocale(root.getContext(), language.equals("en") ? "ar" : "en");
+                LocaleManager.resetApp(getActivity());
+            });
             demoBtn.setOnClickListener(view -> {
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
                 databaseAccess.open();
@@ -188,13 +202,16 @@ public class RegistrationDialog extends DialogFragment {
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
-            showMessage("Registration Successful");
+            showMessage(getString(R.string.registration_successful));
             SharedPrefUtils.setIsRegistered(requireContext(),true);
             SharedPrefUtils.setStartDateTime(requireContext());
+            byte[] bytes=Hasher.encryptMsg(usernameEt.getText().toString().trim()+"-"+passwordEt.getText().toString().trim());
+            SharedPrefUtils.setAuthData(requireContext(),bytes);
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            showMessage("Error in Syncing data");
+            if(workInfo.getOutputData().getKeyValueMap().isEmpty())
+                showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             registerBtn.setVisibility(View.VISIBLE);
             demoBtn.setEnabled(true);
 
@@ -210,7 +227,7 @@ public class RegistrationDialog extends DialogFragment {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage( (errorMessage != null ? errorMessage : "Unknown error occurred"));
+                            showMessage( (errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });

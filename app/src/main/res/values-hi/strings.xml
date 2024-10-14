@@ -153,7 +153,7 @@
     <string name="order_type">आदेश प्रकार:</string>
     <string name="want_to_delete_supplier">सप्लायर को हटाना चाहते हैं?</string>
     <string name="supplier_deleted">आपूर्तिकर्ता हटा दिया गया</string>
-    <string name="quantity">मात्रा:</string>
+    <string name="quantity_">मात्रा:</string>
     <string name="date">तारीख:</string>
     <string name="supplier">देने वाला:</string>
     <string name="buy_price">मूल्य खरीदें:</string>

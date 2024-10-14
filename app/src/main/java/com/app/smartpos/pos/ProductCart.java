@@ -32,6 +32,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrdersActivity;
 import com.app.smartpos.utils.BaseActivity;
@@ -74,6 +75,7 @@ public class ProductCart extends BaseActivity {
     double total_tax;
     AlertDialog alertDialog;
     Device device;
+    boolean checkConnectionOnce=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +128,6 @@ public class ProductCart extends BaseActivity {
             imgNoProduct.setVisibility(View.GONE);
             //productCartAdapter = new CartAdapter(ProductCart.this, cartProductList,txt_total_price,btnSubmitOrder,imgNoProduct,txt_no_product);
 
-            recyclerView.setAdapter(productCartAdapter);
-
 
         }
 
@@ -146,10 +146,16 @@ public class ProductCart extends BaseActivity {
 
     }
 
+    @Override
+    public void connectionChanged(boolean state) {
+        super.connectionChanged(state);
+        if(checkConnectionOnce){
+            checkConnectionOnce=false;
+            recyclerView.setAdapter(productCartAdapter);
+        }
+    }
 
-
-
-    public void proceedOrder(String type,String payment_method,String customer_name,double calculated_tax,String discount,String card_type_code,String approval_code,double total) throws JSONException {
+    public void proceedOrder(String type, String payment_method, String customer_name, double calculated_tax, String discount, String card_type_code, String approval_code, double total) throws JSONException {
 
         final DatabaseAccess databaseAccess = DatabaseAccess.getInstance(ProductCart.this);
         databaseAccess.open();
@@ -671,7 +677,7 @@ public class ProductCart extends BaseActivity {
 
                 if(dialogOrderPaymentMethod.equals("CARD")) {
                     databaseAccess.open();
-                    long totalPriceWithTax = (long) databaseAccess.getTotalPriceWithTax();
+                    double totalPriceWithTax = databaseAccess.getTotalPriceWithTax();
 
                     Intent intent=device.pay(totalPriceWithTax);
 //                    if(){
@@ -756,7 +762,7 @@ public class ProductCart extends BaseActivity {
 //        super.onActivityResult(requestCode, resultCode, data);
 ////        data.getStringExtra("123");
 ////        Log.d("DEBUG","11111111111111111111111111111111111");
-////        Log.i("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
+////        Utils.addLog("datadata",data.getStringExtra(ThirdTag.JSON_DATA));
 //
 //        //tvResponse.setText("Sale Response："+data.getStringExtra(ThirdTag.JSON_DATA));
 //        // tvResponse.setText("Response："+data.getExtras().toString());
@@ -776,10 +782,10 @@ public class ProductCart extends BaseActivity {
 //
 //                String PurchaseAmount=result.getJSONObject("Amounts").getString("PurchaseAmount");
 //                String ApprovalCode=result.getString("ApprovalCode");
-//                Log.i("datadata",name+" "+code);
+//                Utils.addLog("datadata",name+" "+code);
 //                databaseAccess.open();
 //                //long id=databaseAccess.insertCardDetails(name,code);
-//                //Log.i("datadata",id+"");
+//                //Utils.addLog("datadata",id+"");
 //                proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code,ApprovalCode,Double.parseDouble(PurchaseAmount));
 //                alertDialog.dismiss();
 //            }else{
@@ -809,14 +815,14 @@ public class ProductCart extends BaseActivity {
 
                             String PurchaseAmount = result.getJSONObject(amountString).getString("PurchaseAmount");
                             String ApprovalCode = result.getString("ApprovalCode");
-                            Log.i("datadata", name + " " + code);
+                            Utils.addLog("datadata", name + " " + code);
 //                            databaseAccess.open();
                             //long id=databaseAccess.insertCardDetails(name,code);
-                            //Log.i("datadata",id+"");
+                            //Utils.addLog("datadata",id+"");
                             proceedOrder(dialogOrderType, dialogOrderPaymentMethod, customerName, total_tax, dialogDiscount, code, ApprovalCode, Double.parseDouble(PurchaseAmount));
                             alertDialog.dismiss();
                         } else if(resultStatus.equals("Declined")) {
-                            Toast.makeText(this, "Transaction Declined", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     }
                     catch (Exception e){

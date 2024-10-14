@@ -13,9 +13,12 @@ android {
         useLibrary 'org.apache.http.legacy'
 
     }
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,6 +28,11 @@ android {
     }
     packagingOptions{
         resources.excludes.add("META-INF/*")
+    }
+
+    defaultConfig {
+
+        buildConfigField "String", "API_KEY", "\"eyJ4NXQiOiJPREUzWTJaaE1UQmpNRE00WlRCbU1qQXlZemxpWVRJMllqUmhZVFpsT0dJeVptVXhOV0UzWVE9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6ImFkbWluIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJFQ1JfQXBwbGljYXRpb24iLCJpZCI6MTE2LCJ1dWlkIjoiYTA2MGViNTgtN2Y5NC00YWRmLTk3YWMtZmMzZmRmOTUxNjIzIn0sImlzcyI6Imh0dHBzOlwvXC9hbS13c28yLW5vbnByb2QuYXBwcy5udC1ub24tb2NwLm5lb3Rlay5zYTo0NDNcL29hdXRoMlwvdG9rZW4iLCJ0aWVySW5mbyI6eyJVbmxpbWl0ZWQiOnsidGllclF1b3RhVHlwZSI6InJlcXVlc3RDb3VudCIsImdyYXBoUUxNYXhDb21wbGV4aXR5IjowLCJncmFwaFFMTWF4RGVwdGgiOjAsInN0b3BPblF1b3RhUmVhY2giOnRydWUsInNwaWtlQXJyZXN0TGltaXQiOjAsInNwaWtlQXJyZXN0VW5pdCI6bnVsbH19LCJrZXl0eXBlIjoiUFJPRFVDVElPTiIsInBlcm1pdHRlZFJlZmVyZXIiOiIiLCJzdWJzY3JpYmVkQVBJcyI6W3sic3Vic2NyaWJlclRlbmFudERvbWFpbiI6ImNhcmJvbi5zdXBlciIsIm5hbWUiOiJlY3IiLCJjb250ZXh0IjoiXC9lY3JcL3YxIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoidjEiLCJzdWJzY3JpcHRpb25UaWVyIjoiVW5saW1pdGVkIn1dLCJ0b2tlbl90eXBlIjoiYXBpS2V5IiwicGVybWl0dGVkSVAiOiIiLCJpYXQiOjE3MjEyOTE0MTMsImp0aSI6IjU5NWQ0MWRlLTU0YTMtNGNjNi1iYTE1LTczMTk5MzI5NDM0ZiJ9.kNeyuzxZhpQpxlloBtOsIbOA-wWZhgvzqlPGsm0Xc5frk_S1y5hBzHjmeDqOOR2zpYcY0KUi2lUV_-qqbkTzrrJXK5kHgzpT8db5PmFHRIgu9Py-60H7FNdhUYHysSWEKlej8TIWIX7dKOa6w3W3c8Eg5VFQe7aWWtmxwVDuzoxXjQyn2LQov5Lp9eS_lovWyacw_uTko_VPyH4fLm1W2UU04oKobdZPNPmt_ZkMgn-Hh9r1h9K0XaqsALOe_LHZ0qi5TMro6AuQKtxJXvLGcBozukDUjcEq_8-4PjfylFvKSJXN4sIpfbDb4azeTGzLDzUSJFYY-nKDPIMrUnX8XQ==\""
     }
 }
 
@@ -40,6 +48,7 @@ dependencies {
     implementation files('libs/Hasher_Java/lib/shiro-web-1.4.1.jar')
     implementation files('libs/Hasher_Java/lib/slf4j-api-1.7.32.jar')
     implementation files('libs/Hasher_Java/lib/slf4j-log4j12-1.6.4.jar')
+    implementation 'androidx.activity:activity:1.9.1'
     testImplementation 'junit:junit:4.13.2'
     implementation files('libs/WoosimLib231.jar')
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -61,20 +70,20 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
 
     //https://github.com/dm77/barcodescanner
-    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.4'
+    //implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.4'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
 
     implementation 'com.itextpdf:itextg:5.5.10'
-    implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
+    //implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
 
 
 
 
     implementation 'com.github.sd6352051:NiftyDialogEffects:v1.0.3'
 
-    implementation 'com.whiteelephant:monthandyearpicker:1.3.0'
+    //implementation 'com.whiteelephant:monthandyearpicker:1.3.0'
 
     implementation 'androidx.work:work-runtime:2.8.1'
 
@@ -94,5 +103,7 @@ dependencies {
     implementation 'com.github.amitshekhariitbhu.Fast-Android-Networking:android-networking:1.0.4'
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
 
 }

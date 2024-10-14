@@ -46,7 +46,7 @@ public class SalesReportAdapter extends RecyclerView.Adapter<SalesReportAdapter.
 
         holder.txt_product_name.setText(orderData.get(position).get("product_name_en"));
 
-        holder.txt_product_qty.setText(context.getString(R.string.quantity) + orderData.get(position).get("product_qty"));
+        holder.txt_product_qty.setText(context.getString(R.string.quantity_) + orderData.get(position).get("product_qty"));
         holder.txt_product_Weight.setText(context.getString(R.string.weight) + orderData.get(position).get("product_weight"));
 
         holder.txt_date.setText(context.getString(R.string.date) + orderData.get(position).get("product_order_date"));

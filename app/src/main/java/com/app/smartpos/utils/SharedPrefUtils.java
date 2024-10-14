@@ -9,6 +9,8 @@ import com.app.smartpos.R;
 
 import java.util.Date;
 
+import kotlin.text.Charsets;
+
 public class SharedPrefUtils {
 
     public static boolean isRegistered(Context context){
@@ -53,6 +55,11 @@ public class SharedPrefUtils {
         return sharedPreferences.getString("user_email","");
     }
 
+    public static void setEmail(Context context,String email){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("user_email", email).commit();
+    }
+
     public static String getUserId(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("user_id","");
@@ -62,9 +69,14 @@ public class SharedPrefUtils {
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
         editor.putString("user_name", userName).commit();
     }
-    public static void setUserEmail(Context context,String email){
+
+    public static byte[] getAuthData(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("auth_data","").getBytes(Charsets.ISO_8859_1);
+    }
+    public static void setAuthData(Context context,byte[] data){
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-        editor.putString("user_email", email).commit();
+        editor.putString("auth_data", new String(data, Charsets.ISO_8859_1)).commit();
     }
 
     public static void setUserId(Context context,String userID){
@@ -110,16 +122,41 @@ public class SharedPrefUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
         return sharedPreferences.getString("username","");
     }
-//    public static void setAuth(Context context,String auth){
-//        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
-//        editor.putString("mobile", ecrCode).commit();
-//    }
-//
-//    public static String getMobileNumber(Context context){
-//        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
-//        return sharedPreferences.getString("mobile","");
-//    }
+
+    public static void setIsLoggedIn(Context context,Boolean flag){
+        SharedPreferences.Editor editor = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putBoolean("loggedIn", flag).commit();
+    }
+
+    public static boolean getIsLoggedIn(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getBoolean("loggedIn",false);
+    }
 
 
+    public static void setAuthorization(String auth){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("ecr_auth", auth).commit();
+    }
 
+    public static String getAuthorization(){
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_auth","");
+    }
+
+    public static void resetAuthorization(){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("ecr_auth", "").commit();
+    }
+
+    public static void setProductLastUpdatedTimeStamp(String lastUpdatedTimeStamp){
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE).edit();
+        editor.putString("last_updated_time_stamp", lastUpdatedTimeStamp).commit();
+    }
+
+    public static String getProductLastUpdatedTimeStamp(){
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name),MODE_PRIVATE);
+        String data=sharedPreferences.getString("last_updated_time_stamp","");
+        return data.isEmpty()?"":"?lastUpdateTimestamp="+data;
+    }
 }

@@ -1,6 +1,7 @@
 package com.app.smartpos.refund;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -14,13 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
-public class RefundOrOrderList extends AppCompatActivity {
+public class RefundOrOrderList extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
@@ -64,7 +69,7 @@ public class RefundOrOrderList extends AppCompatActivity {
 
         orderList.addAll(databaseAccess.getOrderListPaginated(offset,isRefund));
         for(int i=0;i<orderList.size();i++) {
-            Log.i("datadata_order", orderList.get(i).toString());
+            Utils.addLog("datadata_order", orderList.get(i).toString());
         }
         refundsOrOrdersAdapter = new RefundsOrOrdersAdapter(this, orderList);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -83,6 +88,13 @@ public class RefundOrOrderList extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    private void test() {
+        Locale locale=new Locale("ar");
+        Configuration configuration=getResources().getConfiguration();
+        configuration.setLocale(locale);
+        getResources().updateConfiguration(configuration,getResources().getDisplayMetrics());
     }
 
     public boolean isRefund() {

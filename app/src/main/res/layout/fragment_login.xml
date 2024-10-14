@@ -5,12 +5,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grey_f9">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/language_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_globe" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <ImageView
         android:id="@+id/logo_im"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_qaema_logo"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/language_cl"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="37dp"
         android:layout_marginStart="24dp"/>
@@ -71,6 +85,18 @@
         android:textColor="@color/black"
         android:inputType="textPassword" />
 
+    <ImageView
+        android:id="@+id/eye_im"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:src="@drawable/ic_eye"
+        android:padding="4dp"
+        android:alpha="0.5"
+        app:layout_constraintTop_toTopOf="@id/password_et"
+        app:layout_constraintBottom_toBottomOf="@id/password_et"
+        app:layout_constraintEnd_toEndOf="@id/password_et"
+        android:layout_marginEnd="16dp"/>
+
     <TextView
         android:id="@+id/forget_pasword_tv"
         android:layout_width="wrap_content"
@@ -79,6 +105,7 @@
         app:layout_constraintTop_toBottomOf="@id/password_et"
         app:layout_constraintStart_toStartOf="@id/title_tv"
         android:textSize="17dp"
+        android:visibility="gone"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/inter_black"
         android:textColor="@color/purple"/>

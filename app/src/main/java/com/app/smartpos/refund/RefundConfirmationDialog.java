@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
+import com.app.smartpos.utils.LocaleManager;
 
 public class RefundConfirmationDialog extends DialogFragment {
 
@@ -33,7 +34,7 @@ public class RefundConfirmationDialog extends DialogFragment {
             TextView confirmTv = root.findViewById(R.id.confirm_tv);
             TextView cancelTv = root.findViewById(R.id.cancel_tv);
 
-            title_tv.setText(requireContext().getString(R.string.confirmation_refund)+" "+amount+"?");
+            title_tv.setText(requireContext().getString(R.string.confirmation_refund)+" "+amount+(LocaleManager.getLanguage(requireActivity()).equals("ar")?" ؟":" ?"));
             confirmTv.setOnClickListener(view -> {
                 refundDetails.refundConfirmation();
                 dismiss();

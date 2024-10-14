@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.refund.RefundOrOrderDetails;
 import com.app.smartpos.refund.RefundOrOrderList;
 
@@ -46,9 +47,9 @@ public class RefundsOrOrdersAdapter extends RecyclerView.Adapter<RefundsOrOrders
         String order_type=orderData.get(position).get("order_type");
         String orderStatus = orderData.get(position).get(Constant.ORDER_STATUS);
 
-        Log.i("datadata",orderData.get(position).toString());
+        Utils.addLog("datadata",orderData.get(position).toString());
 
-        holder.amount_tv.setText(in_tax_total);
+        holder.amount_tv.setText(Utils.trimLongDouble(in_tax_total));
         holder.receipt_number_tv.setText(invoice_id);
         holder.currency_tv.setText(refundOrOrderList.getCurrency());
         holder.card_tv.setVisibility(payment_method.equals("CARD")?View.VISIBLE:View.GONE);

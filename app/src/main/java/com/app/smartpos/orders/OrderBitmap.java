@@ -1,6 +1,7 @@
 package com.app.smartpos.orders;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,10 +10,16 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
 import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
@@ -21,7 +28,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.newland.sdk.me.module.printer.PrinterModule;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,26 +41,26 @@ import java.util.Objects;
 public class OrderBitmap extends BaseActivity {
     String name, price, qty;
     double productTotalPrice;
-    DecimalFormat f;
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
     String merchantTaxNumber, merchantId, productCode;
-    PrinterModule mPrintManager = null;
     SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
     ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
     List<PrinterModel> bitmaps = new LinkedList<>();
     int totalHeight = 0;
     int width = 0;
-    String line = "--------------------------------------------";
-
-    public OrderBitmap() {
-
+    String line;
+    MultiLanguageApp activity;
+    public OrderBitmap(Activity activity) {
+        this.activity=MultiLanguageApp.getApp();
     }
 
 
     public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency, String printType) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
+        Device device = DeviceFactory.getDevice();
+        line = device.getPrintLine();
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
@@ -63,7 +69,6 @@ public class OrderBitmap extends BaseActivity {
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat("#.00");
         try {
             if (!configuration.get("merchant_logo").isEmpty()) {
                 byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
@@ -72,25 +77,19 @@ public class OrderBitmap extends BaseActivity {
             }
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);
-            bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(orderDate + "      " + orderTime)));
-            //mPrintManager.addTextLeft_Right(PrintingHelper.getTextBundle(Constant.CENTER_ALIGNED,true), orderDate, orderTime);
+            bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
             printReceiptNo(invoiceId);
             printType(printType);
-            bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة")));
             printInvoiceBarcode(invoiceId);
-            //Todo products ( id, name, price including tax, qty, total including tax
             printProducts(orderDetailsList);
             printTotalExcludingTax(priceBeforeTax);
-            printDiscount(discount);
+            //Todo uncomment discount when it is added in the system
+//            printDiscount(discount);
             printTax(tax);
             printTotalIncludingTax(priceAfterTax);
-            //Todo total paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("إجمالى المدفوع").toString(), "");
-            //Todo needs to be paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
-            //Todo remaining
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
+            printPaidAndChangeAmount(orderList.get("paid_amount"), priceAfterTax, orderList.get("change_amount"), orderList.get("order_payment_method"));
             printZatcaQrCode(databaseAccess);
+            printLine();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,115 +100,118 @@ public class OrderBitmap extends BaseActivity {
 
     @SuppressLint("NewApi")
     public Bitmap shiftZReport(EndShiftModel endShiftModel) {
-        f = new DecimalFormat("#.00");
-
-
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Z Report")));
+        Device device = DeviceFactory.getDevice();
+        line = device.getPrintLine();
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.z_report))));
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(getDateTime(new Date().getTime()))));
         printLine();
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Shift no  " + endShiftModel.getSequence())));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Username   " + endShiftModel.getUserName())));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_no))));
+        bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(endShiftModel.getSequence())));
+        bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(activity.getString(R.string.username)),PrintingHelper.createBitmapFromText(endShiftModel.getUserName())));
 
         printStartAndEndShiftTime(endShiftModel.getStartDateTime(), endShiftModel.getEndDateTime());
         printLine();
         printStartAndLeaveCash(endShiftModel.getStartCash(), endShiftModel.getLeaveCash());
         printNumOfTransactions(endShiftModel.getNum_successful_transaction(), endShiftModel.getNum_returned_transaction());
         printTransactionsAmount(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount(), endShiftModel.getTotalRefundsAmount() * -1);
-        printCashDiscrepancies(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
-        printPaymentDetails(endShiftModel.getTotal_amount() - endShiftModel.getTotalCardsAmount(), endShiftModel.getTotalCardsAmount());
+        printCashDiscrepancies(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal(), Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getInput());
+        printPaymentDetails(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal() - endShiftModel.getStartCash(), endShiftModel.getTotalCardsAmount());
         printCardTypesBreakdown(endShiftModel.getShiftDifferences());
         printLine();
-
-
         return creatGeneralBitmap();
     }
 
     private void printTransactionsAmount(double totalAmount, double totalRefundsAmount) {
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Transactions amount breakdown")));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.transactions_amount_breakdown))));
         printLine();
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Sales amount"));
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(totalAmount)));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 140)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.sales_amount)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(totalAmount)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Refunded amount"));
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(totalRefundsAmount)));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.refunded_amount)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(totalRefundsAmount)));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
         printLine();
         ArrayList<Bitmap> combinedBitmaps3 = new ArrayList<>();
-        combinedBitmaps3.add(PrintingHelper.createBitmapFromText("Total"));
-        combinedBitmaps3.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalAmount-totalRefundsAmount))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps3, 200)));
+        combinedBitmaps3.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
+        combinedBitmaps3.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalAmount - totalRefundsAmount))));
+        bitmaps.add(new PrinterModel(combinedBitmaps3.get(0),combinedBitmaps3.get(1)));
         printLine();
     }
 
     private void printCashDiscrepancies(double totalCash, double inputCash) {
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Cash discrepancies")));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.cash_discrepancies))));
         printLine();
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Actual total cash   " + zeroChecker(f.format(totalCash)))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Input total cash      " + zeroChecker(f.format(inputCash)))));
+
+        ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_cash_sales)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+
+        ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.input_total_cash)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(inputCash))));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
 
         printLine();
     }
 
     private void printNumOfTransactions(int numSuccessfulTransaction, int numReturnedTransaction) {
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Transactions number breakdown")));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.transactions_number_breakdown))));
 
         printLine();
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Successful transactions"));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.sales_transactions)));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 85)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Refunded transactions"));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.refunded_transactions)));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 100)));
-
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
         printLine();
     }
 
     private void printCardTypesBreakdown(HashMap<String, ShiftDifferences> shiftsCardTypesCalculations) {
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Card types breakdown")));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.card_payments_breakdown))));
 
         printLine();
-        double totalCard = 0.0;
+        double totalCard = 0.00;
         for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()) {
-            if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")) {
+            if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase(activity.getString(R.string.cash))) {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(shiftsCardTypeCalculations.getKey()));
-                combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(shiftsCardTypeCalculations.getValue().getReal()))));
-                //bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
-                bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
-                totalCard += Double.parseDouble(f.format(shiftsCardTypeCalculations.getValue().getReal()));
+                combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal()))));
+                bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
+                totalCard += Double.parseDouble(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal()));
             }
         }
         printLine();
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total"));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_card_payments)));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        //bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
-        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
     }
 
     private void printPaymentDetails(double totalCash, double totalCard) {
-        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText("Payment details")));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.payment_details))));
 
         printLine();
-        double totalPayments = 0.0;
+        double totalPayments = 0.00;
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Total cash"));
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalCash))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps1, 100)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_cash)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
-        totalPayments += Double.parseDouble(f.format(totalCash));
+        totalPayments += Double.parseDouble(Utils.trimLongDouble(totalCash));
         totalPayments += printTotalCard(totalCard);
         printLine();
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Total"));
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(totalPayments))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps2, 150)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalPayments))));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
 
         printLine();
     }
@@ -217,32 +219,32 @@ public class OrderBitmap extends BaseActivity {
     private void printStartAndLeaveCash(double startCash, double leaveCash) {
 
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText("Start cash"));
-        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(startCash))));
-        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.start_cash)));
+        combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(startCash))));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText("Leave cash"));
-        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(f.format(leaveCash))));
-        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.leave_cash)));
+        combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(leaveCash))));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
 
         printLine();
     }
 
     private void printStartAndEndShiftTime(long startDateTime, long endDateTime) {
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Shift start date time")));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_start_date_time))));
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(getDateTime(startDateTime))));
 
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("Shift end date time")));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_end_date_time))));
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(getDateTime(endDateTime))));
 
     }
 
     private double printTotalCard(double totalCard) {
         ArrayList<Bitmap> combinedBitmaps = new ArrayList<>();
-        combinedBitmaps.add(PrintingHelper.createBitmapFromText("Total card"));
+        combinedBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_card)));
         combinedBitmaps.add(PrintingHelper.createBitmapFromText(zeroChecker(String.valueOf(totalCard))));
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.combineMultipleBitmapsHorizontally(combinedBitmaps, 105)));
+        bitmaps.add(new PrinterModel(combinedBitmaps.get(0), combinedBitmaps.get(1)));
         return totalCard;
     }
 
@@ -251,37 +253,55 @@ public class OrderBitmap extends BaseActivity {
         int size = bitmaps.size();
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
+            Utils.addLog("datadata_width", bitmap.getWidth() + "");
             totalHeight += bitmap.getHeight();
             if (bitmap.getWidth() > width) {
                 width = bitmap.getWidth();
             }
         }
-        Log.i("datadata", totalHeight + "");
+        //Utils.addLog("datadata", totalHeight + "");
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(width, totalHeight, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
         canvas.drawColor(Color.WHITE);
         int lastY = 0;
+        int mirror=1;
+        String language = LocaleManager.getLanguage(activity);
+        if(language.equals("ar")){
+            mirror=-1;
+        }
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
-            if(bitmaps.get(i).type==1) {
+            if (bitmaps.get(i).type == 1) {
                 int startX = 0;
-                if (bitmaps.get(i).getSide() == 0) {
+                int side=bitmaps.get(i).getSide() * mirror;
+                if (side == 0) {
                     startX = width / 2 - bitmap.getWidth() / 2;
-                } else if (bitmaps.get(i).getSide() == 1) {
+                } else if (side == 1) {
                     startX = width - bitmap.getWidth();
                 }
                 canvas.drawBitmap(bitmaps.get(i).getBitmap(), startX, lastY, new Paint());
-            }else if(bitmaps.get(i).type==2) {
+            } else if (bitmaps.get(i).type == 2) {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
-                canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
-                canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
-            }else if(bitmaps.get(i).type==3) {
+                if(language.equals("ar")){
+                    canvas.drawBitmap(bitmaps.get(i).bitmap2, 0, lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
+                }else {
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
+                }
+            } else if (bitmaps.get(i).type == 3) {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
                 Bitmap bitmap3 = bitmaps.get(i).bitmap3;
-                canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
-                canvas.drawBitmap(bitmaps.get(i).bitmap2, (int)((double)width/2.0 - (double)bitmap2.getWidth()/2.0), lastY, new Paint());
-                canvas.drawBitmap(bitmaps.get(i).bitmap3, width - bitmap3.getWidth(), lastY, new Paint());
+                if(language.equals("ar")){
+                    canvas.drawBitmap(bitmaps.get(i).bitmap3, 0, lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
+                }else {
+                    canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
+                    canvas.drawBitmap(bitmaps.get(i).bitmap3, width - bitmap3.getWidth(), lastY, new Paint());
+                }
 
             }
             lastY += bitmap.getHeight();
@@ -291,49 +311,65 @@ public class OrderBitmap extends BaseActivity {
 
     private void printZatcaQrCode(DatabaseAccess databaseAccess) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration)));
+        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration, true)));
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceAfterTax)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى النهائى"));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.final_total)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceAfterTax != 0 ? Utils.trimLongDouble(priceAfterTax) : "0.00"));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
+    }
+
+    private void printPaidAndChangeAmount(String paidAmount, double priceAfterTax, String changeAmount, String orderPaymentMethod) {
+        if (orderPaymentMethod.equalsIgnoreCase("cash")) {
+            List<Bitmap> newBitmaps1 = new ArrayList<>();
+            newBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_paid)));
+            Utils.addLog("datadata_amount",paidAmount+" "+Utils.trimLongDouble(paidAmount)+" "+(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(paidAmount)));
+            bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
+            printLine();
+            List<Bitmap> newBitmaps3 = new ArrayList<>();
+            newBitmaps3.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.receipt_change)));
+            newBitmaps3.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(-1 * Double.parseDouble(changeAmount))));
+            bitmaps.add(new PrinterModel(newBitmaps3.get(0), newBitmaps3.get(1)));
+            printLine();
+        }
     }
 
     private void printTax(double tax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(tax)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("ضريبة القيمة المضافة"));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.value_added_tax)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(tax != 0 ? Utils.trimLongDouble(tax) : "0.00"));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
     private void printDiscount(String discount) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? f.format(discount) : String.valueOf(0)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الخصم"));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.discount)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(Double.parseDouble(discount) != 0 ? Utils.trimLongDouble(discount) : "0.00"));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
     private void printTotalExcludingTax(double priceBeforeTax) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(f.format(priceBeforeTax)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى قبل الضريبة"));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_before_tax)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(priceBeforeTax != 0 ? Utils.trimLongDouble(priceBeforeTax) : "0.00"));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
     private void printProducts(List<HashMap<String, String>> orderDetailsList) {
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الإجمالى"));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("السعر"));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الكمية"));
-        //newBitmaps.add(PrintingHelper.createBitmapFromText("    "));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0),newBitmaps.get(1),newBitmaps.get(2)));        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.quantity)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.price)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_product_invoice)));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1), newBitmaps.get(2)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
             //productCode = orderDetailsList.get(i).get("product_uuid");
@@ -342,60 +378,60 @@ public class OrderBitmap extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
             List<Bitmap> ProductBitmap = new ArrayList<>();
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(productTotalPrice)));
-            ProductBitmap.add(PrintingHelper.createBitmapFromText(f.format(Double.parseDouble(price))));
             ProductBitmap.add(PrintingHelper.createBitmapFromText(qty));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(Double.parseDouble(price))));
+            ProductBitmap.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(productTotalPrice)));
             //ProductBitmap.add(PrintingHelper.createBitmapFromText("    "));
-            bitmaps.add(new PrinterModel(ProductBitmap.get(0),ProductBitmap.get(1),ProductBitmap.get(2)));
-            bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(name)));
+            bitmaps.add(new PrinterModel(ProductBitmap.get(0), ProductBitmap.get(1), ProductBitmap.get(2)));
+            bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(name)));
             bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
         }
     }
 
     private void printInvoiceBarcode(String invoiceId) throws WriterException {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 400, 100)));
+        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 375, 100)));
     }
 
     private void printReceiptNo(String invoiceId) {
-        List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText("Receipt No "));
-        newBitmaps.add(PrintingHelper.createBitmapFromText(invoiceId));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(MultiLanguageApp.getApp().getString(R.string.receipt_no))));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(invoiceId)));
     }
 
     private void printType(String type) {
         if (!type.equals("invoice") && !type.isEmpty())
             bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(type)));
+        else {
+            bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(activity.getString(R.string.simplified_tax_invoice))));
+        }
     }
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {
         List<Bitmap> newBitmaps = new ArrayList<>();
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("رقم السجل التجارى :"));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
     private void printMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
-        newBitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr","")));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 
     private String zeroChecker(String valueToBePrinted) {
-        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.0") ? "0" : valueToBePrinted;
+        return valueToBePrinted.equalsIgnoreCase(".00") || valueToBePrinted.equalsIgnoreCase("0.00") ? "0" : valueToBePrinted;
     }
 
     private void printLine() {
-        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText("----------------------------------------")));
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
     }
 
     private String getDateTime(Long dateTimeMillisecond) {
         Date date = new Date(dateTimeMillisecond);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.UK);
-        String formattedDate = sdf.format(date);
-        return formattedDate;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+        return sdf.format(date);
     }
 
 }

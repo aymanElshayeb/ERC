@@ -1,11 +1,8 @@
 <network-security-config xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <domain-config>
-        <domain-config cleartextTrafficPermitted="true">
-            <trust-anchors>
-                <certificates src="system" />
-                <certificates src="user" />
-            </trust-anchors>
+        <domain-config cleartextTrafficPermitted="false">
+
             <domain includeSubdomains="true">8.213.27.135</domain>
             <domain includeSubdomains="true">gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa</domain>
         </domain-config>

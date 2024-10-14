@@ -3,13 +3,16 @@ package com.app.smartpos.settings.end_shift;
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,14 +23,17 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
 import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class EndShiftStep2 extends AppCompatActivity {
+public class EndShiftStep2 extends WorkerActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
@@ -58,22 +64,18 @@ public class EndShiftStep2 extends AppCompatActivity {
         for (int i = 0; i < keys.size(); i++) {
             ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
             if( keys.get(i).equals("CASH")){
-                addView(keys.get(i) + "-" + getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
-                addView(keys.get(i) + "-" + getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
+                addView(getString(R.string.total_cash_sales_amount), trimLongDouble(shiftDifferences.getReal()));
+                addView(getString(R.string.input_total_cash), trimLongDouble(shiftDifferences.getInput()));
+                addView(getString(R.string.cash_amount_discrepancy), trimLongDouble(shiftDifferences.getDiff()));
             }else{
                 totalCard+=shiftDifferences.getReal();
             }
         }
-        addView(getResources().getString(R.string.total_card), Utils.trimLongDouble(totalCard) + "");
-        addView(getResources().getString(R.string.total_refunds), Utils.trimLongDouble(endShiftModel.getTotalRefunds()) + "");
+        addView(getResources().getString(R.string.total_card_amount), Utils.trimLongDouble(totalCard) + "");
+        addView(getResources().getString(R.string.total_refunds), String.valueOf(endShiftModel.getTotalRefunds()));
         addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
-
         addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount()));
-
-        //TODO: Add Total Refunds Amount
-
         addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount() * -1));
         addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
         addView(getResources().getString(R.string.leave_cash), trimLongDouble(endShiftModel.getLeaveCash()));
@@ -87,10 +89,11 @@ public class EndShiftStep2 extends AppCompatActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_name), SharedPrefUtils.getName(this));
+        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
+            enqueueUploadWorkers();
         });
         printZReport.setOnClickListener(view -> {
             onPrintZReport();
@@ -104,6 +107,7 @@ public class EndShiftStep2 extends AppCompatActivity {
         TextView textTv = root_view.findViewById(R.id.text_tv);
         TextView valueTv = root_view.findViewById(R.id.value_tv);
 
+        valueTv.setGravity(LocaleManager.getLanguage(this).equals("ar") ? Gravity.START : Gravity.END);
         textTv.setText(text);
         valueTv.setText(value);
 
@@ -134,7 +138,12 @@ public class EndShiftStep2 extends AppCompatActivity {
 
     private void onPrintZReport () {
         Device device = DeviceFactory.getDevice();
-        device.printZReport(endShiftModel);
+        try {
+            Bitmap bitmap=new OrderBitmap(this).shiftZReport(endShiftModel);
+            device.printZReport(bitmap);
+        }catch (Exception e){
+            Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.app.smartpos.utils.printing;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +13,9 @@ import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
+import com.app.smartpos.common.DeviceFactory.Device;
+import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.orders.PrinterModel;
@@ -51,6 +55,19 @@ public class PrintingHelper {
         format.putInt("offset", 50);
         format.putInt("width", 300);
         format.putInt("height", 300);
+        format.putString("text", "ACHAT");
+        format.putInt("YAlign", 1);
+        format.putInt("font", 2);
+        format.putBoolean("fontBold", true);
+        format.putString("fontName", fontPath);
+        return format;
+    }
+    public static Bundle getImageBundle(Bitmap bitmap) {
+        Bundle format = new Bundle();
+        format.putInt("align", 1);
+        format.putInt("offset", 50);
+        format.putInt("width", bitmap.getWidth());
+        format.putInt("height", bitmap.getHeight());
         format.putString("text", "ACHAT");
         format.putInt("YAlign", 1);
         format.putInt("font", 2);
@@ -124,13 +141,13 @@ public class PrintingHelper {
         return combinedBitmap;
     }
 
-    public static PrinterData createBitmap(DatabaseAccess databaseAccess, String id,String printType) {
+    public static PrinterData createBitmap(DatabaseAccess databaseAccess, Activity activity, String id, String printType) {
         databaseAccess.open();
         String currency = databaseAccess.getCurrency();
         databaseAccess.open();
         //HashMap<String, String> orderDetails = databaseAccess.getOrderDetailsList(getIntent().getStringExtra("id")).get(0);
         HashMap<String, String> orderLitItem = databaseAccess.getOrderListByOrderId(id);
-        //Log.i("datadata",map.toString());
+        //Utils.addLog("datadata",map.toString());
         String invoice_id = orderLitItem.get("invoice_id");
         String customer_name = orderLitItem.get("customer_name");
         String order_date = orderLitItem.get("order_date");
@@ -140,9 +157,10 @@ public class PrintingHelper {
         String discount = orderLitItem.get("discount");
         databaseAccess.open();
         double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
+        Utils.addLog("datadata_total_2",price_after_tax+"");
         double price_before_tax = price_after_tax-tax;
 
-        OrderBitmap orderBitmap = new OrderBitmap();
+        OrderBitmap orderBitmap = new OrderBitmap(activity);
         Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType);
         return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
 

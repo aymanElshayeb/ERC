@@ -21,7 +21,6 @@
             android:text="@string/total_cash"
             android:textColor="@color/light_purple"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@id/value_tv"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,11 +34,12 @@
             android:text="00.00"
             android:textColor="@color/black"
             android:textSize="17sp"
-            app:layout_constraintStart_toEndOf="@id/text_tv"
+            android:textDirection="ltr"
+            android:gravity="start"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:gravity="end"
             android:layout_marginVertical="8dp"/>
 
 

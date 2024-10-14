@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                                     android:layout_marginTop="25dp"
                                     android:layout_weight="1"
                                     android:fontFamily="@font/sailec_regular"
-                                    android:text="Download Synchronization"
+                                    android:text="@string/download_synchronization"
                                     android:textColor="#bcbcbc"
                                     android:textSize="18sp" />
 
@@ -110,37 +110,85 @@
                         app:cardElevation="0dp"
                         app:layout_collapseMode="pin">
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center">
+                            android:orientation="horizontal"
+                            android:weightSum="2">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="horizontal"
-                                android:weightSum="2">
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_margin="10dp"
+                                android:src="@drawable/data_import" />
 
-                                <ImageView
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:layout_margin="10dp"
-                                    android:src="@drawable/data_import" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/sailec_regular"
+                                android:text="@string/upload_synchronization"
+                                android:textColor="#bcbcbc"
+                                android:textSize="18sp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="25dp"
-                                    android:layout_weight="1"
-                                    android:fontFamily="@font/sailec_regular"
-                                    android:text="Upload Synchronization"
-                                    android:textColor="#bcbcbc"
-                                    android:textSize="18sp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-                            </LinearLayout>
+                </LinearLayout>
 
+            </LinearLayout>
 
-                        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="7.5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/download_products_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:background="#FFFFFF"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:theme="@style/ThemeOverlay.AppCompat.Light"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp"
+                        app:layout_collapseMode="pin">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_margin="10dp"
+                                android:src="@drawable/ic_products_sync" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/sailec_regular"
+                                android:text="@string/download_product_images"
+                                android:textColor="#bcbcbc"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -148,8 +196,19 @@
             </LinearLayout>
 
 
-
-
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

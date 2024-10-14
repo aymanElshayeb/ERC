@@ -196,6 +196,7 @@
                     android:layout_marginStart="16dp"
                     android:fontFamily="@font/inter_bold"
                     android:text="200 SAR"
+                    android:textDirection="ltr"
                     android:textColor="@color/black"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
