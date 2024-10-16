@@ -434,48 +434,48 @@ public class DatabaseAccess {
 
         ContentValues values = new ContentValues();
 
-        values.put("image_url", productValues.get("image_url")==null?null:productValues.get("image_url").toString());
-        values.put("base64_image", productValues.get("base64_image")==null?null:productValues.get("base64_image").toString());
-        values.put("image_thumbnail_url", productValues.get("image_thumbnail_url")==null?null:productValues.get("image_thumbnail_url").toString());
-        values.put("image_thumbnail", productValues.get("image_thumbnail")==null?null:productValues.get("image_thumbnail").toString());
-        values.put("product_uuid", productValues.get("product_uuid")==null?null:productValues.get("product_uuid").toString());
+        values.put("image_url", productValues.get("image_url") == null ? null : productValues.get("image_url").toString());
+        values.put("base64_image", productValues.get("base64_image") == null ? null : productValues.get("base64_image").toString());
+        values.put("image_thumbnail_url", productValues.get("image_thumbnail_url") == null ? null : productValues.get("image_thumbnail_url").toString());
+        values.put("image_thumbnail", productValues.get("image_thumbnail") == null ? null : productValues.get("image_thumbnail").toString());
+        values.put("product_uuid", productValues.get("product_uuid") == null ? null : productValues.get("product_uuid").toString());
 
-        Utils.addLog("datadata",productValues.toString());
+        Utils.addLog("datadata", productValues.toString());
         Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + productValues.get("product_uuid").toString() + "'", null);
 
         long check;
         if (cursor.moveToFirst()) {
             do {
                 check = database.update("product_image", values, "product_uuid=?", new String[]{productValues.get("product_uuid").toString()});
-                Utils.addLog("datadata_check",check+"");
+                Utils.addLog("datadata_check", check + "");
             } while (cursor.moveToNext());
-        }else{
-            check=database.insert("product_image",null,values);
+        } else {
+            check = database.insert("product_image", null, values);
         }
 
         database.close();
 
-        return check!=-1;
+        return check != -1;
         //if data insert success, its return 1, if failed return -1
 
     }
 
-    public String getProductImage(boolean isInternetConnected,String product_uuid) {
+    public String getProductImage(boolean isInternetConnected, String product_uuid) {
 
         Cursor cursor = database.rawQuery("SELECT * FROM product_image WHERE product_uuid= '" + product_uuid + "'", null);
-        String image=null;
+        String image = null;
         if (cursor.moveToFirst()) {
             do {
-                if(isInternetConnected){
-                    image=cursor.getString(cursor.getColumnIndex("image_thumbnail_url"));
-                    if (image==null){
-                        image=cursor.getString(cursor.getColumnIndex("image_url"));
+                if (isInternetConnected) {
+                    image = cursor.getString(cursor.getColumnIndex("image_thumbnail_url"));
+                    if (image == null) {
+                        image = cursor.getString(cursor.getColumnIndex("image_url"));
                     }
                 }
-                if(image==null) {
+                if (image == null) {
                     image = cursor.getString(cursor.getColumnIndex("image_thumbnail"));
-                    if (image==null) {
-                        image= cursor.getString(cursor.getColumnIndex("base64_image"));
+                    if (image == null) {
+                        image = cursor.getString(cursor.getColumnIndex("base64_image"));
                     }
                 }
 
@@ -698,7 +698,7 @@ public class DatabaseAccess {
 
         List<HashMap<String, String>> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
-            HashMap<String,String> hashMap = new HashMap<>();
+            HashMap<String, String> hashMap = new HashMap<>();
             do {
                 hashMap.put("id", cursor.getString(cursor.getColumnIndex("id")));
                 hashMap.put("name_en", cursor.getString(cursor.getColumnIndex("name_en")));
@@ -716,6 +716,7 @@ public class DatabaseAccess {
         database.close();
         return list;
     }
+
     public HashMap<String, String> getUserWithEmail(String email) {
 
         Cursor cursor = database.rawQuery("SELECT * FROM user WHERE email='" + email + "'", null);
@@ -740,8 +741,6 @@ public class DatabaseAccess {
         database.close();
         return hashMap;
     }
-
-
 
 
     //get product weight unit name
@@ -822,7 +821,7 @@ public class DatabaseAccess {
 
 
     //Add product into cart
-    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock,String product_uuid,String description) {
+    public int addToCart(String product_id, String weight, String weight_unit, String price, int qty, String stock, String product_uuid, String description) {
 
 
         Cursor result = database.rawQuery("SELECT * FROM product_cart WHERE product_id='" + product_id + "'", null);
@@ -956,7 +955,7 @@ public class DatabaseAccess {
     }
 
     //insert order in order list
-    public void insertOrder(String order_id, JSONObject obj, Context context,boolean deleteCart, DatabaseAccess databaseAccess) {
+    public void insertOrder(String order_id, JSONObject obj, Context context, boolean deleteCart, DatabaseAccess databaseAccess) {
 
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
@@ -980,10 +979,9 @@ public class DatabaseAccess {
             double paid_amount = obj.getDouble("paid_amount");
             double change_amount = obj.getDouble("change_amount");
 //            String tax_number = obj.getString("tax_number");
-            String original_order_id = obj.has("original_order_id")?obj.getString("original_order_id"):"";
+            String original_order_id = obj.has("original_order_id") ? obj.getString("original_order_id") : "";
             String operation_type = obj.getString("operation_type");
             String operation_sub_type = obj.getString("operation_sub_type");
-
 
 
             values.put("invoice_id", order_id);
@@ -1013,7 +1011,7 @@ public class DatabaseAccess {
 
             database.insert("order_list", null, values);
 
-            if(deleteCart)
+            if (deleteCart)
                 database.delete("product_cart", null, null);
 
 
@@ -1040,15 +1038,14 @@ public class DatabaseAccess {
                 String product_id = getProductIdByUuid(product_uuid);
                 double taxPercentage;
                 databaseAccess.open();
-                if(!product_description.isEmpty()){
+                if (!product_description.isEmpty()) {
                     HashMap<String, String> shop = databaseAccess.getShopInformation();
                     taxPercentage = Double.parseDouble(shop.get("shop_tax"));
-                }
-                else
-                    taxPercentage= getProductTax(product_id);
+                } else
+                    taxPercentage = getProductTax(product_id);
 //                String stock = jo.getString("stock");
-                double in_tax_total = Double.parseDouble(product_price)*Double.parseDouble(product_qty);
-                double ex_tax_total =in_tax_total-((in_tax_total*taxPercentage)/(100+taxPercentage)) ;
+                double in_tax_total = Double.parseDouble(product_price) * Double.parseDouble(product_qty);
+                double ex_tax_total = in_tax_total - ((in_tax_total * taxPercentage) / (100 + taxPercentage));
                 int updated_stock = Integer.MAX_VALUE - Integer.parseInt(product_qty);
 
 
@@ -1151,13 +1148,13 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> getOrderListPaginated(int offet,boolean isReund) {
+    public ArrayList<HashMap<String, String>> getOrderListPaginated(int offet, boolean isReund) {
         ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
-        String where="";
-        if(isReund){
-            where = "Where operation_type = 'invoice' OR order_status = '"+Constant.REFUNDED+"'";
+        String where = "";
+        if (isReund) {
+            where = "Where operation_type = 'invoice' OR order_status = '" + Constant.REFUNDED + "'";
         }
-        Cursor cursor = database.rawQuery("SELECT * FROM order_list "+where+" ORDER BY order_id DESC LIMIT 10 OFFSET "+offet, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list " + where + " ORDER BY order_id DESC LIMIT 10 OFFSET " + offet, null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
@@ -1689,8 +1686,8 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 product_Tax = cursor.getDouble(cursor.getColumnIndex("product_tax"));
-                if(cursor.getString(cursor.getColumnIndex("product_uuid")).equals("CUSTOM_ITEM")){
-                    product_Tax=getShopTax();
+                if (cursor.getString(cursor.getColumnIndex("product_uuid")).equals("CUSTOM_ITEM")) {
+                    product_Tax = getShopTax();
                 }
 
             } while (cursor.moveToNext());
@@ -1714,8 +1711,8 @@ public class DatabaseAccess {
 
 
                 currency = cursor.getString(cursor.getColumnIndex("shop_currency")) + " ";
-                if(LocaleManager.getLanguage(MultiLanguageApp.getApp()).equals("ar")){
-                    currency = MultiLanguageApp.getApp().getString(R.string.sar)+" ";
+                if (LocaleManager.getLanguage(MultiLanguageApp.getApp()).equals("ar")) {
+                    currency = MultiLanguageApp.getApp().getString(R.string.sar) + " ";
                 }
 
             } while (cursor.moveToNext());
@@ -2134,16 +2131,16 @@ public class DatabaseAccess {
 
 
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + invoice_id + "'", null);
-        Utils.addLog("datadata_tax2",cursor.getCount()+"");
+        Utils.addLog("datadata_tax2", cursor.getCount() + "");
 
         if (cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") double price = Double.parseDouble(cursor.getString(cursor.getColumnIndex("product_price")));
                 @SuppressLint("Range") int qty = Integer.parseInt(cursor.getString(cursor.getColumnIndex("product_qty")));
-                @SuppressLint("Range") double tax = 1.0+Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax_percentage")))/100.0;
-                double sub_total = (price-(price/tax)) * qty;
+                @SuppressLint("Range") double tax = 1.0 + Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax_percentage"))) / 100.0;
+                double sub_total = (price - (price / tax)) * qty;
                 total_price = total_price + sub_total;
-                Utils.addLog("datadata_tax2",price+" "+qty+" "+tax +" "+total_price);
+                Utils.addLog("datadata_tax2", price + " " + qty + " " + tax + " " + total_price);
 
             } while (cursor.moveToNext());
         } else {
@@ -2535,7 +2532,7 @@ public class DatabaseAccess {
                 map.put("product_count", "0");
 
                 if (!active.equals("1")) {
-                    map=null;
+                    map = null;
                 }
             } while (cursor.moveToNext());
         }
@@ -2546,8 +2543,8 @@ public class DatabaseAccess {
 
     public Boolean checkCustomProductInCart() {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'CUSTOM_ITEM'", null);
-        boolean exist=cursor.moveToFirst();
-        Utils.addLog("datadata_exist",exist+"");
+        boolean exist = cursor.moveToFirst();
+        Utils.addLog("datadata_exist", exist + "");
         cursor.close();
         database.close();
         return exist;
@@ -2973,8 +2970,29 @@ public class DatabaseAccess {
 
         values.put("ecr_code", registrationResponseDto.getEcrCode());
         values.put("merchant_id", registrationResponseDto.getMerchant().getMerchantId());
-        values.put("merchant_logo", registrationResponseDto.getMerchant().getLogo() != null? registrationResponseDto.getMerchant().getLogo() : "");
+        values.put("merchant_logo", registrationResponseDto.getMerchant().getLogo() != null ? registrationResponseDto.getMerchant().getLogo() : "");
         values.put("merchant_tax_number", registrationResponseDto.getMerchant().getVATNumber());
+
+        long check = database.insert("configuration", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        if (check == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @SuppressLint("Range")
+    public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("ecr_code", ecr_code);
+        values.put("merchant_id", merchant_id);
+        values.put("merchant_logo", merchant_logo);
+        values.put("merchant_tax_number", merchant_tax_number);
 
         long check = database.insert("configuration", null, values);
         database.close();
@@ -3009,7 +3027,7 @@ public class DatabaseAccess {
         }
         database.close();
         try {
-            sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US,"%010d", nextValue);
+            sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US, "%010d", nextValue);
             sequenceMap.put("sequence", sequence);
             sequenceMap.put("next_value", String.valueOf(nextValue));
             sequenceMap.put("sequence_id", String.valueOf(sequenceId));
@@ -3211,6 +3229,20 @@ public class DatabaseAccess {
         values.put("shop_email", registrationResponseDto.getMerchant().getCompanyEmail());
         values.put("shop_name", registrationResponseDto.getMerchant().getName());
         values.put("tax", registrationResponseDto.getTax().getPercentage());
+
+        database.insert("shop", null, values);
+    }
+
+    public void addShop(String companyPhone, String currency, String companyEmail, String name, double percentage, DatabaseAccess databaseAccess) {
+        deleteShopInfo();
+        databaseAccess.open();
+        ContentValues values = new ContentValues();
+        values.put("shop_address", "Riyadh, Saudi Arabia");
+        values.put("shop_contact", companyPhone);
+        values.put("shop_currency", currency);
+        values.put("shop_email", companyEmail);
+        values.put("shop_name", name);
+        values.put("tax", percentage);
 
         database.insert("shop", null, values);
     }
