@@ -15,6 +15,8 @@ import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Headers;
@@ -52,20 +54,23 @@ public class LastSyncWorker extends Worker  {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                String responseBody = response.body().string();
-                Gson gson=new Gson();
-                ServiceResult<LastSyncResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<LastSyncResponseDto>>(){}.getType());
-                LastSyncResponseDto lastSyncResponseDto=result.getData().getReturnedObj().get(0);
+
+                //Gson gson=new Gson();
+                //ServiceResult<LastSyncResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<LastSyncResponseDto>>(){}.getType());
+                JSONObject responseBody = new JSONObject(response.body().string());
+                JSONObject returnedObj=responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+                String invoiceBusinessId = returnedObj.getString("invoiceBusinessId");
+                String shiftBusinessId = returnedObj.getString("shiftBusinessId");
                 Data data=new Data.Builder().
-                        putString("invoiceBusinessId",lastSyncResponseDto.getInvoiceBusinessId()).
-                        putString("shiftBusinessId",lastSyncResponseDto.getShiftBusinessId()).
+                        putString("invoiceBusinessId",invoiceBusinessId).
+                        putString("shiftBusinessId",shiftBusinessId).
                         putString("Authorization",authorization).
                         build();
                 return Result.success(data); // Return success if the upload is successful
             } else {
                 return Result.failure(); // Retry the work if the server returns an error
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
         }

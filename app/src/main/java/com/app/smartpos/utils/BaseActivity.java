@@ -11,6 +11,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,9 @@ import java.util.Locale;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 import static com.app.smartpos.utils.LocaleManager.changeLang;
+
+import com.app.smartpos.BuildConfig;
+import com.app.smartpos.common.RootUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -105,6 +109,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkConnectivity();
+        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
+        if(!access){
+            finishAffinity();
+        }
     }
 
     @Override

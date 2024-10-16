@@ -17,6 +17,8 @@ import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.FormBody;
@@ -63,21 +65,26 @@ public class ProductImagesSizeWorker extends Worker {
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 Utils.addLog("datadata_worker","success");
-                String responseBody = response.body().string();
-                Utils.addLog("datadata_worker",responseBody);
-                Gson gson=new Gson();
-                ServiceResult<ProductImagesResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<ProductImagesResponseDto>>(){}.getType());
-                ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
+
+
+                //ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
+                JSONObject responseBody = new JSONObject(response.body().string());
+                Utils.addLog("datadata_worker",responseBody.toString());
+                JSONObject returnedObj=responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+                long imagesSize = returnedObj.getLong("imagesSize");
+                String newUpdateTimestamp = returnedObj.getString("newUpdateTimestamp");
+
+
                 Data data=new Data.Builder().
-                        putLong("imagesSize",productImagesResponseDto.getImagesSize()).
-                        putString("newUpdateTimestamp",productImagesResponseDto.getNewUpdateTimestamp()).
+                        putLong("imagesSize",imagesSize).
+                        putString("newUpdateTimestamp",newUpdateTimestamp).
                         build();
                 return Result.success(data); // Return success if the response is successful
             } else {
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
         }

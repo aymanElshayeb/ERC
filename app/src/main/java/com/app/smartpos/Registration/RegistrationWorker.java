@@ -86,7 +86,7 @@ public class RegistrationWorker extends Worker {
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
 
-                databaseAccess.addShop(returnedObj.getJSONObject("merchant1").getString("companyPhone"), returnedObj.getJSONObject("merchant").getString("currency"), returnedObj.getJSONObject("merchant").getString("companyEmail"), returnedObj.getJSONObject("merchant").getString("name"), returnedObj.getJSONObject("tax").getDouble("percentage"), databaseAccess);
+                databaseAccess.addShop(returnedObj.getJSONObject("merchant").getString("companyPhone"), returnedObj.getJSONObject("merchant").getString("currency"), returnedObj.getJSONObject("merchant").getString("companyEmail"), returnedObj.getJSONObject("merchant").getString("name"), returnedObj.getJSONObject("tax").getDouble("percentage"), databaseAccess);
                 String authorization = returnedObj.getString("token");
                 Data outputData = new Data.Builder().
                         putString("Authorization", authorization).
