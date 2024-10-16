@@ -6,6 +6,7 @@ import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
 
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,6 +39,9 @@ public class CheckCompaniesViewModel extends ViewModel {
     }
 
     public void start(String email) {
+        Log.i("datadata_register",CHECK_COMPANY_URL + "?email=" + email);
+        Log.i("datadata_register","apikey " + API_KEY);
+        Log.i("datadata_register","Authorization "+SharedPrefUtils.getAuthorization() );
             AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
                     .addHeaders("apikey", API_KEY)
                     .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
@@ -67,6 +71,8 @@ public class CheckCompaniesViewModel extends ViewModel {
                         @Override
                         public void onError(ANError anError) {
                             Utils.addLog("datadata_error", anError.getMessage() + " ");
+                            Toast.makeText(MultiLanguageApp.getApp(),anError.getMessage() + " " , Toast.LENGTH_SHORT).show();
+                            liveData.postValue(null);
                         }
                     });
 

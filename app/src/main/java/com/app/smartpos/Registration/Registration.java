@@ -8,10 +8,8 @@ import static com.app.smartpos.common.Utils.isValidEmail;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,11 +55,11 @@ public class Registration extends BaseActivity {
     Button actionBtn;
     TextView changeEmailTv;
     ProgressBar loadingPb;
-    private String deviceId;
     CheckCompaniesViewModel companiesViewModel;
     LinkedList<CompanyModel> companyList = new LinkedList<>();
     String tenantId = "";
-    private boolean isPasswordShown=false;
+    private String deviceId;
+    private boolean isPasswordShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,10 +158,10 @@ public class Registration extends BaseActivity {
 
         eyeIm.setOnClickListener(view -> {
             isPasswordShown = !isPasswordShown;
-            if(isPasswordShown){
+            if (isPasswordShown) {
                 eyeIm.setAlpha(1.0f);
                 password.setTransformationMethod(null);
-            }else{
+            } else {
                 eyeIm.setAlpha(0.5f);
                 password.setTransformationMethod(new PasswordTransformationMethod());
             }
@@ -171,34 +169,39 @@ public class Registration extends BaseActivity {
         });
 
         companiesViewModel.getLiveData().observe(this, companyModels -> {
-            actionBtn.setVisibility(View.VISIBLE);
-            loadingPb.setVisibility(View.GONE);
-            companyList = companyModels;
-            if (companyModels.size() > 0) {
-                tenantId = companyModels.get(0).getCompanyCode();
-            }
-
-            if (companyModels.isEmpty()) {
-                Toast.makeText(this, getResources().getString(R.string.please_enter_a_valid_email), Toast.LENGTH_SHORT).show();
+            if (companyModels == null) {
+                actionBtn.setVisibility(View.VISIBLE);
+                loadingPb.setVisibility(View.GONE);
             } else {
-                spinner.setVisibility(View.VISIBLE);
-                password.setVisibility(View.VISIBLE);
-                eyeIm.setVisibility(View.VISIBLE);
-                changeEmailTv.setVisibility(View.VISIBLE);
-                email.setEnabled(false);
-                email.setAlpha(0.5f);
-
-                password.setText("");
-                actionBtn.setText(getString(R.string.register));
-                ArrayList<String> arrayList = new ArrayList<>();
-
-                for (int i = 0; i < companyModels.size(); i++) {
-                    arrayList.add(companyModels.get(i).getCompanyName());
+                actionBtn.setVisibility(View.VISIBLE);
+                loadingPb.setVisibility(View.GONE);
+                companyList = companyModels;
+                if (companyModels.size() > 0) {
+                    tenantId = companyModels.get(0).getCompanyCode();
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayList);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
+                if (companyModels.isEmpty()) {
+                    Toast.makeText(this, getResources().getString(R.string.please_enter_a_valid_email), Toast.LENGTH_SHORT).show();
+                } else {
+                    spinner.setVisibility(View.VISIBLE);
+                    password.setVisibility(View.VISIBLE);
+                    eyeIm.setVisibility(View.VISIBLE);
+                    changeEmailTv.setVisibility(View.VISIBLE);
+                    email.setEnabled(false);
+                    email.setAlpha(0.5f);
+
+                    password.setText("");
+                    actionBtn.setText(getString(R.string.register));
+                    ArrayList<String> arrayList = new ArrayList<>();
+
+                    for (int i = 0; i < companyModels.size(); i++) {
+                        arrayList.add(companyModels.get(i).getCompanyName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                }
             }
         });
 
