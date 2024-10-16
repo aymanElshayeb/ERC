@@ -86,13 +86,17 @@ public class RegistrationWorker extends Worker {
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
 
-                databaseAccess.addShop(returnedObj.getJSONObject("merchant").getString("companyPhone"), returnedObj.getJSONObject("merchant").getString("currency"), returnedObj.getJSONObject("merchant").getString("companyEmail"), returnedObj.getJSONObject("merchant").getString("name"), returnedObj.getJSONObject("tax").getDouble("percentage"), databaseAccess);
+                databaseAccess.addShop(returnedObj.getJSONObject("merchant1").getString("companyPhone"), returnedObj.getJSONObject("merchant").getString("currency"), returnedObj.getJSONObject("merchant").getString("companyEmail"), returnedObj.getJSONObject("merchant").getString("name"), returnedObj.getJSONObject("tax").getDouble("percentage"), databaseAccess);
                 String authorization = returnedObj.getString("token");
                 Data outputData = new Data.Builder().
                         putString("Authorization", authorization).
                         putString("ecrCode", returnedObj.getString("ecrCode")).
                         build();
-                databaseAccess.addConfiguration(returnedObj.getString("ecrCode"), returnedObj.getJSONObject("merchant").getString("merchantId"), returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "", returnedObj.getJSONObject("merchant").getString("VATNumber"));
+                String ecr=returnedObj.getString("ecrCode");
+                String merchantId=returnedObj.getJSONObject("merchant").getString("merchantId");
+                String logo=returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
+                String vatNumber=returnedObj.getJSONObject("merchant").getString("VATNumber");
+                databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber);
                 databaseAccess.open();
                 return Result.success(outputData);
             } else {
