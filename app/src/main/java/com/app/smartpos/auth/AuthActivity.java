@@ -31,21 +31,13 @@ public class AuthActivity extends WorkerActivity {
 
         setContentView(R.layout.activity_auth);
 
-
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        HashMap<String, String> conf = databaseAccess.getConfiguration();
-        if (conf.isEmpty() && !SharedPrefUtils.isRegistered(this)) {
+        if (!SharedPrefUtils.isRegistered(this)) {
             Intent intent = new Intent(AuthActivity.this, Registration.class);
             startActivity(intent);
 //            RegistrationDialog dialog = new RegistrationDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
 //            CompanyCheckDialog dialog = new CompanyCheckDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
-        } else {
-            String merchantId = conf.get("merchant_id");
-            //String ecrCode=conf.get("ecr_code");
-            SharedPrefUtils.setMerchantId(this, merchantId);
         }
 
         final PackageManager pm = getPackageManager();
