@@ -8,8 +8,8 @@ public class Constant {
 
     // API KEY
     public static final String API_KEY = "BuildConfig.API_KEY";
-    public static final String BASE_URL = "https://uat.qaema.com/ecr";
-    //public static final String BASE_URL = "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1";
+    //public static final String BASE_URL = "https://uat.qaema.com/ecr";
+    public static final String BASE_URL = "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1";
     public static final String LOGIN_URL = BASE_URL + "/auth/user";
     public static final String KEY_URL = BASE_URL + "/auth/validate";
 

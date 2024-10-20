@@ -5,11 +5,8 @@ import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.KEY_URL;
 import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
-import static com.app.smartpos.common.Utils.isValidEmail;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -50,6 +47,7 @@ import java.util.LinkedList;
 
 public class Registration extends BaseActivity {
     EditText email;
+    EditText tenantIdEt;
     ImageView eyeIm;
     Spinner spinner;
     EditText password;
@@ -76,6 +74,7 @@ public class Registration extends BaseActivity {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         email = findViewById(R.id.email_et);
+        tenantIdEt = findViewById(R.id.tenant_et);
         spinner = findViewById(R.id.company_spinner);
         password = findViewById(R.id.password_et);
         changeEmailTv = findViewById(R.id.change_email_tv);
@@ -87,6 +86,10 @@ public class Registration extends BaseActivity {
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
+        email.setText("kohoru@polkaroad.net");
+        tenantIdEt.setText("cr4333453353");
+        password.setText("01111Mm&");
+
         changeEmailTv.setOnClickListener(view -> {
             tenantId = "";
             spinner.setVisibility(View.GONE);
@@ -97,58 +100,18 @@ public class Registration extends BaseActivity {
             email.setAlpha(1.0f);
             actionBtn.setText(getResources().getString(R.string.check_email));
         });
-        email.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isValidEmail(email.getText().toString().trim())) {
-                    actionBtn.setEnabled(true);
-                    actionBtn.setAlpha(1);
-
-                } else {
-                    actionBtn.setEnabled(false);
-                    actionBtn.setAlpha(0.5f);
-                }
-            }
-        });
-        password.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!password.getText().toString().trim().isEmpty()) {
-                    actionBtn.setEnabled(true);
-                    actionBtn.setAlpha(1);
-
-                } else {
-                    actionBtn.setEnabled(false);
-                    actionBtn.setAlpha(0.5f);
-                }
-            }
-        });
 
         actionBtn.setOnClickListener(view -> {
-            if (!email.getText().toString().isEmpty() && !tenantId.isEmpty() && !password.getText().toString().isEmpty()) {
+            if (email.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
+            }else if (tenantIdEt.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.company_empty), Toast.LENGTH_SHORT).show();
+            }else if (password.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
+            } else {
                 actionBtn.setVisibility(View.GONE);
                 loadingPb.setVisibility(View.VISIBLE);
                 enqueueDownloadAndReadWorkers();
-            } else {
-                if (email.getText().toString().isEmpty()) {
-                    Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
-                } else {
-                    actionBtn.setVisibility(View.GONE);
-                    loadingPb.setVisibility(View.VISIBLE);
-                    companiesViewModel.start(email.getText().toString().trim());
-                }
             }
         });
 
@@ -225,6 +188,7 @@ public class Registration extends BaseActivity {
         //password 01111Mm&
         Data apiKey = new Data.Builder().
                 putString("url", KEY_URL).
+                putString("tenantId", tenantIdEt.getText().toString()).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 build();
@@ -269,7 +233,7 @@ public class Registration extends BaseActivity {
 
         WorkContinuation continuation = WorkManager.getInstance(this)
                 .beginWith(apiKeyRequest)
-                .then(apiKeyRequest)
+                .then(registerRequest)
                 .then(downloadRequest)
                 .then(decompressRequest)
                 .then(readRequest);
