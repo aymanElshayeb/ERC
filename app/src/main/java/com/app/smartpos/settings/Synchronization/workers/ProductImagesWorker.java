@@ -1,6 +1,5 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
 
@@ -10,6 +9,7 @@ import androidx.work.WorkerParameters;
 
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,7 +49,7 @@ public class ProductImagesWorker extends Worker {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("tenantId", tenantId);
             connection.setRequestProperty("Authorization", authorization);
-            connection.setRequestProperty("apikey", API_KEY);
+            connection.setRequestProperty("apikey", SharedPrefUtils.getApiKey());
             connection.setRequestProperty("ecrCode", ecrCode);
             Utils.addLog("datadata_download", "request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

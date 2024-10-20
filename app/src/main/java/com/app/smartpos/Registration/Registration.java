@@ -8,6 +8,7 @@ import static com.app.smartpos.Constant.SYNC_URL;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,6 +60,7 @@ public class Registration extends BaseActivity {
     String tenantId = "";
     private String deviceId;
     private boolean isPasswordShown = false;
+    private OneTimeWorkRequest readRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,14 +196,15 @@ public class Registration extends BaseActivity {
                 build();
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
-                putString("tenantId", tenantId).
+                putString("tenantId", tenantIdEt.getText().toString()).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 putString("deviceId", deviceId).
                 build();
+
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
-                .putString("tenantId", tenantId)
+                .putString("tenantId", tenantIdEt.getText().toString())
                 .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 
@@ -227,7 +230,7 @@ public class Registration extends BaseActivity {
                 .setInputData(decompressInputData)
                 .build();
 
-        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
+        readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
                 .setInputData(readInputData)
                 .build();
 
@@ -249,7 +252,7 @@ public class Registration extends BaseActivity {
     }
 
     private void handleWorkCompletion(WorkInfo workInfo) {
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED && workInfo.getId().equals(readRequest.getId())) {
             // Work succeeded, handle success
             showMessage(getString(R.string.registration_successful));
             SharedPrefUtils.setIsRegistered(this, true);

@@ -1,6 +1,5 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
 
@@ -10,6 +9,7 @@ import androidx.work.WorkerParameters;
 
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +35,7 @@ public class DownloadWorker extends Worker {
         String authorization = getInputData().getString("Authorization");
         String tenantId = getInputData().getString("tenantId");
         String ecrCode = getInputData().getString("ecrCode");
+        Utils.addLog("datadata_download",getInputData().getKeyValueMap().toString());
         if (urlString == null || fileName == null) {
             return Result.failure();
         }
@@ -45,10 +46,16 @@ public class DownloadWorker extends Worker {
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
+            String api_key=SharedPrefUtils.getApiKey();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("tenantId", tenantId);
             connection.setRequestProperty("Authorization", authorization);
-            connection.setRequestProperty("apikey", API_KEY);
+            connection.setRequestProperty("apikey", api_key);
+
+            Utils.addLog("datadata_download",tenantId);
+            Utils.addLog("datadata_download",api_key);
+            Utils.addLog("datadata_download",ecrCode);
+
             connection.setRequestProperty("ecrCode", ecrCode);
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);

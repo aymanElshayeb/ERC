@@ -4,9 +4,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Keystore.DecryptionHelper;
+import com.app.smartpos.common.Keystore.KeyStoreHelper;
+import com.app.smartpos.common.Utils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import kotlin.text.Charsets;
@@ -136,15 +141,14 @@ public class SharedPrefUtils {
         return sharedPreferences.getBoolean("loggedIn", false);
     }
 
+    public static String getAuthorization() {
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_auth", "");
+    }
 
     public static void setAuthorization(String auth) {
         SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
         editor.putString("ecr_auth", auth).commit();
-    }
-
-    public static String getAuthorization() {
-        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
-        return sharedPreferences.getString("ecr_auth", "");
     }
 
     public static void resetAuthorization() {
@@ -152,14 +156,54 @@ public class SharedPrefUtils {
         editor.putString("ecr_auth", "").commit();
     }
 
-    public static void setProductLastUpdatedTimeStamp(String lastUpdatedTimeStamp) {
-        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
-        editor.putString("last_updated_time_stamp", lastUpdatedTimeStamp).commit();
-    }
-
     public static String getProductLastUpdatedTimeStamp() {
         SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
-        String data = sharedPreferences.getString("last_updated_time_stamp", "");
+        String data = sharedPreferences.getString("ecr_last_updated_time_stamp", "");
         return data.isEmpty() ? "" : "?lastUpdateTimestamp=" + data;
+    }
+
+    public static void setProductLastUpdatedTimeStamp(String lastUpdatedTimeStamp) {
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
+        editor.putString("ecr_last_updated_time_stamp", lastUpdatedTimeStamp).commit();
+    }
+
+    public static String getApiKey() {
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
+        byte[] encryptedVector = Base64.decode(getApiVector(), Base64.DEFAULT);
+        byte[] encryptedKey = Base64.decode(sharedPreferences.getString("ecr_apikey", ""), Base64.DEFAULT);
+        Utils.addLog("datadata_length2",encryptedKey.length+"");
+        Utils.addLog("datadata_length2",encryptedVector.length+"");
+        String apiKey = "";
+        try {
+            apiKey = new DecryptionHelper().decrypt(encryptedKey, encryptedVector, new KeyStoreHelper().getOrCreateSecretKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiKey;
+    }
+
+    public static void setApiKey(String apiKey) {
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
+        editor.putString("ecr_apikey", apiKey).commit();
+    }
+
+    public static String getApiVector() {
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_vector", "");
+    }
+
+    public static void setApiVector(String vector) {
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
+        editor.putString("ecr_vector", vector).commit();
+    }
+
+    public static String getDatabasePassword() {
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_database_password", "");
+    }
+
+    public static void setDatabasePassword(String apiKey) {
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
+        editor.putString("ecr_database_password", apiKey).commit();
     }
 }

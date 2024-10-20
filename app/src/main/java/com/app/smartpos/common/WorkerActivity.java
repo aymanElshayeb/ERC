@@ -1,6 +1,5 @@
 package com.app.smartpos.common;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.LAST_SYNC_URL;
@@ -236,7 +235,7 @@ public class WorkerActivity extends BaseActivity {
 
         Data SizeData = new Data.Builder()
                 .putString("url", PRODUCT_IMAGES_SIZE + lastUpdateTimeStamp)
-                .putString("apikey", API_KEY)
+                .putString("apikey", SharedPrefUtils.getApiKey())
                 .putString("tenantId", conf.get("merchant_id"))
                 .build();
 
@@ -293,7 +292,7 @@ public class WorkerActivity extends BaseActivity {
 
         Data downloadInputData = new Data.Builder()
                 .putString("url", PRODUCT_IMAGES + lastUpdateTimeStamp)
-                .putString("apikey", API_KEY)
+                .putString("apikey", SharedPrefUtils.getApiKey())
                 .putString("ecrCode", ecr)
                 .putString("tenantId", conf.get("merchant_id"))
                 .putString("fileName", PRODUCT_IMAGES_FILE_NAME_GZIP)

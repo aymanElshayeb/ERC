@@ -73,8 +73,6 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         final String weight_unit_id = productData.get(position).get("product_weight_unit_id");
         databaseAccess.open();
         String base64Image = databaseAccess.getProductImage(productActivity.isConnected(), product_uuid);
-        Utils.addLog("datadata_url", base64Image);
-
 
         databaseAccess.open();
         final String weight_unit_name = databaseAccess.getWeightUnitName(weight_unit_id);

@@ -1,6 +1,5 @@
 package com.app.smartpos.auth;
 
-import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
 
@@ -10,6 +9,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -53,7 +53,7 @@ public class LoginWithServerWorker extends Worker {
                 .build();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", API_KEY).
+                add("apikey", SharedPrefUtils.getApiKey()).
 
                 build();
         Request request = new Request.Builder()

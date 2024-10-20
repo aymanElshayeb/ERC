@@ -1,10 +1,9 @@
 package com.app.smartpos.Registration;
 
-import static com.app.smartpos.Constant.API_KEY;
-
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -12,7 +11,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Keystore.EncryptionHelper;
+import com.app.smartpos.common.Keystore.KeyStoreHelper;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,13 +78,22 @@ public class ApiKeyWorker extends Worker {
                     if(jsonObject.getInt("code")==200) {
                         JSONObject body = jsonObject.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
 
-                        String apikey = new String(Base64.decode(body.getString("apikey"), Base64.DEFAULT), StandardCharsets.UTF_8);
+                        String apikey = body.getString("apikey");
                         String password_response = new String(Base64.decode(body.getString("password"), Base64.DEFAULT), StandardCharsets.UTF_8);
 
+                        Pair<byte[],byte[]>encryption=new EncryptionHelper().encrypt(apikey,new KeyStoreHelper().getOrCreateSecretKey());
+                        byte[] first = encryption.first;
+                        byte[] second = encryption.second;
+                        Utils.addLog("datadata_length",first.length+"");
+                        Utils.addLog("datadata_length",second.length+"");
+                        String encryptedApiKey = Base64.encodeToString(second, Base64.DEFAULT);
+                        String encryptedVector = Base64.encodeToString(first, Base64.DEFAULT);
 
-                        Utils.addLog("datadata",password_response);
-
-                        outputData.putString("apikey", apikey).putString("password", password_response);
+                        String encryptedPassword = new String(new EncryptionHelper().encrypt(password_response,new KeyStoreHelper().getOrCreateSecretKey()).second, StandardCharsets.UTF_8);
+                        SharedPrefUtils.setApiVector(encryptedVector);
+                        SharedPrefUtils.setApiKey(encryptedApiKey);
+                        SharedPrefUtils.setDatabasePassword(new String(Base64.decode(encryptedPassword,Base64.DEFAULT),StandardCharsets.UTF_8));
+                        outputData.putString("apikey", apikey).putString("database_password", password_response);
                     }
                 }catch (Exception e) {
                     e.printStackTrace();

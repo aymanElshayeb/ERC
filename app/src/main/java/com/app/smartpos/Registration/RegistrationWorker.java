@@ -3,6 +3,7 @@ package com.app.smartpos.Registration;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -11,7 +12,9 @@ import androidx.work.WorkerParameters;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,10 +43,12 @@ public class RegistrationWorker extends Worker {
             return Result.failure();
         }
         // Perform registration logic here
+        String apiKey=SharedPrefUtils.getApiKey();
+        Utils.addLog("datadata_key",apiKey);
         OkHttpClient client = getUnsafeOkHttpClient();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", Constant.API_KEY).
+                add("apikey", apiKey).
                 build();
         //prepare the dto class
         JSONObject json = new JSONObject();
@@ -60,6 +65,8 @@ public class RegistrationWorker extends Worker {
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(json.toString(), JSON);
+        Log.i("datadata_register",json.toString());
+        Log.i("datadata_register",headers.toString());
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(body)

@@ -1,6 +1,5 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
@@ -11,6 +10,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONObject;
 
@@ -45,7 +45,7 @@ public class ProductImagesSizeWorker extends Worker {
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
                 add("Authorization", authorization).
-                add("apikey", API_KEY).
+                add("apikey", SharedPrefUtils.getApiKey()).
                 build();
         Utils.addLog("datadata_worker", headers.toString());
         Utils.addLog("datadata_worker", authorization);

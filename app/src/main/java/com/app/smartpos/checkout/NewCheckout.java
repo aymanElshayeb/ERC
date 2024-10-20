@@ -381,9 +381,10 @@ public class NewCheckout extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12 && resultCode == Activity.RESULT_OK) {
             double change = data.getDoubleExtra("change", 0);
+            double cashGiven = Double.parseDouble(data.getStringExtra("cashGiven"));
             Utils.addLog("datadata_details", change + " " + totalAmount);
             try {
-                proceedOrder("", "CASH", "", totalTax, "0", "", "", totalAmount, change);
+                proceedOrder("", "CASH", "", totalTax, "0", "", "", cashGiven, change);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

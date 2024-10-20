@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.dto.RegistrationResponseDto;
+import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.baseDto.ServiceRequest;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
@@ -45,7 +46,7 @@ public class CheckCompanyWorker extends Worker {
         // Perform registration logic here
         OkHttpClient client = getUnsafeOkHttpClient();
         Headers headers = new Headers.Builder().
-                add("apikey", Constant.API_KEY).
+                add("apikey", SharedPrefUtils.getApiKey()).
                 build();
         //prepare the dto class
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();

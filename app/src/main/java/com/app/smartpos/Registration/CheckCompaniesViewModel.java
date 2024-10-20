@@ -1,6 +1,5 @@
 package com.app.smartpos.Registration;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
 
 import android.util.Log;
@@ -36,11 +35,8 @@ public class CheckCompaniesViewModel extends ViewModel {
     }
 
     public void start(String email) {
-        Log.i("datadata_register", CHECK_COMPANY_URL + "?email=" + email);
-        Log.i("datadata_register", "apikey " + API_KEY);
-        Log.i("datadata_register", "Authorization " + SharedPrefUtils.getAuthorization());
         AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
-                .addHeaders("apikey", API_KEY)
+                .addHeaders("apikey", SharedPrefUtils.getApiKey())
                 .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
                 .setTag("GET INVOICE DETAILS")
                 .setPriority(Priority.HIGH)

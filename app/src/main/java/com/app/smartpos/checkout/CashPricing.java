@@ -92,6 +92,7 @@ public class CashPricing extends BaseActivity {
             if (cashResult >= Double.parseDouble(Utils.trimLongDouble(totalAmount))) {
                 Intent intent = new Intent();
                 intent.putExtra("change", change);
+                intent.putExtra("cashGiven", cash);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
