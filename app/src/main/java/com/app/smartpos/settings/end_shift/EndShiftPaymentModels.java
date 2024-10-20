@@ -10,9 +10,9 @@ public class EndShiftPaymentModels {
     String code;
     double real;
 
-    boolean error=false;
+    boolean error = false;
 
-    public EndShiftPaymentModels(EditText inputPaymentCashEt, TextView paymentCashErrorTv, String type,String code, double real) {
+    public EndShiftPaymentModels(EditText inputPaymentCashEt, TextView paymentCashErrorTv, String type, String code, double real) {
         this.inputPaymentCashEt = inputPaymentCashEt;
         this.paymentCashErrorTv = paymentCashErrorTv;
         this.code = code;

@@ -18,13 +18,13 @@ public class ExportFileWorker extends Worker {
     @Override
     public Result doWork() {
         String fileName = getInputData().getString("fileName");
-        String invoiceLastSync=getInputData().getString("invoiceBusinessId");
-        String shiftLastSync=getInputData().getString("shiftBusinessId");
-        String[] lastSync =new String[]{invoiceLastSync,shiftLastSync};
+        String invoiceLastSync = getInputData().getString("invoiceBusinessId");
+        String shiftLastSync = getInputData().getString("shiftBusinessId");
+        String[] lastSync = new String[]{invoiceLastSync, shiftLastSync};
         try {
             DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
-            String path=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-            db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath()+"/"+fileName,lastSync);
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+            db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath() + "/" + fileName, lastSync);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure();

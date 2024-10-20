@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
@@ -237,7 +236,7 @@ public class BluetoothPrintService {
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
-        private String mSocketType;
+        private final String mSocketType;
 
         public ConnectThread(BluetoothDevice device, boolean secure) {
             mmDevice = device;
@@ -253,7 +252,7 @@ public class BluetoothPrintService {
                     tmp = device.createInsecureRfcommSocketToServiceRecord(SPP_UUID);
                 }
             } catch (IOException e) {
-                Utils.addLog(TAG, "Socket Type: " + mSocketType + "create() failed "+ e);
+                Utils.addLog(TAG, "Socket Type: " + mSocketType + "create() failed " + e);
             }
             mmSocket = tmp;
         }
@@ -275,9 +274,9 @@ public class BluetoothPrintService {
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Utils.addLog(TAG, "unable to close() " + mSocketType + " socket during connection failure "+e2);
+                    Utils.addLog(TAG, "unable to close() " + mSocketType + " socket during connection failure " + e2);
                 }
-                Utils.addLog(TAG, "Connection Failed "+ e);
+                Utils.addLog(TAG, "Connection Failed " + e);
                 connectionFailed();
                 return;
             }
@@ -295,7 +294,7 @@ public class BluetoothPrintService {
             try {
                 mmSocket.close();
             } catch (IOException e) {
-                Utils.addLog(TAG, "close() of connect " + mSocketType + " socket failed "+ e);
+                Utils.addLog(TAG, "close() of connect " + mSocketType + " socket failed " + e);
             }
         }
     }
@@ -320,7 +319,7 @@ public class BluetoothPrintService {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
-                Utils.addLog(TAG, "temp sockets not created "+e);
+                Utils.addLog(TAG, "temp sockets not created " + e);
             }
 
             mmInStream = tmpIn;

@@ -1,9 +1,7 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -11,6 +9,7 @@ import androidx.work.WorkerParameters;
 
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,14 +29,14 @@ public class ProductImagesWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Utils.addLog("datadata_download","start");
+        Utils.addLog("datadata_download", "start");
         String urlString = getInputData().getString("url");
         String fileName = getInputData().getString("fileName");
         String authorization = getInputData().getString("Authorization");
         String tenantId = getInputData().getString("tenantId");
-        String ecrCode=getInputData().getString("ecrCode");
+        String ecrCode = getInputData().getString("ecrCode");
         if (urlString == null || fileName == null) {
-            Utils.addLog("datadata_download","failed 1");
+            Utils.addLog("datadata_download", "failed 1");
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
@@ -50,22 +49,22 @@ public class ProductImagesWorker extends Worker {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("tenantId", tenantId);
             connection.setRequestProperty("Authorization", authorization);
-            connection.setRequestProperty("apikey",API_KEY);
-            connection.setRequestProperty("ecrCode",ecrCode);
-            Utils.addLog("datadata_download","request");
+            connection.setRequestProperty("apikey", SharedPrefUtils.getApiKey());
+            connection.setRequestProperty("ecrCode", ecrCode);
+            Utils.addLog("datadata_download", "request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Utils.addLog("datadata_download","loading");
+                Utils.addLog("datadata_download", "loading");
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
-                Utils.addLog("datadata_download","delete");
-                downloadFile(connection.getInputStream(),outputFile);
+                Utils.addLog("datadata_download", "delete");
+                downloadFile(connection.getInputStream(), outputFile);
 
                 connection.disconnect();
                 return Result.success();
             } else {
-                Utils.addLog("datadata_download","disconnected "+connection.getResponseCode()+" "+connection.getResponseMessage());
+                Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
@@ -82,7 +81,7 @@ public class ProductImagesWorker extends Worker {
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
-                Utils.addLog("datadata_download","downloading");
+                Utils.addLog("datadata_download", "downloading");
                 fos.write(buffer, 0, length);
             }
 

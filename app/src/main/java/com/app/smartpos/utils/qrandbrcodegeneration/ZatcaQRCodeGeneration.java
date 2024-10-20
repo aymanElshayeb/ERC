@@ -3,7 +3,6 @@ package com.app.smartpos.utils.qrandbrcodegeneration;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import java.util.Base64;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.common.DeviceFactory.Device;
@@ -11,7 +10,6 @@ import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -33,7 +31,7 @@ public class ZatcaQRCodeGeneration {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             byte[] var4 = value.getBytes(Charsets.UTF_8);
-            byte[] var3 = new byte[] { Byte.parseByte(tag),  Byte.parseByte(String.valueOf(var4.length)) };
+            byte[] var3 = new byte[]{Byte.parseByte(tag), Byte.parseByte(String.valueOf(var4.length))};
             outputStream.write(var3);
             outputStream.write(var4);
 
@@ -84,7 +82,7 @@ public class ZatcaQRCodeGeneration {
     public Bitmap getQrCodeBitmap(HashMap<String, String> orderList, DatabaseAccess databaseAccess, List<HashMap<String, String>> orderDetailsList, HashMap<String, String> configuration, boolean print) {
         Bitmap qrCodeBitmap;
         StringBuilder qrCode = new StringBuilder(orderList.get("qr_code"));
-        if (qrCode.toString().isEmpty()){
+        if (qrCode.toString().isEmpty()) {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
             zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
             zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
@@ -92,15 +90,14 @@ public class ZatcaQRCodeGeneration {
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
-            qrCodeBitmap = PrintingHelper.resizeBitmap(zatcaQRCodeGenerationService.createZatcaQrCode(zatcaQRCodeDto,qrCode),200,200);
-            if (print){
+            qrCodeBitmap = PrintingHelper.resizeBitmap(zatcaQRCodeGenerationService.createZatcaQrCode(zatcaQRCodeDto, qrCode), 200, 200);
+            if (print) {
                 databaseAccess.open();
-                databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"),qrCode.toString());
+                databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"), qrCode.toString());
             }
-        }
-        else {
+        } else {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            qrCodeBitmap = PrintingHelper.resizeBitmap(barcodeEncoder.encodeQrOrBc(qrCode.toString(), BarcodeFormat.QR_CODE, 600, 600),200,200);
+            qrCodeBitmap = PrintingHelper.resizeBitmap(barcodeEncoder.encodeQrOrBc(qrCode.toString(), BarcodeFormat.QR_CODE, 600, 600), 200, 200);
         }
         return qrCodeBitmap;
     }
@@ -108,7 +105,7 @@ public class ZatcaQRCodeGeneration {
     public String getQrCodeString(HashMap<String, String> orderList, DatabaseAccess databaseAccess, List<HashMap<String, String>> orderDetailsList, HashMap<String, String> configuration) {
         String data;
         StringBuilder qrCode = new StringBuilder(orderList.get("qr_code"));
-        if (qrCode.toString().isEmpty()){
+        if (qrCode.toString().isEmpty()) {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
             zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
             zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
@@ -116,12 +113,11 @@ public class ZatcaQRCodeGeneration {
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
-            data = zatcaQRCodeGenerationService.createZatcaQrCodeString(zatcaQRCodeDto,qrCode);
+            data = zatcaQRCodeGenerationService.createZatcaQrCodeString(zatcaQRCodeDto, qrCode);
             databaseAccess.open();
-            databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"),qrCode.toString());
-        }
-        else {
-            data=qrCode.toString();
+            databaseAccess.addQrCodeToOrder(orderList.get("invoice_id"), qrCode.toString());
+        } else {
+            data = qrCode.toString();
         }
         return data;
     }

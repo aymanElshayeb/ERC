@@ -1,12 +1,8 @@
 package com.app.smartpos.utils;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 public class AuthoruzationHolder {
     // Define a ThreadLocal variable for a String, initialized with an empty string
-    private static ThreadLocal<String> authorization = ThreadLocal.withInitial(() -> "");
+    private static final ThreadLocal<String> authorization = ThreadLocal.withInitial(() -> "");
 
     // Getter for thread-local variable
     public static String getAuthorization() {

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import com.app.smartpos.Constant;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
 import com.urovo.sdk.print.PrinterProviderImpl;
 

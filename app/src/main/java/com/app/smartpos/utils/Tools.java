@@ -10,7 +10,7 @@ import com.app.smartpos.R;
 
 public class Tools {
 
-    public static boolean isBlueToothOn(Context c){
+    public static boolean isBlueToothOn(Context c) {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(c, c.getString(R.string.bluetooth_not_available), Toast.LENGTH_LONG).show();

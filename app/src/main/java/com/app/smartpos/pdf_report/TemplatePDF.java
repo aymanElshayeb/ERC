@@ -3,19 +3,16 @@ package com.app.smartpos.pdf_report;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Log;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -23,12 +20,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class TemplatePDF {
 
-    private Context context;
+    private final Context context;
     private File pdfFile;
     private Document document;
     PdfWriter pdfWriter;
@@ -36,36 +32,33 @@ public class TemplatePDF {
     //here you can change fonts,fonts size and fonts color
 
 
-    private Font fTitle=new Font(Font.FontFamily.TIMES_ROMAN,6,Font.NORMAL,BaseColor.BLACK);
-    private Font fSubTitle=new Font(Font.FontFamily.TIMES_ROMAN,4,Font.ITALIC,BaseColor.BLACK);
-    private Font fText=new Font(Font.FontFamily.TIMES_ROMAN,4,Font.ITALIC,BaseColor.BLACK);
-    private Font fHighText=new Font(Font.FontFamily.TIMES_ROMAN,4,Font.ITALIC, BaseColor.BLACK);
-    private Font fRowText=new Font(Font.FontFamily.TIMES_ROMAN,4,Font.ITALIC, BaseColor.BLACK);
-    public TemplatePDF(Context context)
-    {
-        this.context=context;
+    private final Font fTitle = new Font(Font.FontFamily.TIMES_ROMAN, 6, Font.NORMAL, BaseColor.BLACK);
+    private final Font fSubTitle = new Font(Font.FontFamily.TIMES_ROMAN, 4, Font.ITALIC, BaseColor.BLACK);
+    private final Font fText = new Font(Font.FontFamily.TIMES_ROMAN, 4, Font.ITALIC, BaseColor.BLACK);
+    private final Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN, 4, Font.ITALIC, BaseColor.BLACK);
+    private final Font fRowText = new Font(Font.FontFamily.TIMES_ROMAN, 4, Font.ITALIC, BaseColor.BLACK);
+
+    public TemplatePDF(Context context) {
+        this.context = context;
     }
 
-    public void openDocument()
-    {
+    public void openDocument() {
         createFile();
-        try{
+        try {
 
             //adjust your page size here
             Rectangle pageSize = new Rectangle(164.41f, 500.41f); //14400 //for 58 mm pos printer
             //document=new Document(PageSize.A4);
-            document=new Document(pageSize);
-            pdfWriter=PdfWriter.getInstance(document,new FileOutputStream(pdfFile));
+            document = new Document(pageSize);
+            pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
             document.open();
-        }catch (Exception e)
-        {
-            Log.e("createFile",e.toString());
+        } catch (Exception e) {
+            Log.e("createFile", e.toString());
         }
     }
 
-    private void createFile()
-    {
-       // File folder = new File(Environment.getExternalStorageDirectory().toString(), "PDF");
+    private void createFile() {
+        // File folder = new File(Environment.getExternalStorageDirectory().toString(), "PDF");
 
         String dest = context.getExternalFilesDir(null) + "/";
         File folder = new File(dest);
@@ -79,21 +72,18 @@ public class TemplatePDF {
 
     }
 
-    public void closeDocument()
-    {
+    public void closeDocument() {
         document.close();
     }
 
-    public void addMetaData(String title, String subject, String author)
-    {
+    public void addMetaData(String title, String subject, String author) {
         document.addTitle(title);
         document.addSubject(subject);
         document.addAuthor(author);
-        
+
     }
 
-    public void addTitle(String title, String subTitle, String date)
-    {
+    public void addTitle(String title, String subTitle, String date) {
 
 
         try {
@@ -103,16 +93,12 @@ public class TemplatePDF {
             addChildP(new Paragraph(title, fTitle));
             addChildP(new Paragraph(subTitle, fSubTitle));
             addChildP(new Paragraph("Order Date: " + date, fHighText));
-           // paragraph.setSpacingAfter(30);
+            // paragraph.setSpacingAfter(30);
             document.add(paragraph);
-        }
-        catch (Exception e)
-        {
-            Log.e("addTitle",e.toString());
+        } catch (Exception e) {
+            Log.e("addTitle", e.toString());
         }
     }
-
-
 
 
     public void addImage(Bitmap bm, float width, float height) {
@@ -146,61 +132,46 @@ public class TemplatePDF {
     }
 
 
-
-
-
-
-    public void addChildP(Paragraph childParagraph)
-    {
+    public void addChildP(Paragraph childParagraph) {
 
         childParagraph.setAlignment(Element.ALIGN_CENTER);
         paragraph.add(childParagraph);
     }
 
-    public void addParagraph(String text)
-    {
+    public void addParagraph(String text) {
 
-        try{
+        try {
 
-        paragraph=new Paragraph(text,fText);
-      //  paragraph.setSpacingAfter(1);
-       // paragraph.setSpacingBefore(1);
-        paragraph.setAlignment(Element.ALIGN_CENTER);
-        document.add(paragraph);
+            paragraph = new Paragraph(text, fText);
+            //  paragraph.setSpacingAfter(1);
+            // paragraph.setSpacingBefore(1);
+            paragraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph);
+        } catch (Exception e) {
+            Log.e("addParagraph", e.toString());
         }
-        catch (Exception e)
-        {
-            Log.e("addParagraph",e.toString());
-        }
-
 
 
     }
 
 
+    public void addRightParagraph(String text) {
 
-    public void addRightParagraph(String text)
-    {
+        try {
 
-        try{
-
-            paragraph=new Paragraph(text,fText);
+            paragraph = new Paragraph(text, fText);
             paragraph.setSpacingAfter(5);
             paragraph.setSpacingBefore(5);
             paragraph.setAlignment(Element.ALIGN_CENTER);
             document.add(paragraph);
+        } catch (Exception e) {
+            Log.e("addParagraph", e.toString());
         }
-        catch (Exception e)
-        {
-            Log.e("addParagraph",e.toString());
-        }
-
 
 
     }
 
-    public void createTable(String[] header, ArrayList<String[]> clients)
-    {
+    public void createTable(String[] header, ArrayList<String[]> clients) {
 
         try {
 
@@ -226,9 +197,9 @@ public class TemplatePDF {
                 String[] row = clients.get(indexR);
 
                 for (indexC = 0; indexC < header.length; indexC++) {
-                    pdfPCell = new PdfPCell(new Phrase(row[indexC],fRowText));
+                    pdfPCell = new PdfPCell(new Phrase(row[indexC], fRowText));
                     pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                   // pdfPCell.setFixedHeight(40);
+                    // pdfPCell.setFixedHeight(40);
                     pdfPCell.setBorder(Rectangle.NO_BORDER);
                     pdfPTable.addCell(pdfPCell);
                 }
@@ -237,25 +208,19 @@ public class TemplatePDF {
             paragraph.add(pdfPTable);
             document.add(paragraph);
 
-        }catch (Exception e)
-        {
-            Log.e("createTable",e.toString());
+        } catch (Exception e) {
+            Log.e("createTable", e.toString());
         }
     }
 
-    public void viewPDF()
-    {
-        Intent intent=new Intent(context,ViewPDFActivity.class);
-        intent.putExtra("path",pdfFile.getAbsolutePath());
-        Log.d("Path",pdfFile.getAbsolutePath());
+    public void viewPDF() {
+        Intent intent = new Intent(context, ViewPDFActivity.class);
+        intent.putExtra("path", pdfFile.getAbsolutePath());
+        Log.d("Path", pdfFile.getAbsolutePath());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
     }
-
-
-
-
 
 
 }

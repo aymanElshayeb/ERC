@@ -1,57 +1,35 @@
 package com.app.smartpos.database;
 
-import static android.provider.Telephony.Carriers.PASSWORD;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.MultiLanguageApp;
-
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 import es.dmoral.toasty.Toasty;
 
-public class DatabaseOpenHelper extends SQLiteOpenHelper {
+public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    public static final String DATABASE_PASSWORD = "ecu_database_password_";
     private static final int DATABASE_VERSION = 55;
-    private Context mContext;
-    public static DatabaseOpenHelper instance;
+    private final Context mContext;
+
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        //setForcedUpgrade();
+        setForcedUpgrade();
     }
 
-    @Override
-    public void onCreate(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase) {
-
-    }
-
-    public static DatabaseOpenHelper getInstance(Context context){
-        if(instance==null){
-            instance=new DatabaseOpenHelper(context);
-        }
-        return instance;
-    }
-    @Override
-    public void onUpgrade(net.sqlcipher.database.SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        onCreate(sqLiteDatabase);
-    }
 
     public void backup(String outFileName) {
 
@@ -121,8 +99,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     public void mergeDatabases(String newDbFilePath) {
-        SQLiteDatabase existingDb = getWritableDatabase("");
-        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath,DATABASE_PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
 
         try {
             existingDb.beginTransaction();
@@ -156,7 +134,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     public void readProductDatabase(String newDbFilePath) {
         //SQLiteDatabase existingDb = getWritableDatabase();
-        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath,DATABASE_PASSWORD, null, SQLiteDatabase.OPEN_READONLY);
+        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
 
         try {
             // existingDb.beginTransaction();
@@ -198,8 +176,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         if (dbFile.exists()) {
             dbFile.delete();
         }
-        SQLiteDatabase existingDb = getWritableDatabase(DATABASE_PASSWORD);
-        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath,DATABASE_PASSWORD, null);
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
             exportInvoice(existingDb, newDb, lastSync[0]);
@@ -332,7 +310,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         // Execute CREATE TABLE statement in the target database
         targetDb.execSQL(createTableQuery.toString());
     }
-
 
 
 }

@@ -21,7 +21,6 @@ public class KeyStoreHelper {
 
         // Check if the key exists in the Keystore
         if (keyStore.isKeyEntry(KEY_ALIAS)) {
-            Log.i("datadata_key2",((SecretKey) keyStore.getKey(KEY_ALIAS, null)).toString());
             return (SecretKey) keyStore.getKey(KEY_ALIAS, null);
         }
 
@@ -35,7 +34,6 @@ public class KeyStoreHelper {
                 .build();
 
         keyGenerator.init(keyGenParameterSpec);
-        Log.i("datadata_key2",keyGenerator.generateKey().toString());
         return keyGenerator.generateKey();
     }
 }

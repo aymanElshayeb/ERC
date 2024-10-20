@@ -1,8 +1,9 @@
 package com.app.smartpos.Registration;
 
-import static com.app.smartpos.Constant.API_KEY;
-
 import android.content.Context;
+import android.util.Base64;
+import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -10,11 +11,16 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Keystore.EncryptionHelper;
+import com.app.smartpos.common.Keystore.KeyStoreHelper;
+import com.app.smartpos.common.Utils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -41,10 +47,10 @@ public class ApiKeyWorker extends Worker {
         // Perform login with server logic here
         String email = getInputData().getString("email");
         String password = getInputData().getString("password");
-        String tenantId= getInputData().getString("tenantId");
-        String urlString=getInputData().getString("url");
+        String tenantId = getInputData().getString("tenantId");
+        String urlString = getInputData().getString("url");
 
-        if (email == null || password == null || tenantId==null) {
+        if (email == null || password == null || tenantId == null) {
             return Result.failure();
         }
 
@@ -52,27 +58,49 @@ public class ApiKeyWorker extends Worker {
 
         FormBody formBody = new FormBody.Builder()
                 .add("email", email)
-                .add("password",password)
+                .add("password", password)
                 .build();
-        Headers headers=new Headers.Builder().
+        Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-
                 build();
+
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(formBody)
                 .headers(headers)
                 .build();
-        try(Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                Data.Builder outputData = new Data.Builder();
                 try {
-                    JSONObject responseBody = new JSONObject(response.body().string());
-                } catch (Exception e) {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+
+                    if(jsonObject.getInt("code")==200) {
+                        JSONObject body = jsonObject.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+
+                        String apikey = body.getString("apikey");
+                        String password_response = new String(Base64.decode(body.getString("password"), Base64.DEFAULT), StandardCharsets.UTF_8);
+
+                        Pair<byte[],byte[]>encryption=new EncryptionHelper().encrypt(apikey,new KeyStoreHelper().getOrCreateSecretKey());
+                        byte[] first = encryption.first;
+                        byte[] second = encryption.second;
+
+                        String encryptedApiKey = Base64.encodeToString(second, Base64.DEFAULT);
+                        String encryptedVector = Base64.encodeToString(first, Base64.DEFAULT);
+
+                        SharedPrefUtils.setApiVector(encryptedVector);
+                        SharedPrefUtils.setApiKey(encryptedApiKey);
+
+                        String encryptedPassword = new String(new EncryptionHelper().encrypt(password_response,new KeyStoreHelper().getOrCreateSecretKey()).second, StandardCharsets.UTF_8);
+                        SharedPrefUtils.setDatabasePassword(encryptedPassword);
+                        outputData.putString("apikey", apikey).putString("database_password", password_response);
+                    }
+                }catch (Exception e) {
                     e.printStackTrace();
                 }
-                Data outputData = new Data.Builder().putString("Authorization", "authorization").putString("email",email).build();
-                return Result.success(outputData);
+                return Result.success(outputData.build());
             } else {
+                Utils.addLog("datadata_error",response.body().toString());
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }

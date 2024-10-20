@@ -2,10 +2,9 @@ package com.app.smartpos.settings.end_shift;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class EndShiftModel implements Serializable {
-    HashMap<String,ShiftDifferences> shiftDifferences;
+    HashMap<String, ShiftDifferences> shiftDifferences;
     int num_successful_transaction;
     int num_canceled_transaction;
     int num_returned_transaction;
@@ -22,10 +21,11 @@ public class EndShiftModel implements Serializable {
     String note;
     String sequence;
     String userName;
-    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences,String sequence,String userName ,int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash,String note, double totalRefundsAmount, double totalCardsAmount) {
+
+    public EndShiftModel(HashMap<String, ShiftDifferences> shiftDifferences, String sequence, String userName, int num_successful_transaction, int num_canceled_transaction, int num_returned_transaction, double total_amount, double total_tax, String deviceID, long startDateTime, long endDateTime, double startCash, double leaveCash, String note, double totalRefundsAmount, double totalCardsAmount) {
         this.shiftDifferences = shiftDifferences;
-        this.sequence=sequence;
-        this.userName=userName;
+        this.sequence = sequence;
+        this.userName = userName;
         this.num_successful_transaction = num_successful_transaction;
         this.num_canceled_transaction = num_canceled_transaction;
         this.num_returned_transaction = num_returned_transaction;
@@ -36,7 +36,7 @@ public class EndShiftModel implements Serializable {
         this.endDateTime = endDateTime;
         this.startCash = startCash;
         this.leaveCash = leaveCash;
-        this.note=note;
+        this.note = note;
         this.totalRefundsAmount = totalRefundsAmount;
         this.totalCardsAmount = totalCardsAmount;
     }
@@ -72,6 +72,7 @@ public class EndShiftModel implements Serializable {
     public double getTotal_tax() {
         return total_tax;
     }
+
     public String getDeviceID() {
         return deviceID;
     }
@@ -99,9 +100,11 @@ public class EndShiftModel implements Serializable {
     public int getTotalRefunds() {
         return totalRefunds;
     }
+
     public double getTotalRefundsAmount() {
         return totalRefundsAmount;
     }
+
     public double getTotalCardsAmount() {
         return totalCardsAmount;
     }

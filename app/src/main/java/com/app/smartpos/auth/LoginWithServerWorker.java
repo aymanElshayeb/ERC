@@ -1,6 +1,5 @@
 package com.app.smartpos.auth;
 
-import static com.app.smartpos.Constant.API_KEY;
 
 import android.content.Context;
 
@@ -10,18 +9,12 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
-import com.app.smartpos.utils.SSLUtils;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
@@ -45,10 +38,10 @@ public class LoginWithServerWorker extends Worker {
         // Perform login with server logic here
         String email = getInputData().getString("email");
         String password = getInputData().getString("password");
-        String tenantId= getInputData().getString("tenantId");
-        String urlString=getInputData().getString("url");
+        String tenantId = getInputData().getString("tenantId");
+        String urlString = getInputData().getString("url");
 
-        if (email == null || password == null || tenantId==null) {
+        if (email == null || password == null || tenantId == null) {
             return Result.failure();
         }
 
@@ -56,11 +49,11 @@ public class LoginWithServerWorker extends Worker {
 
         FormBody formBody = new FormBody.Builder()
                 .add("email", email)
-                .add("password",password)
+                .add("password", password)
                 .build();
-        Headers headers=new Headers.Builder().
+        Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", API_KEY).
+                add("apikey", SharedPrefUtils.getApiKey()).
 
                 build();
         Request request = new Request.Builder()
@@ -68,10 +61,10 @@ public class LoginWithServerWorker extends Worker {
                 .post(formBody)
                 .headers(headers)
                 .build();
-        try(Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                String authorization=response.header("Authorization");
-                Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email",email).build();
+                String authorization = response.header("Authorization");
+                Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
                 return Result.success(outputData);
             } else {
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();

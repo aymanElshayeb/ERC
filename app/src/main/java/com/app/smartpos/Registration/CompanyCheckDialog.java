@@ -1,13 +1,8 @@
 package com.app.smartpos.Registration;
 
-import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -25,20 +20,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkContinuation;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -159,11 +146,6 @@ public class CompanyCheckDialog extends DialogFragment {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
-
-
-
-
-
 
 
 }

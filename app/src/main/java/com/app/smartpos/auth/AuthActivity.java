@@ -3,8 +3,6 @@ package com.app.smartpos.auth;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -33,28 +31,15 @@ public class AuthActivity extends WorkerActivity {
 
         setContentView(R.layout.activity_auth);
 
-
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        HashMap<String, String> conf=databaseAccess.getConfiguration();
-        if (conf.isEmpty() && !SharedPrefUtils.isRegistered(this)) {
+        if (!SharedPrefUtils.isRegistered(this)) {
             Intent intent = new Intent(AuthActivity.this, Registration.class);
             startActivity(intent);
 //            RegistrationDialog dialog = new RegistrationDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
 //            CompanyCheckDialog dialog = new CompanyCheckDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
-        }else {
-            String merchantId=conf.get("merchant_id");
-            //String ecrCode=conf.get("ecr_code");
-            SharedPrefUtils.setMerchantId(this,merchantId);
         }
-        new KeyGenParameterSpec.Builder("MySecretKey", KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                .setUserAuthenticationRequired(false) // Adjust as needed
-                .setKeySize(256)
-                .build();
+
         final PackageManager pm = getPackageManager();
 //get a list of installed apps.
 //        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -70,8 +55,8 @@ public class AuthActivity extends WorkerActivity {
     @Override
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
-        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
-            String email=workInfo.getOutputData().getString("email");
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+            String email = workInfo.getOutputData().getString("email");
 
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
             databaseAccess.open();
@@ -85,7 +70,7 @@ public class AuthActivity extends WorkerActivity {
             Intent intent = new Intent(this, NewHomeActivity.class);
             startActivity(intent);
             this.finish();
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
         }
     }

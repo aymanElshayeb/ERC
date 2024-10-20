@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
@@ -26,7 +25,6 @@ import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-import com.newland.sdk.me.module.printer.PrinterModule;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,8 +50,9 @@ public class OrderBitmap extends BaseActivity {
     int width = 0;
     String line;
     MultiLanguageApp activity;
+
     public OrderBitmap(Activity activity) {
-        this.activity=MultiLanguageApp.getApp();
+        this.activity = MultiLanguageApp.getApp();
     }
 
 
@@ -107,7 +106,7 @@ public class OrderBitmap extends BaseActivity {
         printLine();
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(activity.getString(R.string.shift_no))));
         bitmaps.add(new PrinterModel(1, PrintingHelper.createBitmapFromText(endShiftModel.getSequence())));
-        bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(activity.getString(R.string.username)),PrintingHelper.createBitmapFromText(endShiftModel.getUserName())));
+        bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(activity.getString(R.string.username)), PrintingHelper.createBitmapFromText(endShiftModel.getUserName())));
 
         printStartAndEndShiftTime(endShiftModel.getStartDateTime(), endShiftModel.getEndDateTime());
         printLine();
@@ -127,17 +126,17 @@ public class OrderBitmap extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.sales_amount)));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(totalAmount)));
-        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.refunded_amount)));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(totalRefundsAmount)));
-        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
         printLine();
         ArrayList<Bitmap> combinedBitmaps3 = new ArrayList<>();
         combinedBitmaps3.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total)));
         combinedBitmaps3.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalAmount - totalRefundsAmount))));
-        bitmaps.add(new PrinterModel(combinedBitmaps3.get(0),combinedBitmaps3.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps3.get(0), combinedBitmaps3.get(1)));
         printLine();
     }
 
@@ -148,12 +147,12 @@ public class OrderBitmap extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_cash_sales)));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(totalCash))));
-        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.input_total_cash)));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(inputCash))));
-        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
 
         printLine();
     }
@@ -165,12 +164,12 @@ public class OrderBitmap extends BaseActivity {
         ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.sales_transactions)));
         combinedBitmaps1.add(PrintingHelper.createBitmapFromText(String.valueOf(numSuccessfulTransaction)));
-        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0),combinedBitmaps1.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps1.get(0), combinedBitmaps1.get(1)));
 
         ArrayList<Bitmap> combinedBitmaps2 = new ArrayList<>();
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.refunded_transactions)));
         combinedBitmaps2.add(PrintingHelper.createBitmapFromText(String.valueOf(numReturnedTransaction)));
-        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0),combinedBitmaps2.get(1)));
+        bitmaps.add(new PrinterModel(combinedBitmaps2.get(0), combinedBitmaps2.get(1)));
         printLine();
     }
 
@@ -253,7 +252,7 @@ public class OrderBitmap extends BaseActivity {
         int size = bitmaps.size();
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
-            Utils.addLog("datadata_width", bitmap.getWidth() + "");
+            Utils.addLog("datadata_width", String.valueOf(bitmap.getWidth()));
             totalHeight += bitmap.getHeight();
             if (bitmap.getWidth() > width) {
                 width = bitmap.getWidth();
@@ -265,16 +264,16 @@ public class OrderBitmap extends BaseActivity {
         Canvas canvas = new Canvas(bmp);
         canvas.drawColor(Color.WHITE);
         int lastY = 0;
-        int mirror=1;
+        int mirror = 1;
         String language = LocaleManager.getLanguage(activity);
-        if(language.equals("ar")){
-            mirror=-1;
+        if (language.equals("ar")) {
+            mirror = -1;
         }
         for (int i = 0; i < size; i++) {
             Bitmap bitmap = bitmaps.get(i).getBitmap();
             if (bitmaps.get(i).type == 1) {
                 int startX = 0;
-                int side=bitmaps.get(i).getSide() * mirror;
+                int side = bitmaps.get(i).getSide() * mirror;
                 if (side == 0) {
                     startX = width / 2 - bitmap.getWidth() / 2;
                 } else if (side == 1) {
@@ -283,21 +282,21 @@ public class OrderBitmap extends BaseActivity {
                 canvas.drawBitmap(bitmaps.get(i).getBitmap(), startX, lastY, new Paint());
             } else if (bitmaps.get(i).type == 2) {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
-                if(language.equals("ar")){
+                if (language.equals("ar")) {
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
-                }else {
+                } else {
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, width - bitmap2.getWidth(), lastY, new Paint());
                 }
             } else if (bitmaps.get(i).type == 3) {
                 Bitmap bitmap2 = bitmaps.get(i).bitmap2;
                 Bitmap bitmap3 = bitmaps.get(i).bitmap3;
-                if(language.equals("ar")){
+                if (language.equals("ar")) {
                     canvas.drawBitmap(bitmaps.get(i).bitmap3, 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), width - bitmaps.get(i).getBitmap().getWidth(), lastY, new Paint());
-                }else {
+                } else {
                     canvas.drawBitmap(bitmaps.get(i).getBitmap(), 0, lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap2, (int) ((double) width / 2.0 - (double) bitmap2.getWidth() / 2.0), lastY, new Paint());
                     canvas.drawBitmap(bitmaps.get(i).bitmap3, width - bitmap3.getWidth(), lastY, new Paint());
@@ -326,7 +325,7 @@ public class OrderBitmap extends BaseActivity {
         if (orderPaymentMethod.equalsIgnoreCase("cash")) {
             List<Bitmap> newBitmaps1 = new ArrayList<>();
             newBitmaps1.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.total_paid)));
-            Utils.addLog("datadata_amount",paidAmount+" "+Utils.trimLongDouble(paidAmount)+" "+(Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
+            Utils.addLog("datadata_amount", paidAmount + " " + Utils.trimLongDouble(paidAmount) + " " + (Utils.trimLongDouble(Double.parseDouble(paidAmount) - Double.parseDouble(changeAmount))));
             newBitmaps1.add(PrintingHelper.createBitmapFromText(Utils.trimLongDouble(paidAmount)));
             bitmaps.add(new PrinterModel(newBitmaps1.get(0), newBitmaps1.get(1)));
             printLine();
@@ -416,7 +415,7 @@ public class OrderBitmap extends BaseActivity {
     private void printMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
-        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr","")));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr", "")));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 

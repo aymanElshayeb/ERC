@@ -1,8 +1,5 @@
 package com.app.smartpos.Items;
 
-import static com.app.smartpos.common.Utils.trimLongDouble;
-
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,28 +7,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
-import com.app.smartpos.auth.AuthActivity;
-import com.app.smartpos.settings.end_shift.EndShiftModel;
-import com.app.smartpos.settings.end_shift.ShiftDifferences;
-import com.app.smartpos.utils.SharedPrefUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 
 public class ItemsOptionsDialog extends DialogFragment {
 
     View root;
     Items items;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,15 +32,14 @@ public class ItemsOptionsDialog extends DialogFragment {
             //ImageButton closeBtn = root.findViewById(R.id.btn_close);
 
             customItemLl.setOnClickListener(view -> {
-               items.openCustomBill();
-               dismiss();
+                items.openCustomBill();
+                dismiss();
             });
 
             clearAllItemsLl.setOnClickListener(view -> {
                 items.clearAllItems();
                 dismiss();
             });
-
 
 
         }

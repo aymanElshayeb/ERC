@@ -1,15 +1,10 @@
 package com.app.smartpos.adapter;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,14 +15,12 @@ import com.app.smartpos.checkout.NewCheckout;
 import java.util.HashMap;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
-
 public class CartPaymentMethodAdapter extends RecyclerView.Adapter<CartPaymentMethodAdapter.MyViewHolder> {
 
 
-    private List<HashMap<String, String>> paymentMethodData;
-    private NewCheckout checkout;
-    private int selectedItem=-1;
+    private final List<HashMap<String, String>> paymentMethodData;
+    private final NewCheckout checkout;
+    private int selectedItem = -1;
 
     public CartPaymentMethodAdapter(NewCheckout checkout, List<HashMap<String, String>> paymentMethodData) {
         this.checkout = checkout;
@@ -49,20 +42,20 @@ public class CartPaymentMethodAdapter extends RecyclerView.Adapter<CartPaymentMe
 
         final String payment_method_id = paymentMethodData.get(position).get("payment_method_id");
         String payment_method_name = paymentMethodData.get(position).get("payment_method_name");
-        int status=Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
+        int status = Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
 
-        if(payment_method_name.toLowerCase().equals("cash")) {
+        if (payment_method_name.equalsIgnoreCase("cash")) {
             holder.text.setText(checkout.getString(R.string.cash_ar));
-        }else{
+        } else {
             holder.text.setText(checkout.getString(R.string.card_ar));
         }
-        holder.image.setImageResource(payment_method_name.equals("CASH")?R.drawable.ic_cash:R.drawable.ic_card);
+        holder.image.setImageResource(payment_method_name.equals("CASH") ? R.drawable.ic_cash : R.drawable.ic_card);
 
-        holder.itemView.setBackgroundResource(selectedItem==position ? R.drawable.custom_payment_method_selected_item : R.drawable.custom_payment_method_item);
+        holder.itemView.setBackgroundResource(selectedItem == position ? R.drawable.custom_payment_method_selected_item : R.drawable.custom_payment_method_item);
 
         holder.itemView.setOnClickListener(view -> {
             checkout.setPaymentType(paymentMethodData.get(position).get("payment_method_name"));
-            selectedItem=position;
+            selectedItem = position;
             notifyDataSetChanged();
         });
     }

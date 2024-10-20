@@ -1,63 +1,25 @@
 package com.app.smartpos;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Log;
-import android.util.Pair;
+
+import androidx.appcompat.app.ActionBar;
 
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
-import com.app.smartpos.checkout.SuccessfulPayment;
-import com.app.smartpos.common.Keystore.DecryptionHelper;
-import com.app.smartpos.common.Keystore.EncryptionHelper;
-import com.app.smartpos.common.Keystore.KeyStoreHelper;
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-import net.sqlcipher.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
-
-import org.apache.http.auth.AUTH;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Calendar;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.SecretKey;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -65,9 +27,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.security.auth.x500.X500Principal;
 
-import kotlin.text.Charsets;
 import okhttp3.OkHttpClient;
 
 
@@ -79,14 +39,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SQLiteDatabase.loadLibs(this);
-        try {
-            File f = new File("/data/data/com.app.smartpos/databases/smart_pos");
-            SQLiteDatabase db = SQLiteDatabase.openDatabase(f.getPath(), DatabaseOpenHelper.DATABASE_PASSWORD, null,SQLiteDatabase.OPEN_READWRITE);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         setContentView(R.layout.activity_splash);
 
 
@@ -101,19 +53,19 @@ public class SplashActivity extends BaseActivity {
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
-        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
-        Utils.addLog("datadata_adb",access+" "+ RootUtil.isDeviceRooted());
+        boolean access = (BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
+        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
 
-        if(!access){
+        if (!access) {
             finishAffinity();
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
                     Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                     Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
-                    Utils.addLog("datadata_login", "" + SharedPrefUtils.getIsLoggedIn(SplashActivity.this));
+                    Utils.addLog("datadata_login", String.valueOf(SharedPrefUtils.getIsLoggedIn(SplashActivity.this)));
                     if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
                         startActivity(intentHome);
                     } else {
@@ -123,7 +75,6 @@ public class SplashActivity extends BaseActivity {
                 }
             }, splashTimeOut);
         }
-        encryptAndStoreApiKey(Constant.API_KEY);
     }
 
     private OkHttpClient getUnsafeOkHttpClient() {
@@ -166,7 +117,6 @@ public class SplashActivity extends BaseActivity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     /**
@@ -207,36 +157,6 @@ public class SplashActivity extends BaseActivity {
         }
 
 
-    }
-
-    public void encryptAndStoreApiKey(String apiKey) {
-        try {
-            // Initialize helpers
-            KeyStoreHelper keyStoreHelper = new KeyStoreHelper();
-            EncryptionHelper encryptionHelper = new EncryptionHelper();
-            DecryptionHelper decryptionHelper=new DecryptionHelper();
-
-
-            // Get or create the secret key
-            SecretKey secretKey = keyStoreHelper.getOrCreateSecretKey();
-
-            // Encrypt the API key
-            Pair<byte[], byte[]> encryptedData = encryptionHelper.encrypt("database_password", secretKey);
-            //decryptionHelper.decrypt(encryptedData)
-
-            // Save the encrypted API key and IV to SharedPreferences
-
-            // Confirmation
-
-            Utils.addLog("datadata_key",new String(encryptedData.first,"UTF-8").toString());
-            Utils.addLog("datadata_api_key",new String(encryptedData.second,"UTF-8"));
-            Utils.addLog("datadata_key","API Key encrypted and stored successfully.");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Handle exceptions
-            Utils.addLog("datadata_key","Error encrypting API Key: " + e.getMessage());
-        }
     }
 }
 

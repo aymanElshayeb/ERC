@@ -124,7 +124,7 @@ public class NewHomeActivity extends BaseActivity {
             databaseAccess.open();
             total_amount += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
         }
-        currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount) + "");
+        currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount));
 
         databaseAccess.open();
         String startCashString = databaseAccess.getLastShift("leave_cash");

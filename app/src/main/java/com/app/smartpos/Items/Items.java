@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,9 +48,9 @@ public class Items extends BaseActivity {
     ConstraintLayout viewCartCl;
     ConstraintLayout openCartCl;
     DatabaseAccess databaseAccess;
-    boolean firstOpen=true;
+    boolean firstOpen = true;
     String currency;
-    boolean checkConnectionOnce=true;
+    boolean checkConnectionOnce = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +79,7 @@ public class Items extends BaseActivity {
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
 
-        currency=databaseAccess.getCurrency();
+        currency = databaseAccess.getCurrency();
 
         databaseAccess.open();
         productList = databaseAccess.getProducts(true);
@@ -146,9 +144,9 @@ public class Items extends BaseActivity {
 
         selectedProductList = databaseAccess.getCartProduct();
         updateCartUI();
-        firstOpen=false;
+        firstOpen = false;
         productCartAdapter.notifyDataSetChanged();
-        if(!isConnected()){
+        if (!isConnected()) {
             setAdapter();
         }
     }
@@ -156,13 +154,13 @@ public class Items extends BaseActivity {
     @Override
     public void connectionChanged(boolean state) {
         super.connectionChanged(state);
-        Utils.addLog("datadata_connection",""+state);
+        Utils.addLog("datadata_connection", String.valueOf(state));
         setAdapter();
     }
 
-    private void setAdapter(){
-        if(checkConnectionOnce){
-            checkConnectionOnce=false;
+    private void setAdapter() {
+        if (checkConnectionOnce) {
+            checkConnectionOnce = false;
             runOnUiThread(() -> {
                 recycler.setAdapter(productCartAdapter);
             });
@@ -172,7 +170,7 @@ public class Items extends BaseActivity {
     public void updateCart(HashMap<String, String> product, int position) {
         int index = -1;
         for (int i = 0; i < selectedProductList.size(); i++) {
-            if (selectedProductList.get(i).get("product_id").toString().equals(product.get("product_id").toString())) {
+            if (selectedProductList.get(i).get("product_id").equals(product.get("product_id"))) {
                 index = i;
             }
         }
@@ -203,7 +201,7 @@ public class Items extends BaseActivity {
             String weight_unit_id = product.get("product_weight_unit_id");
             String product_uuid = product.get("product_uuid");
             databaseAccess.open();
-            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid,"");
+            int check = databaseAccess.addToCart(product_id, product_weight, weight_unit_id, product_price, 1, product_stock, product_uuid, "");
             selectedProductList.add(convertProductToCartItem(product));
         }
 
@@ -219,14 +217,14 @@ public class Items extends BaseActivity {
             total += productPrice * productCount;
             count += productCount;
         }
-        Utils.addLog("datadata_count", count + "");
-        cartCountTv.setText("" + count);
-        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " "+currency);
+        Utils.addLog("datadata_count", String.valueOf(count));
+        cartCountTv.setText(String.valueOf(count));
+        cartTotalPriceTv.setText(Utils.trimLongDouble(total) + " " + currency);
 
 
         if (count > 0) {
             animateViewCartHeight(103 * getResources().getDisplayMetrics().density);
-        } else if(!firstOpen){
+        } else if (!firstOpen) {
             animateViewCartHeight(1f);
         }
     }
@@ -237,11 +235,11 @@ public class Items extends BaseActivity {
             double productPrice = Double.parseDouble(selectedProductList.get(i).get("product_price"));
             double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
             total += productPrice * productCount;
-            Utils.addLog("datadata_total",(i==pos)+" "+(productPrice*productCount));
+            Utils.addLog("datadata_total", (i == pos) + " " + (productPrice * productCount));
         }
         total += Double.parseDouble(productList.get(pos).get("product_sell_price"));
-        Utils.addLog("datadata_total",total+"");
-        return total>999999999.99;
+        Utils.addLog("datadata_total", String.valueOf(total));
+        return total > 999999999.99;
     }
 
     public Boolean checkCartTotalPriceForCustomItem(double amount) {
@@ -251,7 +249,7 @@ public class Items extends BaseActivity {
             double productCount = Double.parseDouble(selectedProductList.get(i).get("product_qty"));
             total += productPrice * productCount;
         }
-        return (total+amount)>999999999.99;
+        return (total + amount) > 999999999.99;
 
     }
 
@@ -272,7 +270,7 @@ public class Items extends BaseActivity {
         animator.setDuration(500);
         animator.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams params = viewCartCl.getLayoutParams();
-            Utils.addLog("datadata_height",(int) (float) valueAnimator.getAnimatedValue()+"");
+            Utils.addLog("datadata_height", String.valueOf((int) (float) valueAnimator.getAnimatedValue()));
             params.height = (int) (float) valueAnimator.getAnimatedValue();
             viewCartCl.setLayoutParams(params);
         });
@@ -292,7 +290,7 @@ public class Items extends BaseActivity {
     public String checkCount(int position) {
         String count = "0";
         for (int i = 0; i < selectedProductList.size(); i++) {
-            if (selectedProductList.get(i).get("product_id").toString().equals(productList.get(position).get("product_id").toString())) {
+            if (selectedProductList.get(i).get("product_id").equals(productList.get(position).get("product_id"))) {
                 count = selectedProductList.get(i).get("product_qty");
                 Utils.addLog("datadata_count", selectedProductList.get(i).toString());
                 Utils.addLog("datadata_count", count);
@@ -303,21 +301,21 @@ public class Items extends BaseActivity {
         return count;
     }
 
-    public void openCustomBill(){
+    public void openCustomBill() {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
-        if(!isItemExist){
-            startActivityForResult(new Intent(this, QuickBill.class).putExtra("type","customItem"),12);
-        }else{
+        if (!isItemExist) {
+            startActivityForResult(new Intent(this, QuickBill.class).putExtra("type", "customItem"), 12);
+        } else {
             Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void addCustomItem(String amount,String description) {
+    public void addCustomItem(String amount, String description) {
         databaseAccess.open();
         boolean isItemExist = databaseAccess.checkCustomProductInCart();
         if (!isItemExist) {
-            if(checkCartTotalPriceForCustomItem(Double.parseDouble(amount))){
+            if (checkCartTotalPriceForCustomItem(Double.parseDouble(amount))) {
                 Toast.makeText(this, R.string.total_price_cannot_exceed, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -333,11 +331,11 @@ public class Items extends BaseActivity {
             product.put("product_description", description);
             String product_uuid = product.get("product_uuid");
             databaseAccess.open();
-            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid,description);
+            databaseAccess.addToCart(product_id, product_weight, weight_unit_id, amount, 1, product_stock, product_uuid, description);
             selectedProductList.add(convertProductToCartItem(product));
-            Utils.addLog("datadata", selectedProductList.size() + "");
+            Utils.addLog("datadata", String.valueOf(selectedProductList.size()));
             updateCartUI();
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.cutom_item_already_added), Toast.LENGTH_SHORT).show();
         }
     }
@@ -356,8 +354,8 @@ public class Items extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode==12){
-            addCustomItem(data.getStringExtra("amount"),data.getStringExtra("description"));
+        if (resultCode == RESULT_OK && requestCode == 12) {
+            addCustomItem(data.getStringExtra("amount"), data.getStringExtra("description"));
         }
     }
 }

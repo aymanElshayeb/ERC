@@ -1,11 +1,10 @@
 package com.app.smartpos.utils.baseDto;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class ServiceResult <T>{
+public class ServiceResult<T> {
 
     private int code;
     private String status;
@@ -23,6 +22,7 @@ public class ServiceResult <T>{
     public int getCode() {
         return code;
     }
+
     public void setCode(int code) {
         this.code = code;
     }
@@ -30,12 +30,15 @@ public class ServiceResult <T>{
     public void setStatus(String status) {
         this.status = status;
     }
+
     public String getStatus() {
         return this.status;
     }
+
     public void setData(Data<T> data) {
         this.data = data;
     }
+
     public Data<T> getData() {
         return this.data;
     }
@@ -43,8 +46,10 @@ public class ServiceResult <T>{
     public static class Data<T> {
         private List<T> returnedObj;
         private Integer total;
+
         public Data() {
         }
+
         public void setReturnedObj(List<T> returnedObj) {
             this.returnedObj = returnedObj;
         }

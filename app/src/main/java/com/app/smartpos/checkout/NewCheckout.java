@@ -14,7 +14,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -134,7 +133,7 @@ public class NewCheckout extends BaseActivity {
             cartProductList = databaseAccess.getCartProduct();
         } else {
             cartProductList = new ArrayList<>();
-            cartProductList.add(addCustomItem(getIntent().getStringExtra("amount"),getIntent().getStringExtra("description")));
+            cartProductList.add(addCustomItem(getIntent().getStringExtra("amount"), getIntent().getStringExtra("description")));
         }
         List<HashMap<String, String>> paymentMethodData;
         databaseAccess.open();
@@ -155,7 +154,7 @@ public class NewCheckout extends BaseActivity {
                 try {
                     Intent intent = device.pay(totalAmount);
                     launcher.launch(intent);
-                }catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -170,7 +169,7 @@ public class NewCheckout extends BaseActivity {
     }
 
     public void updateTotalPrice(List<HashMap<String, String>> list) {
-        Utils.addLog("datadata_size", list.size() + "");
+        Utils.addLog("datadata_size", String.valueOf(list.size()));
         double totalWithoutTax = 0;
 
         for (int i = 0; i < list.size(); i++) {
@@ -241,7 +240,7 @@ public class NewCheckout extends BaseActivity {
                     obj.put("original_order_id", null);
                     obj.put("card_type_code", card_type_code);
                     obj.put("approval_code", approval_code);
-                    obj.put("operation_sub_type", fromQuickBill?"freeText":"product");
+                    obj.put("operation_sub_type", fromQuickBill ? "freeText" : "product");
 
                     databaseAccess.open();
                     HashMap<String, String> configuration = databaseAccess.getConfiguration();
@@ -250,17 +249,17 @@ public class NewCheckout extends BaseActivity {
 
                     databaseAccess.open();
                     double totalPriceWithTax = databaseAccess.getTotalPriceWithTax();
-                    if(fromQuickBill){
-                        totalPriceWithTax=Double.parseDouble(cartProductList.get(0).get("product_price"));
+                    if (fromQuickBill) {
+                        totalPriceWithTax = Double.parseDouble(cartProductList.get(0).get("product_price"));
                     }
-                    Utils.addLog("datadata_total_cart",totalPriceWithTax+"");
+                    Utils.addLog("datadata_total_cart", String.valueOf(totalPriceWithTax));
                     obj.put("in_tax_total", totalPriceWithTax);
 
                     databaseAccess.open();
                     double totalPriceWithoutTax = databaseAccess.getTotalPriceWithoutTax();
-                    if(fromQuickBill){
+                    if (fromQuickBill) {
                         databaseAccess.open();
-                        totalPriceWithoutTax=totalPriceWithTax/(1.0+databaseAccess.getShopTax()/100.0);
+                        totalPriceWithoutTax = totalPriceWithTax / (1.0 + databaseAccess.getShopTax() / 100.0);
                     }
                     databaseAccess.open();
                     obj.put("ex_tax_total", totalPriceWithoutTax);
@@ -295,11 +294,11 @@ public class NewCheckout extends BaseActivity {
 
                         JSONObject objp = new JSONObject();
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
-                        String englishName=product.get(0).get("product_name_en");
-                        String arabicName=product.get(0).get("product_name_ar");
-                        if(!lines.get(i).get("product_description").isEmpty()){
-                            englishName=lines.get(i).get("product_description");
-                            arabicName=lines.get(i).get("product_description");
+                        String englishName = product.get(0).get("product_name_en");
+                        String arabicName = product.get(0).get("product_name_ar");
+                        if (!lines.get(i).get("product_description").isEmpty()) {
+                            englishName = lines.get(i).get("product_description");
+                            arabicName = lines.get(i).get("product_description");
                         }
                         objp.put("product_name_en", englishName);
                         objp.put("product_name_ar", arabicName);
@@ -343,14 +342,14 @@ public class NewCheckout extends BaseActivity {
         databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
 
         String orderId = sequenceMap.get("sequence");
-        Utils.addLog("datadata_seq",orderId);
+        Utils.addLog("datadata_seq", orderId);
         databaseAccess.open();
-        databaseAccess.insertOrder(orderId, obj, this,!fromQuickBill,databaseAccess);
+        databaseAccess.insertOrder(orderId, obj, this, !fromQuickBill, databaseAccess);
 
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType",getString(R.string.simplified_tax_invoice));
+        Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType", getString(R.string.simplified_tax_invoice));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -358,20 +357,20 @@ public class NewCheckout extends BaseActivity {
 
     }
 
-    public HashMap<String, String> addCustomItem(String amount,String description) {
+    public HashMap<String, String> addCustomItem(String amount, String description) {
         databaseAccess.open();
         HashMap<String, String> product = databaseAccess.getCustomProduct();
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("product_id", product.get("product_id"));
         map.put("product_price", amount);
-        if(description.isEmpty())
+        if (description.isEmpty())
             map.put("product_description", product.get("product_name_ar"));
         else
             map.put("product_description", description);
         map.put("product_qty", "1");
-        map.put("weight_unit_id",product.get("product_weight"));
-        map.put("product_stock",product.get("product_stock"));
-        map.put("product_weight_unit_id",product.get("product_weight_unit_id"));
+        map.put("weight_unit_id", product.get("product_weight"));
+        map.put("product_stock", product.get("product_stock"));
+        map.put("product_weight_unit_id", product.get("product_weight_unit_id"));
         map.put("product_uuid", product.get("product_uuid"));
         return map;
     }
@@ -382,9 +381,10 @@ public class NewCheckout extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 12 && resultCode == Activity.RESULT_OK) {
             double change = data.getDoubleExtra("change", 0);
-             Utils.addLog("datadata_details",change+" "+totalAmount);
+            double cashGiven = Double.parseDouble(data.getStringExtra("cashGiven"));
+            Utils.addLog("datadata_details", change + " " + totalAmount);
             try {
-                proceedOrder("", "CASH", "", totalTax, "0", "", "", totalAmount, change);
+                proceedOrder("", "CASH", "", totalTax, "0", "", "", cashGiven, change);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

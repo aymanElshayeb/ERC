@@ -9,16 +9,13 @@ import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.Manifest;
-
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +27,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -70,7 +65,7 @@ public class DownloadDataDialog extends DialogFragment {
     EditText passwordEt;
     ProgressBar progressBar;
     Button downloadBtn;
-    private boolean isPasswordShown=false;
+    private boolean isPasswordShown = false;
 
     private static final String ARG_OPERATION_TYPE = "operation_type";
     public static final String OPERATION_UPLOAD = "upload";
@@ -102,8 +97,8 @@ public class DownloadDataDialog extends DialogFragment {
 //            passwordEt.setText("01111Mm&");
 
             String lang = LocaleManager.getLanguage(requireActivity());
-            emailEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
-            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            emailEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            passwordEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
             if (getArguments() != null)
                 operationType = getArguments().getString(ARG_OPERATION_TYPE);
@@ -113,10 +108,10 @@ public class DownloadDataDialog extends DialogFragment {
 
             eyeIm.setOnClickListener(view -> {
                 isPasswordShown = !isPasswordShown;
-                if(isPasswordShown){
+                if (isPasswordShown) {
                     eyeIm.setAlpha(1.0f);
                     passwordEt.setTransformationMethod(null);
-                }else{
+                } else {
                     eyeIm.setAlpha(0.5f);
                     passwordEt.setTransformationMethod(new PasswordTransformationMethod());
                 }
@@ -246,18 +241,18 @@ public class DownloadDataDialog extends DialogFragment {
                 build();
 
         Data lastSync = null;
-        if(SharedPrefUtils.getAuthorization().isEmpty()){
+        if (SharedPrefUtils.getAuthorization().isEmpty()) {
             lastSync = new Data.Builder().
                     putString("url", LAST_SYNC_URL).
                     putString("tenantId", conf.get("merchant_id")).
                     putString("ecrCode", conf.get("ecr_code")).
                     build();
-        } else{
+        } else {
             lastSync = new Data.Builder().
                     putString("url", LAST_SYNC_URL).
                     putString("tenantId", conf.get("merchant_id")).
                     putString("ecrCode", conf.get("ecr_code")).
-                    putString("Authorization",SharedPrefUtils.getAuthorization()).
+                    putString("Authorization", SharedPrefUtils.getAuthorization()).
                     build();
         }
         Data exportData = new Data.Builder()
@@ -282,7 +277,7 @@ public class DownloadDataDialog extends DialogFragment {
         OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
                 setInputData(uploadInputData).
                 build();
-        WorkContinuation continuation ;
+        WorkContinuation continuation;
         if (SharedPrefUtils.getAuthorization().isEmpty()) {
             continuation = WorkManager.getInstance(activity)
                     .beginWith(loginRequest)
@@ -392,7 +387,7 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        if(workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
+                        if (workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
                             Utils.addLog("WORK INFO", workInfo.getOutputData().getString("Authorization"));
 //                        authorization= workInfo.getOutputData().getString("Authorization");
                             SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
@@ -404,7 +399,7 @@ public class DownloadDataDialog extends DialogFragment {
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
-                        Utils.addLog("log_auth",SharedPrefUtils.getAuthorization());
+                        Utils.addLog("log_auth", SharedPrefUtils.getAuthorization());
                         handleWorkCompletion(workInfo);
                     }
                 });
@@ -414,7 +409,7 @@ public class DownloadDataDialog extends DialogFragment {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage(requireActivity().getString(R.string.data_synced_successfully));
-            Utils.addLog("datadata","here");
+            Utils.addLog("datadata", "here");
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -425,7 +420,7 @@ public class DownloadDataDialog extends DialogFragment {
     }
 
     private void closePendingScreen() {
-        Utils.addLog("LOG AUTHINSIDE Close ",SharedPrefUtils.getAuthorization());
+        Utils.addLog("LOG AUTHINSIDE Close ", SharedPrefUtils.getAuthorization());
         if (getActivity() instanceof Refund) {
             ((Refund) getActivity()).callApi();
         } else if (getActivity() instanceof RefundOrOrderList) {

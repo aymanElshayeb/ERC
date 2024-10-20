@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class LoginFragment extends Fragment {
 
     private View root;
     private Context context;
-    private boolean isPasswordShown=false;
+    private boolean isPasswordShown = false;
 
     @Nullable
     @Override
@@ -52,7 +50,6 @@ public class LoginFragment extends Fragment {
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
 
 
-
             languageCl.setOnClickListener(view -> {
                 ChangeLanguageDialog dialog = new ChangeLanguageDialog();
                 dialog.show(getParentFragmentManager(), "change language dialog");
@@ -60,10 +57,10 @@ public class LoginFragment extends Fragment {
 
             eyeIm.setOnClickListener(view -> {
                 isPasswordShown = !isPasswordShown;
-                if(isPasswordShown){
+                if (isPasswordShown) {
                     eyeIm.setAlpha(1.0f);
                     passwordEt.setTransformationMethod(null);
-                }else{
+                } else {
                     eyeIm.setAlpha(0.5f);
                     passwordEt.setTransformationMethod(new PasswordTransformationMethod());
                 }
@@ -87,9 +84,9 @@ public class LoginFragment extends Fragment {
                 databaseAccess.open();
                 HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString().trim());
                 if (map != null) {
-                    if(((AuthActivity)requireActivity()).isConnected()){
-                        ((AuthActivity)requireActivity()).loginWorkers(emailEt.getText().toString().trim(),passwordEt.getText().toString());
-                    }else {
+                    if (((AuthActivity) requireActivity()).isConnected()) {
+                        ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
+                    } else {
                         Hasher hasher = new Hasher();
                         boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                         //Utils.addLog("datadata",map.toString());

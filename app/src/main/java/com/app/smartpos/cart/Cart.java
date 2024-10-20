@@ -1,9 +1,5 @@
 package com.app.smartpos.cart;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -11,6 +7,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartAdapter;
@@ -33,7 +33,7 @@ public class Cart extends BaseActivity {
 
     String currency;
     DatabaseAccess databaseAccess;
-    boolean checkConnectionOnce=true;
+    boolean checkConnectionOnce = true;
     private RecyclerView recyclerView;
 
     @Override
@@ -82,27 +82,27 @@ public class Cart extends BaseActivity {
         });
     }
 
-    public void updateTotalPrice(List<HashMap<String, String>> list){
-        double totalWithoutTax=0;
-        double total=0;
-        for(int i=0;i<list.size();i++){
-            String productId=list.get(i).get("product_id");
-            double productPrice=Double.parseDouble(list.get(i).get("product_price"));
-            double productCount=Double.parseDouble(list.get(i).get("product_qty"));
+    public void updateTotalPrice(List<HashMap<String, String>> list) {
+        double totalWithoutTax = 0;
+        double total = 0;
+        for (int i = 0; i < list.size(); i++) {
+            String productId = list.get(i).get("product_id");
+            double productPrice = Double.parseDouble(list.get(i).get("product_price"));
+            double productCount = Double.parseDouble(list.get(i).get("product_qty"));
             databaseAccess.open();
-            double productTax = 1+databaseAccess.getProductTax(productId)/100;
-            totalWithoutTax+= (productPrice/productTax)*productCount;
-            total+=productPrice*productCount;
-            Utils.addLog("datadata",(productPrice*productCount)+" "+productTax+" "+totalWithoutTax+" "+total);
+            double productTax = 1 + databaseAccess.getProductTax(productId) / 100;
+            totalWithoutTax += (productPrice / productTax) * productCount;
+            total += productPrice * productCount;
+            Utils.addLog("datadata", (productPrice * productCount) + " " + productTax + " " + totalWithoutTax + " " + total);
         }
-        Utils.addLog("datadata_total",totalWithoutTax+" "+total);
-        Utils.addLog("datadata_total",Utils.trimLongDouble(total));
+        Utils.addLog("datadata_total", totalWithoutTax + " " + total);
+        Utils.addLog("datadata_total", Utils.trimLongDouble(total));
 
-        totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax)+" "+currency);
-        totalVatTv.setText(Utils.trimLongDouble(total-totalWithoutTax)+" "+currency);
-        totalAmountTv.setText(Utils.trimLongDouble(total)+" "+currency);
+        totalAmountWithoutVatTv.setText(Utils.trimLongDouble(totalWithoutTax) + " " + currency);
+        totalVatTv.setText(Utils.trimLongDouble(total - totalWithoutTax) + " " + currency);
+        totalAmountTv.setText(Utils.trimLongDouble(total) + " " + currency);
 
-        if(total==0){
+        if (total == 0) {
             finish();
         }
     }
@@ -110,7 +110,7 @@ public class Cart extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isConnected()){
+        if (!isConnected()) {
             setAdapter();
         }
     }
@@ -121,9 +121,9 @@ public class Cart extends BaseActivity {
         setAdapter();
     }
 
-    private void setAdapter(){
-        if(checkConnectionOnce){
-            checkConnectionOnce=false;
+    private void setAdapter() {
+        if (checkConnectionOnce) {
+            checkConnectionOnce = false;
             runOnUiThread(() -> {
                 recyclerView.setAdapter(productCartAdapter);
             });
@@ -135,8 +135,8 @@ public class Cart extends BaseActivity {
         for (int i = 0; i < cartProductList.size(); i++) {
             double productPrice = Double.parseDouble(cartProductList.get(i).get("product_price"));
             double productCount = Double.parseDouble(cartProductList.get(i).get("product_qty"));
-            total += productPrice * (productCount+(i==pos ? 1:0));
+            total += productPrice * (productCount + (i == pos ? 1 : 0));
         }
-        return total>999999999.99;
+        return total > 999999999.99;
     }
 }

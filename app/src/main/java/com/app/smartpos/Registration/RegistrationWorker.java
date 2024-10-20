@@ -3,6 +3,7 @@ package com.app.smartpos.Registration;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -13,7 +14,7 @@ import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.google.gson.Gson;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,10 +43,12 @@ public class RegistrationWorker extends Worker {
             return Result.failure();
         }
         // Perform registration logic here
+        String apiKey=SharedPrefUtils.getApiKey();
+        Utils.addLog("datadata_key",apiKey);
         OkHttpClient client = getUnsafeOkHttpClient();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", Constant.API_KEY).
+                add("apikey", apiKey).
                 build();
         //prepare the dto class
         JSONObject json = new JSONObject();
@@ -92,10 +95,10 @@ public class RegistrationWorker extends Worker {
                         putString("Authorization", authorization).
                         putString("ecrCode", returnedObj.getString("ecrCode")).
                         build();
-                String ecr=returnedObj.getString("ecrCode");
-                String merchantId=returnedObj.getJSONObject("merchant").getString("merchantId");
-                String logo=returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
-                String vatNumber=returnedObj.getJSONObject("merchant").getString("VATNumber");
+                String ecr = returnedObj.getString("ecrCode");
+                String merchantId = returnedObj.getJSONObject("merchant").getString("merchantId");
+                String logo = returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
+                String vatNumber = returnedObj.getJSONObject("merchant").getString("VATNumber");
                 databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber);
                 databaseAccess.open();
                 return Result.success(outputData);

@@ -1,10 +1,8 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -12,14 +10,9 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.common.Utils;
-import com.app.smartpos.settings.Synchronization.dtos.ProductImagesResponseDto;
-import com.app.smartpos.utils.baseDto.ServiceResult;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -37,47 +30,47 @@ public class ProductImagesSizeWorker extends Worker {
     @Override
     public Result doWork() {
         String urL = getInputData().getString("url");
-        String tenantId= getInputData().getString("tenantId");
-        String authorization= getInputData().getString("Authorization");
+        String tenantId = getInputData().getString("tenantId");
+        String authorization = getInputData().getString("Authorization");
 
-        if (urL==null || tenantId==null || authorization==null) {
-            Utils.addLog("datadata_worker","fail");
+        if (urL == null || tenantId == null || authorization == null) {
+            Utils.addLog("datadata_worker", "fail");
             return Result.failure();
         }
         FormBody formBody = new FormBody.Builder()
                 .add("email", "email")
-                .add("password","")
+                .add("password", "")
                 .build();
         OkHttpClient client = getUnsafeOkHttpClient();
-        Headers headers=new Headers.Builder().
+        Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("Authorization",authorization).
-                add("apikey",API_KEY).
+                add("Authorization", authorization).
+                add("apikey", SharedPrefUtils.getApiKey()).
                 build();
-        Utils.addLog("datadata_worker",headers.toString());
-        Utils.addLog("datadata_worker",authorization);
+        Utils.addLog("datadata_worker", headers.toString());
+        Utils.addLog("datadata_worker", authorization);
         Request request = new Request.Builder()
                 .url(urL) // Replace with your server's upload endpoint
                 .post(formBody)
                 .headers(headers)
                 .build();
-        Utils.addLog("datadata_worker",request.toString());
+        Utils.addLog("datadata_worker", request.toString());
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                Utils.addLog("datadata_worker","success");
+                Utils.addLog("datadata_worker", "success");
 
 
                 //ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
                 JSONObject responseBody = new JSONObject(response.body().string());
-                Utils.addLog("datadata_worker",responseBody.toString());
-                JSONObject returnedObj=responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+                Utils.addLog("datadata_worker", responseBody.toString());
+                JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
                 long imagesSize = returnedObj.getLong("imagesSize");
                 String newUpdateTimestamp = returnedObj.getString("newUpdateTimestamp");
 
 
-                Data data=new Data.Builder().
-                        putLong("imagesSize",imagesSize).
-                        putString("newUpdateTimestamp",newUpdateTimestamp).
+                Data data = new Data.Builder().
+                        putLong("imagesSize", imagesSize).
+                        putString("newUpdateTimestamp", newUpdateTimestamp).
                         build();
                 return Result.success(data); // Return success if the response is successful
             } else {

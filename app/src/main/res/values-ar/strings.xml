@@ -325,7 +325,7 @@
     <string name="welcome_to_qaema">مرحبًا بك في qaema ECR</string>
     <string name="Please_enter_your_login_info">يرجى إدخال معلومات تسجيل الدخول الخاصة بك</string>
     <string name="email">البريد الإلكتروني</string>
-    <string name="company_id">الرقم التعريفي للشركة</string>
+    <string name="company_id">الرقم التعريفى للشركة</string>
     <string name="password">كلمة المرور</string>
     <string name="forget_password">نسيت كلمة المرور؟</string>
     <string name="login">تسجيل الدخول</string>
@@ -404,8 +404,8 @@
     <string name="change_email">تغيير البريد الإلكتروني</string>
     <string name="demo">العرض التجريبي</string>
     <string name="user_name_empty">حقل اسم المستخدم فارغ</string>
-    <string name="email_empty">حقل البريد الإلكتروني فارغ</string>
-    <string name="tenant_empty">حقل الرقم التعريفى للشركة فارغ</string>
+    <string name="email_empty">حقل البريد الإلكترونى فارغ</string>
+    <string name="company_empty">حقل الرقم التعريفى للشركة فارغ</string>
     <string name="password_empty">حقل كلمة المرور فارغ</string>
     <string name="merchant_empty">حقل معرف التاجر فارغ</string>
     <string name="leave_cash_empty">يرجى إضافة أموال نقدية للخزنة</string>

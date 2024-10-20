@@ -46,8 +46,7 @@ public class ThirdTag {
     public final static String Bitmap = "BitmapImage";
 
     /**
-
-    /**
+     * /**
      * amount
      */
     public final static String AMOUNT = "amount";
@@ -85,7 +84,7 @@ public class ThirdTag {
      */
     public final static String BALANCE = "balance";
     /**
-     *   original VoucherNo
+     * original VoucherNo
      */
     public final static String OLD_TRACE_NO = "oriVoucherNo";
 
@@ -109,13 +108,13 @@ public class ThirdTag {
 
 
     /**
-     *  external OrderNo
+     * external OrderNo
      */
     public final static String OUT_ORDERNO = "outOrderNo";
 
     /**
      * 付款码,收银台扫码后，结果通过该TAG传给收单
-     *  using in scan transaction
+     * using in scan transaction
      */
     public final static String PAY_CODE = "payCode";
 
@@ -127,12 +126,10 @@ public class ThirdTag {
 
     /**
      * 是否需要主管密码 ,默认显示.  true：显示  false：不显示
-     *
      */
     public final static String IS_OPEN_ADMIN = "isOpenAdminVerify";
     /**
      * 读卡方式 ，
-     *
      */
     public final static String CARD_INPUT_MODE = "cardInputMode";
 
@@ -191,10 +188,10 @@ public class ThirdTag {
      */
     public final static String INSERT_SALE = "insertSale";
 
-    public final static  String JSON_DATA="JSON_DATA";
+    public final static String JSON_DATA = "JSON_DATA";
 
     //CR# 15.09.2021
-    public final static  String XML_DATA="XML_DATA";
+    public final static String XML_DATA = "XML_DATA";
 
     //========================
 }

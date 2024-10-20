@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
@@ -15,10 +18,6 @@ import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
-
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteStatement;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +33,7 @@ import java.util.Locale;
 
 public class DatabaseAccess {
     private static DatabaseAccess instance;
-    private DatabaseOpenHelper openHelper;
+    private final SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
 
     /**
@@ -43,7 +42,7 @@ public class DatabaseAccess {
      * @param context
      */
     private DatabaseAccess(Context context) {
-        this.openHelper = DatabaseOpenHelper.getInstance(context);
+        this.openHelper = new DatabaseOpenHelper(context);
     }
 
     /**
@@ -65,7 +64,7 @@ public class DatabaseAccess {
      * Open the database connection.
      */
     public void open() {
-        this.database = openHelper.getWritableDatabase(DatabaseOpenHelper.DATABASE_PASSWORD);
+        this.database = openHelper.getWritableDatabase();
     }
 
     /**
@@ -77,6 +76,94 @@ public class DatabaseAccess {
         }
     }
 
+    //insert customer
+    public boolean addCustomer(String customer_name, String customer_cell,
+                               String customer_email, String customer_address,
+                               Boolean customer_active) {
+
+        ContentValues values = new ContentValues();
+
+
+        values.put("customer_name", customer_name);
+        values.put("customer_cell", customer_cell);
+        values.put("customer_email", customer_email);
+        values.put("customer_address", customer_address);
+        values.put("customer_active", customer_active);
+
+        long check = database.insert("customers", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+
+    //insert category
+    public boolean addCategory(String category_name) {
+
+        ContentValues values = new ContentValues();
+
+
+        values.put("category_name", category_name);
+
+
+        long check = database.insert("product_category", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+
+    //insert payment method
+    public boolean addPaymentMethod(String payment_method_name, boolean payment_method_active) {
+
+        ContentValues values = new ContentValues();
+
+
+        values.put("payment_method_name", payment_method_name);
+        values.put("payment_method_active", payment_method_active);
+
+        long check = database.insert("payment_method", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+
+    //insert unit
+    public boolean addUnit(String unitName) {
+
+        ContentValues values = new ContentValues();
+
+
+        values.put("weight_unit", unitName);
+
+
+        long check = database.insert("product_weight", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+
+    //insert order type
+    public boolean addOrderType(String orderType) {
+
+        ContentValues values = new ContentValues();
+
+
+        values.put("order_type_name", orderType);
+
+
+        long check = database.insert("order_type", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
 
     public String getLastShift(String key) {
         String result = "";
@@ -122,7 +209,7 @@ public class DatabaseAccess {
         try {
             check = database.insertOrThrow("shift", null, values);
         } catch (Exception e) {
-            Utils.addLog("datadata", e.getMessage() + "");
+            Utils.addLog("datadata", e.getMessage());
         }
 
 
@@ -167,11 +254,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -189,11 +272,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -210,11 +289,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -231,11 +306,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -255,11 +326,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -282,11 +349,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -315,11 +378,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -340,7 +399,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             do {
                 check = database.update("product_image", values, "product_uuid=?", new String[]{productValues.get("product_uuid").toString()});
-                Utils.addLog("datadata_check", check + "");
+                Utils.addLog("datadata_check", String.valueOf(check));
             } while (cursor.moveToNext());
         } else {
             check = database.insert("product_image", null, values);
@@ -407,11 +466,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -432,11 +487,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -457,11 +508,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -481,11 +528,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -505,11 +548,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
 
@@ -541,7 +580,7 @@ public class DatabaseAccess {
     public int getShiftWithTimestamp(long timeStamp) {
 
         int id = 0;
-        Cursor cursor = database.rawQuery("SELECT * FROM shift WHERE end_date_time= " + timeStamp + "", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM shift WHERE end_date_time= " + timeStamp, null);
 
 
         if (cursor.moveToFirst()) {
@@ -642,7 +681,7 @@ public class DatabaseAccess {
         Cursor cursor = null;
         String weight_unit_name = "n/a";
         try {
-            cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id + "", null);
+            cursor = database.rawQuery("SELECT * FROM product_weight WHERE weight_id=" + weight_unit_id, null);
             if (cursor.moveToFirst()) {
                 do {
 
@@ -667,7 +706,7 @@ public class DatabaseAccess {
     public String getSupplierName(String supplier_id) {
 
         String supplier_name = "n/a";
-        Cursor cursor = database.rawQuery("SELECT * FROM suppliers WHERE suppliers_id=" + supplier_id + "", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM suppliers WHERE suppliers_id=" + supplier_id, null);
 
 
         if (cursor.moveToFirst()) {
@@ -693,7 +732,7 @@ public class DatabaseAccess {
 
         String product_category = "n/a";
         if (category_id.isEmpty() || category_id.isBlank()) return product_category;
-        Cursor cursor = database.rawQuery("SELECT * FROM product_category WHERE category_id=" + category_id + "", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM product_category WHERE category_id=" + category_id, null);
 
 
         if (cursor.moveToFirst()) {
@@ -841,7 +880,7 @@ public class DatabaseAccess {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Utils.addLog("datadata", id + "");
+        Utils.addLog("datadata", String.valueOf(id));
 
 
         return id;
@@ -1123,7 +1162,7 @@ public class DatabaseAccess {
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getOrderListWithTime(long time) {
         ArrayList<HashMap<String, String>> orderList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE order_timestamp > " + time + "", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM order_list WHERE order_timestamp > " + time, null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
@@ -1430,7 +1469,7 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
 
-        Log.d("total_price", "" + total_price);
+        Log.d("total_price", String.valueOf(total_price));
         return total_price;
     }
 
@@ -1466,7 +1505,7 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
 
-        Log.d("total_price", "" + total_cost);
+        Log.d("total_price", String.valueOf(total_cost));
         return total_cost;
     }
 
@@ -1479,11 +1518,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -2024,7 +2059,7 @@ public class DatabaseAccess {
 
 
         Cursor cursor = database.rawQuery("SELECT * FROM order_details WHERE invoice_id='" + invoice_id + "'", null);
-        Utils.addLog("datadata_tax2", cursor.getCount() + "");
+        Utils.addLog("datadata_tax2", String.valueOf(cursor.getCount()));
 
         if (cursor.moveToFirst()) {
             do {
@@ -2152,7 +2187,7 @@ public class DatabaseAccess {
         int id = 0;
         Cursor cursor = database.rawQuery("SELECT * FROM users", null);
 
-        Utils.addLog("datadata", "" + cursor.moveToFirst());
+        Utils.addLog("datadata", String.valueOf(cursor.moveToFirst()));
         if (cursor.moveToFirst()) {
             do {
 
@@ -2437,7 +2472,7 @@ public class DatabaseAccess {
     public Boolean checkCustomProductInCart() {
         Cursor cursor = database.rawQuery("SELECT * FROM product_cart Where product_uuid = 'CUSTOM_ITEM'", null);
         boolean exist = cursor.moveToFirst();
-        Utils.addLog("datadata_exist", exist + "");
+        Utils.addLog("datadata_exist", String.valueOf(exist));
         cursor.close();
         database.close();
         return exist;
@@ -2870,11 +2905,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
     @SuppressLint("Range")
@@ -2891,11 +2922,7 @@ public class DatabaseAccess {
         database.close();
 
         //if data insert success, its return 1, if failed return -1
-        if (check == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        return check != -1;
     }
 
     @SuppressLint("Range")
@@ -2910,7 +2937,7 @@ public class DatabaseAccess {
             if (cursor != null && cursor.moveToFirst()) {
                 nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value"))) + 1;
                 prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
-                Utils.addLog("datadata_seq", nextValue + "");
+                Utils.addLog("datadata_seq", String.valueOf(nextValue));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2948,11 +2975,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -2965,11 +2988,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -2982,11 +3001,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -2998,11 +3013,7 @@ public class DatabaseAccess {
         long check = database.delete("order_type", "order_type_id=?", new String[]{typeId});
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -3013,11 +3024,7 @@ public class DatabaseAccess {
         long check = database.delete("product_weight", "weight_id=?", new String[]{unitId});
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -3035,11 +3042,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -3053,11 +3056,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -3070,11 +3069,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
@@ -3087,11 +3082,7 @@ public class DatabaseAccess {
 
         database.close();
 
-        if (check == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return check == 1;
 
     }
 
