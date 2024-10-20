@@ -65,8 +65,6 @@ public class RegistrationWorker extends Worker {
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(json.toString(), JSON);
-        Log.i("datadata_register",json.toString());
-        Log.i("datadata_register",headers.toString());
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(body)
