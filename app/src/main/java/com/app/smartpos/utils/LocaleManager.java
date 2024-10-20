@@ -11,14 +11,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import androidx.annotation.StringDef;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
 public class LocaleManager {
@@ -28,9 +24,9 @@ public class LocaleManager {
     public static void onCreate(Context context) {
 
         String lang;
-        if(getLanguage(context).isEmpty()){
+        if (getLanguage(context).isEmpty()) {
             lang = getPersistedData(context, Locale.getDefault().getLanguage());
-        }else {
+        } else {
             lang = getLanguage(context);
         }
 
@@ -82,25 +78,27 @@ public class LocaleManager {
 
     }
 
-    public static void changeLang(){
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
-            Locale locale=new Locale(getLanguage(MultiLanguageApp.getApp()));
+    public static void changeLang() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Locale locale = new Locale(getLanguage(MultiLanguageApp.getApp()));
             Locale.setDefault(locale);
-            Configuration configuration=MultiLanguageApp.getApp().getResources().getConfiguration();
+            Configuration configuration = MultiLanguageApp.getApp().getResources().getConfiguration();
             configuration.setLocale(locale);
-            MultiLanguageApp.getApp().getResources().updateConfiguration(configuration,MultiLanguageApp.getApp().getResources().getDisplayMetrics());
+            MultiLanguageApp.getApp().getResources().updateConfiguration(configuration, MultiLanguageApp.getApp().getResources().getDisplayMetrics());
         }
     }
-    public static void updateLocale(Context context,String lang) {
+
+    public static void updateLocale(Context context, String lang) {
         persist(context, lang);
 
-        LocaleListCompat localeListCompat=LocaleListCompat.forLanguageTags(lang);
-        Handler handler=new Handler(Looper.getMainLooper());
+        LocaleListCompat localeListCompat = LocaleListCompat.forLanguageTags(lang);
+        Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> AppCompatDelegate.setApplicationLocales(localeListCompat));
 
 
     }
-    public static void resetApp(Activity activity){
+
+    public static void resetApp(Activity activity) {
         PackageManager pm = activity.getPackageManager();
         Intent intent = pm.getLaunchIntentForPackage(activity.getPackageName());
         activity.finishAffinity(); // Finishes all activities.

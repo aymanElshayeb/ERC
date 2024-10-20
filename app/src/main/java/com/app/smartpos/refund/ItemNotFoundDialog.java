@@ -22,12 +22,12 @@ public class ItemNotFoundDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(root==null){
+        if (root == null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            root=inflater.inflate(R.layout.dialog_item_not_found,container,false);
+            root = inflater.inflate(R.layout.dialog_item_not_found, container, false);
             setCancelable(false);
 
-            Button doneBtn=root.findViewById(R.id.done_btn);
+            Button doneBtn = root.findViewById(R.id.done_btn);
 
             doneBtn.setOnClickListener(view -> {
                 dismissAllowingStateLoss();
@@ -43,7 +43,7 @@ public class ItemNotFoundDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = (int)(getContext().getResources().getDisplayMetrics().widthPixels*0.9);
+        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }

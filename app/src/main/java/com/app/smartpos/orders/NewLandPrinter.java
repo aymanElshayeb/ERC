@@ -4,23 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Base64;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.app.smartpos.Constant;
-import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.app.smartpos.utils.qrandbrcodegeneration.BarcodeEncoder;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGeneration;
-import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
 import com.google.zxing.WriterException;
 import com.newland.sdk.me.module.printer.ErrorCode;
 import com.newland.sdk.me.module.printer.ModuleManage;
@@ -28,7 +19,6 @@ import com.newland.sdk.me.module.printer.PrintListener;
 import com.newland.sdk.me.module.printer.PrinterModule;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +33,7 @@ public class NewLandPrinter extends BaseActivity {
     HashMap<String, String> configuration;
     String merchantTaxNumber, merchantId, productCode;
     PrinterModule mPrinterModule;
-    String currency="";
+    String currency = "";
     StringBuffer printDara;
 
 
@@ -53,10 +43,10 @@ public class NewLandPrinter extends BaseActivity {
     }
 
 
-    public boolean printReceipt(Context context,String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
+    public boolean printReceipt(Context context, String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandPrinter.this);
         databaseAccess.open();
-        this.currency=currency;
+        this.currency = currency;
 
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
@@ -77,11 +67,10 @@ public class NewLandPrinter extends BaseActivity {
             String bitmapName1 = "logo";
 
 
+            Bitmap bitmapMerchant = printMerchantId(merchantId);
+            Utils.addLog("datadata_size", bitmapMerchant.getWidth() + " " + bitmapMerchant.getHeight());
 
-            Bitmap bitmapMerchant=printMerchantId(merchantId);
-            Utils.addLog("datadata_size",bitmapMerchant.getWidth()+" "+bitmapMerchant.getHeight());
-
-            Bitmap bitmap=loadBitmapFromView(decodedByte,bitmapMerchant);
+            Bitmap bitmap = loadBitmapFromView(decodedByte, bitmapMerchant);
             bitmaps.put(bitmapName1, bitmap);
 
             printDara.append("*image c 293*400 path:" + bitmapName1 + "\n");
@@ -110,12 +99,12 @@ public class NewLandPrinter extends BaseActivity {
             mPrinterModule.print(printDara.toString(), bitmaps, new PrintListener() {
                 @Override
                 public void onSuccess() {
-                    Utils.addLog("datadata","done");
+                    Utils.addLog("datadata", "done");
                 }
 
                 @Override
                 public void onError(ErrorCode errorCode, String s) {
-                    Utils.addLog("datadata_error","error "+errorCode+" "+s);
+                    Utils.addLog("datadata_error", "error " + errorCode + " " + s);
                 }
             });
         } catch (Exception e) {
@@ -126,28 +115,28 @@ public class NewLandPrinter extends BaseActivity {
 
     }
 
-    public Bitmap loadBitmapFromView(Bitmap logo,Bitmap bitmap){
+    public Bitmap loadBitmapFromView(Bitmap logo, Bitmap bitmap) {
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(293, 200, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
         //canvas.drawBi
-        canvas.drawBitmap(logo,0,0,new Paint());
-        canvas.drawBitmap(bitmap,0,logo.getHeight()+40,new Paint());
+        canvas.drawBitmap(logo, 0, 0, new Paint());
+        canvas.drawBitmap(bitmap, 0, logo.getHeight() + 40, new Paint());
         return bmp;
     }
 
     private void printZatcaQrCode(DatabaseAccess databaseAccess) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
         String data = zatcaQRCodeGeneration.getQrCodeString(orderList, databaseAccess, orderDetailsList, configuration);
-        printDara.append("!QRCODE 200 0 3\n*QRCODE c "+data+"\n");
+        printDara.append("!QRCODE 200 0 3\n*QRCODE c " + data + "\n");
         printDara.append("*feedline 16\n");
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {
 
         String text = "Total:";
-        String printString = priceAfterTax+"";
-        printDara.append("!NLFONT 15 15 3\n*TEXT l "+text+"\n!NLFONT 15 15 3\n*text r "+currency+printString+"\n");
+        String printString = String.valueOf(priceAfterTax);
+        printDara.append("!NLFONT 15 15 3\n*TEXT l " + text + "\n!NLFONT 15 15 3\n*text r " + currency + printString + "\n");
         //printDara.append("!NLFONT 15 15 3\n*text l "+printString+"\n");
         printDara.append("!NLFONT 15 15 3\n*text l ----------------------------------------\n");
 
@@ -156,24 +145,24 @@ public class NewLandPrinter extends BaseActivity {
     private void printTax(String tax) {
 
         String text = "Total Tax:";
-        String value = currency+tax;
-        printDara.append("!NLFONT 15 15 3\n*TEXT l "+text+"\n!NLFONT 15 15 3\n*text r "+value+"\n");
+        String value = currency + tax;
+        printDara.append("!NLFONT 15 15 3\n*TEXT l " + text + "\n!NLFONT 15 15 3\n*text r " + value + "\n");
         printDara.append("!NLFONT 15 15 3\n*text l ----------------------------------------\n");
 
     }
 
     private void printDiscount(String discount) {
         String text = "Discount:";
-        String value = currency+discount;
-        printDara.append("!NLFONT 15 15 3\n*TEXT l "+text+"\n!NLFONT 15 15 3\n*text r "+value+"\n");
+        String value = currency + discount;
+        printDara.append("!NLFONT 15 15 3\n*TEXT l " + text + "\n!NLFONT 15 15 3\n*text r " + value + "\n");
 //        printDara.append("!NLFONT 15 15 3\n*text l "+printString+"\n");
     }
 
     private void printTotalExcludingTax(double priceBeforeTax) {
 
         String text = "Sub Total:";
-        String value = currency+priceBeforeTax;
-        printDara.append("!NLFONT 15 15 3\n*TEXT l "+text+"\n!NLFONT 15 15 3\n*text r "+value+"\n");
+        String value = currency + priceBeforeTax;
+        printDara.append("!NLFONT 15 15 3\n*TEXT l " + text + "\n!NLFONT 15 15 3\n*text r " + value + "\n");
 
     }
 
@@ -187,8 +176,8 @@ public class NewLandPrinter extends BaseActivity {
             qty = orderDetailsList.get(i).get("product_qty");
             productTotalPrice = Double.parseDouble(price) * Integer.parseInt(qty);
 
-            printDara.append("!NLFONT 15 15 3\n*TEXT l "+name+" \n!NLFONT 15 15 3\n*text r "+currency+price+"\n");
-            printDara.append("!NLFONT 15 15 3\n*text l ("+qty+"*"+currency+price+") \n");
+            printDara.append("!NLFONT 15 15 3\n*TEXT l " + name + " \n!NLFONT 15 15 3\n*text r " + currency + price + "\n");
+            printDara.append("!NLFONT 15 15 3\n*text l (" + qty + "*" + currency + price + ") \n");
             printDara.append("!NLFONT 15 15 3\n*text l ----------------------------------------\n");
         }
     }
@@ -206,7 +195,7 @@ public class NewLandPrinter extends BaseActivity {
 
     private void printMerchantTaxNumber(String merchantTaxNumber) {
         String text = "Merchant tax number:";
-        String printString = text+" "+merchantTaxNumber;
+        String printString = text + " " + merchantTaxNumber;
         printDara.append("!NLFONT 15 15 3\n*text c " + printString + "\n");
     }
 
@@ -218,7 +207,7 @@ public class NewLandPrinter extends BaseActivity {
         ArrayList<Bitmap> bitmaps = new ArrayList<>();
         bitmaps.add(PrintingHelper.createBitmapFromText(merchantId));
         bitmaps.add(PrintingHelper.createBitmapFromText("الرقم الضريبى :"));
-        return PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps,45);
+        return PrintingHelper.combineMultipleBitmapsHorizontally(bitmaps, 45);
 
     }
 

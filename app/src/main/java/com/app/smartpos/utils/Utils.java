@@ -15,8 +15,8 @@ public class Utils {
             0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23,
             0x23, 0x23, 0x23};
 
-    private static String hexStr = "0123456789ABCDEF";
-    private static String[] binaryArray = {"0000", "0001", "0010", "0011",
+    private static final String hexStr = "0123456789ABCDEF";
+    private static final String[] binaryArray = {"0000", "0001", "0010", "0011",
             "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011",
             "1100", "1101", "1110", "1111"};
 

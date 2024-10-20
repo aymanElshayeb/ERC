@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.fonts.Font;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
@@ -20,12 +19,8 @@ import com.app.smartpos.utils.printerFactory;
 import com.app.smartpos.utils.printerWordMng;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-import com.itextpdf.awt.geom.misc.RenderingHints;
-import com.urovo.sdk.print.PrinterProviderImpl;
 import com.woosim.printer.WoosimCmd;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +32,7 @@ public class TestPrinter implements IPrintToPrinter {
     double cost_total, subTotal, totalPrice;
     Bitmap bm;
     DecimalFormat f;
-    private Context context;
+    private final Context context;
     List<HashMap<String, String>> orderDetailsList;
     String currency, shopName, shopAddress, shopEmail, shopContact, invoiceId, orderDate, orderTime, customerName, footer, tax, discount;
 
@@ -73,8 +68,8 @@ public class TestPrinter implements IPrintToPrinter {
     public void printContent(WoosimPrnMng prnMng) {
 
 
-        double getDiscount=Double.parseDouble(discount);
-        double getTax=Double.parseDouble(tax);
+        double getDiscount = Double.parseDouble(discount);
+        double getTax = Double.parseDouble(tax);
 
         //Generate barcode
         BarCodeEncoder qrCodeEncoder = new BarCodeEncoder();
@@ -115,7 +110,7 @@ public class TestPrinter implements IPrintToPrinter {
 
 
             cost_total = Integer.parseInt(qty) * Double.parseDouble(price);
-            prnMng.printStr(name,1,WoosimCmd.ALIGN_LEFT);
+            prnMng.printStr(name, 1, WoosimCmd.ALIGN_LEFT);
             prnMng.printStr("             " + price + "       " + qty + "      " + cost_total, 1, WoosimCmd.ALIGN_CENTER);
             prnMng.printStr("--------------------------------");
 //            prnMng.leftRightAlign(name.trim(), " " + price + " x" + qty + " " + f.format(cost_total));
@@ -133,7 +128,6 @@ public class TestPrinter implements IPrintToPrinter {
 //        prnMng.printStr("needs to be paid" + "   " + "الصافى", 1, WoosimCmd.ALIGN_LEFT);
 //        prnMng.printStr("Remaining" + "   " + "الباقى", 1, WoosimCmd.ALIGN_LEFT);
 //        prnMng.printStr("--------------------------------");
-
 
 
         prnMng.printStr("Sub Total: " + currency + f.format(subTotal), 1, WoosimCmd.ALIGN_LEFT);

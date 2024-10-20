@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.Result;
@@ -67,7 +68,7 @@ public class EditProductScannerViewActivity extends BaseActivity implements ZXin
         final String myResult = result.getText();
 
         //set result in main activity or previous activity
-        EditProductActivity.etxtProductCode.setText(myResult);
+        Items.searchEt.setText(myResult);
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
 
@@ -110,19 +111,13 @@ public class EditProductScannerViewActivity extends BaseActivity implements ZXin
     }
 
 
-
-
     //for back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {// app icon in action bar clicked; goto parent activity.
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

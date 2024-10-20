@@ -1,6 +1,5 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
@@ -9,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,15 +35,15 @@ public class UploadWorker extends Worker {
         String filePath = getInputData().getString("fileNameGzip");
 
         String uri = getInputData().getString("url");
-        String tenantId= getInputData().getString("tenantId");
-        String authorization= getInputData().getString("Authorization");
-        String ecrCode= getInputData().getString("ecrCode");
-        if (filePath == null || uri==null || tenantId==null || authorization==null || ecrCode==null) {
+        String tenantId = getInputData().getString("tenantId");
+        String authorization = getInputData().getString("Authorization");
+        String ecrCode = getInputData().getString("ecrCode");
+        if (filePath == null || uri == null || tenantId == null || authorization == null || ecrCode == null) {
             return Result.failure();
         }
 
         // Step 1: Get the file from the download directory
-        File fileToUpload = new File(getApplicationContext().getCacheDir().getAbsolutePath(),filePath ); // Replace with your actual file name
+        File fileToUpload = new File(getApplicationContext().getCacheDir().getAbsolutePath(), filePath); // Replace with your actual file name
 
         if (!fileToUpload.exists()) {
             return Result.failure(); // Return failure if the file does not exist
@@ -52,17 +53,17 @@ public class UploadWorker extends Worker {
         OkHttpClient client = getUnsafeOkHttpClient();
 
 
-        RequestBody fileBody = RequestBody.create(fileToUpload,MediaType.parse("application/octet-stream"));
+        RequestBody fileBody = RequestBody.create(fileToUpload, MediaType.parse("application/octet-stream"));
 
         MultipartBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", fileToUpload.getName(), fileBody)
                 .build();
-        Headers headers=new Headers.Builder().
+        Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("Authorization",authorization).
-                add("apikey",API_KEY).
-                add("ecrCode",ecrCode).
+                add("Authorization", authorization).
+                add("apikey", SharedPrefUtils.getApiKey()).
+                add("ecrCode", ecrCode).
                 build();
         Request request = new Request.Builder()
                 .url(uri) // Replace with your server's upload endpoint

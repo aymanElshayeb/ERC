@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.app.smartpos.refund.Refund;
 import com.app.smartpos.R;
+import com.app.smartpos.refund.Refund;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
@@ -108,19 +108,13 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
     }
 
 
-
-
     //for back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {// app icon in action bar clicked; goto parent activity.
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

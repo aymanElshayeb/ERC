@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -39,6 +38,7 @@ public class EndShiftStep2 extends WorkerActivity {
     String currency;
     EndShiftModel endShiftModel;
     LinearLayout viewsLl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,37 +50,37 @@ public class EndShiftStep2 extends WorkerActivity {
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
-        currency=databaseAccess.getCurrency();
+        currency = databaseAccess.getCurrency();
 
-        viewsLl=findViewById(R.id.views_ll);
-        TextView totalAmountTv=findViewById(R.id.total_amount_tv);
-        TextView endMyShiftTv=findViewById(R.id.end_my_shift_tv);
-        TextView printZReport=findViewById(R.id.print_z_report);
+        viewsLl = findViewById(R.id.views_ll);
+        TextView totalAmountTv = findViewById(R.id.total_amount_tv);
+        TextView endMyShiftTv = findViewById(R.id.end_my_shift_tv);
+        TextView printZReport = findViewById(R.id.print_z_report);
 
-        endShiftModel=(EndShiftModel)getIntent().getSerializableExtra("model");
+        endShiftModel = (EndShiftModel) getIntent().getSerializableExtra("model");
 
         LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
-        double totalCard=0;
+        double totalCard = 0;
         for (int i = 0; i < keys.size(); i++) {
-            ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
-            if( keys.get(i).equals("CASH")){
+            ShiftDifferences shiftDifferences = endShiftModel.getShiftDifferences().get(keys.get(i));
+            if (keys.get(i).equals("CASH")) {
                 addView(getString(R.string.total_cash_sales_amount), trimLongDouble(shiftDifferences.getReal()));
                 addView(getString(R.string.input_total_cash), trimLongDouble(shiftDifferences.getInput()));
                 addView(getString(R.string.cash_amount_discrepancy), trimLongDouble(shiftDifferences.getDiff()));
-            }else{
-                totalCard+=shiftDifferences.getReal();
+            } else {
+                totalCard += shiftDifferences.getReal();
             }
         }
-        addView(getResources().getString(R.string.total_card_amount), Utils.trimLongDouble(totalCard) + "");
+        addView(getResources().getString(R.string.total_card_amount), Utils.trimLongDouble(totalCard));
         addView(getResources().getString(R.string.total_refunds), String.valueOf(endShiftModel.getTotalRefunds()));
-        addView(getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
+        addView(getResources().getString(R.string.total_sales_transactions), String.valueOf(endShiftModel.getNum_successful_transaction()));
         //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
         addView(getResources().getString(R.string.total_cash_amount), trimLongDouble(endShiftModel.getTotal_amount() - endShiftModel.getTotalRefundsAmount()));
         addView(getResources().getString(R.string.total_refunds_amount), trimLongDouble(endShiftModel.getTotalRefundsAmount() * -1));
         addView(getResources().getString(R.string.start_cash), trimLongDouble(endShiftModel.getStartCash()));
         addView(getResources().getString(R.string.leave_cash), trimLongDouble(endShiftModel.getLeaveCash()));
 
-        totalAmountTv.setText(Utils.trimLongDouble(endShiftModel.total_amount)+" "+currency);
+        totalAmountTv.setText(Utils.trimLongDouble(endShiftModel.total_amount) + " " + currency);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm aa");
         String start_date = formatter.format(new Date(endShiftModel.getStartDateTime()));
         addView(getResources().getString(R.string.start_shift_date), start_date);
@@ -136,12 +136,12 @@ public class EndShiftStep2 extends WorkerActivity {
         viewsLl.addView(root_view);
     }
 
-    private void onPrintZReport () {
+    private void onPrintZReport() {
         Device device = DeviceFactory.getDevice();
         try {
-            Bitmap bitmap=new OrderBitmap(this).shiftZReport(endShiftModel);
+            Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }
     }

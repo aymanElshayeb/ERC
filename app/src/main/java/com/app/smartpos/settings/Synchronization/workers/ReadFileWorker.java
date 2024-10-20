@@ -27,15 +27,16 @@ public class ReadFileWorker extends Worker {
             DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
             //old one -> Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
             String downloadsUri = getApplicationContext().getCacheDir().getAbsolutePath();
-            synchronizeDataBase(db,downloadsUri+"/"+fileName);
+            synchronizeDataBase(db, downloadsUri + "/" + fileName);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure();
         }
         return Result.success();
     }
+
     private void synchronizeDataBase(final DatabaseOpenHelper db, String filePath) {
         DownloadSyncronization downloadSyncronization = new DownloadSyncronization();
-        downloadSyncronization.synchronizeDataBase(db,filePath);
+        downloadSyncronization.synchronizeDataBase(db, filePath);
     }
 }

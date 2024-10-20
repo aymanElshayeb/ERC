@@ -29,17 +29,18 @@ public class CompressWorker extends Worker {
         }
 
         File inputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
-        File gzipFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName+".gz");
-        if (compressGzip(inputFile,gzipFile)) {
-            Data outputData = new Data.Builder().putString("fileNameGzip",gzipFile.getName())
-                    .putString("Authorization",getInputData().getString("Authorization"))
+        File gzipFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName + ".gz");
+        if (compressGzip(inputFile, gzipFile)) {
+            Data outputData = new Data.Builder().putString("fileNameGzip", gzipFile.getName())
+                    .putString("Authorization", getInputData().getString("Authorization"))
                     .build();
             return Result.success(outputData);
         } else {
             return Result.failure();
         }
     }
-    private  boolean compressGzip(File inputFilePath, File outputFilePath)  {
+
+    private boolean compressGzip(File inputFilePath, File outputFilePath) {
         try (FileInputStream fis = new FileInputStream(inputFilePath);
              FileOutputStream fos = new FileOutputStream(outputFilePath);
              GZIPOutputStream gos = new GZIPOutputStream(fos)) {
@@ -49,7 +50,7 @@ public class CompressWorker extends Worker {
             while ((length = fis.read(buffer)) > 0) {
                 gos.write(buffer, 0, length);
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

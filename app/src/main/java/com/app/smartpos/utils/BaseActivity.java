@@ -1,7 +1,9 @@
 package com.app.smartpos.utils;
 
+import static android.content.pm.PackageManager.GET_META_DATA;
+import static com.app.smartpos.utils.LocaleManager.changeLang;
+
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -12,26 +14,23 @@ import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Locale;
-
-import static android.content.pm.PackageManager.GET_META_DATA;
-import static com.app.smartpos.utils.LocaleManager.changeLang;
-
 import com.app.smartpos.BuildConfig;
 import com.app.smartpos.common.RootUtil;
+
+import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     boolean isConnected = false;
     ConnectivityManager connectivityManager;
     NetworkInfo activeNetworkInfo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LocaleManager.onCreate(this);
@@ -41,7 +40,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         connectivityManager = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
     }
-
 
 
     protected void resetTitles() {
@@ -56,7 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
     //for Android Android N
     @Override
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
@@ -68,14 +65,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if(getCurrentFocus()!=null){
-            InputMethodManager imm= (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
     }
 
-    private ConnectivityManager.NetworkCallback connectivityCallback
+    private final ConnectivityManager.NetworkCallback connectivityCallback
             = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
@@ -94,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     };
 
-    public void connectionChanged(boolean state){
+    public void connectionChanged(boolean state) {
     }
 
     private void checkConnectivity() {
@@ -109,8 +106,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkConnectivity();
-        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
-        if(!access){
+        boolean access = (BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
+        if (!access) {
             finishAffinity();
         }
     }

@@ -3,7 +3,6 @@ package com.app.smartpos.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.payment_method.EditPaymentMethodActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +24,8 @@ import es.dmoral.toasty.Toasty;
 public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdapter.MyViewHolder> {
 
 
-    private List<HashMap<String, String>> paymentMethodData;
-    private Context context;
+    private final List<HashMap<String, String>> paymentMethodData;
+    private final Context context;
 
 
     public PaymentMethodAdapter(Context context, List<HashMap<String, String>> paymentMethodData) {
@@ -50,10 +48,10 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
 
         final String payment_method_id = paymentMethodData.get(position).get("payment_method_id");
         String payment_method_name = paymentMethodData.get(position).get("payment_method_name");
-        int status=Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
+        int status = Integer.parseInt(paymentMethodData.get(position).get("payment_method_active"));
 
         holder.txtPaymentMethodName.setText(payment_method_name);
-        holder.imgStatus.setImageResource(status==1?R.drawable.active_oval:R.drawable.disable_oval);
+        holder.imgStatus.setImageResource(status == 1 ? R.drawable.active_oval : R.drawable.disable_oval);
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,10 +100,10 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
         return paymentMethodData.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtPaymentMethodName;
-        ImageView imgDelete,imgStatus;
+        ImageView imgDelete, imgStatus;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,18 +114,10 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
 
             imgStatus = itemView.findViewById(R.id.img_status);
 
-            //itemView.setOnClickListener(this);
 
         }
 
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(context, EditPaymentMethodActivity.class);
-            i.putExtra("payment_method_id", paymentMethodData.get(getAdapterPosition()).get("payment_method_id"));
-            i.putExtra("payment_method_name", paymentMethodData.get(getAdapterPosition()).get("payment_method_name"));
 
-            context.startActivity(i);
-        }
     }
 
 

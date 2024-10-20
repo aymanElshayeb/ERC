@@ -1,25 +1,18 @@
 package com.app.smartpos.auth;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.work.WorkInfo;
 
-import com.app.smartpos.HomeActivity;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.Registration.CompanyCheckDialog;
 import com.app.smartpos.Registration.Registration;
-import com.app.smartpos.Registration.RegistrationDialog;
 import com.app.smartpos.common.WorkerActivity;
-import com.app.smartpos.customers.CustomersActivity;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -38,21 +31,13 @@ public class AuthActivity extends WorkerActivity {
 
         setContentView(R.layout.activity_auth);
 
-
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        HashMap<String, String> conf=databaseAccess.getConfiguration();
-        if (conf.isEmpty() && !SharedPrefUtils.isRegistered(this)) {
+        if (!SharedPrefUtils.isRegistered(this)) {
             Intent intent = new Intent(AuthActivity.this, Registration.class);
             startActivity(intent);
 //            RegistrationDialog dialog = new RegistrationDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
 //            CompanyCheckDialog dialog = new CompanyCheckDialog();
 //            dialog.show(getSupportFragmentManager(), "register dialog");
-        }else {
-            String merchantId=conf.get("merchant_id");
-            //String ecrCode=conf.get("ecr_code");
-            SharedPrefUtils.setMerchantId(this,merchantId);
         }
 
         final PackageManager pm = getPackageManager();
@@ -70,8 +55,8 @@ public class AuthActivity extends WorkerActivity {
     @Override
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
-        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
-            String email=workInfo.getOutputData().getString("email");
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+            String email = workInfo.getOutputData().getString("email");
 
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
             databaseAccess.open();
@@ -85,7 +70,7 @@ public class AuthActivity extends WorkerActivity {
             Intent intent = new Intent(this, NewHomeActivity.class);
             startActivity(intent);
             this.finish();
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
         }
     }

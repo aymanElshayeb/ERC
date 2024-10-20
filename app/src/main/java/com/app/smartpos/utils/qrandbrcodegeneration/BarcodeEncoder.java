@@ -13,6 +13,7 @@ import com.google.zxing.common.BitMatrix;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 public class BarcodeEncoder {
     public Bitmap encodeQrOrBc(String contents, BarcodeFormat format, int width, int height) {
@@ -30,7 +31,7 @@ public class BarcodeEncoder {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(matrix, "PNG", bos);
-            matrixImage = new String(Base64.encodeBase64(bos.toByteArray()), "utf-8");
+            matrixImage = new String(Base64.encodeBase64(bos.toByteArray()), StandardCharsets.UTF_8);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,14 +50,14 @@ public class BarcodeEncoder {
         return bmp;
     }
 
-    public Bitmap base64ToBitmap(String base64){
+    public Bitmap base64ToBitmap(String base64) {
         Bitmap bitmap = null;
         try {
             // Decode Base64 string to byte array
             byte[] decodedBytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
             // Convert byte array to Bitmap
             bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return bitmap;

@@ -1,10 +1,7 @@
 package com.app.smartpos.Registration;
 
-import static com.app.smartpos.Constant.API_KEY;
-import static com.app.smartpos.Constant.BASE_URL;
 import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
 
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class CheckCompaniesViewModel extends ViewModel {
@@ -39,42 +35,39 @@ public class CheckCompaniesViewModel extends ViewModel {
     }
 
     public void start(String email) {
-        Log.i("datadata_register",CHECK_COMPANY_URL + "?email=" + email);
-        Log.i("datadata_register","apikey " + API_KEY);
-        Log.i("datadata_register","Authorization "+SharedPrefUtils.getAuthorization() );
-            AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
-                    .addHeaders("apikey", API_KEY)
-                    .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
-                    .setTag("GET INVOICE DETAILS")
-                    .setPriority(Priority.HIGH)
-                    .build().getAsJSONObject(new JSONObjectRequestListener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Utils.addLog("datadata", response.toString());
-                            try {
-                                LinkedList<CompanyModel> list = new LinkedList<>();
-                                if (response.getInt("code") == 200) {
+        AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
+                .addHeaders("apikey", SharedPrefUtils.getApiKey())
+                .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
+                .setTag("GET INVOICE DETAILS")
+                .setPriority(Priority.HIGH)
+                .build().getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Utils.addLog("datadata", response.toString());
+                        try {
+                            LinkedList<CompanyModel> list = new LinkedList<>();
+                            if (response.getInt("code") == 200) {
 
-                                    JSONArray array = response.getJSONObject("data").getJSONArray("returnedObj");
-                                    for (int i = 0; i < array.length(); i++) {
-                                        list.addLast(new CompanyModel(array.getJSONObject(i).toString()));
-                                    }
-                                } else if (response.getInt("code") == 404) {
-
+                                JSONArray array = response.getJSONObject("data").getJSONArray("returnedObj");
+                                for (int i = 0; i < array.length(); i++) {
+                                    list.addLast(new CompanyModel(array.getJSONObject(i).toString()));
                                 }
-                                liveData.postValue(list);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                            } else if (response.getInt("code") == 404) {
 
-                        @Override
-                        public void onError(ANError anError) {
-                            Utils.addLog("datadata_error", anError.getMessage() + " ");
-                            Toast.makeText(MultiLanguageApp.getApp(),anError.getMessage() + " " , Toast.LENGTH_SHORT).show();
-                            liveData.postValue(null);
+                            }
+                            liveData.postValue(list);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Utils.addLog("datadata_error", anError.getMessage() + " ");
+                        Toast.makeText(MultiLanguageApp.getApp(), anError.getMessage() + " ", Toast.LENGTH_SHORT).show();
+                        liveData.postValue(null);
+                    }
+                });
 
     }
 }

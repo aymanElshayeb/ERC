@@ -1,7 +1,9 @@
-package com.app.smartpos.auth;
-
+package com.app.smartpos.Registration;
 
 import android.content.Context;
+import android.util.Base64;
+import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -9,9 +11,16 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Keystore.EncryptionHelper;
+import com.app.smartpos.common.Keystore.KeyStoreHelper;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -26,9 +35,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LoginWithServerWorker extends Worker {
+public class ApiKeyWorker extends Worker {
 
-    public LoginWithServerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public ApiKeyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -53,9 +62,8 @@ public class LoginWithServerWorker extends Worker {
                 .build();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", SharedPrefUtils.getApiKey()).
-
                 build();
+
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(formBody)
@@ -63,10 +71,36 @@ public class LoginWithServerWorker extends Worker {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                String authorization = response.header("Authorization");
-                Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
-                return Result.success(outputData);
+                Data.Builder outputData = new Data.Builder();
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+
+                    if(jsonObject.getInt("code")==200) {
+                        JSONObject body = jsonObject.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+
+                        String apikey = body.getString("apikey");
+                        String password_response = new String(Base64.decode(body.getString("password"), Base64.DEFAULT), StandardCharsets.UTF_8);
+
+                        Pair<byte[],byte[]>encryption=new EncryptionHelper().encrypt(apikey,new KeyStoreHelper().getOrCreateSecretKey());
+                        byte[] first = encryption.first;
+                        byte[] second = encryption.second;
+
+                        String encryptedApiKey = Base64.encodeToString(second, Base64.DEFAULT);
+                        String encryptedVector = Base64.encodeToString(first, Base64.DEFAULT);
+
+                        SharedPrefUtils.setApiVector(encryptedVector);
+                        SharedPrefUtils.setApiKey(encryptedApiKey);
+
+                        String encryptedPassword = new String(new EncryptionHelper().encrypt(password_response,new KeyStoreHelper().getOrCreateSecretKey()).second, StandardCharsets.UTF_8);
+                        SharedPrefUtils.setDatabasePassword(encryptedPassword);
+                        outputData.putString("apikey", apikey).putString("database_password", password_response);
+                    }
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return Result.success(outputData.build());
             } else {
+                Utils.addLog("datadata_error",response.body().toString());
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }

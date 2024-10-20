@@ -4,11 +4,9 @@ package com.app.smartpos.settings;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
-
 import com.app.smartpos.utils.LocaleManager;
 
 

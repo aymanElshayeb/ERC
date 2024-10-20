@@ -1,28 +1,20 @@
 package com.app.smartpos;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
+
+import androidx.appcompat.app.ActionBar;
 
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
-import com.app.smartpos.checkout.SuccessfulPayment;
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
-import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-import org.apache.http.auth.AUTH;
-
-import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -36,7 +28,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import kotlin.text.Charsets;
 import okhttp3.OkHttpClient;
 
 
@@ -62,19 +53,19 @@ public class SplashActivity extends BaseActivity {
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
-        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
-        Utils.addLog("datadata_adb",access+" "+ RootUtil.isDeviceRooted());
+        boolean access = (BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
+        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
 
-        if(!access){
+        if (!access) {
             finishAffinity();
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //Intent intent = new Intent(SplashActivity.this, SuccessfulPayment.class).putExtra("amount", "100 SAR").putExtra("id", "e123-001-I0000000001");
                     Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                     Intent intentHome = new Intent(SplashActivity.this, NewHomeActivity.class);
-                    Utils.addLog("datadata_login", "" + SharedPrefUtils.getIsLoggedIn(SplashActivity.this));
+                    Utils.addLog("datadata_login", String.valueOf(SharedPrefUtils.getIsLoggedIn(SplashActivity.this)));
                     if (SharedPrefUtils.getIsLoggedIn(SplashActivity.this)) {
                         startActivity(intentHome);
                     } else {

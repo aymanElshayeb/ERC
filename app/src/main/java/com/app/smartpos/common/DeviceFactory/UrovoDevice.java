@@ -7,11 +7,10 @@ import android.graphics.Bitmap;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.orders.UrovoPrinter;
-import com.app.smartpos.settings.end_shift.EndShiftModel;
 
 import java.util.Base64;
 
-public class UrovoDevice implements Device{
+public class UrovoDevice implements Device {
     @Override
     public Intent pay(double total) {
         Intent intent = new Intent();

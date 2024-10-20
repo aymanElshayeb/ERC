@@ -1,9 +1,6 @@
 package com.app.smartpos.refund;
 
-import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.Constant.BASE_URL;
-
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,7 +35,7 @@ public class RefundDetailsViewModel extends ViewModel {
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
         AndroidNetworking.get(BASE_URL + "/invoice/refund/" + sequenceId)
-                .addHeaders("apikey", API_KEY)
+                .addHeaders("apikey", SharedPrefUtils.getApiKey())
                 .addHeaders("tenantId", conf.get("merchant_id"))
                 .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
                 .setTag("GET INVOICE DETAILS")
@@ -60,7 +57,7 @@ public class RefundDetailsViewModel extends ViewModel {
 
                     @Override
                     public void onError(ANError anError) {
-                        Utils.addLog("datadata_error", anError.getMessage() + " "+anError.getErrorDetail()+" "+anError.getErrorCode());
+                        Utils.addLog("datadata_error", anError.getMessage() + " " + anError.getErrorDetail() + " " + anError.getErrorCode());
                     }
                 });
 

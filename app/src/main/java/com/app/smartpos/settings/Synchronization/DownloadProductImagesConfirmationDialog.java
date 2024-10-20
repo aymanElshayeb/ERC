@@ -13,8 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
-import com.app.smartpos.refund.RefundOrOrderDetails;
-import com.app.smartpos.utils.LocaleManager;
 
 public class DownloadProductImagesConfirmationDialog extends DialogFragment {
 
@@ -31,13 +29,13 @@ public class DownloadProductImagesConfirmationDialog extends DialogFragment {
             root = inflater.inflate(R.layout.refund_confirmation_dialog, container, false);
             setCancelable(false);
 
-            TextView title_tv=root.findViewById(R.id.title_tv);
+            TextView title_tv = root.findViewById(R.id.title_tv);
             TextView confirmTv = root.findViewById(R.id.confirm_tv);
             TextView cancelTv = root.findViewById(R.id.cancel_tv);
 
-            title_tv.setText(requireContext().getString(R.string.confirmation_for_download_product_images_text)+" "+size);
+            title_tv.setText(requireContext().getString(R.string.confirmation_for_download_product_images_text) + " " + size);
             confirmTv.setOnClickListener(view -> {
-                dataBaseBackupActivity.workerType=4;
+                dataBaseBackupActivity.workerType = 4;
                 dataBaseBackupActivity.showLoading();
                 dataBaseBackupActivity.enqueueDownloadProductsImagesWorkers();
                 dismiss();
@@ -52,7 +50,7 @@ public class DownloadProductImagesConfirmationDialog extends DialogFragment {
 
     public void setData(DataBaseBackupActivity dataBaseBackupActivity, String size) {
         this.dataBaseBackupActivity = dataBaseBackupActivity;
-        this.size=size;
+        this.size = size;
     }
 
     @Override

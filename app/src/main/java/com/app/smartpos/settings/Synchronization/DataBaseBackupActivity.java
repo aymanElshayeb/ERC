@@ -38,7 +38,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
 
-        loadingLl=findViewById(R.id.loading_ll);
+        loadingLl = findViewById(R.id.loading_ll);
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
         getSupportActionBar().setTitle(R.string.data_backup);
@@ -49,12 +49,10 @@ public class DataBaseBackupActivity extends WorkerActivity {
         downloadProductsImages = findViewById(R.id.download_products_images);
 
 
-
-
         localBackup = new LocalBackup(this);
 
         cardLocalBackUp.setOnClickListener(v -> {
-            workerType=1;
+            workerType = 1;
             loadingLl.setVisibility(View.VISIBLE);
             enqueueDownloadAndReadWorkers();
 
@@ -62,20 +60,20 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
         cardLocalImport.setOnClickListener(v -> {
             loadingLl.setVisibility(View.VISIBLE);
-            workerType=2;
+            workerType = 2;
             enqueueUploadWorkers();
         });
 
 
         downloadProductsImages.setOnClickListener(v -> {
             loadingLl.setVisibility(View.VISIBLE);
-            workerType=3;
+            workerType = 3;
             enqueueDownloadProductsImagesSizeWorkers();
         });
 
     }
 
-    public void showLoading(){
+    public void showLoading() {
         loadingLl.setVisibility(View.VISIBLE);
     }
 
@@ -86,16 +84,16 @@ public class DataBaseBackupActivity extends WorkerActivity {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
 
-            if(workerType==3){
-                if(imagesSize==0){
+            if (workerType == 3) {
+                if (imagesSize == 0) {
                     Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     showMessage(getString(R.string.data_synced_successfully));
                     DownloadProductImagesConfirmationDialog dialog = new DownloadProductImagesConfirmationDialog();
                     dialog.setData(this, formatSize(imagesSize));
                     dialog.show(getSupportFragmentManager(), "dialog");
                 }
-            }else{
+            } else {
                 showMessage(getString(R.string.data_synced_successfully));
             }
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
@@ -104,13 +102,13 @@ public class DataBaseBackupActivity extends WorkerActivity {
         }
     }
 
-    private String formatSize(long size){
+    private String formatSize(long size) {
         String result;
-        if(size>=1000000){
-            result = size/1000000 + "MB";
-        }else if(size>=1000){
-            result = size/1000 + "KB";
-        }else{
+        if (size >= 1000000) {
+            result = size / 1000000 + "MB";
+        } else if (size >= 1000) {
+            result = size / 1000 + "KB";
+        } else {
             result = size + "B";
         }
 
@@ -120,22 +118,18 @@ public class DataBaseBackupActivity extends WorkerActivity {
     //for back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {// app icon in action bar clicked; goto parent activity.
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    public boolean checkStoragePermissions(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+    public boolean checkStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             //Android is 11 (R) or above
             return Environment.isExternalStorageManager();
-        }else {
+        } else {
             //Below android 11
             int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -147,7 +141,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
     private void enqueue() {
         //username Admin
         //password 01111Mm&
-        Data writeFile  = new Data.Builder().
+        Data writeFile = new Data.Builder().
                 build();
 
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(ExportFileWorker.class)
