@@ -1,25 +1,20 @@
 package com.app.smartpos.auth;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.work.WorkInfo;
 
-import com.app.smartpos.HomeActivity;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.Registration.CompanyCheckDialog;
 import com.app.smartpos.Registration.Registration;
-import com.app.smartpos.Registration.RegistrationDialog;
 import com.app.smartpos.common.WorkerActivity;
-import com.app.smartpos.customers.CustomersActivity;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -54,7 +49,12 @@ public class AuthActivity extends WorkerActivity {
             //String ecrCode=conf.get("ecr_code");
             SharedPrefUtils.setMerchantId(this,merchantId);
         }
-
+        new KeyGenParameterSpec.Builder("MySecretKey", KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                .setUserAuthenticationRequired(false) // Adjust as needed
+                .setKeySize(256)
+                .build();
         final PackageManager pm = getPackageManager();
 //get a list of installed apps.
 //        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);

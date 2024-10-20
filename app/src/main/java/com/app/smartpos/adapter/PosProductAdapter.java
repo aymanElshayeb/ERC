@@ -2,14 +2,9 @@ package com.app.smartpos.adapter;
 
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +20,6 @@ import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.product.EditProductActivity;
 import com.app.smartpos.utils.BaseActivity;
 import com.bumptech.glide.Glide;
 

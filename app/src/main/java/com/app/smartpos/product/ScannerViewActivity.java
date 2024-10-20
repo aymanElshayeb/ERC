@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
 import com.google.zxing.Result;
@@ -67,7 +68,7 @@ public class ScannerViewActivity extends BaseActivity implements ZXingScannerVie
         final String myResult = result.getText();
 
         //set result in main activity or previous activity
-        AddProductActivity.etxtProductCode.setText(myResult);
+        Items.searchEt.setText(myResult);
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
 

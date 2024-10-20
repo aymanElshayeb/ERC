@@ -30,6 +30,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
@@ -49,6 +50,7 @@ import java.util.LinkedList;
 
 public class Registration extends BaseActivity {
     EditText email;
+    EditText tenantIdEt;
     ImageView eyeIm;
     Spinner spinner;
     EditText password;
@@ -60,6 +62,7 @@ public class Registration extends BaseActivity {
     String tenantId = "";
     private String deviceId;
     private boolean isPasswordShown = false;
+    private OneTimeWorkRequest readRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class Registration extends BaseActivity {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         email = findViewById(R.id.email_et);
+        tenantIdEt = findViewById(R.id.tenant_et);
         spinner = findViewById(R.id.company_spinner);
         password = findViewById(R.id.password_et);
         changeEmailTv = findViewById(R.id.change_email_tv);
@@ -96,58 +100,56 @@ public class Registration extends BaseActivity {
             email.setAlpha(1.0f);
             actionBtn.setText(getResources().getString(R.string.check_email));
         });
-        email.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (isValidEmail(email.getText().toString().trim())) {
-                    actionBtn.setEnabled(true);
-                    actionBtn.setAlpha(1);
-
-                } else {
-                    actionBtn.setEnabled(false);
-                    actionBtn.setAlpha(0.5f);
-                }
-            }
-        });
-        password.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!password.getText().toString().trim().isEmpty()) {
-                    actionBtn.setEnabled(true);
-                    actionBtn.setAlpha(1);
-
-                } else {
-                    actionBtn.setEnabled(false);
-                    actionBtn.setAlpha(0.5f);
-                }
-            }
-        });
+//        email.addTextChangedListener(new TextWatcher() {
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (isValidEmail(email.getText().toString().trim())) {
+//                    actionBtn.setEnabled(true);
+//                    actionBtn.setAlpha(1);
+//
+//                } else {
+//                    actionBtn.setEnabled(false);
+//                    actionBtn.setAlpha(0.5f);
+//                }
+//            }
+//        });
+//        password.addTextChangedListener(new TextWatcher() {
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (!password.getText().toString().trim().isEmpty()) {
+//                    actionBtn.setEnabled(true);
+//                    actionBtn.setAlpha(1);
+//
+//                } else {
+//                    actionBtn.setEnabled(false);
+//                    actionBtn.setAlpha(0.5f);
+//                }
+//            }
+//        });
 
         actionBtn.setOnClickListener(view -> {
-            if (!email.getText().toString().isEmpty() && !tenantId.isEmpty() && !password.getText().toString().isEmpty()) {
+            if (email.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
+            }else if (tenantIdEt.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.tenant_empty), Toast.LENGTH_SHORT).show();
+            }else if (password.getText().toString().isEmpty()) {
+                Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
+            } else {
                 actionBtn.setVisibility(View.GONE);
                 loadingPb.setVisibility(View.VISIBLE);
                 enqueueDownloadAndReadWorkers();
-            } else {
-                if (email.getText().toString().isEmpty()) {
-                    Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
-                } else {
-                    actionBtn.setVisibility(View.GONE);
-                    loadingPb.setVisibility(View.VISIBLE);
-                    companiesViewModel.start(email.getText().toString().trim());
-                }
             }
         });
 
@@ -224,14 +226,14 @@ public class Registration extends BaseActivity {
         //password 01111Mm&
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
-                putString("tenantId", tenantId).
+                putString("tenantId", tenantIdEt.getText().toString().trim()).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 putString("deviceId", deviceId).
                 build();
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
-                .putString("tenantId", tenantId)
+                .putString("tenantId", tenantIdEt.getText().toString().trim())
                 .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 
@@ -254,7 +256,7 @@ public class Registration extends BaseActivity {
                 .setInputData(decompressInputData)
                 .build();
 
-        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
+        readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
                 .setInputData(readInputData)
                 .build();
 
@@ -275,7 +277,7 @@ public class Registration extends BaseActivity {
     }
 
     private void handleWorkCompletion(WorkInfo workInfo) {
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED && workInfo.getId().equals(readRequest.getId())) {
             // Work succeeded, handle success
             showMessage(getString(R.string.registration_successful));
             SharedPrefUtils.setIsRegistered(this, true);

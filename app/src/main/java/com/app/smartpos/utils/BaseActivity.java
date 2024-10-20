@@ -25,6 +25,9 @@ import static android.content.pm.PackageManager.GET_META_DATA;
 import static com.app.smartpos.utils.LocaleManager.changeLang;
 
 import com.app.smartpos.BuildConfig;
+import com.app.smartpos.Registration.Registration;
+import com.app.smartpos.SplashActivity;
+import com.app.smartpos.auth.AuthActivity;
 import com.app.smartpos.common.RootUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -109,7 +112,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkConnectivity();
-        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
+        boolean access=(BuildConfig.BUILD_TYPE.equals("debug") || (Settings.Global.getInt(getContentResolver(),
+                Settings.Global.ADB_ENABLED, 0)==0 && !RootUtil.isDeviceRooted()));
+
+        if(this instanceof AuthActivity || this instanceof Registration || this instanceof SplashActivity){
+
+        }else{
+            access = access && SharedPrefUtils.getIsLoggedIn(this);
+        }
         if(!access){
             finishAffinity();
         }

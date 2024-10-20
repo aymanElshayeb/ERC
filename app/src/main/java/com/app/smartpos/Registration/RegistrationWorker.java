@@ -73,10 +73,10 @@ public class RegistrationWorker extends Worker {
                 int code = responseBody.getInt("code");
 
 
-                if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000004")) {
-                    Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.non_admin_register)).build();
-                    return Result.failure(outputData);
-                }
+//                if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000004")) {
+//                    Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.non_admin_register)).build();
+//                    return Result.failure(outputData);
+//                }
                 if (code != 200) {
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                     return Result.failure(outputData);

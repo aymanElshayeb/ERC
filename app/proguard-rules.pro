@@ -20,3 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
+-keep class net.sqlcipher.** { *; }

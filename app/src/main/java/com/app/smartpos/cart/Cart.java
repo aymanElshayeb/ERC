@@ -1,14 +1,11 @@
 package com.app.smartpos.cart;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,7 +17,6 @@ import com.app.smartpos.adapter.CartAdapter;
 import com.app.smartpos.checkout.NewCheckout;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pos.ProductCart;
 import com.app.smartpos.utils.BaseActivity;
 
 import java.util.HashMap;

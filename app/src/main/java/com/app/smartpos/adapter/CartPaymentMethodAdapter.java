@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.checkout.NewCheckout;
-import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.settings.payment_method.EditPaymentMethodActivity;
 
 import java.util.HashMap;
 import java.util.List;

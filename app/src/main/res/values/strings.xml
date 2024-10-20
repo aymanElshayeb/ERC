@@ -332,6 +332,7 @@
     <string name="Please_enter_your_login_info">Please enter your login info</string>
     <string name="Please_enter_your_registration_info">Please enter your registration info</string>
     <string name="email">Email</string>
+    <string name="company_id">Company Id</string>
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login">Login</string>
@@ -410,6 +411,8 @@
     <string name="change_email">Change Email Address</string>
     <string name="demo">Demo</string>
     <string name="user_name_empty">Username field is empty</string>
+    <string name="email_empty">Email field is empty</string>
+    <string name="tenant_empty">Tenant field is empty</string>
     <string name="password_empty">password field is empty</string>
     <string name="merchant_empty">Merchant ID field is empty</string>
     <string name="leave_cash_empty">Please add leave cash for safe</string>

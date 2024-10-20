@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +21,8 @@ import com.app.smartpos.R;
 import com.app.smartpos.cart.Cart;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.pos.ProductCart;
 import com.bumptech.glide.Glide;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
