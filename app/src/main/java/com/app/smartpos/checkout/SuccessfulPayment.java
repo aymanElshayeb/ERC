@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.DeviceFactory.Device;
@@ -56,13 +54,13 @@ public class SuccessfulPayment extends BaseActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            Utils.addLog("datadata_type",getIntent().getStringExtra("printType"));
-            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this,getIntent().getStringExtra("order_id"),getIntent().getStringExtra("printType"));
+            Utils.addLog("datadata_type", getIntent().getStringExtra("printType"));
+            printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this, getIntent().getStringExtra("order_id"), getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
         String amount = getIntent().getStringExtra("amount").split(" ")[0];
         String currency = getIntent().getStringExtra("amount").split(" ")[1];
-        amountTv.setText(Utils.trimLongDouble(amount)+" "+currency);
+        amountTv.setText(Utils.trimLongDouble(amount) + " " + currency);
 
         noReceipt.setOnClickListener(view -> {
             finish();
@@ -72,7 +70,7 @@ public class SuccessfulPayment extends BaseActivity {
             Device device = DeviceFactory.getDevice();
             try {
                 device.printReceipt(printerData.getBitmap());
-            }catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });
@@ -87,11 +85,11 @@ public class SuccessfulPayment extends BaseActivity {
 
             @Override
             public void onFinish() {
-                if(!getIntent().getExtras().containsKey("order_id")) {
+                if (!getIntent().getExtras().containsKey("order_id")) {
                     finish();
                 }
                 if (getIntent().getExtras().containsKey("id")) {
-                    startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id", getIntent().getStringExtra("id")).putExtra("printType",getIntent().getStringExtra("printType")));
+                    startActivity(new Intent(SuccessfulPayment.this, CheckoutOrderDetails.class).putExtra("id", getIntent().getStringExtra("id")).putExtra("printType", getIntent().getStringExtra("printType")));
                 }
             }
         }.start();

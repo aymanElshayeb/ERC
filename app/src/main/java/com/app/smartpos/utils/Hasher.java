@@ -5,6 +5,7 @@ import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.format.HashFormat;
 import org.apache.shiro.crypto.hash.format.Shiro1CryptFormat;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -25,7 +26,7 @@ public class Hasher {
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, generateKey());
-            cipherText = cipher.doFinal(message.getBytes("UTF-8"));
+            cipherText = cipher.doFinal(message.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +40,7 @@ public class Hasher {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 
             cipher.init(Cipher.DECRYPT_MODE, generateKey());
-            decryptString = new String(cipher.doFinal(cipherText), "UTF-8");
+            decryptString = new String(cipher.doFinal(cipherText), StandardCharsets.UTF_8);
         } catch (Exception e) {
             e.printStackTrace();
         }

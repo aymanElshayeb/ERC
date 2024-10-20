@@ -1,9 +1,7 @@
 package com.app.smartpos.refund;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,19 +10,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
-import com.app.smartpos.Items.Items;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class Refund extends BaseActivity {
 
@@ -42,7 +34,7 @@ public class Refund extends BaseActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_refund);
 
-        model=new RefundDetailsViewModel();
+        model = new RefundDetailsViewModel();
 
         databaseAccess = DatabaseAccess.getInstance(this);
         ImageView scannerIm = findViewById(R.id.img_scanner);
@@ -56,7 +48,7 @@ public class Refund extends BaseActivity {
                 startActivity(intent);
             }
         });
-        allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund",true)));
+        allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund", true)));
         view_receipt_btn.setOnClickListener(view -> {
             databaseAccess.open();
             if (!searchEt.getText().toString().trim().isEmpty()) {
@@ -70,8 +62,8 @@ public class Refund extends BaseActivity {
 //
 //                    startActivity(i);
 //                }
-                ConfirmSyncDialog confirmdialog=new ConfirmSyncDialog();
-                confirmdialog.show(getSupportFragmentManager(),"confirmDialog");
+                ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
+                confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
 
                 //callApi();
             }
@@ -80,10 +72,10 @@ public class Refund extends BaseActivity {
         findViewById(R.id.back_im).setOnClickListener(view -> finish());
 
         model.getLiveData().observe(this, refundModel -> {
-            if(refundModel==null) {
-                ItemNotFoundDialog dialog=new ItemNotFoundDialog();
-                dialog.show(getSupportFragmentManager(),"dialog");
-            }else{
+            if (refundModel == null) {
+                ItemNotFoundDialog dialog = new ItemNotFoundDialog();
+                dialog.show(getSupportFragmentManager(), "dialog");
+            } else {
                 Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
                 i.putExtra("refundModel", refundModel);
                 startActivity(i);
@@ -91,9 +83,9 @@ public class Refund extends BaseActivity {
         });
     }
 
-    public void callApi(){
-        Utils.addLog("INSIDE CALL API" , SharedPrefUtils.getAuthorization());
+    public void callApi() {
+        Utils.addLog("INSIDE CALL API", SharedPrefUtils.getAuthorization());
 
-        model.start(searchEt.getText().toString().trim(),databaseAccess);
+        model.start(searchEt.getText().toString().trim(), databaseAccess);
     }
 }

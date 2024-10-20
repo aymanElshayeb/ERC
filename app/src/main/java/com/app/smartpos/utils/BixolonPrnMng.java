@@ -37,8 +37,8 @@ public class BixolonPrnMng extends WoosimPrnMng {
             buffer.append(cmd_emphasis, 0, cmd_emphasis.length);
         }
 
-        mCharsize-=1;
-        if (mCharsize!=0) {
+        mCharsize -= 1;
+        if (mCharsize != 0) {
             byte charSize = (byte) (mCharsize | (mCharsize << 4));
             byte[] cmd_size = new byte[]{29, 33, charSize};
             buffer.append(cmd_size, 0, cmd_size.length);
@@ -77,12 +77,12 @@ public class BixolonPrnMng extends WoosimPrnMng {
     //------------------------------------------------------
     public static class Utils {
 
-        private static String hexStr = "0123456789ABCDEF";
-        private static String[] binaryArray = { "0000", "0001", "0010", "0011",
+        private static final String hexStr = "0123456789ABCDEF";
+        private static final String[] binaryArray = {"0000", "0001", "0010", "0011",
                 "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011",
-                "1100", "1101", "1110", "1111" };
+                "1100", "1101", "1110", "1111"};
 
-        public static byte[] decodeBitmap(Bitmap bmp){
+        public static byte[] decodeBitmap(Bitmap bmp) {
             int bmpWidth = bmp.getWidth();
             int bmpHeight = bmp.getHeight();
 
@@ -145,7 +145,7 @@ public class BixolonPrnMng extends WoosimPrnMng {
             heightHexString = heightHexString + "00";
 
             List<String> commandList = new ArrayList<String>();
-            commandList.add(commandHexString+widthHexString+heightHexString);
+            commandList.add(commandHexString + widthHexString + heightHexString);
             commandList.addAll(bmpHexList);
 
             return hexList2Byte(commandList);

@@ -1,12 +1,9 @@
 package com.app.smartpos.utils.baseDto;
 
 
-
-
-
-
 public class ServiceRequest<T> {
     private T data;
+
     public T getData() {
         return data;
     }

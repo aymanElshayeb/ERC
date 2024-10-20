@@ -42,7 +42,7 @@ public class EndShiftReportDialog extends DialogFragment {
 
             Button logoutBtn = root.findViewById(R.id.btn_logout);
             //ImageButton closeBtn = root.findViewById(R.id.btn_close);
-            viewLl=root.findViewById(R.id.views_ll);
+            viewLl = root.findViewById(R.id.views_ll);
 
             logoutBtn.setOnClickListener(view -> {
                 requireActivity().finish();
@@ -51,12 +51,12 @@ public class EndShiftReportDialog extends DialogFragment {
 
             LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
             for (int i = 0; i < keys.size(); i++) {
-                ShiftDifferences shiftDifferences=endShiftModel.getShiftDifferences().get(keys.get(i));
+                ShiftDifferences shiftDifferences = endShiftModel.getShiftDifferences().get(keys.get(i));
                 addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.real), trimLongDouble(shiftDifferences.getReal()));
                 addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.input), trimLongDouble(shiftDifferences.getInput()));
                 addView(keys.get(i) + "-" + requireContext().getResources().getString(R.string.diff), trimLongDouble(shiftDifferences.getDiff()));
             }
-            addView(requireContext().getResources().getString(R.string.total_sales_transactions), endShiftModel.getNum_successful_transaction() + "");
+            addView(requireContext().getResources().getString(R.string.total_sales_transactions), String.valueOf(endShiftModel.getNum_successful_transaction()));
             //addView(requireContext().getResources().getString(R.string.total_amount), trimLongDouble(endShiftModel.getTotal_amount()));
             //addView(requireContext().getResources().getString(R.string.total_tax), trimLongDouble(endShiftModel.getTotal_tax()));
 

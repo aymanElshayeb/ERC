@@ -1,7 +1,6 @@
 package com.app.smartpos.refund;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,7 +57,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     private String order_payment_method;
     private String operation_type;
     private String refundSequence;
-    boolean checkConnectionOnce=true;
+    boolean checkConnectionOnce = true;
     private RecyclerView recycler;
 
     @Override
@@ -103,7 +101,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             for (int i = 0; i < orderDetailsList.size(); i++) {
                 orderDetailsList.get(i).put("refund_qty", "0");
                 orderDetailsList.get(i).put("item_checked", "0");
-                Utils.addLog("datadata", "" + orderDetailsList.get(i).toString());
+                Utils.addLog("datadata", orderDetailsList.get(i).toString());
             }
         } else {
             RefundModel refundModel = (RefundModel) getIntent().getSerializableExtra("refundModel");
@@ -127,7 +125,6 @@ public class RefundOrOrderDetails extends WorkerActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
 
-
         updateTotalAmount();
         if (!isRefund) {
             title_tv.setText(getString(R.string.order_details));
@@ -142,7 +139,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
                 startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
-                operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
+                        operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
                 ;
             } else {
                 refundPressed();
@@ -154,21 +151,21 @@ public class RefundOrOrderDetails extends WorkerActivity {
     @Override
     public void connectionChanged(boolean state) {
         super.connectionChanged(state);
-        Utils.addLog("datadata_connection",""+state);
+        Utils.addLog("datadata_connection", String.valueOf(state));
         setAdapter();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isConnected()){
+        if (!isConnected()) {
             setAdapter();
         }
     }
 
-    private void setAdapter(){
-        if(checkConnectionOnce){
-            checkConnectionOnce=false;
+    private void setAdapter() {
+        if (checkConnectionOnce) {
+            checkConnectionOnce = false;
             runOnUiThread(() -> {
                 recycler.setAdapter(refundDetailsAdapter);
             });
@@ -379,7 +376,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                         objp.put("product_uuid", product.get(0).get("product_uuid"));
                         objp.put("product_weight", orderDetailsList.get(i).get("product_weight") + " " + weight_unit);
                         //objp.put("product_qty", orderDetailsList.get(i).get("product_qty") + "");
-                        objp.put("product_qty", -refund_qty + "");
+                        objp.put("product_qty", String.valueOf(-refund_qty));
                         objp.put("stock", orderDetailsList.get(i).get("stock") == null ? Integer.MAX_VALUE : orderDetailsList.get(i).get("stock"));
                         objp.put("product_price", orderDetailsList.get(i).get("product_price"));
                         objp.put("product_description", orderDetailsList.get(i).get("product_description"));

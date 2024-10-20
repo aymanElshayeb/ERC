@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
@@ -23,7 +22,7 @@ import es.dmoral.toasty.Toasty;
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
     private static final int DATABASE_VERSION = 55;
-    private Context mContext;
+    private final Context mContext;
 
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -98,6 +97,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             e.printStackTrace();
         }
     }
+
     public void mergeDatabases(String newDbFilePath) {
         SQLiteDatabase existingDb = getWritableDatabase();
         SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
@@ -106,7 +106,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             existingDb.beginTransaction();
 
             // Get tables from new database
-            String[] tables = {"products","payment_method","card_type","user"};
+            String[] tables = {"products", "payment_method", "card_type", "user"};
             for (String table : tables) {
                 // Delete all rows in the existing table
                 existingDb.delete(table, null, null);
@@ -137,7 +137,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
 
         try {
-           // existingDb.beginTransaction();
+            // existingDb.beginTransaction();
 
             // Get tables from new database
             String[] tables = {"product_image"};
@@ -147,7 +147,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
 
                 // Insert rows from the new database
                 String query = "SELECT * FROM " + table;
-                DatabaseAccess databaseAccess=DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
                 try (Cursor cursor = newDb.rawQuery(query, null)) {
                     while (cursor.moveToNext()) {
                         ContentValues values = new ContentValues();
@@ -157,22 +157,22 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                         }
                         databaseAccess.open();
                         databaseAccess.updateProductImage(values);
-                        Utils.addLog("datadata",values.toString());
+                        Utils.addLog("datadata", values.toString());
                     }
                 }
             }
 
-          //  existingDb.setTransactionSuccessful();
+            //  existingDb.setTransactionSuccessful();
         } finally {
             //existingDb.endTransaction();
             newDb.close();
         }
     }
 
-    public void exportTablesToNewDatabase(String newDbFilePath,String[] lastSync ) {
+    public void exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
-        Utils.addLog("datadata_base",newDbFilePath);
+        Utils.addLog("datadata_base", newDbFilePath);
         if (dbFile.exists()) {
             dbFile.delete();
         }
@@ -180,21 +180,22 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
-            exportInvoice(existingDb,newDb,lastSync[0]);
-            exportShift(existingDb,newDb,lastSync[1]);
+            exportInvoice(existingDb, newDb, lastSync[0]);
+            exportShift(existingDb, newDb, lastSync[1]);
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
             newDb.close();
         }
     }
-    private void exportShift(SQLiteDatabase existingDb, SQLiteDatabase newDb,String lastSync){
+
+    private void exportShift(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "shift");
             copyTableSchema(existingDb, newDb, "credit_calculations");
-            String lastSyncShift=String.format("SELECT MAX(id)  FROM shift WHERE sequence = '%s'", lastSync);
+            String lastSyncShift = String.format("SELECT MAX(id)  FROM shift WHERE sequence = '%s'", lastSync);
             Cursor cursor = existingDb.rawQuery(lastSyncShift, null);
-            Integer lastSyncId=-1;
+            Integer lastSyncId = -1;
             // Check if the cursor has any results
             if (cursor.moveToFirst()) {
                 // Retrieve the first column value as a string
@@ -207,7 +208,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             }
 
             // Copy rows from the existing database table to the new one
-            String shiftQuery = "SELECT * FROM shift WHERE id >"+ lastSyncId+";";
+            String shiftQuery = "SELECT * FROM shift WHERE id >" + lastSyncId + ";";
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
                 while (shiftCursor.moveToNext()) {
                     ContentValues shiftValues = new ContentValues();
@@ -228,18 +229,18 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                     }
                 }
             }
-        }catch (Exception e){
-             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void exportInvoice(SQLiteDatabase existingDb, SQLiteDatabase newDb,String lastSync){
+    private void exportInvoice(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "order_list");
             copyTableSchema(existingDb, newDb, "order_details");
-            String lastSyncOrderList=String.format("SELECT MAX(order_id)  FROM order_list WHERE invoice_id = '%s'", lastSync);
+            String lastSyncOrderList = String.format("SELECT MAX(order_id)  FROM order_list WHERE invoice_id = '%s'", lastSync);
             Cursor cursor = existingDb.rawQuery(lastSyncOrderList, null);
-            Integer lastSyncId=-1;
+            Integer lastSyncId = -1;
             // Check if the cursor has any results
             if (cursor.moveToFirst()) {
                 // Retrieve the first column value as a string
@@ -252,16 +253,16 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             }
 
             // Copy rows from the existing database table to the new one
-            String shiftQuery =String.format("SELECT * FROM order_list WHERE order_id > %s", lastSyncId);
+            String shiftQuery = String.format("SELECT * FROM order_list WHERE order_id > %s", lastSyncId);
             try (Cursor shiftCursor = existingDb.rawQuery(shiftQuery, null)) {
-                Utils.addLog("datadata_shift",shiftCursor.toString());
+                Utils.addLog("datadata_shift", shiftCursor.toString());
                 while (shiftCursor.moveToNext()) {
                     ContentValues orderListValues = new ContentValues();
                     for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
-                        Utils.addLog("datadata_value",shiftCursor.getColumnName(i)+" "+shiftCursor.getString(i));
+                        Utils.addLog("datadata_value", shiftCursor.getColumnName(i) + " " + shiftCursor.getString(i));
                         orderListValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
                     }
-                    Utils.addLog("datadata_base_list",orderListValues.toString());
+                    Utils.addLog("datadata_base_list", orderListValues.toString());
                     newDb.insert("order_list", null, orderListValues);
                     @SuppressLint("Range") String orderListId = shiftCursor.getString(shiftCursor.getColumnIndex("invoice_id"));
                     String orderDetails = String.format("SELECT * FROM order_details WHERE invoice_id = '%s'", orderListId);
@@ -271,19 +272,19 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                             for (int i = 0; i < creditCursor.getColumnCount(); i++) {
                                 detailsValues.put(creditCursor.getColumnName(i), creditCursor.getString(i));
                             }
-                            Utils.addLog("datadata_base_details",detailsValues.toString());
+                            Utils.addLog("datadata_base_details", detailsValues.toString());
 
                             newDb.insert("order_details", null, detailsValues);
                         }
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public  void copyTableSchema(SQLiteDatabase sourceDb, SQLiteDatabase targetDb, String tableName) {
+    public void copyTableSchema(SQLiteDatabase sourceDb, SQLiteDatabase targetDb, String tableName) {
         // Retrieve schema information from the source database
         String schemaQuery = "PRAGMA table_info(" + tableName + ")";
         Cursor cursor = sourceDb.rawQuery(schemaQuery, null);
@@ -294,10 +295,10 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         while (cursor.moveToNext()) {
             @SuppressLint("Range") String columnName = cursor.getString(cursor.getColumnIndex("name"));
             @SuppressLint("Range") String columnType = cursor.getString(cursor.getColumnIndex("type"));
-            Utils.addLog("datadata_table",columnName+" "+columnType);
+            Utils.addLog("datadata_table", columnName + " " + columnType);
             createTableQuery.append(columnName).append(" ").append(columnType).append(", ");
         }
-        Utils.addLog("datadata_table",createTableQuery.toString());
+        Utils.addLog("datadata_table", createTableQuery.toString());
         // Remove trailing comma and space
         if (createTableQuery.length() > 0) {
             createTableQuery.setLength(createTableQuery.length() - 2);

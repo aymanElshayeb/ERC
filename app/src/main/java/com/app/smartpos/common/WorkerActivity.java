@@ -12,8 +12,6 @@ import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
-import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.work.Data;
@@ -35,8 +33,8 @@ import com.app.smartpos.settings.Synchronization.workers.ProductImagesWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadProductImagesFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
-import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
 
@@ -353,7 +351,7 @@ public class WorkerActivity extends BaseActivity {
 
     }
 
-    public void loginWorkers(String email,String password) {
+    public void loginWorkers(String email, String password) {
         //username Admin
         //password 01111Mm&
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);

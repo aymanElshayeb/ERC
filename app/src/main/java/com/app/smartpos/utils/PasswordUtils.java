@@ -2,11 +2,6 @@ package com.app.smartpos.utils;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.security.InvalidKeyException;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 public class PasswordUtils {
 
 

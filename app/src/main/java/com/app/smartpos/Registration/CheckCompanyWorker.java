@@ -13,7 +13,6 @@ import androidx.work.WorkerParameters;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.dto.RegistrationResponseDto;
-import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.baseDto.ServiceRequest;
 import com.app.smartpos.utils.baseDto.ServiceResult;
 import com.google.gson.Gson;
@@ -38,21 +37,21 @@ public class CheckCompanyWorker extends Worker {
     public Result doWork() {
         String email = getInputData().getString("email");
 
-        String deviceId= getInputData().getString("deviceId");
-        String urlString=getInputData().getString("url") + "?email="+email;
-        if (email == null || deviceId==null) {
+        String deviceId = getInputData().getString("deviceId");
+        String urlString = getInputData().getString("url") + "?email=" + email;
+        if (email == null || deviceId == null) {
             return Result.failure();
         }
         // Perform registration logic here
         OkHttpClient client = getUnsafeOkHttpClient();
-        Headers headers=new Headers.Builder().
+        Headers headers = new Headers.Builder().
                 add("apikey", Constant.API_KEY).
                 build();
         //prepare the dto class
-        RegistrationRequestDto registrationRequestDto =new RegistrationRequestDto();
+        RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();
         registrationRequestDto.setemail(email);
         registrationRequestDto.setDeviceId(deviceId);
-        ServiceRequest<RegistrationRequestDto> serviceRequest=ServiceRequest.constructServiceRequest(registrationRequestDto);
+        ServiceRequest<RegistrationRequestDto> serviceRequest = ServiceRequest.constructServiceRequest(registrationRequestDto);
         //prepare the req1uest
         Gson gson = new Gson();
         String jsonBody = gson.toJson(serviceRequest);
@@ -64,26 +63,27 @@ public class CheckCompanyWorker extends Worker {
                 .headers(headers)
 //                .addHeader("email",email)
                 .build();
-        try(Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-                ServiceResult<RegistrationResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<RegistrationResponseDto>>(){}.getType());
-                Log.e("Result" , result.toString());
+                ServiceResult<RegistrationResponseDto> result = gson.fromJson(responseBody, new TypeToken<ServiceResult<RegistrationResponseDto>>() {
+                }.getType());
+                Log.e("Result", result.toString());
 
-                if(result.getCode()!=200){
+                if (result.getCode() != 200) {
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                     return Result.failure(outputData);
                 }
-                RegistrationResponseDto registrationResponseDto=result.getData().getReturnedObj().get(0);
+                RegistrationResponseDto registrationResponseDto = result.getData().getReturnedObj().get(0);
 //                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
 //                databaseAccess.open();
 //                databaseAccess.addConfiguration(registrationResponseDto);
 //                databaseAccess.open();
 //                databaseAccess.addShop(registrationResponseDto,databaseAccess);
-                String authorization=registrationResponseDto.getToken();
+                String authorization = registrationResponseDto.getToken();
                 Data outputData = new Data.Builder().
                         putString("Authorization", authorization).
-                        putString("ecrCode",registrationResponseDto.getEcrCode()).
+                        putString("ecrCode", registrationResponseDto.getEcrCode()).
                         build();
                 return Result.success(outputData);
             } else {

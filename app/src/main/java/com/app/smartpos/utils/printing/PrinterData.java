@@ -14,7 +14,7 @@ public class PrinterData {
     String discount;
     String currency;
 
-    public PrinterData(Bitmap bitmap, String invoice_id, String customer_name, String order_date, String order_time, double tax, double price_after_tax, double price_before_tax,String discount,String currency) {
+    public PrinterData(Bitmap bitmap, String invoice_id, String customer_name, String order_date, String order_time, double tax, double price_after_tax, double price_before_tax, String discount, String currency) {
         this.bitmap = bitmap;
         this.invoice_id = invoice_id;
         this.customer_name = customer_name;
@@ -23,8 +23,8 @@ public class PrinterData {
         this.tax = tax;
         this.price_after_tax = price_after_tax;
         this.price_before_tax = price_before_tax;
-        this.discount=discount;
-        this.currency=currency;
+        this.discount = discount;
+        this.currency = currency;
     }
 
     public Bitmap getBitmap() {

@@ -57,37 +57,38 @@ public class RegistrationDialog extends DialogFragment {
     Button demoBtn;
 
     private String deviceId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(root==null){
+        if (root == null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            root=inflater.inflate(R.layout.dialog_registration,container,false);
+            root = inflater.inflate(R.layout.dialog_registration, container, false);
             setCancelable(false);
 
-            deviceId =  Utils.getDeviceId(requireActivity());
+            deviceId = Utils.getDeviceId(requireActivity());
 
-            usernameEt=root.findViewById(R.id.username_et);
-            passwordEt=root.findViewById(R.id.password_et);
-            merchantEt=root.findViewById(R.id.merchant_id_et);
-            registerBtn =root.findViewById(R.id.register_btn);
-            demoBtn =root.findViewById(R.id.demo_btn);
-            progressBar=root.findViewById(R.id.progress);
+            usernameEt = root.findViewById(R.id.username_et);
+            passwordEt = root.findViewById(R.id.password_et);
+            merchantEt = root.findViewById(R.id.merchant_id_et);
+            registerBtn = root.findViewById(R.id.register_btn);
+            demoBtn = root.findViewById(R.id.demo_btn);
+            progressBar = root.findViewById(R.id.progress);
             String lang = LocaleManager.getLanguage(requireActivity());
 
-            passwordEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
-            usernameEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
-            merchantEt.setGravity((lang.equals("ar")? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            passwordEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            usernameEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
+            merchantEt.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
-            ConstraintLayout languageCl=root.findViewById(R.id.language_cl);
+            ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
             registerBtn.setOnClickListener(view -> {
-                if(usernameEt.getText().toString().isEmpty()){
+                if (usernameEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
-                }else if(passwordEt.getText().toString().isEmpty()){
+                } else if (passwordEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
-                }else if(merchantEt.getText().toString().isEmpty()){
+                } else if (merchantEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.merchant_empty), Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     registerBtn.setVisibility(View.GONE);
                     demoBtn.setEnabled(false);
                     enqueueDownloadAndReadWorkers();
@@ -104,7 +105,7 @@ public class RegistrationDialog extends DialogFragment {
                 databaseAccess.open();
                 databaseAccess.addDemoConfiguration();
                 SharedPrefUtils.setStartDateTime(requireActivity());
-                SharedPrefUtils.setDemoPressed(requireActivity(),true);
+                SharedPrefUtils.setDemoPressed(requireActivity(), true);
                 requireActivity().finish();
                 requireActivity().startActivity(new Intent(requireActivity(), NewHomeActivity.class));
             });
@@ -119,15 +120,15 @@ public class RegistrationDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = (int)(getContext().getResources().getDisplayMetrics().widthPixels*0.9);
+        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
     }
 
     private void requestForStoragePermissions() {
         //Android is 11 (R) or above
-        if((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) || Build.VERSION.SDK_INT >= 35){
-            if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) || Build.VERSION.SDK_INT >= 35) {
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
                         requireActivity(),
                         new String[]{
@@ -141,7 +142,6 @@ public class RegistrationDialog extends DialogFragment {
         }
 
     }
-
 
 
     private void enqueueDownloadAndReadWorkers() {
@@ -203,14 +203,14 @@ public class RegistrationDialog extends DialogFragment {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
             // Work succeeded, handle success
             showMessage(getString(R.string.registration_successful));
-            SharedPrefUtils.setIsRegistered(requireContext(),true);
+            SharedPrefUtils.setIsRegistered(requireContext(), true);
             SharedPrefUtils.setStartDateTime(requireContext());
-            byte[] bytes=Hasher.encryptMsg(usernameEt.getText().toString().trim()+"-"+passwordEt.getText().toString().trim());
-            SharedPrefUtils.setAuthData(requireContext(),bytes);
+            byte[] bytes = Hasher.encryptMsg(usernameEt.getText().toString().trim() + "-" + passwordEt.getText().toString().trim());
+            SharedPrefUtils.setAuthData(requireContext(), bytes);
             closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            if(workInfo.getOutputData().getKeyValueMap().isEmpty())
+            if (workInfo.getOutputData().getKeyValueMap().isEmpty())
                 showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             registerBtn.setVisibility(View.VISIBLE);
             demoBtn.setEnabled(true);
@@ -221,13 +221,14 @@ public class RegistrationDialog extends DialogFragment {
     private void closePendingScreen() {
         dismissAllowingStateLoss();
     }
+
     private void observeWorker(OneTimeWorkRequest workRequest) {
         WorkManager.getInstance(requireActivity()).getWorkInfoByIdLiveData(workRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage( (errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
                         }
                     }
                 });

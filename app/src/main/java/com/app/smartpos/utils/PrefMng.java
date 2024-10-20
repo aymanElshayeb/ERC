@@ -37,6 +37,7 @@ public class PrefMng {
 
     /**
      * You can use the getDeviceAddr method to bypass DeviceListActivity.
+     *
      * @param context
      * @return If the return value is an empty string, it means no printer Bluetooth
      * address already is saved. In this case you MUST first run DeviceListActivity.
@@ -56,6 +57,7 @@ public class PrefMng {
     /**
      * This method is specific to the Woosim printers only. In other words,
      * you can choose which font to use on the Woosim printers.
+     *
      * @return The code table for printing.
      */
     public static int getWoosimCodeTbl() {

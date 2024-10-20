@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import androidx.core.content.FileProvider;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.utils.BaseActivity;
-
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -36,8 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import es.dmoral.toasty.Toasty;
 
 public class BackupActivity extends BaseActivity {
 
@@ -60,7 +56,6 @@ public class BackupActivity extends BaseActivity {
         cardLocalImport = findViewById(R.id.card_local_db_import);
         cardExportToExcel = findViewById(R.id.card_export_to_excel);
         cardBackupToDrive = findViewById(R.id.card_backup_to_drive);
-
 
 
         localBackup = new LocalBackup(BackupActivity.this);
@@ -158,15 +153,11 @@ public class BackupActivity extends BaseActivity {
     //for back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {// app icon in action bar clicked; goto parent activity.
+            this.finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -208,7 +199,6 @@ public class BackupActivity extends BaseActivity {
         // Export SQLite DB as EXCEL FILE
 
     }
-
 
 
     public void fileChooser() {

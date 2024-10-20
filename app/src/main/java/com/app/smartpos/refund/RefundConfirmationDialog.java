@@ -30,11 +30,11 @@ public class RefundConfirmationDialog extends DialogFragment {
             root = inflater.inflate(R.layout.refund_confirmation_dialog, container, false);
             setCancelable(false);
 
-            TextView title_tv=root.findViewById(R.id.title_tv);
+            TextView title_tv = root.findViewById(R.id.title_tv);
             TextView confirmTv = root.findViewById(R.id.confirm_tv);
             TextView cancelTv = root.findViewById(R.id.cancel_tv);
 
-            title_tv.setText(requireContext().getString(R.string.confirmation_refund)+" "+amount+(LocaleManager.getLanguage(requireActivity()).equals("ar")?" ؟":" ?"));
+            title_tv.setText(requireContext().getString(R.string.confirmation_refund) + " " + amount + (LocaleManager.getLanguage(requireActivity()).equals("ar") ? " ؟" : " ?"));
             confirmTv.setOnClickListener(view -> {
                 refundDetails.refundConfirmation();
                 dismiss();
@@ -49,7 +49,7 @@ public class RefundConfirmationDialog extends DialogFragment {
 
     public void setData(RefundOrOrderDetails refundDetails, String amount) {
         this.refundDetails = refundDetails;
-        this.amount=amount;
+        this.amount = amount;
     }
 
     @Override

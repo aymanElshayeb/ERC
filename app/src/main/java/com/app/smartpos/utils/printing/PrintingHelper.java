@@ -1,6 +1,5 @@
 package com.app.smartpos.utils.printing;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,29 +10,16 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
-import android.util.Log;
 
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
-import com.app.smartpos.orders.PrinterModel;
-import com.app.smartpos.settings.end_shift.EndShiftModel;
-import com.app.smartpos.settings.end_shift.ShiftDifferences;
-import com.newland.sdk.me.module.printer.ErrorCode;
-import com.newland.sdk.me.module.printer.PrintListener;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class PrintingHelper {
-    private static String fontPath = Environment.getExternalStorageDirectory() + "/alipuhuiti.ttf";
+    private static final String fontPath = Environment.getExternalStorageDirectory() + "/alipuhuiti.ttf";
 
     public static Bitmap resizeBitmap(Bitmap bitmap, int newWidth, int newHeight) {
         int width = bitmap.getWidth();
@@ -62,6 +48,7 @@ public class PrintingHelper {
         format.putString("fontName", fontPath);
         return format;
     }
+
     public static Bundle getImageBundle(Bitmap bitmap) {
         Bundle format = new Bundle();
         format.putInt("align", 1);
@@ -115,7 +102,7 @@ public class PrintingHelper {
         int maxHeight = 0;
 
         // Calculate the total width and maximum height
-        for (Bitmap bitmap:bitmaps) {
+        for (Bitmap bitmap : bitmaps) {
             if (bitmap != null) {
                 totalWidth += bitmap.getWidth() + spacing;
                 maxHeight = Math.max(maxHeight, bitmap.getHeight());
@@ -157,15 +144,14 @@ public class PrintingHelper {
         String discount = orderLitItem.get("discount");
         databaseAccess.open();
         double price_after_tax = databaseAccess.totalOrderPrice(invoice_id);
-        Utils.addLog("datadata_total_2",price_after_tax+"");
-        double price_before_tax = price_after_tax-tax;
+        Utils.addLog("datadata_total_2", String.valueOf(price_after_tax));
+        double price_before_tax = price_after_tax - tax;
 
         OrderBitmap orderBitmap = new OrderBitmap(activity);
-        Bitmap bitmap=orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency,printType);
-        return new PrinterData(bitmap,invoice_id,customer_name,order_date,order_time,tax,price_after_tax,price_before_tax,discount,currency);
+        Bitmap bitmap = orderBitmap.orderBitmap(invoice_id, order_date, order_time, price_before_tax, price_after_tax, tax, discount, currency, printType);
+        return new PrinterData(bitmap, invoice_id, customer_name, order_date, order_time, tax, price_after_tax, price_before_tax, discount, currency);
 
     }
-
 
 
 }

@@ -2,18 +2,13 @@ package com.app.smartpos.settings.end_shift;
 
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,14 +17,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 import com.app.smartpos.utils.printing.PrinterData;
-import com.app.smartpos.utils.printing.PrintingHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,10 +40,10 @@ public class EndShiftStep1 extends BaseActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
-    int totalRefunds=0;
+    int totalRefunds = 0;
 
-    double totalRefundsAmount=0;
-    double totalCardsAmount=0;
+    double totalRefundsAmount = 0;
+    double totalCardsAmount = 0;
     private PrinterData printerData;
 
     @Override
@@ -57,7 +52,7 @@ public class EndShiftStep1 extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         Window w = getWindow();
-       // w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        // w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_end_shift_step1);
 
         TextView totalAmountTv = findViewById(R.id.total_amount_tv);
@@ -73,7 +68,7 @@ public class EndShiftStep1 extends BaseActivity {
 
         databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
-        currency=databaseAccess.getCurrency();
+        currency = databaseAccess.getCurrency();
 
         backIm.setOnClickListener(view -> finish());
         databaseAccess.open();
@@ -90,62 +85,62 @@ public class EndShiftStep1 extends BaseActivity {
         String startCashString = databaseAccess.getLastShift("leave_cash");
         double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
 
-        paymentTypesCashMap.put("CASH",startCash+"");
+        paymentTypesCashMap.put("CASH", String.valueOf(startCash));
 
         databaseAccess.open();
         for (int i = 0; i < orderList.size(); i++) {
-            Utils.addLog("datadata_tax",orderList.get(i).toString());
+            Utils.addLog("datadata_tax", orderList.get(i).toString());
             databaseAccess.open();
             double total_price = databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
             databaseAccess.open();
             double tax = databaseAccess.totalOrderTax(orderList.get(i).get("invoice_id"));
             double discount = Double.parseDouble(orderList.get(i).get("discount"));
-            if(orderList.get(i).get("operation_type").equals("refund")){
+            if (orderList.get(i).get("operation_type").equals("refund")) {
                 totalRefunds++;
-                totalRefundsAmount +=  total_price;
+                totalRefundsAmount += total_price;
             }
             total_amount += total_price;
             total_tax += tax;
-            Utils.addLog("datadata_card",orderList.get(i).get("order_payment_method")+" "+orderList.get(i).get("card_type_code"));
+            Utils.addLog("datadata_card", orderList.get(i).get("order_payment_method") + " " + orderList.get(i).get("card_type_code"));
             double calculated_total_price = total_price - discount;
             if (orderList.get(i).get("order_payment_method").equals("CASH")) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get("CASH"));
                 double total = calculated_total_price + cash;
-                Utils.addLog("datadata_shift",calculated_total_price+" "+cash+" "+totalRefundsAmount+" "+total);
-                paymentTypesCashMap.put("CASH", total + "");
-            }else if (orderList.get(i).get("order_payment_method").equals("CARD") && paymentTypesCashMap.containsKey(orderList.get(i).get("card_type_code").toString())) {
+                Utils.addLog("datadata_shift", calculated_total_price + " " + cash + " " + totalRefundsAmount + " " + total);
+                paymentTypesCashMap.put("CASH", String.valueOf(total));
+            } else if (orderList.get(i).get("order_payment_method").equals("CARD") && paymentTypesCashMap.containsKey(orderList.get(i).get("card_type_code"))) {
                 double cash = Double.parseDouble(paymentTypesCashMap.get(orderList.get(i).get("card_type_code")));
                 double total = calculated_total_price + cash;
-                paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), total + "");
+                paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), String.valueOf(total));
 //                totalCardsAmount += calculated_total_price;
             } else {
-                paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), calculated_total_price + "");
+                paymentTypesCashMap.put(orderList.get(i).get("card_type_code"), String.valueOf(calculated_total_price));
             }
         }
-        Utils.addLog("datadata_shift",total_amount+" "+totalRefundsAmount);
-        totalAmountTv.setText(Utils.trimLongDouble(total_amount)+" "+currency);
+        Utils.addLog("datadata_shift", total_amount + " " + totalRefundsAmount);
+        totalAmountTv.setText(Utils.trimLongDouble(total_amount) + " " + currency);
         databaseAccess.open();
-        List<HashMap<String, String>> cardTypes=new ArrayList<>();
+        List<HashMap<String, String>> cardTypes = new ArrayList<>();
         HashMap<String, String> cash_map = new HashMap<>();
         cash_map.put("active", "1");
-        cash_map.put("CASH", paymentTypesCashMap.get("CASH").toString());
+        cash_map.put("CASH", paymentTypesCashMap.get("CASH"));
         cash_map.put("name", "CASH");
         cash_map.put("code", "CASH");
         cardTypes.add(cash_map);
         cardTypes.addAll(databaseAccess.getCardTypes(true));
-        for(int i=0;i<cardTypes.size();i++){
-            String code=cardTypes.get(i).get("code");
-            String cash=paymentTypesCashMap.get(code);
-            cardTypes.get(i).put("CASH",cash);
+        for (int i = 0; i < cardTypes.size(); i++) {
+            String code = cardTypes.get(i).get("code");
+            String cash = paymentTypesCashMap.get(code);
+            cardTypes.get(i).put("CASH", cash);
         }
-        Utils.addLog("datadata",paymentTypesCashMap.get("CASH").toString());
+        Utils.addLog("datadata", paymentTypesCashMap.get("CASH"));
         LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
         for (int i = 0; i < cardTypes.size(); i++) {
-            Log.w("datadata_cards", cardTypes.get(i).toString() + "");
+            Log.w("datadata_cards", cardTypes.get(i).toString());
             // remove this condition if you want to show all cards
             if ("CASH".equals(cardTypes.get(i).get("name"))) {
                 View root_view = LayoutInflater.from(this).inflate(R.layout.layout_new_end_shift_payment_method, null);
-                Log.w("card types", cardTypes + "");
+                Log.w("card types", String.valueOf(cardTypes));
 
                 TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
                 EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);
@@ -162,7 +157,8 @@ public class EndShiftStep1 extends BaseActivity {
 
                 paymentTypeAmountEt.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -170,9 +166,10 @@ public class EndShiftStep1 extends BaseActivity {
                     }
 
                     @Override
-                    public void afterTextChanged(Editable editable) {}
+                    public void afterTextChanged(Editable editable) {
+                    }
                 });
-            }else{
+            } else {
                 String cash = cardTypes.get(i).get("CASH");
                 if (cash == null) {
                     cash = "0";
@@ -190,11 +187,11 @@ public class EndShiftStep1 extends BaseActivity {
                 return;
             }
 
-            int total_transactions = orderList.size()-totalRefunds;
+            int total_transactions = orderList.size() - totalRefunds;
 
             for (int i = 0; i < models.size(); i++) {
-                if(models.get(i).inputPaymentCashEt==null){
-                    ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, 0, 0,models.get(i).code);
+                if (models.get(i).inputPaymentCashEt == null) {
+                    ShiftDifferences shiftDifferences = new ShiftDifferences(models.get(i).real, 0, 0, models.get(i).code);
                     map.put(models.get(i).type, shiftDifferences);
                     continue;
                 }
@@ -203,10 +200,10 @@ public class EndShiftStep1 extends BaseActivity {
                 String value = trimLongDouble((employeeCash - models.get(i).real));
 
                 models.get(i).setError((employeeCash != models.get(i).real) && !value.equals("0.00"));
-                ShiftDifferences shiftDifferences=new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real),models.get(i).code);
+                ShiftDifferences shiftDifferences = new ShiftDifferences(models.get(i).real, employeeCash, (employeeCash - models.get(i).real), models.get(i).code);
                 map.put(models.get(i).type, shiftDifferences);
-                Utils.addLog("datadata_type",models.get(i).type+" "+shiftDifferences.toString());
-                if ((employeeCash != models.get(i).real) && !value.equals("0.00")){
+                Utils.addLog("datadata_type", models.get(i).type + " " + shiftDifferences);
+                if ((employeeCash != models.get(i).real) && !value.equals("0.00")) {
                     if (employeeCash - models.get(i).real > 0) {
                         models.get(i).paymentCashErrorTv.setText("+" + value);
                         models.get(i).paymentCashErrorTv.setTextColor(getResources().getColor(R.color.successColor));
@@ -230,11 +227,11 @@ public class EndShiftStep1 extends BaseActivity {
 //                    Settings.Secure.ANDROID_ID);
             databaseAccess.open();
             HashMap<String, String> configuration = databaseAccess.getConfiguration();
-            String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code").toString();
+            String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");
             databaseAccess.open();
             HashMap<String, String> sequenceMap = databaseAccess.getSequence(2, ecr_code);
             databaseAccess.open();
-            databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")),Integer.parseInt(sequenceMap.get("sequence_id")));
+            databaseAccess.updateSequence(Integer.parseInt(sequenceMap.get("next_value")), Integer.parseInt(sequenceMap.get("sequence_id")));
             databaseAccess.open();
             String startDateString = databaseAccess.getLastShift("end_date_time");
             long startDate = startDateString.equals("") ? SharedPrefUtils.getStartDateTime(this) : Long.parseLong(startDateString);
@@ -245,14 +242,14 @@ public class EndShiftStep1 extends BaseActivity {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()),noteEt.getText().toString().trim() , totalRefundsAmount, totalCardsAmount);
+            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()), noteEt.getText().toString().trim(), totalRefundsAmount, totalCardsAmount);
             endShiftModel.setTotalRefunds(totalRefunds);
             if (hasError) {
                 confirmWithErrorTv.setVisibility(View.VISIBLE);
             } else {
-                EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
+                EndShiftConfirmationDialog dialog = new EndShiftConfirmationDialog();
                 dialog.setEndShiftStep2(this);
-                dialog.show(getSupportFragmentManager(),"dialog");
+                dialog.show(getSupportFragmentManager(), "dialog");
 //                scrollView.setVisibility(View.VISIBLE);
 //                scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //                    @Override
@@ -281,9 +278,9 @@ public class EndShiftStep1 extends BaseActivity {
                 return;
             }
             endShiftModel.setLeaveCash(Double.parseDouble(leaveCashEt.getText().toString()));
-            EndShiftConfirmationDialog dialog=new EndShiftConfirmationDialog();
+            EndShiftConfirmationDialog dialog = new EndShiftConfirmationDialog();
             dialog.setEndShiftStep2(this);
-            dialog.show(getSupportFragmentManager(),"dialog");
+            dialog.show(getSupportFragmentManager(), "dialog");
 
 //            scrollView.setVisibility(View.VISIBLE);
 //            scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -299,25 +296,25 @@ public class EndShiftStep1 extends BaseActivity {
 
         });
 
-}
+    }
 
     public void addToShift() {
         databaseAccess.open();
         int id = databaseAccess.addShift(endShiftModel);
         if (id > -1) {
-            LinkedList<String>keys=new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
-            for(int i=0;i<keys.size();i++) {
-                if(!keys.get(i).equals("CASH")) {
-                    Utils.addLog("datadata",keys.get(i));
+            LinkedList<String> keys = new LinkedList<>(endShiftModel.getShiftDifferences().keySet());
+            for (int i = 0; i < keys.size(); i++) {
+                if (!keys.get(i).equals("CASH")) {
+                    Utils.addLog("datadata", keys.get(i));
                     databaseAccess.open();
                     boolean added = databaseAccess.addShiftCreditCalculations(endShiftModel.getSequence(), endShiftModel.getShiftDifferences().get(keys.get(i)), keys.get(i));
-                    Utils.addLog("datadata", added + "");
+                    Utils.addLog("datadata", String.valueOf(added));
                 }
             }
 
         }
-        Utils.addLog("datadata", id + "");
-        startActivity(new Intent(this, EndShiftStep2.class).putExtra("model",endShiftModel));
+        Utils.addLog("datadata", String.valueOf(id));
+        startActivity(new Intent(this, EndShiftStep2.class).putExtra("model", endShiftModel));
 
     }
 }

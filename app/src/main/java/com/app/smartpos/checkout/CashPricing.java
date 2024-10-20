@@ -2,7 +2,6 @@ package com.app.smartpos.checkout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -102,14 +101,14 @@ public class CashPricing extends BaseActivity {
 
         cashGivingTv.setText("0");
         change = 0;
-        changeTv.setText(change + "");
+        changeTv.setText(String.valueOf(change));
 
         backIm.setOnClickListener(view -> finish());
 
     }
 
     private void setNumber(String number) {
-        Utils.addLog("datadata_length", cashGivingTv.getText().toString().split("\\.").length + "");
+        Utils.addLog("datadata_length", String.valueOf(cashGivingTv.getText().toString().split("\\.").length));
         if ((cashGivingTv.getText().toString().length() == 13 && cashGivingTv.getText().toString().split("\\.").length == 2) || (cashGivingTv.getText().toString().split("\\.").length == 1 && cashGivingTv.getText().toString().split("\\.")[0].length() == 10) && !number.equals(".") && !cashGivingTv.getText().toString().endsWith(".")) {
             return;
         }
@@ -128,7 +127,7 @@ public class CashPricing extends BaseActivity {
         cash += number;
         cashGivingTv.setText(cash);
         change = Double.parseDouble(Utils.trimLongDouble(totalAmount)) - Double.parseDouble(cash);
-        Utils.addLog("datadata_trim", "" + change);
+        Utils.addLog("datadata_trim", String.valueOf(change));
         Utils.addLog("datadata_trim", Utils.trimLongDouble(change));
         changeTv.setText(Utils.trimLongDouble(change));
     }

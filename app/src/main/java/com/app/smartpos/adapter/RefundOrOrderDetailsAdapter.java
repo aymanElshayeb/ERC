@@ -2,7 +2,6 @@ package com.app.smartpos.adapter;
 
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
 
 
     RefundOrOrderDetails refundOrOrderDetails;
-    private List<HashMap<String, String>> orderData;
+    private final List<HashMap<String, String>> orderData;
 
 
     public RefundOrOrderDetailsAdapter(RefundOrOrderDetails refundOrOrderDetails, List<HashMap<String, String>> orderData) {
@@ -69,10 +68,10 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
         if (item_checked.equals("1")) {
             holder.checkbox_im.setImageResource(R.drawable.ic_box_check);
             holder.refund_qty_ll.setVisibility(View.VISIBLE);
-            holder.number_tv.setText(refund_qty[0] + "");
+            holder.number_tv.setText(String.valueOf(refund_qty[0]));
             if (refund_qty[0] > 0) {
                 holder.amount_ll.setVisibility(View.VISIBLE);
-                holder.number_tv.setText(refund_qty[0] + "");
+                holder.number_tv.setText(String.valueOf(refund_qty[0]));
                 holder.amount_tv.setText(Utils.trimLongDouble(product_price * refund_qty[0]));
             } else {
                 holder.amount_ll.setVisibility(View.GONE);
@@ -105,7 +104,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
         holder.plus_im.setOnClickListener(view -> {
             if (refund_qty[0] < product_qty) {
                 refund_qty[0] += 1;
-                orderData.get(position).put("refund_qty", refund_qty[0] + "");
+                orderData.get(position).put("refund_qty", String.valueOf(refund_qty[0]));
                 notifyItemChanged(position);
                 refundOrOrderDetails.updateTotalAmount();
             }
@@ -114,7 +113,7 @@ public class RefundOrOrderDetailsAdapter extends RecyclerView.Adapter<RefundOrOr
         holder.minus_im.setOnClickListener(view -> {
             if (refund_qty[0] > 0) {
                 refund_qty[0] -= 1;
-                orderData.get(position).put("refund_qty", refund_qty[0] + "");
+                orderData.get(position).put("refund_qty", String.valueOf(refund_qty[0]));
                 notifyItemChanged(position);
                 refundOrOrderDetails.updateTotalAmount();
             }

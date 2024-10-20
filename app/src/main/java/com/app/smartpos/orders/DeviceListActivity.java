@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.R;
 import com.app.smartpos.utils.BaseActivity;
@@ -50,7 +49,7 @@ public class DeviceListActivity extends BaseActivity {
         //supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_device_list);
         ActionBar br = getSupportActionBar();
-        if (br!=null){
+        if (br != null) {
             br.setDisplayHomeAsUpEnabled(true);
             br.setHomeAsUpIndicator(R.drawable.back);
         }
@@ -109,7 +108,7 @@ public class DeviceListActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
@@ -154,7 +153,7 @@ public class DeviceListActivity extends BaseActivity {
     }
 
     // The on-click listener for all devices in the ListViews
-    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+    private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
             mBtAdapter.cancelDiscovery();

@@ -8,11 +8,11 @@ public class ShiftDifferences implements Serializable {
     double diff;
     String code;
 
-    public ShiftDifferences(double real, double input, double diff,String code) {
+    public ShiftDifferences(double real, double input, double diff, String code) {
         this.real = real;
         this.input = input;
         this.diff = diff;
-        this.code=code;
+        this.code = code;
     }
 
     public double getReal() {

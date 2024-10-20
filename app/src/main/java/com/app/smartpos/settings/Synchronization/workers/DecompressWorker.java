@@ -26,7 +26,7 @@ public class DecompressWorker extends Worker {
             return Result.failure();
         }
 
-        String path=getApplicationContext().getCacheDir().getAbsolutePath();;
+        String path = getApplicationContext().getCacheDir().getAbsolutePath();
         File gzipFile = new File(path, fileName);
         File outputFile = new File(path, removeGzipExtension(fileName));
         if (outputFile.exists()) {

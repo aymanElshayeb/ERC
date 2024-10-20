@@ -1,4 +1,4 @@
-package com.app.smartpos.auth;
+package com.app.smartpos.Registration;
 
 import static com.app.smartpos.Constant.API_KEY;
 
@@ -10,6 +10,9 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
@@ -26,9 +29,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LoginWithServerWorker extends Worker {
+public class ApiKeyWorker extends Worker {
 
-    public LoginWithServerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public ApiKeyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
@@ -53,7 +56,6 @@ public class LoginWithServerWorker extends Worker {
                 .build();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
-                add("apikey", API_KEY).
 
                 build();
         Request request = new Request.Builder()
@@ -63,9 +65,21 @@ public class LoginWithServerWorker extends Worker {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                String authorization = response.header("Authorization");
-                Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
-                return Result.success(outputData);
+                Data.Builder outputData = new Data.Builder();
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                    if(jsonObject.getInt("code")==200) {
+                        JSONObject body = jsonObject.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+
+                        String apikey = body.getString("apikey");
+                        String password_response = body.getString("password");
+                        outputData.putString("apikey", apikey).putString("password", password_response);
+                    }
+                }catch (Exception e) {
+
+                }
+                return Result.success(outputData.build());
             } else {
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);

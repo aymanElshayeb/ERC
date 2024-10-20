@@ -5,18 +5,21 @@ public class Constant {
     Constant() {
         //write your action here if need
     }
+
     // API KEY
-    public static final String API_KEY=BuildConfig.API_KEY;
+    public static final String API_KEY = "BuildConfig.API_KEY";
     public static final String BASE_URL = "https://uat.qaema.com/ecr";
     //public static final String BASE_URL = "https://gateway-am-wso2-nonprod.apps.nt-non-ocp.neotek.sa/ecr/v1";
     public static final String LOGIN_URL = BASE_URL + "/auth/user";
-    public static final String SYNC_URL=BASE_URL + "/sync";
-    public static final String LAST_SYNC_URL=BASE_URL + "/sync/last";
-    public static final String REGISTER_DEVICE_URL=BASE_URL + "/organization/unit/device/register";
-    public static final String CHECK_COMPANY_URL=BASE_URL + "/user/companies";
+    public static final String KEY_URL = BASE_URL + "/auth/validate";
 
-    public static final String PRODUCT_IMAGES_SIZE=BASE_URL + "/sync/products/images/size";
-    public static final String PRODUCT_IMAGES=BASE_URL + "/sync/products/images";
+    public static final String SYNC_URL = BASE_URL + "/sync";
+    public static final String LAST_SYNC_URL = BASE_URL + "/sync/last";
+    public static final String REGISTER_DEVICE_URL = BASE_URL + "/organization/unit/device/register";
+    public static final String CHECK_COMPANY_URL = BASE_URL + "/user/companies";
+
+    public static final String PRODUCT_IMAGES_SIZE = BASE_URL + "/sync/products/images/size";
+    public static final String PRODUCT_IMAGES = BASE_URL + "/sync/products/images";
 
     //File names
     public static final String DOWNLOAD_FILE_NAME_GZIP = "download.db.gz";

@@ -28,7 +28,7 @@ public class ZatcaQRCodeGenerationService {
 
         try {
             qrCodeBase64.append(zatcaQRCodeGeneration.getBase64(zatcaQRCodeDto));
-            data=qrCodeBase64.toString();
+            data = qrCodeBase64.toString();
 
         } catch (Exception e) {
             e.printStackTrace();

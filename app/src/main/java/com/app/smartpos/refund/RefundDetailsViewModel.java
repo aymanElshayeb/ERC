@@ -3,8 +3,6 @@ package com.app.smartpos.refund;
 import static com.app.smartpos.Constant.API_KEY;
 import static com.app.smartpos.Constant.BASE_URL;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -60,7 +58,7 @@ public class RefundDetailsViewModel extends ViewModel {
 
                     @Override
                     public void onError(ANError anError) {
-                        Utils.addLog("datadata_error", anError.getMessage() + " "+anError.getErrorDetail()+" "+anError.getErrorCode());
+                        Utils.addLog("datadata_error", anError.getMessage() + " " + anError.getErrorDetail() + " " + anError.getErrorCode());
                     }
                 });
 

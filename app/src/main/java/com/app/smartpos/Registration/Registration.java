@@ -2,6 +2,7 @@ package com.app.smartpos.Registration;
 
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
+import static com.app.smartpos.Constant.KEY_URL;
 import static com.app.smartpos.Constant.REGISTER_DEVICE_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.common.Utils.isValidEmail;
@@ -222,6 +223,11 @@ public class Registration extends BaseActivity {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
+        Data apiKey = new Data.Builder().
+                putString("url", KEY_URL).
+                putString("email", email.getText().toString().trim()).
+                putString("password", password.getText().toString()).
+                build();
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
                 putString("tenantId", tenantId).
@@ -243,6 +249,9 @@ public class Registration extends BaseActivity {
                 .putString("fileName", DOWNLOAD_FILE_NAME)
                 .build();
 
+        OneTimeWorkRequest apiKeyRequest = new OneTimeWorkRequest.Builder(ApiKeyWorker.class)
+                .setInputData(apiKey)
+                .build();
         OneTimeWorkRequest registerRequest = new OneTimeWorkRequest.Builder(RegistrationWorker.class)
                 .setInputData(register)
                 .build();
@@ -259,7 +268,8 @@ public class Registration extends BaseActivity {
                 .build();
 
         WorkContinuation continuation = WorkManager.getInstance(this)
-                .beginWith(registerRequest)
+                .beginWith(apiKeyRequest)
+                .then(apiKeyRequest)
                 .then(downloadRequest)
                 .then(decompressRequest)
                 .then(readRequest);
