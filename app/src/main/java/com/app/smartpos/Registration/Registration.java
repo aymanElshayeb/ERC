@@ -85,6 +85,10 @@ public class Registration extends BaseActivity {
         loadingPb = findViewById(R.id.loading_pb);
         String lang = LocaleManager.getLanguage(this);
 
+        email.setText("kohoru@polkaroad.net");
+        password.setText("01111Mm&");
+        tenantIdEt.setText("cr4333453353");
+
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 

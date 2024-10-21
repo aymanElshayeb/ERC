@@ -4,7 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.app.smartpos.R;
@@ -12,24 +13,40 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import es.dmoral.toasty.Toasty;
 
-public class DatabaseOpenHelper extends SQLiteAssetHelper {
+public class DatabaseOpenHelper extends SQLiteOpenHelper {
+    public static final String DATABASE_PASSWORD = "ecu_database_password_";
     public static final String DATABASE_NAME = "smart_pos.db";
     private static final int DATABASE_VERSION = 55;
     private final Context mContext;
+    private static DatabaseOpenHelper instance;
 
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        setForcedUpgrade();
+        //setForcedUpgrade();
     }
 
+    @Override
+    public synchronized SQLiteDatabase getWritableDatabase(char[] password) {
+
+//        Uri uri = Uri.fromFile(new File("//android_asset/databases/your_database.db"));
+//        InputStream inputStream = MultiLanguageApp.getApp().getAssets().open("databases/your_database.db");
+//
+//        return SQLiteDatabase.openDatabase(uri.getPath(),DATABASE_PASSWORD,null,SQLiteDatabase.OPEN_READWRITE);
+        return super.getWritableDatabase(password);
+    }
 
     public void backup(String outFileName) {
 
@@ -99,8 +116,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
     }
 
     public void mergeDatabases(String newDbFilePath) {
-        SQLiteDatabase existingDb = getWritableDatabase();
-        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
+        SQLiteDatabase existingDb = getWritableDatabase(DATABASE_PASSWORD);
+        android.database.sqlite.SQLiteDatabase newDb = android.database.sqlite.SQLiteDatabase.openDatabase(newDbFilePath, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY);
 
         try {
             existingDb.beginTransaction();
@@ -134,7 +151,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
 
     public void readProductDatabase(String newDbFilePath) {
         //SQLiteDatabase existingDb = getWritableDatabase();
-        SQLiteDatabase newDb = SQLiteDatabase.openDatabase(newDbFilePath, null, SQLiteDatabase.OPEN_READONLY);
+        android.database.sqlite.SQLiteDatabase newDb = android.database.sqlite.SQLiteDatabase.openDatabase(newDbFilePath, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY);
 
         try {
             // existingDb.beginTransaction();
@@ -176,8 +193,8 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         if (dbFile.exists()) {
             dbFile.delete();
         }
-        SQLiteDatabase existingDb = getWritableDatabase();
-        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
+        SQLiteDatabase existingDb = getWritableDatabase(DATABASE_PASSWORD);
+        android.database.sqlite.SQLiteDatabase newDb = android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
             exportInvoice(existingDb, newDb, lastSync[0]);
@@ -189,7 +206,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    private void exportShift(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
+    private void exportShift(SQLiteDatabase existingDb, android.database.sqlite.SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "shift");
             copyTableSchema(existingDb, newDb, "credit_calculations");
@@ -234,7 +251,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    private void exportInvoice(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
+    private void exportInvoice(SQLiteDatabase existingDb, android.database.sqlite.SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "order_list");
             copyTableSchema(existingDb, newDb, "order_details");
@@ -284,7 +301,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    public void copyTableSchema(SQLiteDatabase sourceDb, SQLiteDatabase targetDb, String tableName) {
+    public void copyTableSchema(SQLiteDatabase sourceDb, android.database.sqlite.SQLiteDatabase targetDb, String tableName) {
         // Retrieve schema information from the source database
         String schemaQuery = "PRAGMA table_info(" + tableName + ")";
         Cursor cursor = sourceDb.rawQuery(schemaQuery, null);
@@ -311,5 +328,219 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         targetDb.execSQL(createTableQuery.toString());
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String card_type="CREATE TABLE card_type(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  name TEXT,\n" +
+                "  code TEXT,\n" +
+                "  active BOOLEAN,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(card_type);
+        String configuration="CREATE TABLE configuration(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  ecr_code TEXT,\n" +
+                "  merchant_id TEXT,\n" +
+                "  merchant_tax_number TEXT,\n" +
+                "  merchant_logo TEXT,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(configuration);
+        String credit_calculations="CREATE TABLE credit_calculations(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  credit_code TEXT,\n" +
+                "  shift_id INTEGER,\n" +
+                "  total DOUBLE,\n" +
+                "  difference DOUBLE,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(credit_calculations);
+        String customers="CREATE TABLE \"customers\" (\n" +
+                "\t\"customer_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"customer_name\"\tTEXT,\n" +
+                "\t\"customer_cell\"\tTEXT,\n" +
+                "\t\"customer_email\"\tTEXT,\n" +
+                "\t\"customer_address\"\tTEXT\n" +
+                ", customer_active BOOLEAN, customer_sequence TEXT)";
+        sqLiteDatabase.execSQL(customers);
+        String demo="CREATE TABLE demo (ID integer primary key, Name varchar(20), Hint text )";
+        sqLiteDatabase.execSQL(demo);
+        String expense="CREATE TABLE \"expense\"\n" +
+                "(\n" +
+                "    expense_id       INTEGER\n" +
+                "        primary key autoincrement,\n" +
+                "    expense_name     TEXT,\n" +
+                "    expense_note     TEXT,\n" +
+                "    expense_amount   TEXT,\n" +
+                "    expense_date     TEXT,\n" +
+                "    expense_time     TEXT,\n" +
+                "    expense_sequence TEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(expense);
+        String order_details="CREATE TABLE \"order_details\"\n" +
+                "(\n" +
+                "    order_details_id   INTEGER\n" +
+                "        primary key autoincrement,\n" +
+                "    invoice_id         TEXT,\n" +
+                "    product_name_en    TEXT,\n" +
+                "    product_weight     TEXT,\n" +
+                "    product_qty        TEXT,\n" +
+                "    product_price      TEXT,\n" +
+                "    product_image      TEXT,\n" +
+                "    product_order_date TEXT,\n" +
+                "    order_status       TEXT,\n" +
+                "    ex2_tax_total       DOUBLE,\n" +
+                "    in2_tax_total       DOUBLE,\n" +
+                "    tax_amount2         DOUBLE,\n" +
+                "    tax_percentage     DOUBLE,\n" +
+                "    product_uuid       INTEGER,\n" +
+                "    product_name_ar    TEXT\n" +
+                ", description TEXT, product_description TEXT, tax_amount TEXT, in_tax_total TEXT, ex_tax_total TEXT)";
+        sqLiteDatabase.execSQL(order_details);
+        String order_list="CREATE TABLE \"order_list\"\n" +
+                "(\n" +
+                "    order_id             INTEGER\n" +
+                "        primary key autoincrement,\n" +
+                "    invoice_id           TEXT,\n" +
+                "    order_date           TEXT,\n" +
+                "    order_time           TEXT,\n" +
+                "    order_type           TEXT,\n" +
+                "    order_payment_method TEXT,\n" +
+                "    customer_name        TEXT,\n" +
+                "    tax                  TEXT,\n" +
+                "    discount             TEXT,\n" +
+                "    order_status         TEXT,\n" +
+                "    card_details         INTEGER,\n" +
+                "    original_order_id    INTEGER,\n" +
+                "    ecr_code             TEXT,\n" +
+                "    ex2_tax_total         DOUBLE,\n" +
+                "    in2_tax_total         DOUBLE,\n" +
+                "    paid_amount2          DOUBLE,\n" +
+                "    change_amount        DOUBLE,\n" +
+                "    tax_number           TEXT,\n" +
+                "    order_timestamp      integer\n" +
+                ", qr_code TEXT, operation_type TEXT, card_type_code TEXT, approval_code TEXT, sequence_text text, operation_sub_type TEXT, in_tax_total TEXT, ex_tax_total TEXT, paid_amount TEXT)";
+        sqLiteDatabase.execSQL(order_list);
+        String order_type="CREATE TABLE \"order_type\" (\n" +
+                "\t\"order_type_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"order_type_name\"\tTEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(order_type);
+        String payment_methods="CREATE TABLE \"payment_method\" (\n" +
+                "\t\"payment_method_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"payment_method_name\"\tTEXT\n" +
+                ", payment_method_active BOOLEAN, payment_method_code TEXT)";
+        sqLiteDatabase.execSQL(payment_methods);
+        String product_cart="CREATE TABLE \"product_cart\" (\n" +
+                "\t\"cart_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"product_id\"\tTEXT,\n" +
+                "\t\"product_weight\"\tTEXT,\n" +
+                "\t\"product_weight_unit\"\tTEXT,\n" +
+                "\t\"product_price\"\tTEXT,\n" +
+                "\t\"product_qty\"\tINTEGER,\n" +
+                "\t\"stock\"\tTEXT\n" +
+                ", product_uuid text, product_description TEXT)";
+        sqLiteDatabase.execSQL(product_cart);
+        String product_category="CREATE TABLE \"product_category\" (\n" +
+                "\t\"category_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"category_name\"\tTEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(product_category);
+        String product_image="CREATE TABLE product_image (\n" +
+                "\tid INTEGER PRIMARY KEY,\n" +
+                "\timage_url TEXT,\n" +
+                "\tbase64_image TEXT,\n" +
+                "\timage_thumbnail_url TEXT,\n" +
+                "\timage_thumbnail TEXT,\n" +
+                "\tproduct_uuid TEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(product_image);
+        String product_weight="CREATE TABLE \"product_weight\" (\n" +
+                "\t\"weight_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"weight_unit\"\tTEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(product_weight);
+        String products="CREATE TABLE \"products\"\n" +
+                "(\n" +
+                "    product_id             INTEGER not null\n" +
+                "        primary key autoincrement,\n" +
+                "    product_name_ar        TEXT,\n" +
+                "    product_name_en        TEXT,\n" +
+                "    product_code           TEXT,\n" +
+                "    product_category       TEXT,\n" +
+                "    product_description    TEXT,\n" +
+                "    product_buy_price      TEXT,\n" +
+                "    product_sell_price     TEXT,\n" +
+                "    product_supplier       TEXT,\n" +
+                "    product_image          TEXT,\n" +
+                "    product_stock          TEXT,\n" +
+                "    product_weight_unit_id TEXT,\n" +
+                "    product_weight         TEXT,\n" +
+                "    product_active         BOOLEAN,\n" +
+                "    product_tax            DOUBLE,\n" +
+                "    product_uuid           TEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(products);
+        String sequence_text="CREATE TABLE sequence_text(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  type_perfix TEXT,\n" +
+                "  current_value TEXT,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(sequence_text);
+        String shift = "CREATE TABLE shift(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  sequence TEXT,\n" +
+                "  device_id TEXT,\n" +
+                "  username TEXT,\n" +
+                "  start_date_time DATE,\n" +
+                "  end_date_time DATE,\n" +
+                "  total_cash DOUBLE,\n" +
+                "  difference_cash DOUBLE,\n" +
+                "  leave_cash DOUBLE,\n" +
+                "  start_cash DOUBLE,\n" +
+                "  num_successful_transaction DOUBLE,\n" +
+                "  num_canceled_transaction DOUBLE,\n" +
+                "  num_returned_transaction DOUBLE, notes text, user_mail TEXT,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(shift);
+        String shop="CREATE TABLE \"shop\" (\n" +
+                "\t\"shop_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"shop_name\"\tTEXT,\n" +
+                "\t\"shop_contact\"\tTEXT,\n" +
+                "\t\"shop_email\"\tTEXT,\n" +
+                "\t\"shop_address\"\tTEXT,\n" +
+                "\t\"shop_currency\"\tTEXT,\n" +
+                "\t\"tax\"\tTEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(shop);
 
+        String suppliers="CREATE TABLE \"suppliers\" (\n" +
+                "\t\"suppliers_id\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "\t\"suppliers_name\"\tTEXT,\n" +
+                "\t\"suppliers_contact_person\"\tTEXT,\n" +
+                "\t\"suppliers_cell\"\tTEXT,\n" +
+                "\t\"suppliers_email\"\tTEXT,\n" +
+                "\t\"suppliers_address\"\tTEXT\n" +
+                ")";
+        sqLiteDatabase.execSQL(suppliers);
+        String user="CREATE TABLE user(\n" +
+                "  id INTEGER NOT NULL,\n" +
+                "  name_en TEXT,\n" +
+                "  name_ar TEXT,\n" +
+                "  email TEXT,\n" +
+                "  password TEXT NOT NULL,\n" +
+                "  username TEXT NOT NULL, mobile TEXT,\n" +
+                "  PRIMARY KEY(id)\n" +
+                ")";
+        sqLiteDatabase.execSQL(user);
+        Utils.addLog("datadata_created","done");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+    }
 }

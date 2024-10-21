@@ -2,6 +2,8 @@ package com.app.smartpos.utils;
 
 import android.app.Application;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 public class MultiLanguageApp extends Application {
 
     public static MultiLanguageApp app;
@@ -20,6 +22,7 @@ public class MultiLanguageApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SQLiteDatabase.loadLibs(this);
         app = this;
     }
 

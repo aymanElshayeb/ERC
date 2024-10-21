@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.app.smartpos.Constant;
@@ -18,6 +15,10 @@ import com.app.smartpos.settings.end_shift.ShiftDifferences;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
+
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
+import net.sqlcipher.database.SQLiteStatement;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,15 +34,14 @@ import java.util.Locale;
 
 public class DatabaseAccess {
     private static DatabaseAccess instance;
-    private final SQLiteOpenHelper openHelper;
+    private final DatabaseOpenHelper openHelper;
     private SQLiteDatabase database;
-
     /**
      * Private constructor to avoid object creation from outside classes.
      *
      * @param context
      */
-    private DatabaseAccess(Context context) {
+    public DatabaseAccess(Context context) {
         this.openHelper = new DatabaseOpenHelper(context);
     }
 
@@ -51,7 +51,7 @@ public class DatabaseAccess {
      * @param context the Context
      * @return the instance of DabaseAccess
      */
-    public static DatabaseAccess getInstance(Context context) {
+    static public DatabaseAccess getInstance(Context context) {
 
 
         if (instance == null) {
@@ -64,7 +64,7 @@ public class DatabaseAccess {
      * Open the database connection.
      */
     public void open() {
-        this.database = openHelper.getWritableDatabase();
+        this.database = openHelper.getWritableDatabase(DatabaseOpenHelper.DATABASE_PASSWORD);
     }
 
     /**
@@ -77,93 +77,15 @@ public class DatabaseAccess {
     }
 
     //insert customer
-    public boolean addCustomer(String customer_name, String customer_cell,
-                               String customer_email, String customer_address,
-                               Boolean customer_active) {
-
-        ContentValues values = new ContentValues();
-
-
-        values.put("customer_name", customer_name);
-        values.put("customer_cell", customer_cell);
-        values.put("customer_email", customer_email);
-        values.put("customer_address", customer_address);
-        values.put("customer_active", customer_active);
-
-        long check = database.insert("customers", null, values);
-        database.close();
-
-        //if data insert success, its return 1, if failed return -1
-        return check != -1;
-    }
 
 
     //insert category
-    public boolean addCategory(String category_name) {
-
-        ContentValues values = new ContentValues();
-
-
-        values.put("category_name", category_name);
-
-
-        long check = database.insert("product_category", null, values);
-        database.close();
-
-        //if data insert success, its return 1, if failed return -1
-        return check != -1;
-    }
 
 
     //insert payment method
-    public boolean addPaymentMethod(String payment_method_name, boolean payment_method_active) {
-
-        ContentValues values = new ContentValues();
-
-
-        values.put("payment_method_name", payment_method_name);
-        values.put("payment_method_active", payment_method_active);
-
-        long check = database.insert("payment_method", null, values);
-        database.close();
-
-        //if data insert success, its return 1, if failed return -1
-        return check != -1;
-    }
 
 
     //insert unit
-    public boolean addUnit(String unitName) {
-
-        ContentValues values = new ContentValues();
-
-
-        values.put("weight_unit", unitName);
-
-
-        long check = database.insert("product_weight", null, values);
-        database.close();
-
-        //if data insert success, its return 1, if failed return -1
-        return check != -1;
-    }
-
-
-    //insert order type
-    public boolean addOrderType(String orderType) {
-
-        ContentValues values = new ContentValues();
-
-
-        values.put("order_type_name", orderType);
-
-
-        long check = database.insert("order_type", null, values);
-        database.close();
-
-        //if data insert success, its return 1, if failed return -1
-        return check != -1;
-    }
 
     public String getLastShift(String key) {
         String result = "";
@@ -171,6 +93,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             result = cursor.getString(cursor.getColumnIndex(key));
         }
+        cursor.close();
         database.close();
         return result;
     }
@@ -404,7 +327,7 @@ public class DatabaseAccess {
         } else {
             check = database.insert("product_image", null, values);
         }
-
+        cursor.close();
         database.close();
 
         return check != -1;
@@ -433,7 +356,7 @@ public class DatabaseAccess {
 
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         database.close();
 
         return image;
@@ -774,7 +697,7 @@ public class DatabaseAccess {
 
             long check = database.insert("product_cart", null, values);
 
-
+            result.close();
             database.close();
 
 
@@ -795,7 +718,6 @@ public class DatabaseAccess {
 
 
         result.execute();
-
 
         database.close();
 
@@ -2764,6 +2686,7 @@ public class DatabaseAccess {
                 product.add(map);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         database.close();
         return product;
     }
