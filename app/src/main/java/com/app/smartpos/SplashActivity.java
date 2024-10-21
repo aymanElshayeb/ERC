@@ -47,11 +47,6 @@ public class SplashActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-        databaseAccess.open();
-        String endDateString = databaseAccess.getLastShift("end_date_time");
-        Utils.addLog("end_date", endDateString);
-
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
