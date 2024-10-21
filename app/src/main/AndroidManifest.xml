@@ -100,7 +100,7 @@
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity android:name=".customers.EditCustomersActivity" />
+        <activity android:name=".orders.DeviceListActivity" />
         <activity android:name=".product.EditProductScannerViewActivity" />
         <activity android:name=".pdf_report.ViewPDFActivity" />
         <activity android:name=".pos.ScannerActivity" />
@@ -109,13 +109,6 @@
         <activity android:name=".settings.backup.BackupActivity" />
         <activity android:name=".settings.Synchronization.DataBaseBackupActivity" />
 
-        <activity android:name=".settings.SettingsActivity" />
-
-        <activity
-            android:name=".orders.OrdersActivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".customers.AddCustomersActivity" />
-        <activity android:name=".customers.CustomersActivity" />
         <activity
             android:name=".SplashActivity"
             android:exported="true">
