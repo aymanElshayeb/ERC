@@ -21,3 +21,5 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
 -keep class net.sqlcipher.** { *; }
+-keep,includedescriptorclasses class net.sqlcipher.** { *; }
+-keep,includedescriptorclasses interface net.sqlcipher.** { *; }
