@@ -53,7 +53,7 @@ public class TemplatePDF {
             pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
             document.open();
         } catch (Exception e) {
-            Log.e("createFile", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -96,7 +96,7 @@ public class TemplatePDF {
             // paragraph.setSpacingAfter(30);
             document.add(paragraph);
         } catch (Exception e) {
-            Log.e("addTitle", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -125,7 +125,7 @@ public class TemplatePDF {
 
             document.add(img);
         } catch (Exception e) {
-            Log.e("addParagraph", e.toString());
+            e.printStackTrace();
         }
 
 
@@ -148,7 +148,7 @@ public class TemplatePDF {
             paragraph.setAlignment(Element.ALIGN_CENTER);
             document.add(paragraph);
         } catch (Exception e) {
-            Log.e("addParagraph", e.toString());
+            e.printStackTrace();
         }
 
 
@@ -165,7 +165,7 @@ public class TemplatePDF {
             paragraph.setAlignment(Element.ALIGN_CENTER);
             document.add(paragraph);
         } catch (Exception e) {
-            Log.e("addParagraph", e.toString());
+            e.printStackTrace();
         }
 
 
@@ -209,14 +209,14 @@ public class TemplatePDF {
             document.add(paragraph);
 
         } catch (Exception e) {
-            Log.e("createTable", e.toString());
+            e.printStackTrace();
         }
     }
 
     public void viewPDF() {
         Intent intent = new Intent(context, ViewPDFActivity.class);
         intent.putExtra("path", pdfFile.getAbsolutePath());
-        Log.d("Path", pdfFile.getAbsolutePath());
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 

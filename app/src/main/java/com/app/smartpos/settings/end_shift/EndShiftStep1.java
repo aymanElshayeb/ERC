@@ -136,11 +136,9 @@ public class EndShiftStep1 extends BaseActivity {
         Utils.addLog("datadata", paymentTypesCashMap.get("CASH"));
         LinkedList<EndShiftPaymentModels> models = new LinkedList<>();
         for (int i = 0; i < cardTypes.size(); i++) {
-            Log.w("datadata_cards", cardTypes.get(i).toString());
             // remove this condition if you want to show all cards
             if ("CASH".equals(cardTypes.get(i).get("name"))) {
                 View root_view = LayoutInflater.from(this).inflate(R.layout.layout_new_end_shift_payment_method, null);
-                Log.w("card types", String.valueOf(cardTypes));
 
                 TextView paymentTypeTv = root_view.findViewById(R.id.payment_type_tv);
                 EditText paymentTypeAmountEt = root_view.findViewById(R.id.payment_type_amount_et);

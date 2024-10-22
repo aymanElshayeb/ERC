@@ -290,7 +290,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             //timestamp use for invoice id for unique
             Long tsLong = System.currentTimeMillis() / 1000;
             String timeStamp = tsLong.toString();
-            Log.d("Time", timeStamp);
+
 
             final JSONObject obj = new JSONObject();
             try {

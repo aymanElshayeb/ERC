@@ -1273,7 +1273,7 @@ public class DatabaseAccess {
         } else if (type.equals("yearly")) {
 
             String currentYear = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(new Date());
-            Log.d("YEAR", currentYear);
+
             String sql = "SELECT * FROM order_details WHERE order_status='" + Constant.COMPLETED + "' AND strftime('%Y', product_order_date) = '" + currentYear + "' ";
 
             cursor = database.rawQuery(sql, null);
@@ -1391,7 +1391,7 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
 
-        Log.d("total_price", String.valueOf(total_price));
+
         return total_price;
     }
 
@@ -1427,7 +1427,6 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
 
-        Log.d("total_price", String.valueOf(total_cost));
         return total_cost;
     }
 

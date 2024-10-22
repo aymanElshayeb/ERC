@@ -69,8 +69,8 @@ public class RefundScannerActivity extends BaseActivity implements ZXingScannerV
 
         //set result in main activity or previous activity
         Items.searchEt.setText(myResult);
-        Log.d("QRCodeScanner", result.getText());
-        Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
+//        Log.d("QRCodeScanner", result.getText());
+//        Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
         onBackPressed();
     }
 

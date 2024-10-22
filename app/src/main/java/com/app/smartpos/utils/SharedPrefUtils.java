@@ -171,8 +171,6 @@ public class SharedPrefUtils {
         SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
         byte[] encryptedVector = Base64.decode(getApiVector(), Base64.DEFAULT);
         byte[] encryptedKey = Base64.decode(sharedPreferences.getString("ecr_apikey", ""), Base64.DEFAULT);
-        Utils.addLog("datadata_length2",encryptedKey.length+"");
-        Utils.addLog("datadata_length2",encryptedVector.length+"");
         String apiKey = "";
         try {
             apiKey = new DecryptionHelper().decrypt(encryptedKey, encryptedVector, new KeyStoreHelper().getOrCreateSecretKey());
@@ -199,11 +197,29 @@ public class SharedPrefUtils {
 
     public static String getDatabasePassword() {
         SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
-        return sharedPreferences.getString("ecr_database_password", "");
+        byte[] encryptedVector = Base64.decode(getDatabasePasswordKey(), Base64.DEFAULT);
+        byte[] encryptedKey = Base64.decode(sharedPreferences.getString("ecr_database_password", ""), Base64.DEFAULT);
+        String databasePassword = "";
+        try {
+            databasePassword = new DecryptionHelper().decrypt(encryptedKey, encryptedVector, new KeyStoreHelper().getOrCreateSecretKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return databasePassword;
     }
 
     public static void setDatabasePassword(String apiKey) {
         SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
         editor.putString("ecr_database_password", apiKey).commit();
+    }
+
+    public static String getDatabasePasswordKey() {
+        SharedPreferences sharedPreferences = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE);
+        return sharedPreferences.getString("ecr_database_password_key", "");
+    }
+
+    public static void setDatabasePasswordKey(String apiKey) {
+        SharedPreferences.Editor editor = MultiLanguageApp.getApp().getSharedPreferences(MultiLanguageApp.getApp().getString(R.string.app_name), MODE_PRIVATE).edit();
+        editor.putString("ecr_database_password_key", apiKey).commit();
     }
 }

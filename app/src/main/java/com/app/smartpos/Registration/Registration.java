@@ -184,6 +184,8 @@ public class Registration extends BaseActivity {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
+        Utils.addLog("datadata",KEY_URL);
+        Utils.addLog("datadata",REGISTER_DEVICE_URL);
         Data apiKey = new Data.Builder().
                 putString("url", KEY_URL).
                 putString("tenantId", tenantIdEt.getText().toString()).

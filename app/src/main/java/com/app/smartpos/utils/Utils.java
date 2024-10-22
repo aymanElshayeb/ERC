@@ -67,7 +67,7 @@ public class Utils {
                 .toHexString(bmpWidth % 8 == 0 ? bmpWidth / 8
                         : (bmpWidth / 8 + 1));
         if (widthHexString.length() > 2) {
-            Log.e("decodeBitmap error", " width is too large");
+            com.app.smartpos.common.Utils.addLog("decodeBitmap error", " width is too large");
             return null;
         } else if (widthHexString.length() == 1) {
             widthHexString = "0" + widthHexString;
@@ -76,7 +76,7 @@ public class Utils {
 
         String heightHexString = Integer.toHexString(bmpHeight);
         if (heightHexString.length() > 2) {
-            Log.e("decodeBitmap error", " height is too large");
+            com.app.smartpos.common.Utils.addLog("decodeBitmap error", " height is too large");
             return null;
         } else if (heightHexString.length() == 1) {
             heightHexString = "0" + heightHexString;

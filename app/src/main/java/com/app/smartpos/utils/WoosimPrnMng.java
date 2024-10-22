@@ -241,11 +241,11 @@ public class WoosimPrnMng {
                 byte[] command = Utils.decodeBitmap(bmp);
                 mPrintService.write(command);
             } else {
-                Log.e("Print Photo error", "the file isn't exists");
+                com.app.smartpos.common.Utils.addLog("Print Photo error", "the file isn't exists");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("PrintTools", "the file isn't exists");
+            com.app.smartpos.common.Utils.addLog("PrintTools", "the file isn't exists");
         }
     }
 

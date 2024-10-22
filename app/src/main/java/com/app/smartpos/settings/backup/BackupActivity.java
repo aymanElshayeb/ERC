@@ -172,7 +172,7 @@ public class BackupActivity extends BaseActivity {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
                         onExport(path);
-                        Log.d("path", path);
+                        //Log.d("path", path);
 
                     }
                 })

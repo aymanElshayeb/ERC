@@ -132,7 +132,7 @@ public class DeviceListActivity extends BaseActivity {
      * Start device discover with the BluetoothAdapter
      */
     private void doDiscovery() {
-        if (D) Log.d(TAG, "doDiscovery()");
+
 
         // Indicate scanning in the title
         //setProgressBarIndeterminateVisibility(true);
