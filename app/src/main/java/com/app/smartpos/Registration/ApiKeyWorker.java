@@ -82,6 +82,7 @@ public class ApiKeyWorker extends Worker {
                         String password_response = new String(Base64.decode(body.getString("password"), Base64.DEFAULT), StandardCharsets.UTF_8);
 
                         Pair<byte[],byte[]>encryption=new EncryptionHelper().encrypt(apikey,new KeyStoreHelper().getOrCreateSecretKey());
+                        Pair<byte[],byte[]>databasePasswordEncryption=new EncryptionHelper().encrypt(password_response,new KeyStoreHelper().getOrCreateSecretKey());
                         byte[] first = encryption.first;
                         byte[] second = encryption.second;
 
@@ -91,8 +92,13 @@ public class ApiKeyWorker extends Worker {
                         SharedPrefUtils.setApiVector(encryptedVector);
                         SharedPrefUtils.setApiKey(encryptedApiKey);
 
-                        String encryptedPassword = new String(new EncryptionHelper().encrypt(password_response,new KeyStoreHelper().getOrCreateSecretKey()).second, StandardCharsets.UTF_8);
-                        SharedPrefUtils.setDatabasePassword(encryptedPassword);
+
+
+                        String encryptedDatabasePassword = Base64.encodeToString(databasePasswordEncryption.second, Base64.DEFAULT);
+                        String encryptedDatabasePasswordKey = Base64.encodeToString(databasePasswordEncryption.first, Base64.DEFAULT);
+                        SharedPrefUtils.setDatabasePassword(encryptedDatabasePassword);
+                        SharedPrefUtils.setDatabasePasswordKey(encryptedDatabasePasswordKey);
+                        Utils.addLog("datadata_pass2",SharedPrefUtils.getDatabasePassword());
                         outputData.putString("apikey", apikey).putString("database_password", password_response);
                     }
                 }catch (Exception e) {
