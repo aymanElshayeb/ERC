@@ -88,9 +88,6 @@ public class Registration extends BaseActivity {
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
-        email.setText("tesrartecr@yopmail.com");
-        password.setText("01111Mm&");
-        tenantIdEt.setText("cr31234533331233");
         changeEmailTv.setOnClickListener(view -> {
             tenantId = "";
             spinner.setVisibility(View.GONE);
