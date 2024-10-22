@@ -51,8 +51,6 @@ public class ViewPDFActivity extends BaseActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        Log.d("location", bundle.toString());
-
         String dest = this.getExternalFilesDir(null) + "/";
 
         if (bundle != null) {

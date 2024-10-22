@@ -151,7 +151,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
             databaseAccess1.open();
             int itemCount = databaseAccess1.getCartItemCount();
-            Log.d("itemCount", String.valueOf(itemCount));
 //                if (itemCount <= 0) {
 //                    txt_total_price.setVisibility(View.GONE);
 //                    btnSubmitOrder.setVisibility(View.GONE);

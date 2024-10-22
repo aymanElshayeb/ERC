@@ -69,7 +69,6 @@ public class CheckCompanyWorker extends Worker {
                 String responseBody = response.body().string();
                 ServiceResult<RegistrationResponseDto> result = gson.fromJson(responseBody, new TypeToken<ServiceResult<RegistrationResponseDto>>() {
                 }.getType());
-                Log.e("Result", result.toString());
 
                 if (result.getCode() != 200) {
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
