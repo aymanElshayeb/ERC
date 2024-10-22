@@ -88,6 +88,9 @@ public class Registration extends BaseActivity {
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
 
+        email.setText("tesrartecr@yopmail.com");
+        password.setText("01111Mm&");
+        tenantIdEt.setText("cr31234533331233");
         changeEmailTv.setOnClickListener(view -> {
             tenantId = "";
             spinner.setVisibility(View.GONE);
@@ -184,6 +187,8 @@ public class Registration extends BaseActivity {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
+        Utils.addLog("datadata",KEY_URL);
+        Utils.addLog("datadata",REGISTER_DEVICE_URL);
         Data apiKey = new Data.Builder().
                 putString("url", KEY_URL).
                 putString("tenantId", tenantIdEt.getText().toString()).
