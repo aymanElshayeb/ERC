@@ -2,7 +2,7 @@ package com.app.smartpos.utils;
 
 import android.app.Application;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import com.app.smartpos.database.DatabaseOpenHelper;
 
 public class MultiLanguageApp extends Application {
 
@@ -18,15 +18,16 @@ public class MultiLanguageApp extends Application {
 //        LocaleManager.setLocale(this);
 //    }
 
+    public static MultiLanguageApp getApp() {
+        return app;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteDatabase.loadLibs(this);
+        if(SharedPrefUtils.isRegistered(this)){
+            DatabaseOpenHelper.DATABASE_PASSWORD = SharedPrefUtils.getDatabasePassword();
+        }
         app = this;
-    }
-
-    public static MultiLanguageApp getApp() {
-        return app;
     }
 }

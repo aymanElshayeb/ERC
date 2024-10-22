@@ -14,7 +14,11 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.Keystore.EncryptionHelper;
 import com.app.smartpos.common.Keystore.KeyStoreHelper;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.database.DatabaseOpenHelper;
+import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,6 +102,10 @@ public class ApiKeyWorker extends Worker {
                         String encryptedDatabasePasswordKey = Base64.encodeToString(databasePasswordEncryption.first, Base64.DEFAULT);
                         SharedPrefUtils.setDatabasePassword(encryptedDatabasePassword);
                         SharedPrefUtils.setDatabasePasswordKey(encryptedDatabasePasswordKey);
+
+                        DatabaseOpenHelper.DATABASE_PASSWORD = SharedPrefUtils.getDatabasePassword();
+
+                        SQLiteDatabase.loadLibs(MultiLanguageApp.getApp());
                         Utils.addLog("datadata_pass2",SharedPrefUtils.getDatabasePassword());
                         outputData.putString("apikey", apikey).putString("database_password", password_response);
                     }

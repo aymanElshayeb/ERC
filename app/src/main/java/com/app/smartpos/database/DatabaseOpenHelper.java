@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_PASSWORD = "ecu_database_password_";
+    public static String DATABASE_PASSWORD;
     public static final String DATABASE_NAME = "smart_pos.db";
     private static final int DATABASE_VERSION = 55;
     private final Context mContext;
@@ -37,6 +37,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         mContext = context;
         //setForcedUpgrade();
     }
+
 
     @Override
     public synchronized SQLiteDatabase getWritableDatabase(char[] password) {
