@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">ECR</string>
+    <string name="app_name" translatable="false">Qaema</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>
@@ -455,6 +455,7 @@
 
     //error
     <string name="failed_to_register">فشل في تسجيل الجهاز</string>
+    <string name="no_vat_number_found">يجب عليك إضافة الرقم الضريبي إلى ملف تعريف شركتك</string>
     <string name="non_admin_register">لا يمكن التسجيل باستخدام مستخدم غير إدارى</string>
     <string name="failed_to_login">فشل في تسجيل الدخول</string>
     <string name="no_printer_found">لم يتم العثور على طابعة</string>
