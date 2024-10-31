@@ -228,7 +228,7 @@ public class RegistrationDialog extends DialogFragment {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.failed_to_register)));
                         }
                     }
                 });
