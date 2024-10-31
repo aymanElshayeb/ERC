@@ -61,7 +61,7 @@ public class Registration extends BaseActivity {
     private String deviceId;
     private boolean isPasswordShown = false;
     private OneTimeWorkRequest readRequest;
-
+    boolean registerPassed=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActionBar actionBar = getSupportActionBar();
@@ -109,6 +109,7 @@ public class Registration extends BaseActivity {
             } else {
                 actionBtn.setVisibility(View.GONE);
                 loadingPb.setVisibility(View.VISIBLE);
+                registerPassed=true;
                 enqueueDownloadAndReadWorkers();
             }
         });
@@ -261,7 +262,7 @@ public class Registration extends BaseActivity {
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
-            if (workInfo.getOutputData().getKeyValueMap().isEmpty())
+            if (workInfo.getOutputData().getKeyValueMap().isEmpty() && registerPassed)
                 showMessage(MultiLanguageApp.app.getString(R.string.error_in_syncing_data));
             actionBtn.setVisibility(View.VISIBLE);
             loadingPb.setVisibility(View.GONE);
@@ -279,7 +280,8 @@ public class Registration extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            showMessage((errorMessage != null ? errorMessage : getString(R.string.unknown_error_occurred)));
+                            showMessage((errorMessage != null ? errorMessage : getString(R.string.failed_to_register)));
+                            registerPassed=false;
                         }
                     }
                 });
