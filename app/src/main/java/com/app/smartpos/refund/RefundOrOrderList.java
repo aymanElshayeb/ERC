@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
+import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
@@ -124,8 +125,15 @@ public class RefundOrOrderList extends BaseActivity {
         if (isRefund()) {
 //            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
 //            dialog.show(getSupportFragmentManager(),"dialog");
-            ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
-            confirmation.show(getSupportFragmentManager(), "confirmDialog");
+            databaseAccess.open();
+            if(databaseAccess.getConfiguration().get("merchant_tax_number").isEmpty()){
+                NoVatNumberDialog dialog=new NoVatNumberDialog();
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }
+            else {
+                ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
+                confirmation.show(getSupportFragmentManager(), "confirmDialog");
+            }
         } else {
             startActivity(i);
         }
