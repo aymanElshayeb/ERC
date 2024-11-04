@@ -103,7 +103,6 @@ public class PosProductAdapter extends RecyclerView.Adapter<PosProductAdapter.My
         } else if (base64Image != null) {
             if (base64Image.length() < 6) {
                 holder.product_image.setImageResource(R.drawable.image_placeholder);
-                holder.product_image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
 
                 Utils.addLog("datadata_64", base64Image);

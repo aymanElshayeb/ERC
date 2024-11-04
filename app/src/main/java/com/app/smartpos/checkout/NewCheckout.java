@@ -148,7 +148,12 @@ public class NewCheckout extends BaseActivity {
         addItemsTv.setOnClickListener(view -> finish());
         backIm.setOnClickListener(view -> finish());
         checkoutTv.setOnClickListener(view -> {
-            if (paymentType.equals("CASH")) {
+            databaseAccess.open();
+            if(databaseAccess.getConfiguration().get("merchant_tax_number").isEmpty()){
+                NoVatNumberDialog dialog=new NoVatNumberDialog();
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }
+            else if (paymentType.equals("CASH")) {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
                 try {

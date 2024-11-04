@@ -3,14 +3,12 @@ package com.app.smartpos.Registration;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
@@ -43,8 +41,8 @@ public class RegistrationWorker extends Worker {
             return Result.failure();
         }
         // Perform registration logic here
-        String apiKey=SharedPrefUtils.getApiKey();
-        Utils.addLog("datadata_key",apiKey);
+        String apiKey = SharedPrefUtils.getApiKey();
+        Utils.addLog("datadata_key", apiKey);
         OkHttpClient client = getUnsafeOkHttpClient();
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
@@ -98,11 +96,11 @@ public class RegistrationWorker extends Worker {
                 String ecr = returnedObj.getString("ecrCode");
                 String merchantId = returnedObj.getJSONObject("merchant").getString("merchantId");
                 String logo = returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
-                if(!returnedObj.getJSONObject("merchant").has("VATNumber")) {
-                    outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.no_vat_number_found)).build();
-                    return Result.failure(outputData);
-                }
-                String vatNumber = returnedObj.getJSONObject("merchant").getString("VATNumber");
+//                if (!returnedObj.getJSONObject("merchant").has("VATNumber")) {
+//                    outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.no_vat_number_found)).build();
+//                    return Result.failure(outputData);
+//                }
+                String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
                 databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber);
                 databaseAccess.open();
                 return Result.success(outputData);
