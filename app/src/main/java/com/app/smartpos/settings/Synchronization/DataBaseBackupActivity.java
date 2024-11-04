@@ -85,7 +85,11 @@ public class DataBaseBackupActivity extends WorkerActivity {
             // Work succeeded, handle success
 
             if (workerType == 3) {
-                if (imagesSize == 0) {
+                if (imagesSize == 0 && needToUpdate) {
+                    loadingLl.setVisibility(View.VISIBLE);
+                    enqueueDownloadProductsImagesWorkers();
+                }
+                else if (imagesSize == 0) {
                     Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
                 } else {
                     showMessage(getString(R.string.data_synced_successfully));

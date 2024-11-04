@@ -40,6 +40,7 @@ import java.util.HashMap;
 public class WorkerActivity extends BaseActivity {
 
     public long imagesSize;
+    public Boolean needToUpdate;
     String lastUpdated;
 
     public void enqueueCreateAndUploadWorkers() {
@@ -260,6 +261,7 @@ public class WorkerActivity extends BaseActivity {
                         Utils.addLog("datadata", workInfo.getOutputData().toString());
                         // Work is finished, close pending screen or perform any action
                         imagesSize = workInfo.getOutputData().getLong("imagesSize", 0);
+                        needToUpdate = workInfo.getOutputData().getBoolean("needToUpdate", false);
                         lastUpdated = workInfo.getOutputData().getString("newUpdateTimestamp");
                         handleWorkCompletion(workInfo);
                     }
