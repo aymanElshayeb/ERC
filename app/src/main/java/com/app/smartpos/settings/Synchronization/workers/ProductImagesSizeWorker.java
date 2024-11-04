@@ -66,11 +66,12 @@ public class ProductImagesSizeWorker extends Worker {
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
                 long imagesSize = returnedObj.getLong("imagesSize");
                 String newUpdateTimestamp = returnedObj.getString("newUpdateTimestamp");
-
+                boolean needToUpdate = returnedObj.getBoolean("needToUpdate");
 
                 Data data = new Data.Builder().
                         putLong("imagesSize", imagesSize).
                         putString("newUpdateTimestamp", newUpdateTimestamp).
+                        putBoolean("needToUpdate",needToUpdate).
                         build();
                 return Result.success(data); // Return success if the response is successful
             } else {
