@@ -87,6 +87,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
             if (workerType == 3) {
                 if (imagesSize == 0 && needToUpdate) {
                     loadingLl.setVisibility(View.VISIBLE);
+                    workerType=4;
                     enqueueDownloadProductsImagesWorkers();
                 }
                 else if (imagesSize == 0) {
