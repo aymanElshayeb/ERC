@@ -61,6 +61,8 @@ public class OrderBitmap extends BaseActivity {
         Device device = DeviceFactory.getDevice();
         line = device.getPrintLine();
         databaseAccess.open();
+        HashMap<String,String>shop = databaseAccess.getShopInformation();
+        databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
         merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
@@ -74,6 +76,7 @@ public class OrderBitmap extends BaseActivity {
                 Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 bitmaps.add(new PrinterModel(0, logo));
             }
+            printShopName(shop.get("shop_name"));
             printMerchantId(merchantId);
             printMerchantTaxNumber(merchantTaxNumber);
             bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
@@ -409,6 +412,13 @@ public class OrderBitmap extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
+        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
+    }
+
+    private void printShopName(String shopName) {
+        List<Bitmap> newBitmaps = new ArrayList<>();
+        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.shop_name)));
+        newBitmaps.add(PrintingHelper.createBitmapFromText(shopName));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
 

@@ -106,7 +106,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             existingDb.beginTransaction();
 
             // Get tables from new database
-            String[] tables = {"products", "payment_method", "card_type", "user","configuration","shop"};
+            String[] tables = {"products", "payment_method", "card_type", "user"};
             for (String table : tables) {
                 // Delete all rows in the existing table
                 existingDb.delete(table, null, null);

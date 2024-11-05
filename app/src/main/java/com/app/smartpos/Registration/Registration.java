@@ -185,17 +185,18 @@ public class Registration extends BaseActivity {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
+        String tenantId="cr"+tenantIdEt.getText().toString().trim();
         Utils.addLog("datadata",KEY_URL);
         Utils.addLog("datadata",REGISTER_DEVICE_URL);
         Data apiKey = new Data.Builder().
                 putString("url", KEY_URL).
-                putString("tenantId", tenantIdEt.getText().toString()).
+                putString("tenantId",tenantId).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 build();
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
-                putString("tenantId", tenantIdEt.getText().toString()).
+                putString("tenantId", tenantId).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 putString("deviceId", deviceId).
@@ -203,7 +204,7 @@ public class Registration extends BaseActivity {
 
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
-                .putString("tenantId", tenantIdEt.getText().toString())
+                .putString("tenantId", tenantId)
                 .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 

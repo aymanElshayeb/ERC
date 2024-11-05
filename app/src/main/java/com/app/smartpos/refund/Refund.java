@@ -45,7 +45,7 @@ public class Refund extends BaseActivity {
         scannerIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Refund.this, ScannerActivity.class);
+                Intent intent = new Intent(Refund.this, ScannerActivity.class).putExtra("screenType","refund");
                 startActivity(intent);
             }
         });

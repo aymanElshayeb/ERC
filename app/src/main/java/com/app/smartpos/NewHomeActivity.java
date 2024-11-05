@@ -50,6 +50,7 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
         TextView nameTv = findViewById(R.id.name_tv);
+        TextView shopNameTv = findViewById(R.id.shop_name_tv);
         TextView locationTv = findViewById(R.id.location_tv);
         TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
         if (!SharedPrefUtils.getName(this).isEmpty()) {
@@ -64,7 +65,9 @@ public class NewHomeActivity extends BaseActivity {
         databaseAccess.open();
         HashMap<String, String> shop = databaseAccess.getShopInformation();
         String shopLocation = String.valueOf(shop.get("shop_address"));
+        String shopName = String.valueOf(shop.get("shop_name"));
         locationTv.setText(shopLocation);
+        shopNameTv.setText(shopName);
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
