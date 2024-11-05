@@ -2772,7 +2772,7 @@ public class DatabaseAccess {
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getSearchProducts(String s, boolean showActiveOnly) {
         ArrayList<HashMap<String, String>> product = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name_en LIKE '%" + s + "%' OR product_name_ar LIKE '%\" + s + \"%' OR product_uuid LIKE '%" + s + "%' ORDER BY product_id DESC", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM products WHERE product_name_en LIKE '%" + s + "%' OR product_code LIKE '%\" + s + \"%' OR product_name_ar LIKE '%\" + s + \"%' OR product_uuid LIKE '%" + s + "%' ORDER BY product_id DESC", null);
         if (cursor.moveToFirst()) {
             do {
                 String active = cursor.getString(cursor.getColumnIndex("product_active"));
