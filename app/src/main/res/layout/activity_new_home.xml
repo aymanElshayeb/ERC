@@ -77,10 +77,12 @@
 
         <TextView
             android:id="@+id/shop_name_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:drawablePadding="8dp"
+            android:layout_marginHorizontal="24dp"
+            android:ellipsize="end"
             android:fontFamily="@font/inter_regular"
             android:includeFontPadding="false"
             android:textColor="#F4F4F4"

@@ -418,6 +418,9 @@ public class OrderBitmap extends BaseActivity {
     private void printShopName(String shopName) {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.shop_name)));
+        if(shopName.length()>20){
+            shopName=shopName.substring(0,20);
+        }
         newBitmaps.add(PrintingHelper.createBitmapFromText(shopName));
         bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
     }
