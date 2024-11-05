@@ -412,7 +412,8 @@ public class OrderBitmap extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
+        bitmaps.add(new PrinterModel(-1,newBitmaps.get(0)));
+        bitmaps.add(new PrinterModel(1,newBitmaps.get(1)));
     }
 
     private void printShopName(String shopName) {
