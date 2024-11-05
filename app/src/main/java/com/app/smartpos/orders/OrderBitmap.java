@@ -78,11 +78,16 @@ public class OrderBitmap extends BaseActivity {
             }
             printShopName(shop.get("shop_name"));
             printMerchantId(merchantId);
-            printMerchantTaxNumber(merchantTaxNumber);
+            if(!merchantTaxNumber.isEmpty()) {
+                printMerchantTaxNumber(merchantTaxNumber);
+            }
             bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
             printReceiptNo(invoiceId);
             printType(printType);
-            printInvoiceBarcode(invoiceId);
+            if(!merchantTaxNumber.isEmpty()) {
+                printInvoiceBarcode(invoiceId);
+            }
+
             printProducts(orderDetailsList);
             printTotalExcludingTax(priceBeforeTax);
             //Todo uncomment discount when it is added in the system

@@ -89,17 +89,23 @@ public class RegistrationWorker extends Worker {
 
                 databaseAccess.addShop(returnedObj.getJSONObject("merchant").getString("companyPhone"), returnedObj.getJSONObject("merchant").getString("currency"), returnedObj.getJSONObject("merchant").getString("companyEmail"), returnedObj.getJSONObject("merchant").getString("name"), returnedObj.getJSONObject("tax").getDouble("percentage"), databaseAccess);
                 String authorization = returnedObj.getString("token");
-                Data outputData = new Data.Builder().
-                        putString("Authorization", authorization).
-                        putString("ecrCode", returnedObj.getString("ecrCode")).
-                        build();
+                Data outputData;
                 String ecr = returnedObj.getString("ecrCode");
                 String merchantId = returnedObj.getJSONObject("merchant").getString("merchantId");
                 String logo = returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
-//                if (!returnedObj.getJSONObject("merchant").has("VATNumber")) {
-//                    outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.no_vat_number_found)).build();
-//                    return Result.failure(outputData);
-//                }
+                if (!returnedObj.getJSONObject("merchant").has("VATNumber")) {
+                    outputData= new Data.Builder().
+                            putString("Authorization", authorization).
+                            putString("ecrCode", returnedObj.getString("ecrCode")).
+                            putBoolean("vatNumberExist",false).
+                            build();
+                }else{
+                    outputData= new Data.Builder().
+                            putString("Authorization", authorization).
+                            putString("ecrCode", returnedObj.getString("ecrCode")).
+                            putBoolean("vatNumberExist",true).
+                            build();
+                }
                 String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
                 databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber);
                 databaseAccess.open();

@@ -32,6 +32,7 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
+import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
@@ -62,6 +63,7 @@ public class Registration extends BaseActivity {
     private boolean isPasswordShown = false;
     private OneTimeWorkRequest readRequest;
     boolean registerPassed=true;
+    boolean vatNumberExist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActionBar actionBar = getSupportActionBar();
@@ -259,7 +261,13 @@ public class Registration extends BaseActivity {
             SharedPrefUtils.setStartDateTime(this);
             byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
             SharedPrefUtils.setAuthData(this, bytes);
-            finish();
+            if(vatNumberExist) {
+                finish();
+            }else{
+                NoVatNumberDialog dialog=new NoVatNumberDialog();
+                dialog.setRegistration(this);
+                dialog.show(getSupportFragmentManager(),"dialog");
+            }
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -281,6 +289,7 @@ public class Registration extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
+                            vatNumberExist = workInfo.getOutputData().getBoolean("vatNumberExist",true);
                             showMessage((errorMessage != null ? errorMessage : getString(R.string.failed_to_register)));
                             registerPassed=false;
                         }

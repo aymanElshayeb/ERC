@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.R;
-import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
@@ -21,10 +20,9 @@ import com.app.smartpos.utils.SharedPrefUtils;
 
 public class Refund extends BaseActivity {
 
+    public static EditText searchEt;
     DatabaseAccess databaseAccess;
     RefundDetailsViewModel model;
-    public static EditText searchEt;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +43,13 @@ public class Refund extends BaseActivity {
         scannerIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Refund.this, ScannerActivity.class).putExtra("screenType","refund");
+                Intent intent = new Intent(Refund.this, ScannerActivity.class).putExtra("screenType", "refund");
                 startActivity(intent);
             }
         });
         allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund", true)));
         view_receipt_btn.setOnClickListener(view -> {
-            databaseAccess.open();
-            if(databaseAccess.getConfiguration().get("merchant_tax_number").isEmpty()){
-                NoVatNumberDialog dialog=new NoVatNumberDialog();
-                dialog.show(getSupportFragmentManager(),"dialog");
-            }
-            else if (!searchEt.getText().toString().trim().isEmpty()) {
+            if (!searchEt.getText().toString().trim().isEmpty()) {
 //                List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
 //                if (list.size() > 0) {
 //                    Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund",true);
@@ -67,7 +60,6 @@ public class Refund extends BaseActivity {
 //
 //                    startActivity(i);
 //                }
-                databaseAccess.open();
                 ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
                 confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
 
