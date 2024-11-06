@@ -65,11 +65,16 @@ public class SuccessfulPayment extends BaseActivity {
         noReceipt.setOnClickListener(view -> {
             finish();
         });
-
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
             try {
-                device.printReceipt(printerData.getBitmap());
+                boolean success=device.printReceipt(printerData.getBitmap());
+                if(success){
+                    databaseAccess.open();
+                    databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                    finish();
+                }
             } catch (Exception e) {
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
