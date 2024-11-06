@@ -255,7 +255,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:text="+966581234567"
+                    android:text="+9668001010025"
                     android:textDirection="ltr"
                     android:textColor="@color/light_purple"
                     android:textSize="17sp"

@@ -84,9 +84,7 @@ public class OrderBitmap extends BaseActivity {
             bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
             printReceiptNo(invoiceId);
             printType(printType);
-            if(!merchantTaxNumber.isEmpty()) {
-                printInvoiceBarcode(invoiceId);
-            }
+            printInvoiceBarcode(invoiceId);
 
             printProducts(orderDetailsList);
             printTotalExcludingTax(priceBeforeTax);
@@ -95,8 +93,10 @@ public class OrderBitmap extends BaseActivity {
             printTax(tax);
             printTotalIncludingTax(priceAfterTax);
             printPaidAndChangeAmount(orderList.get("paid_amount"), priceAfterTax, orderList.get("change_amount"), orderList.get("order_payment_method"));
-            printZatcaQrCode(databaseAccess);
-            printLine();
+            if(!merchantTaxNumber.isEmpty()){
+                printZatcaQrCode(databaseAccess);
+                printLine();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -422,13 +422,10 @@ public class OrderBitmap extends BaseActivity {
     }
 
     private void printShopName(String shopName) {
-        List<Bitmap> newBitmaps = new ArrayList<>();
-        newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.shop_name)));
         if(shopName.length()>20){
             shopName=shopName.substring(0,20);
         }
-        newBitmaps.add(PrintingHelper.createBitmapFromText(shopName));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(shopName)));
     }
 
     private void printMerchantId(String merchantId) {

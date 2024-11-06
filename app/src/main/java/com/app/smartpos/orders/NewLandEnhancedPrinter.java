@@ -2,8 +2,10 @@ package com.app.smartpos.orders;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.MultiLanguageApp;
@@ -57,6 +59,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
 
             @Override
             public void onError(ErrorCode errorCode, String s) {
+                Toast.makeText(MultiLanguageApp.getApp(), s, Toast.LENGTH_SHORT).show();
                 Utils.addLog("datadata_error", "error " + errorCode + " " + s);
             }
         });
