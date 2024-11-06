@@ -914,7 +914,7 @@ public class DatabaseAccess {
             String original_order_id = obj.has("original_order_id") ? obj.getString("original_order_id") : "";
             String operation_type = obj.getString("operation_type");
             String operation_sub_type = obj.getString("operation_sub_type");
-            boolean print = obj.getBoolean("print");
+            boolean print = obj.getBoolean("printer");
 
 
             values.put("invoice_id", order_id);
