@@ -38,15 +38,16 @@ public class UrovoPrinter extends BaseActivity {
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
         merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
+        int status=0;
         try {
             mPrintManager.initPrint();
             mPrintManager.addBitmap(bitmap, 0);
-            mPrintManager.startPrint();
+            status = mPrintManager.startPrint();
         } catch (Exception e) {
             e.printStackTrace();
         }
         mPrintManager.close();
-        return true;
+        return status==0;
 
     }
 

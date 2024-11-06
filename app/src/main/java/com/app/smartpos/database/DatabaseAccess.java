@@ -938,6 +938,9 @@ public class DatabaseAccess {
             values.put("operation_type", operation_type);
             values.put("original_order_id", original_order_id);
             values.put("order_status", order_status);
+            if( obj.has("printed")){
+                values.put("printed", false);
+            }
             values.put("qr_code", "");
 
 
@@ -1015,6 +1018,17 @@ public class DatabaseAccess {
         }
 
         database.close();
+    }
+
+    public void updateOrderPrintFlag(boolean value, String order_id) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("print", value);
+
+        long check = database.update("order_list", values, "print=?", new String[]{order_id});
+        database.close();
+
     }
 
     private void openDatabase() {
@@ -1111,6 +1125,7 @@ public class DatabaseAccess {
                 map.put("operation_type", cursor.getString(cursor.getColumnIndex("operation_type")));
                 map.put("operation_sub_type", cursor.getString(cursor.getColumnIndex("operation_sub_type")));
                 map.put("qr_code", cursor.getString(cursor.getColumnIndex("qr_code")));
+                map.put("printed", cursor.getString(cursor.getColumnIndex("printed")));
 
 
                 map.put(Constant.ORDER_STATUS, cursor.getString(cursor.getColumnIndex(Constant.ORDER_STATUS)));

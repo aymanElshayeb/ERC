@@ -51,19 +51,22 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmapResult.put(bitmapName1, bitmap);
         String printDara = "*image c " + bitmap.getWidth() + "*" + (bitmap.getHeight() + 20) + " path:" + bitmapName1 + "\n" +
                 "!hz s\n!asc s\n";
+        final boolean[] error = {false};
         mPrintManager.print(printDara, bitmapResult, new PrintListener() {
             @Override
             public void onSuccess() {
                 Utils.addLog("datadata", "success");
+                error[0] =false;
             }
 
             @Override
             public void onError(ErrorCode errorCode, String s) {
                 Toast.makeText(MultiLanguageApp.getApp(), s, Toast.LENGTH_SHORT).show();
                 Utils.addLog("datadata_error", "error " + errorCode + " " + s);
+                error[0] =true;
             }
         });
-        return true;
+        return error[0];
     }
 
     @SuppressLint("NewApi")

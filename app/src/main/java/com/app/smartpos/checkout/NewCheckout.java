@@ -240,6 +240,7 @@ public class NewCheckout extends BaseActivity {
                     obj.put("card_type_code", card_type_code);
                     obj.put("approval_code", approval_code);
                     obj.put("operation_sub_type", fromQuickBill ? "freeText" : "product");
+                    obj.put("printed", false);
 
                     databaseAccess.open();
                     HashMap<String, String> configuration = databaseAccess.getConfiguration();

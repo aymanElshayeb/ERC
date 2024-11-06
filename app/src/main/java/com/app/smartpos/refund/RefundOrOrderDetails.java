@@ -59,6 +59,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     private String refundSequence;
     boolean checkConnectionOnce = true;
     private RecyclerView recycler;
+    boolean printedBefore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             operation_sub_type = getIntent().getStringExtra("operation_sub_type");
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
+            printedBefore = getIntent().getBooleanExtra("printed",false);
             orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
             Utils.addLog("datadata_test", operation_sub_type + " " + operation_type);
             for (int i = 0; i < orderDetailsList.size(); i++) {
@@ -139,7 +141,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
                 startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
-                        operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
+                        operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(printedBefore ? R.string.receipt_copy:R.string.simplified_tax_invoice)))
                 ;
             } else {
                 refundPressed();

@@ -87,7 +87,11 @@ public class CheckoutOrderDetails extends BaseActivity {
 
         printReceipt.setOnClickListener(view -> {
             try {
-                device.printReceipt(printerData.getBitmap());
+                boolean success= device.printReceipt(printerData.getBitmap());
+                if(success){
+                    databaseAccess.open();
+                    databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                }
                 Intent intent = new Intent(this, NewHomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

@@ -121,6 +121,7 @@ public class RefundOrOrderList extends BaseActivity {
         i.putExtra("order_payment_method", orderList.get(adapterPosition).get("order_payment_method"));
         i.putExtra("operation_type", orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type", orderList.get(adapterPosition).get("operation_sub_type"));
+        i.putExtra("printed", Boolean.parseBoolean(orderList.get(adapterPosition).get("printed")));
         if (isRefund()) {
 //            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
 //            dialog.show(getSupportFragmentManager(),"dialog");
