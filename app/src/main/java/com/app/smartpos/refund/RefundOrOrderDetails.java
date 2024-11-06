@@ -140,8 +140,22 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
+                String type="";
+                if(operation_type.equals("refund")){
+                    if(printedBefore){
+                       type = getString(R.string.receipt_refund_copy);
+                    }else{
+                        type= getString(R.string.receipt_refund_copy);
+                    }
+                }else{
+                    if(printedBefore){
+                        type = getString(R.string.receipt_copy);
+                    }else{
+                        type= getString(R.string.simplified_tax_invoice);
+                    }
+                }
                 startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
-                        operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(printedBefore ? R.string.receipt_copy:R.string.simplified_tax_invoice)))
+                        type))
                 ;
             } else {
                 refundPressed();
@@ -310,6 +324,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 obj.put("card_type_code", card_type_code);
                 obj.put("approval_code", approval_code);
                 obj.put("operation_sub_type", operation_sub_type);
+                obj.put("printed", false);
                 databaseAccess.open();
                 HashMap<String, String> configuration = databaseAccess.getConfiguration();
                 String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");

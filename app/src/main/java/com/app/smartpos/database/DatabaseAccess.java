@@ -914,6 +914,7 @@ public class DatabaseAccess {
             String original_order_id = obj.has("original_order_id") ? obj.getString("original_order_id") : "";
             String operation_type = obj.getString("operation_type");
             String operation_sub_type = obj.getString("operation_sub_type");
+            boolean print = obj.getBoolean("print");
 
 
             values.put("invoice_id", order_id);
@@ -938,9 +939,8 @@ public class DatabaseAccess {
             values.put("operation_type", operation_type);
             values.put("original_order_id", original_order_id);
             values.put("order_status", order_status);
-            if( obj.has("printed")){
-                values.put("printed", false);
-            }
+            values.put("printed", print);
+
             values.put("qr_code", "");
 
 
@@ -1024,9 +1024,9 @@ public class DatabaseAccess {
 
         ContentValues values = new ContentValues();
 
-        values.put("print", value);
+        values.put("printed", value);
 
-        long check = database.update("order_list", values, "print=?", new String[]{order_id});
+        long check = database.update("order_list", values, "invoice_id=?", new String[]{order_id});
         database.close();
 
     }
