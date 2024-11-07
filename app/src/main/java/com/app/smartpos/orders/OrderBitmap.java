@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
@@ -98,7 +99,8 @@ public class OrderBitmap extends BaseActivity {
                 printZatcaQrCode(databaseAccess);
                 printLine();
             }
-
+            printLine();
+            footer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,6 +145,7 @@ public class OrderBitmap extends BaseActivity {
         printPaymentDetails(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal() - endShiftModel.getStartCash(), endShiftModel.getTotalCardsAmount());
         printCardTypesBreakdown(endShiftModel.getShiftDifferences());
         printLine();
+        footer();
         return creatGeneralBitmap();
     }
 
@@ -459,6 +462,14 @@ public class OrderBitmap extends BaseActivity {
 
     private void printLine() {
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
+    }
+
+    private void footer() {
+        Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
+        Bitmap bmp = Bitmap.createBitmap(50, 50, conf); // this creates a MUTABLE bitmap
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE);
+        bitmaps.add(new PrinterModel(0, bmp));
     }
 
     private String getDateTime(Long dateTimeMillisecond) {
