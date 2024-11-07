@@ -17,6 +17,7 @@ public class RefundModel implements Serializable {
     String operation_sub_type;
     String order_payment_method;
     String operation_type;
+    boolean printed;
     ArrayList<HashMap<String, String>> orderDetailsItems = new ArrayList<>();
 
     public RefundModel(String jsonString, DatabaseAccess databaseAccess) {
@@ -26,6 +27,7 @@ public class RefundModel implements Serializable {
             order_id = json.getString("invoiceSeq");
             operation_type = json.getString("operationType");
             operation_sub_type = json.getString("operationSubType");
+            printed = json.getBoolean("printed");
             order_payment_method = json.getJSONObject("paymentMethod").getString("name");
 
             JSONArray invoiceLines = json.getJSONArray("invoiceLines");
@@ -87,6 +89,10 @@ public class RefundModel implements Serializable {
 
     public String getOperation_type() {
         return operation_type;
+    }
+
+    public boolean isPrinted() {
+        return printed;
     }
 
     public ArrayList<HashMap<String, String>> getOrderDetailsItems() {

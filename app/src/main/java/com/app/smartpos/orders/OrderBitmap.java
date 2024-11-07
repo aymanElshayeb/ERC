@@ -74,6 +74,7 @@ public class OrderBitmap extends BaseActivity {
             if (!configuration.get("merchant_logo").isEmpty()) {
                 byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
                 Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                logo = resizeBitmap(logo);
                 bitmaps.add(new PrinterModel(0, logo));
             }
             printShopName(shop.get("shop_name"));
@@ -103,6 +104,23 @@ public class OrderBitmap extends BaseActivity {
         }
         return creatGeneralBitmap();
 
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap){
+        if(bitmap.getWidth()<=200 && bitmap.getHeight()<=200){
+            return bitmap;
+        }
+        int width;
+        int height;
+        if(bitmap.getWidth() > bitmap.getHeight()){
+            width=200;
+            height = (int)(200.0 * (((double) bitmap.getHeight()) / ((double) bitmap.getWidth())));
+        }else{
+            height=200;
+            width = (int)(200.0 * (((double) bitmap.getWidth()) / ((double) bitmap.getHeight())));
+        }
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        return bitmap;
     }
 
     @SuppressLint("NewApi")

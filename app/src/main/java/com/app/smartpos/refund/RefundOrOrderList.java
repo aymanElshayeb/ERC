@@ -35,7 +35,7 @@ public class RefundOrOrderList extends BaseActivity {
     RefundDetailsViewModel model;
     String invoiceSeq = "";
     private RecyclerView recycler;
-
+    private int lastSelectedItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +83,7 @@ public class RefundOrOrderList extends BaseActivity {
                 finish();
                 Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
                 i.putExtra("refundModel", refundModel);
+                i.putExtra("printed", Boolean.parseBoolean(orderList.get(lastSelectedItem).get("printed")));
                 startActivity(i);
             }
         });
@@ -115,6 +116,7 @@ public class RefundOrOrderList extends BaseActivity {
     }
 
     public void openDetails(int adapterPosition) {
+        lastSelectedItem=adapterPosition;
         invoiceSeq = orderList.get(adapterPosition).get("invoice_id");
         Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", isRefund);
         i.putExtra("order_id", orderList.get(adapterPosition).get("invoice_id"));
