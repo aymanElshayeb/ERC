@@ -2,6 +2,7 @@ package com.app.smartpos.checkout;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -69,11 +70,12 @@ public class SuccessfulPayment extends BaseActivity {
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
             try {
-                boolean success=device.printReceipt(printerData.getBitmap());
+                Bitmap newBitmap = Bitmap.createBitmap(printerData.getBitmap());
+                boolean success=device.printReceipt(newBitmap);
                 if(success){
                     databaseAccess.open();
                     databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
-                    finish();
+                    //finish();
                 }
             } catch (Exception e) {
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
