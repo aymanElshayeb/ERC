@@ -47,7 +47,7 @@
     <string name="sar">ر.س</string>
     <string name="items">الأصناف</string>
     <string name="quick_bills">الفواتير السريعة</string>
-    <string name="refund">استرجاع</string>
+    <string name="refund">مسترجع</string>
     <string name="end_of_shift">نهاية الوردية</string>
     <string name="confirmation_refund">يرجى تأكيد استرجاع الصنف / الأصناف بقيمة</string>
     <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد استرجاع هذا الطلب؟</string>

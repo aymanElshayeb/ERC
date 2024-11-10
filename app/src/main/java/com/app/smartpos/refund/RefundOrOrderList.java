@@ -3,6 +3,7 @@ package com.app.smartpos.refund;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class RefundOrOrderList extends BaseActivity {
 
@@ -83,7 +85,7 @@ public class RefundOrOrderList extends BaseActivity {
                 finish();
                 Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
                 i.putExtra("refundModel", refundModel);
-                i.putExtra("printed", Boolean.parseBoolean(orderList.get(lastSelectedItem).get("printed")));
+                i.putExtra("printed", Objects.requireNonNull(orderList.get(lastSelectedItem).get("printed")).equalsIgnoreCase("1"));
                 startActivity(i);
             }
         });
@@ -123,7 +125,7 @@ public class RefundOrOrderList extends BaseActivity {
         i.putExtra("order_payment_method", orderList.get(adapterPosition).get("order_payment_method"));
         i.putExtra("operation_type", orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type", orderList.get(adapterPosition).get("operation_sub_type"));
-        i.putExtra("printed", Boolean.parseBoolean(orderList.get(adapterPosition).get("printed")));
+        i.putExtra("printed", Objects.requireNonNull(orderList.get(adapterPosition).get("printed")).equalsIgnoreCase("1"));
         if (isRefund()) {
 //            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
 //            dialog.show(getSupportFragmentManager(),"dialog");

@@ -89,7 +89,7 @@ public class EndShiftStep2 extends WorkerActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getName(this));
+        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getUserName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
@@ -142,6 +142,7 @@ public class EndShiftStep2 extends WorkerActivity {
             Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
         } catch (Exception e) {
+            e.printStackTrace();
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }
     }

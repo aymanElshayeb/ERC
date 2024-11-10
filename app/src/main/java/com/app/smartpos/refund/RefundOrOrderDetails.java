@@ -145,7 +145,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                     if(printedBefore){
                        type = getString(R.string.receipt_refund_copy);
                     }else{
-                        type= getString(R.string.receipt_refund_copy);
+                        type= getString(R.string.refund);
                     }
                 }else{
                     if(printedBefore){

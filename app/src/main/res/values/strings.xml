@@ -476,7 +476,7 @@
     <string name="total_price_cannot_exceed">Total price cannot exceed 999999999.99</string>
 
     //print status
-    <string name="print_successful">Printer is out of paper</string>
+    <string name="print_successful">Print done successfully</string>
     <string name="printer_out_of_paper">Printer is out of paper</string>
     <string name="printer_over_heat">Printer over heat</string>
     <string name="device_under_voltage">Battery low. Please charge the device</string>

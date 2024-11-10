@@ -289,10 +289,10 @@ public class Registration extends BaseActivity {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
-                            vatNumberExist = workInfo.getOutputData().getBoolean("vatNumberExist",true);
                             showMessage((errorMessage != null ? errorMessage : getString(R.string.failed_to_register)));
                             registerPassed=false;
                         }
+                        vatNumberExist = workInfo.getOutputData().getBoolean("vatNumberExist",true);
                     }
                 });
     }

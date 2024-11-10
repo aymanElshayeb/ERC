@@ -115,7 +115,7 @@ public class RefundDetailsViewModel extends ViewModel {
     }
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED && workInfo.getId().equals(refundRequest.getId())) {
-            liveData.postValue(GsonUtils.deserializeFromJson(workInfo.getOutputData().getString("refundModel")));
+            liveData.postValue((RefundModel) GsonUtils.deserializeFromJson(workInfo.getOutputData().getString("refundModel"),RefundModel.class));
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED && workInfo.getId().equals(refundRequest.getId())) {
             liveData.postValue(null);

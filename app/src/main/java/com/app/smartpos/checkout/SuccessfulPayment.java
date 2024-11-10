@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -56,7 +57,6 @@ public class SuccessfulPayment extends BaseActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            Utils.addLog("datadata_type", getIntent().getStringExtra("printType"));
             printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this, getIntent().getStringExtra("order_id"), getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
@@ -76,12 +76,13 @@ public class SuccessfulPayment extends BaseActivity {
                 if(success){
                     databaseAccess.open();
                     databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
-//                    Intent intent = new Intent(this, NewHomeActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(intent);
-//                    finish();
+                    Intent intent = new Intent(this, NewHomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });

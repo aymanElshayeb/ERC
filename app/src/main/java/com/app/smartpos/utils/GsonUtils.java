@@ -3,17 +3,18 @@ package com.app.smartpos.utils;
 import com.app.smartpos.refund.Model.RefundModel;
 import com.google.gson.Gson;
 
-public class GsonUtils {
+public class GsonUtils<T> {
+    public GsonUtils() {
+    }
 
-    static public String serializeToJson(RefundModel refundModel) {
+    public String serializeToJson(T object) {
         Gson gson = new Gson();
-        String j = gson.toJson(refundModel);
+        String j = gson.toJson(object);
         return j;
     }
     // Deserialize to single object.
-    static public RefundModel deserializeFromJson(String jsonString) {
+    static public Object deserializeFromJson(String jsonString,Class objectClass) {
         Gson gson = new Gson();
-        RefundModel refundModel = gson.fromJson(jsonString, RefundModel.class);
-        return refundModel;
+        return gson.fromJson(jsonString, objectClass);
     }
 }
