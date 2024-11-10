@@ -23,7 +23,6 @@ public class UrovoPrinter extends BaseActivity {
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
-    String merchantTaxNumber, merchantId, productCode;
     PrinterProviderImpl mPrintManager = null;
     SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
     ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
@@ -39,8 +38,6 @@ public class UrovoPrinter extends BaseActivity {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(UrovoPrinter.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         boolean success = false;
         try {
             mPrintManager.initPrint();

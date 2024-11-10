@@ -2892,6 +2892,7 @@ public class DatabaseAccess {
                 configuration.put("merchant_id", cursor.getString(cursor.getColumnIndex("merchant_id")));
                 configuration.put("merchant_logo", cursor.getString(cursor.getColumnIndex("merchant_logo")));
                 configuration.put("merchant_tax_number", cursor.getString(cursor.getColumnIndex("merchant_tax_number")));
+                configuration.put("invoice_merchant_id", cursor.getString(cursor.getColumnIndex("invoice_merchant_id")));
             }
         } catch (Exception e) {
             e.printStackTrace();
