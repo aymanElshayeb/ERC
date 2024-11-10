@@ -43,7 +43,7 @@ public class OrderBitmap extends BaseActivity {
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
-    String merchantTaxNumber, merchantId, productCode;
+    String merchantTaxNumber, invoiceMerchantId, productCode;
     SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
     ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
     List<PrinterModel> bitmaps = new LinkedList<>();
@@ -66,7 +66,7 @@ public class OrderBitmap extends BaseActivity {
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
+        invoiceMerchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
@@ -79,7 +79,7 @@ public class OrderBitmap extends BaseActivity {
                 bitmaps.add(new PrinterModel(0, logo));
             }
             printShopName(shop.get("shop_name"));
-            printInvoiceMerchantId(merchantId);
+            printInvoiceMerchantId(invoiceMerchantId);
             if(!merchantTaxNumber.isEmpty()) {
                 printMerchantTaxNumber(merchantTaxNumber);
             }
