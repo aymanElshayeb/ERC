@@ -32,6 +32,7 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.Model.RefundModel;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.GsonUtils;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -114,7 +115,7 @@ public class RefundDetailsViewModel extends ViewModel {
     }
     private void handleWorkCompletion(WorkInfo workInfo) {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED && workInfo.getId().equals(refundRequest.getId())) {
-            liveData.postValue((RefundModel) workInfo.getOutputData().getKeyValueMap().get("refundModel"));
+            liveData.postValue(GsonUtils.deserializeFromJson(workInfo.getOutputData().getString("refundModel")));
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED && workInfo.getId().equals(refundRequest.getId())) {
             liveData.postValue(null);
