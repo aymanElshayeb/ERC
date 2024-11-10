@@ -3,6 +3,7 @@ package com.app.smartpos.refund.Model;
 import com.app.smartpos.Constant;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.MultiLanguageApp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +21,7 @@ public class RefundModel implements Serializable {
     boolean printed;
     ArrayList<HashMap<String, String>> orderDetailsItems = new ArrayList<>();
 
-    public RefundModel(String jsonString, DatabaseAccess databaseAccess) {
+    public RefundModel(String jsonString) {
         try {
             JSONObject json = new JSONObject(jsonString);
 
@@ -46,6 +47,7 @@ public class RefundModel implements Serializable {
                     map.put("product_name_en", description);
                     map.put("product_name_ar", description);
                 } else {
+                    DatabaseAccess databaseAccess = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
                     databaseAccess.open();
                     HashMap<String, String> map1 = databaseAccess.getProductsInfoFromUUID(uuid).get(0);
                     map.put("product_image", map1.get("product_image"));

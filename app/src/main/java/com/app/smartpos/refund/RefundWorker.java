@@ -57,7 +57,7 @@ public class RefundWorker extends Worker {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     int code = responseBody.getInt("code");
                     if (code == 200) {
-                        outputData.put("refundModel",new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString(), (DatabaseAccess) getInputData().getKeyValueMap().get("databaseAccess")));
+                        outputData.put("refundModel",new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString()));
                     } else if (code == 404) {
                         outputData.put("refundModel",null);
                     }

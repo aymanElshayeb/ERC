@@ -68,7 +68,6 @@ public class RefundDetailsViewModel extends ViewModel {
                 .putString("tenantId", conf.get("merchant_id"))
                 .putString("Authorization", SharedPrefUtils.getAuthorization())
                 .putString("sequenceId",sequenceId)
-                .putString("databaseAccess",databaseAccess.toString())
                 .build();
         refundRequest = new OneTimeWorkRequest.Builder(RefundWorker.class)
                 .setInputData(refundInputData)
