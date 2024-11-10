@@ -12,8 +12,11 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_close"
+        android:background="@drawable/active_oval"
+        android:backgroundTint="@color/trans_red"
         android:layout_marginTop="16dp"
-        android:tint="@color/red"/>
+        android:padding="8dp"
+        android:tint="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
