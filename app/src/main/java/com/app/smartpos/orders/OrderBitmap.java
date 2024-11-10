@@ -418,7 +418,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printInvoiceBarcode(String invoiceId) throws WriterException {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 375, 100)));
+        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.QR_CODE, 375, 100)));
     }
 
     private void printReceiptNo(String invoiceId) {
