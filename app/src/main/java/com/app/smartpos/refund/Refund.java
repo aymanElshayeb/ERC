@@ -84,6 +84,6 @@ public class Refund extends BaseActivity {
     public void callApi() {
         Utils.addLog("INSIDE CALL API", SharedPrefUtils.getAuthorization());
 
-        model.start(searchEt.getText().toString().trim(), databaseAccess);
+        model.start(this,searchEt.getText().toString().trim(), databaseAccess);
     }
 }

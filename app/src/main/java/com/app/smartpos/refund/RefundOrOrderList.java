@@ -137,6 +137,6 @@ public class RefundOrOrderList extends BaseActivity {
     }
 
     public void callApi() {
-        model.start(invoiceSeq, databaseAccess);
+        model.start(this,invoiceSeq, databaseAccess);
     }
 }

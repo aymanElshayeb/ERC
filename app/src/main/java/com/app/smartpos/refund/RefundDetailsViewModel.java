@@ -31,6 +31,7 @@ import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.Model.RefundModel;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -57,7 +58,7 @@ public class RefundDetailsViewModel extends ViewModel {
         return liveData;
     }
 
-    public void start(String sequenceId, DatabaseAccess databaseAccess) {
+    public void start(BaseActivity activity, String sequenceId, DatabaseAccess databaseAccess) {
         //Utils.addLog("datadata",SharedPrefUtils.getAuthorization());
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
@@ -76,13 +77,13 @@ public class RefundDetailsViewModel extends ViewModel {
                 .beginWith(refundRequest);
         continuation.enqueue();
         // cannot observe in view model
-        /*WorkManager.getInstance().getWorkInfoByIdLiveData(refundRequest.getId())
-                .observe(getViewLifecycleOwner(), workInfo -> {
+        WorkManager.getInstance().getWorkInfoByIdLiveData(refundRequest.getId())
+                .observe(activity, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);
                     }
-                });*/
+                });
 
 //        AndroidNetworking.get(REFUND_URL + sequenceId)
 //                .addHeaders("apikey", SharedPrefUtils.getApiKey())
@@ -116,9 +117,8 @@ public class RefundDetailsViewModel extends ViewModel {
         if (workInfo.getState() == WorkInfo.State.SUCCEEDED && workInfo.getId().equals(refundRequest.getId())) {
             liveData.postValue((RefundModel) workInfo.getOutputData().getKeyValueMap().get("refundModel"));
 //            closePendingScreen();
-        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-
-
+        } else if (workInfo.getState() == WorkInfo.State.FAILED && workInfo.getId().equals(refundRequest.getId())) {
+            liveData.postValue(null);
         }
     }
 }
