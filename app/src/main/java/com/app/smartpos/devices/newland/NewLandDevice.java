@@ -1,4 +1,4 @@
-package com.app.smartpos.common.DeviceFactory;
+package com.app.smartpos.devices.newland;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,7 +7,7 @@ import android.util.Base64;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.common.Utils;
-import com.app.smartpos.orders.NewLandEnhancedPrinter;
+import com.app.smartpos.devices.DeviceFactory.Device;
 
 public class NewLandDevice implements Device {
     @Override

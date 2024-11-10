@@ -5,8 +5,8 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
 import com.app.smartpos.Constant;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.google.zxing.BarcodeFormat;
@@ -86,7 +86,7 @@ public class ZatcaQRCodeGeneration {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
             zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
             zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
-            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("merchant_id"));
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id"));
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
@@ -109,7 +109,7 @@ public class ZatcaQRCodeGeneration {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
             zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
             zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
-            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("merchant_id"));
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id"));
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();

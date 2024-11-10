@@ -27,7 +27,7 @@ public class RefundModel implements Serializable {
             order_id = json.getString("invoiceSeq");
             operation_type = json.getString("operationType");
             operation_sub_type = json.getString("operationSubType");
-            printed = json.getBoolean("printed");
+//            printed = json.getBoolean("printed");
             order_payment_method = json.getJSONObject("paymentMethod").getString("name");
 
             JSONArray invoiceLines = json.getJSONArray("invoiceLines");

@@ -1,4 +1,4 @@
-package com.app.smartpos.common.DeviceFactory;
+package com.app.smartpos.devices.urovo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
-import com.app.smartpos.orders.UrovoPrinter;
+import com.app.smartpos.devices.DeviceFactory.Device;
 
 import java.util.Base64;
 

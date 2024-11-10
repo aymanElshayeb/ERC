@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
@@ -2923,12 +2922,13 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number) {
+    public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number, String invoiceMerchantId) {
 
         ContentValues values = new ContentValues();
 
         values.put("ecr_code", ecr_code);
         values.put("merchant_id", merchant_id);
+        values.put("invoice_merchant_id", invoiceMerchantId);
         values.put("merchant_logo", merchant_logo);
         values.put("merchant_tax_number", merchant_tax_number);
 

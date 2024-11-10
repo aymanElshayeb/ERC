@@ -1,4 +1,4 @@
-package com.app.smartpos.common.DeviceFactory;
+package com.app.smartpos.devices.DeviceFactory;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

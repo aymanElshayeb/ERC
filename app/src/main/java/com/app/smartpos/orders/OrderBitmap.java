@@ -11,8 +11,8 @@ import android.graphics.Rect;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
@@ -66,7 +66,7 @@ public class OrderBitmap extends BaseActivity {
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
+        merchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
@@ -104,7 +104,7 @@ public class OrderBitmap extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return creatGeneralBitmap();
+        return createGeneralBitmap();
 
     }
 
@@ -146,7 +146,7 @@ public class OrderBitmap extends BaseActivity {
         printCardTypesBreakdown(endShiftModel.getShiftDifferences());
         printLine();
         footer();
-        return creatGeneralBitmap();
+        return createGeneralBitmap();
     }
 
     private void printTransactionsAmount(double totalAmount, double totalRefundsAmount) {
@@ -276,7 +276,7 @@ public class OrderBitmap extends BaseActivity {
         return totalCard;
     }
 
-    public Bitmap creatGeneralBitmap() {
+    public Bitmap createGeneralBitmap() {
         totalHeight = 0;
         int size = bitmaps.size();
         for (int i = 0; i < size; i++) {

@@ -464,7 +464,7 @@
 
     //error
     <string name="failed_to_register">Failed to register device</string>
-    <string name="no_vat_number_found">You need to add VAT number to your company profile to complete order</string>
+    <string name="no_vat_number_found">You have not provided VAT Number. Your Invoices will not be compliant with ZATCA</string>
     <string name="non_admin_register">Can\'t register device with non admin user</string>
     <string name="failed_to_login">Failed to login</string>
     <string name="no_printer_found">no printer found</string>
@@ -474,6 +474,14 @@
     <string name="please_select_payment_method">Please select Payment Method</string>
     <string name="price_total_cannot_exceed">Price total cannot exceed 999999999.99</string>
     <string name="total_price_cannot_exceed">Total price cannot exceed 999999999.99</string>
+
+    //print status
+    <string name="print_successful">Printer is out of paper</string>
+    <string name="printer_out_of_paper">Printer is out of paper</string>
+    <string name="printer_over_heat">Printer over heat</string>
+    <string name="device_under_voltage">Battery low. Please charge the device</string>
+    <string name="printer_busy">Printer busy</string>
+    <string name="printer_error">Error with printer</string>
 
     //reports
     <string name="z_report">Z Report</string>

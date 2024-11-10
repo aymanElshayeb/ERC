@@ -1,6 +1,8 @@
-package com.app.smartpos.common.DeviceFactory;
+package com.app.smartpos.devices.DeviceFactory;
 
 import com.app.smartpos.common.Consts;
+import com.app.smartpos.devices.newland.NewLandDevice;
+import com.app.smartpos.devices.urovo.UrovoDevice;
 
 public class DeviceFactory {
 

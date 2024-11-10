@@ -1,4 +1,4 @@
-package com.app.smartpos.orders;
+package com.app.smartpos.devices.newland;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -50,7 +50,7 @@ public class NewLandPrinter extends BaseActivity {
 
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
+        merchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();

@@ -92,6 +92,7 @@ public class RegistrationWorker extends Worker {
                 Data outputData;
                 String ecr = returnedObj.getString("ecrCode");
                 String merchantId = returnedObj.getJSONObject("merchant").getString("merchantId");
+                String invoiceMerchantId = returnedObj.getJSONObject("merchant").getString("invoiceMerchantId");
                 String logo = returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
                 if (!returnedObj.getJSONObject("merchant").has("VATNumber")) {
                     outputData= new Data.Builder().
@@ -107,7 +108,7 @@ public class RegistrationWorker extends Worker {
                             build();
                 }
                 String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
-                databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber);
+                databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber,invoiceMerchantId);
                 databaseAccess.open();
                 return Result.success(outputData);
             } else {

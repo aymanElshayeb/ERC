@@ -17,9 +17,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
+import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
@@ -75,7 +76,10 @@ public class SuccessfulPayment extends BaseActivity {
                 if(success){
                     databaseAccess.open();
                     databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
-                    //finish();
+//                    Intent intent = new Intent(this, NewHomeActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(intent);
+//                    finish();
                 }
             } catch (Exception e) {
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
