@@ -79,7 +79,7 @@ public class OrderBitmap extends BaseActivity {
                 bitmaps.add(new PrinterModel(0, logo));
             }
             printShopName(shop.get("shop_name"));
-            printMerchantId(merchantId);
+            printInvoiceMerchantId(merchantId);
             if(!merchantTaxNumber.isEmpty()) {
                 printMerchantTaxNumber(merchantTaxNumber);
             }
@@ -449,7 +449,7 @@ public class OrderBitmap extends BaseActivity {
         bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(shopName)));
     }
 
-    private void printMerchantId(String merchantId) {
+    private void printInvoiceMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr", "")));
