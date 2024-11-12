@@ -40,14 +40,14 @@ public class NewLeapGeneralDevice implements Device {
 
     @Override
     public boolean printReceipt(Bitmap bitmap) {
-        UrovoPrinter urovoPrinter = new UrovoPrinter();
-        return urovoPrinter.printReceipt(bitmap);
+        NewLandEnhancedPrinter newLandEnhancedPrinter = new NewLandEnhancedPrinter();
+        return newLandEnhancedPrinter.printReceipt(bitmap);
     }
 
     @Override
     public boolean printZReport(Bitmap bitmap) {
-        UrovoPrinter urovoPrinter = new UrovoPrinter();
-        return urovoPrinter.printZReport(bitmap);
+        NewLandEnhancedPrinter newLandEnhancedPrinter = new NewLandEnhancedPrinter();
+        return newLandEnhancedPrinter.printZReport(bitmap);
     }
 
     @SuppressLint("NewApi")
