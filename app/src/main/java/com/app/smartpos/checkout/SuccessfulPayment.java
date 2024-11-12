@@ -84,7 +84,7 @@ public class SuccessfulPayment extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                FilesUtils.generateNoteOnSD(this,"no_printer",e.getStackTrace(),databaseAccess);
+                FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });

@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class FilesUtils {
 
-    static public void generateNoteOnSD(Context context, String sFileName, StackTraceElement[] sBody, DatabaseAccess databaseAccess) {
+    static public void generateNoteOnSD(String sFileName, StackTraceElement[] sBody, DatabaseAccess databaseAccess) {
         try {
             File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ECR-Error-Logs");
             if (!root.exists()) {
