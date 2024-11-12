@@ -10,6 +10,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -26,7 +27,9 @@ public class FilesUtils {
             String merchant_id = configuration.isEmpty() ? "" : configuration.get("merchant_id");
             databaseAccess.open();
 
-            File gpxfile = new File(root, sFileName+"-"+new Date().getTime()+".txt");
+            SimpleDateFormat simpleDateFormat =
+                    new SimpleDateFormat("yyyy-MM-dd--HH-mm");
+            File gpxfile = new File(root, sFileName+"-"+simpleDateFormat.format(new Date())+".txt");
 
             FileWriter writer = new FileWriter(gpxfile);
             writer.append(ecr_code);

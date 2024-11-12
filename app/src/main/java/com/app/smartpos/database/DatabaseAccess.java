@@ -2901,12 +2901,11 @@ public class DatabaseAccess {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            database.close();
         }
+        if (cursor != null) {
+            cursor.close();
+        }
+        database.close();
         return configuration;
     }
 
