@@ -24,6 +24,7 @@ import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.devices.DeviceFactory.Device;
 import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
+import com.app.smartpos.orders.OrderBitmap;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 

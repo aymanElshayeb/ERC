@@ -15,8 +15,8 @@ import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;

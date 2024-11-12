@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
 import com.app.smartpos.Constant;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.utils.printing.PrintingHelper;
 import com.google.zxing.BarcodeFormat;
 
