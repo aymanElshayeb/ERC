@@ -13,7 +13,6 @@ import android.util.Base64;
 
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
-import com.app.smartpos.orders.OrderBitmap;
 
 import java.util.HashMap;
 import java.util.List;
