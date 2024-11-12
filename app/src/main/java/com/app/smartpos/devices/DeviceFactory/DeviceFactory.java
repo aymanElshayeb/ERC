@@ -15,9 +15,9 @@ import java.util.List;
 public class DeviceFactory {
 
     public static Device getDevice() {
-        Boolean isNewLand = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION);
-        Boolean isUrovo = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION_UROVO_PURCHASE);
-        Boolean isGeneralNeoleap = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION_GENERAL_NEWLEAP_PURCHASE);
+        Boolean isNewLand = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION,Consts.PACKAGE);
+        Boolean isUrovo = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION_UROVO_PURCHASE,Consts.PACKAGE_UROVO);
+        //Boolean isGeneralNeoleap = queryForAction(MultiLanguageApp.getApp().getPackageManager(),Consts.CARD_ACTION_GENERAL_NEWLEAP_PURCHASE);
         if(isNewLand){
             return new NewLandDevice();
         }else if(isUrovo){
@@ -27,8 +27,9 @@ public class DeviceFactory {
         }
     }
 
-    public static Boolean queryForAction(PackageManager packageManager, String action) {
+    public static Boolean queryForAction(PackageManager packageManager, String action,String packageName) {
         Intent intent = new Intent(action);
+        intent.setPackage(packageName);
         return !packageManager.queryIntentActivities(intent, 0).isEmpty();
     }
 }
