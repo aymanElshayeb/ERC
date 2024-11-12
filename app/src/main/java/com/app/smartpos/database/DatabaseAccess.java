@@ -184,7 +184,6 @@ public class DatabaseAccess {
         values.put("start_date_time", endShiftModel.getStartDateTime());
         values.put("end_date_time", endShiftModel.getEndDateTime());
 
-        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String startDateIso = new Date(endShiftModel.getStartDateTime()).toString();
         String endDateIso = new Date(endShiftModel.getEndDateTime()).toString();
 

@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Utils {
 
@@ -74,7 +75,7 @@ public class Utils {
     }
 
     public static void addLog(String key, String value) {
-        if (BuildConfig.BUILD_TYPE == "debug") {
+        if (Objects.equals(BuildConfig.BUILD_TYPE, "debug")) {
             Log.i(key, value);
         }
     }
