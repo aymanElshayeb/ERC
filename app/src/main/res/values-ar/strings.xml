@@ -454,6 +454,7 @@
     <string name="unknown_error_occurred">حدث خطأ غير معروف</string>
 
     //error
+    <string name="no_internet_connection">لا يوجد إتصال بالشبكة</string>
     <string name="failed_to_register">فشل في تسجيل الجهاز</string>
     <string name="no_vat_number_found">لم تقم بتسجيل الرقم الضريبي. الفواتير المصدرة لن تكون مطابقة لهيئة الزكاة و الضرائب</string>
     <string name="non_admin_register">لا يمكن التسجيل باستخدام مستخدم غير إدارى</string>

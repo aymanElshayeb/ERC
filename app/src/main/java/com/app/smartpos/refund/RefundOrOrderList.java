@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -130,8 +131,12 @@ public class RefundOrOrderList extends BaseActivity {
 //            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
 //            dialog.show(getSupportFragmentManager(),"dialog");
 
-            ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
-            confirmation.show(getSupportFragmentManager(), "confirmDialog");
+            if(!isConnected()){
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }else {
+                ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
+                confirmation.show(getSupportFragmentManager(), "confirmDialog");
+            }
 
         } else {
             startActivity(i);

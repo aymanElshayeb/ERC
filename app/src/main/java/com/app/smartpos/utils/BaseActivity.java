@@ -13,6 +13,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.BuildConfig;
 import com.app.smartpos.common.RootUtil;
+import com.app.smartpos.common.Utils;
 
 import java.util.Locale;
 
@@ -77,6 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onAvailable(Network network) {
             isConnected = true;
+            Utils.addLog("datadata_error","true");
             connectionChanged(isConnected);
         }
 
@@ -84,8 +87,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         public void onLost(Network network) {
             isConnected = false;
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+            Utils.addLog("datadata_error","false");
+            isConnected = activeNetworkInfo != null && activeNetworkInfo.isAvailable();
+            Utils.addLog("datadata_error",isConnected+"");
             connectionChanged(isConnected);
+
             //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
         }
 

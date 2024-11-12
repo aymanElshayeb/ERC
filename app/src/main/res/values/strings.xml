@@ -463,6 +463,7 @@
 
 
     //error
+    <string name="no_internet_connection">No internet connection</string>
     <string name="failed_to_register">Failed to register device</string>
     <string name="no_vat_number_found">You have not provided VAT Number. Your Invoices will not be compliant with ZATCA</string>
     <string name="non_admin_register">Can\'t register device with non admin user</string>

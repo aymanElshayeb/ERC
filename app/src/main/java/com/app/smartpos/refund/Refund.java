@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -60,9 +61,12 @@ public class Refund extends BaseActivity {
 //
 //                    startActivity(i);
 //                }
-                ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
-                confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
-
+                if(!isConnected()){
+                    Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                }else {
+                    ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
+                    confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
+                }
                 //callApi();
             }
         });

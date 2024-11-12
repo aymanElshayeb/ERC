@@ -29,9 +29,9 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
     LinearLayout loadingLl;
     ProgressDialog loading;
-    private LocalBackup localBackup;
     int workerType;
     CardView cardLocalBackUp, cardLocalImport, downloadProductsImages, cardBackupToDrive;
+    private LocalBackup localBackup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +52,35 @@ public class DataBaseBackupActivity extends WorkerActivity {
         localBackup = new LocalBackup(this);
 
         cardLocalBackUp.setOnClickListener(v -> {
-            workerType = 1;
-            loadingLl.setVisibility(View.VISIBLE);
-            enqueueDownloadAndReadWorkers();
+            if (isConnected()) {
+                workerType = 1;
+                loadingLl.setVisibility(View.VISIBLE);
+                enqueueDownloadAndReadWorkers();
+            }else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
 
         });
 
         cardLocalImport.setOnClickListener(v -> {
-            loadingLl.setVisibility(View.VISIBLE);
-            workerType = 2;
-            enqueueUploadWorkers();
+            if (isConnected()) {
+                loadingLl.setVisibility(View.VISIBLE);
+                workerType = 2;
+                enqueueUploadWorkers();
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
         });
 
 
         downloadProductsImages.setOnClickListener(v -> {
-            loadingLl.setVisibility(View.VISIBLE);
-            workerType = 3;
-            enqueueDownloadProductsImagesSizeWorkers();
+            if (isConnected()) {
+                loadingLl.setVisibility(View.VISIBLE);
+                workerType = 3;
+                enqueueDownloadProductsImagesSizeWorkers();
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
         });
 
     }
@@ -87,10 +99,9 @@ public class DataBaseBackupActivity extends WorkerActivity {
             if (workerType == 3) {
                 if (imagesSize == 0 && needToUpdate) {
                     loadingLl.setVisibility(View.VISIBLE);
-                    workerType=4;
+                    workerType = 4;
                     enqueueDownloadProductsImagesWorkers();
-                }
-                else if (imagesSize == 0) {
+                } else if (imagesSize == 0) {
                     Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
                 } else {
                     showMessage(getString(R.string.data_synced_successfully));
