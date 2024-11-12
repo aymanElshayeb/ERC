@@ -20,6 +20,7 @@ import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
@@ -89,6 +90,8 @@ public class CheckoutOrderDetails extends BaseActivity {
             try {
                 device.printReceipt(printerData.getBitmap());
             } catch (Exception e) {
+                e.printStackTrace();
+                FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });

@@ -11,7 +11,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
-
+        namespace 'com.app.smartpos'
     }
     buildFeatures {
         buildConfig = true

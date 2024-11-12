@@ -25,6 +25,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.devices.DeviceFactory.Device;
 import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -142,6 +143,8 @@ public class EndShiftStep2 extends WorkerActivity {
             Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
         } catch (Exception e) {
+            e.printStackTrace();
+            FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }
     }
