@@ -66,7 +66,7 @@ public class OrderBitmap extends BaseActivity {
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        invoiceMerchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
+        invoiceMerchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
