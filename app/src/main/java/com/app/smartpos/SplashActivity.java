@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.common.CrashReport.CustomExceptionHandler;
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
@@ -74,6 +75,10 @@ public class SplashActivity extends BaseActivity {
                     finish();
                 }
             }, splashTimeOut);
+        }
+
+        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
         }
     }
 

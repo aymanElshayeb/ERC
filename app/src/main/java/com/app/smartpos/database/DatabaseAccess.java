@@ -2927,6 +2927,23 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
+    public Boolean addReport(String ecr,String merchantId,String type,String body) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("ecr", ecr);
+        values.put("merchant_id", merchantId);
+        values.put("type", type);
+        values.put("body", body);
+
+        long check = database.insert("crash_report", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+    @SuppressLint("Range")
     public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number, String invoiceMerchantId) {
 
         ContentValues values = new ContentValues();
