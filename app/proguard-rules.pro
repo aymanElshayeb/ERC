@@ -20,3 +20,11 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
+-dontwarn java.beans.BeanInfo
+-dontwarn java.beans.IntrospectionException
+-dontwarn java.beans.Introspector
+-dontwarn java.beans.PropertyDescriptor
+-dontwarn javax.imageio.spi.ImageInputStreamSpi
+-dontwarn javax.imageio.spi.ImageOutputStreamSpi
+-dontwarn javax.imageio.spi.ImageReaderSpi
+-dontwarn javax.imageio.spi.ImageWriterSpi
