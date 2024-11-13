@@ -2941,7 +2941,6 @@ public class DatabaseAccess {
         values.put("merchant_id", merchantId);
         values.put("type", type);
         values.put("dateTime_", new Date().toString());
-        values.put("toast", new Date().toString());
         values.put("message", message);
         values.put("body", body);
 
