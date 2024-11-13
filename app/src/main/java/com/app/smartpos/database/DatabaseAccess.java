@@ -2938,7 +2938,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
         values.put("ecr", ecr);
-        values.put("merchnt_id", merchantId);
+        values.put("merchant_id", merchantId);
         values.put("type", type);
         values.put("dateTime_", new Date().toString());
         values.put("toast", new Date().toString());
