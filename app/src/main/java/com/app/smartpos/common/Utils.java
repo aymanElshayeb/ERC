@@ -77,5 +77,6 @@ public class Utils {
         if (BuildConfig.BUILD_TYPE == "debug") {
             Log.i(key, value);
         }
+        Log.i(key, value);
     }
 }
