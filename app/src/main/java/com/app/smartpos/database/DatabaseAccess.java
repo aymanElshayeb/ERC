@@ -2934,6 +2934,8 @@ public class DatabaseAccess {
         values.put("ecr", ecr);
         values.put("merchnt_id", merchantId);
         values.put("type", type);
+        values.put("dateTime_", new Date().toString());
+        values.put("toast", new Date().toString());
         values.put("body", body);
 
         long check = database.insertOrThrow("crash_report", null, values);
