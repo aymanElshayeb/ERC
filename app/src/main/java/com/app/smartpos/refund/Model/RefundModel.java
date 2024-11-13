@@ -1,5 +1,7 @@
 package com.app.smartpos.refund.Model;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import com.app.smartpos.Constant;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
@@ -73,6 +75,7 @@ public class RefundModel implements Serializable {
                 orderDetailsItems.add(map);
             }
         } catch (JSONException e) {
+            addToDatabase(e,"error-in-read-json-refundModel");
             e.printStackTrace();
         }
     }

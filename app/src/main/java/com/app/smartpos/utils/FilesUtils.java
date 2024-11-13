@@ -1,5 +1,7 @@
 package com.app.smartpos.utils;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class FilesUtils {
             //Utils.addLog("datadata_dir",root.mkdir()+"");
             //Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
+            addToDatabase(e,"generateNoteOnSD-filesUtils");
             e.printStackTrace();
         }
     }

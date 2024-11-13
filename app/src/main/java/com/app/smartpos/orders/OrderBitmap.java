@@ -1,5 +1,7 @@
 package com.app.smartpos.orders;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -102,6 +104,7 @@ public class OrderBitmap extends BaseActivity {
             printLine();
             footer();
         } catch (Exception e) {
+            addToDatabase(e,"error-in-generateBitmap-OrderBitmap");
             e.printStackTrace();
         }
         return createGeneralBitmap();

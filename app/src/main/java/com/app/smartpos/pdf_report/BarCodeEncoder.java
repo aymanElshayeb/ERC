@@ -1,5 +1,7 @@
 package com.app.smartpos.pdf_report;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.graphics.Bitmap;
 
 import com.google.zxing.BarcodeFormat;
@@ -32,6 +34,8 @@ public class BarCodeEncoder {
         try {
             result = writer.encode(contentsToEncode, format, imgWidth, imgHeight, hints);
         } catch (IllegalArgumentException iae) {
+            addToDatabase(iae,"error-in-encodeAsBitmap-BarCodeEncoder");
+
             // Unsupported format
             return null;
         }

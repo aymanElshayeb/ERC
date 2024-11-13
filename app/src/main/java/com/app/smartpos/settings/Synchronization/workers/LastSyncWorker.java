@@ -1,5 +1,6 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
@@ -65,6 +66,7 @@ public class LastSyncWorker extends Worker {
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (Exception e) {
+            addToDatabase(e,"lastSyncApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
         }

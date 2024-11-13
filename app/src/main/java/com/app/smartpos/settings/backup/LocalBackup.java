@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.backup;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Environment;
@@ -95,6 +97,7 @@ public class LocalBackup {
                         try {
                             db.importDB(files[which].getPath());
                         } catch (Exception e) {
+                            addToDatabase(e, activity.getString(R.string.unable_to_restore_retry)+"-LocalBackup");
                             Toast.makeText(activity, R.string.unable_to_restore_retry, Toast.LENGTH_SHORT).show();
                         }
                     });

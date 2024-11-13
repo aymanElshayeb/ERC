@@ -1,6 +1,7 @@
 package com.app.smartpos.refund;
 
 import static com.app.smartpos.Constant.REFUND_URL;
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.annotation.SuppressLint;
@@ -64,11 +65,13 @@ public class RefundWorker extends Worker {
                         outputData.put("refundModel",null);
                     }
                 } catch (JSONException e) {
+                    addToDatabase(e,"error-in-read-json-do-work-refundWorker");
                     e.printStackTrace();
                 }
                 return Result.success(outputData.build());
             }
         } catch (Exception e) {
+            addToDatabase(e,"refundApi-cannot-call-request");
             e.printStackTrace();
         }
         return Result.failure();

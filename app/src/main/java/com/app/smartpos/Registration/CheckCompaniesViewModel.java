@@ -1,6 +1,7 @@
 package com.app.smartpos.Registration;
 
 import static com.app.smartpos.Constant.CHECK_COMPANY_URL;
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class CheckCompaniesViewModel extends ViewModel {
                             }
                             liveData.postValue(list);
                         } catch (JSONException e) {
+                            addToDatabase(e,"checkCompanyViewModel-read-response");
                             e.printStackTrace();
                         }
                     }

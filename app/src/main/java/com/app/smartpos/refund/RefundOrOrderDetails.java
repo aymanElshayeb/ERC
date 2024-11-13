@@ -1,5 +1,7 @@
 package com.app.smartpos.refund;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -258,6 +260,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 loadingLl.setVisibility(View.VISIBLE);
                 enqueueCreateAndUploadWorkers();
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceedOrder-refundOrOrderDetailsScreen");
                 e.printStackTrace();
             }
 
@@ -408,6 +411,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
 
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceedOrder-lines-refundOrderDetailsScreen");
                 e.printStackTrace();
             }
 

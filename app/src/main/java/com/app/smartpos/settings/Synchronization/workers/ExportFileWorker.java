@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 import android.os.Environment;
 
@@ -26,6 +28,7 @@ public class ExportFileWorker extends Worker {
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
             db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath() + "/" + fileName, lastSync);
         } catch (Exception e) {
+            addToDatabase(e,"doWork-exportFileWorker");
             e.printStackTrace();
             return Result.failure();
         }

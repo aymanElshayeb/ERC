@@ -1,5 +1,7 @@
 package com.app.smartpos.utils;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -244,6 +246,7 @@ public class WoosimPrnMng {
                 com.app.smartpos.common.Utils.addLog("Print Photo error", "the file isn't exists");
             }
         } catch (Exception e) {
+            addToDatabase(e,"printPhoto-function-error-WoosimPrnMng");
             e.printStackTrace();
             com.app.smartpos.common.Utils.addLog("PrintTools", "the file isn't exists");
         }

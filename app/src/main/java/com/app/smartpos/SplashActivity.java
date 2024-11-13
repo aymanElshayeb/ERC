@@ -1,5 +1,7 @@
 package com.app.smartpos;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -120,6 +122,7 @@ public class SplashActivity extends BaseActivity {
             OkHttpClient okHttpClient = builder.build();
             return okHttpClient;
         } catch (Exception e) {
+            addToDatabase(e,"getUnsafeOkHttpClient-function-error-splashScreen");
             throw new RuntimeException(e);
         }
     }

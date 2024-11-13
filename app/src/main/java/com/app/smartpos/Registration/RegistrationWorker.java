@@ -1,5 +1,6 @@
 package com.app.smartpos.Registration;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
@@ -58,7 +59,8 @@ public class RegistrationWorker extends Worker {
             data.put("deviceId", deviceId);
             json.put("data", data);
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            addToDatabase(e,"registration-api-body");
+            e.printStackTrace();
         }
 
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -116,6 +118,7 @@ public class RegistrationWorker extends Worker {
                 return Result.failure(outputData);
             }
         } catch (Exception e) {
+            addToDatabase(e,"registrationApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }

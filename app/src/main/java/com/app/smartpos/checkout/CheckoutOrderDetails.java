@@ -1,5 +1,7 @@
 package com.app.smartpos.checkout;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -101,6 +103,7 @@ public class CheckoutOrderDetails extends BaseActivity {
                     finish();
                 }
             } catch (Exception e) {
+                addToDatabase(e,getString(R.string.no_printer_found)+"-checkoutOrderDetails");
                 e.printStackTrace();
                 FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();

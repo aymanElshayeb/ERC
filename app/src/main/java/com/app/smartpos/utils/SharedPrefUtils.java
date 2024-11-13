@@ -2,6 +2,8 @@ package com.app.smartpos.utils;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
@@ -175,6 +177,7 @@ public class SharedPrefUtils {
         try {
             apiKey = new DecryptionHelper().decrypt(encryptedKey, encryptedVector, new KeyStoreHelper().getOrCreateSecretKey());
         } catch (Exception e) {
+            addToDatabase(e,"getApiKey-function-error-sharedPrefUtils");
             e.printStackTrace();
         }
         return apiKey;
@@ -203,6 +206,7 @@ public class SharedPrefUtils {
         try {
             databasePassword = new DecryptionHelper().decrypt(encryptedKey, encryptedVector, new KeyStoreHelper().getOrCreateSecretKey());
         } catch (Exception e) {
+            addToDatabase(e,"getDatabasePassword-function-error-sharedPrefUtils");
             e.printStackTrace();
         }
         return databasePassword;

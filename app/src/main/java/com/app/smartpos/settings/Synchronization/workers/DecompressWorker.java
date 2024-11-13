@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -52,6 +54,7 @@ public class DecompressWorker extends Worker {
 
             return true;
         } catch (IOException e) {
+            addToDatabase(e,"decompressGZip-compressWorker");
             e.printStackTrace();
             return false;
         }

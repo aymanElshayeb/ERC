@@ -1,5 +1,7 @@
 package com.app.smartpos.devices.urovo;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.widget.Toast;
@@ -45,6 +47,7 @@ public class UrovoPrinter extends BaseActivity {
             int status = mPrintManager.startPrint();
             success = handlePrintStatus(status);
         } catch (Exception e) {
+            addToDatabase(e,"error-in-printInvoice-urovoPrinter");
             e.printStackTrace();
         }
         mPrintManager.close();
@@ -77,6 +80,7 @@ public class UrovoPrinter extends BaseActivity {
             mPrintManager.addBitmap(bitmap, 0);
             mPrintManager.startPrint();
         } catch (Exception e) {
+            addToDatabase(e,"error-in-printZReport-UrovoPrinter");
             e.printStackTrace();
         }
         mPrintManager.close();

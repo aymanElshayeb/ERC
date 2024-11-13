@@ -1,5 +1,7 @@
 package com.app.smartpos.devices.newland;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -112,6 +114,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                 }
             });
         } catch (Exception e) {
+            addToDatabase(e,"error-in-printZReport-newLandEnhancedPrinter");
             e.printStackTrace();
         }
 

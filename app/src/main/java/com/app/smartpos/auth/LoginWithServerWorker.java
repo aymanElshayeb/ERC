@@ -1,6 +1,8 @@
 package com.app.smartpos.auth;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -71,6 +73,7 @@ public class LoginWithServerWorker extends Worker {
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
+            addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }

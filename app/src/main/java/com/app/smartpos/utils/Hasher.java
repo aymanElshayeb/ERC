@@ -1,5 +1,7 @@
 package com.app.smartpos.utils;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.format.HashFormat;
@@ -28,6 +30,7 @@ public class Hasher {
             cipher.init(Cipher.ENCRYPT_MODE, generateKey());
             cipherText = cipher.doFinal(message.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
+            addToDatabase(e,"encryptMsg-hasher");
             e.printStackTrace();
         }
         return cipherText;

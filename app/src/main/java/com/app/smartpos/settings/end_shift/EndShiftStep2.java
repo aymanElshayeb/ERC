@@ -1,5 +1,6 @@
 package com.app.smartpos.settings.end_shift;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
@@ -143,6 +144,7 @@ public class EndShiftStep2 extends WorkerActivity {
             Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
         } catch (Exception e) {
+            addToDatabase(e,getString(R.string.no_printer_found)+"-endShiftStep2");
             e.printStackTrace();
             FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();

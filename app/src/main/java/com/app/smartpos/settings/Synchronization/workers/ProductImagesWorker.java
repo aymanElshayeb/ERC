@@ -1,6 +1,8 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -87,6 +89,7 @@ public class ProductImagesWorker extends Worker {
 
             return true;
         } catch (IOException e) {
+            addToDatabase(e,"downloadFile-productImagesWorker");
             e.printStackTrace();
             return false;
         }

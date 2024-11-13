@@ -1,5 +1,7 @@
 package com.app.smartpos.database;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -213,6 +215,7 @@ public class DatabaseAccess {
         try {
             check = database.insertOrThrow("shift", null, values);
         } catch (Exception e) {
+            addToDatabase(e,"error-in-add-shift-databaseAccess");
             Utils.addLog("datadata", e.getMessage());
         }
 
@@ -955,6 +958,7 @@ public class DatabaseAccess {
 
 
         } catch (JSONException e) {
+            addToDatabase(e,"error-in-insert-order-databaseAccess");
             e.printStackTrace();
         }
 
@@ -1018,6 +1022,7 @@ public class DatabaseAccess {
             }
 
         } catch (JSONException e) {
+            addToDatabase(e,"error-in-add-lines-databaseAccess");
             e.printStackTrace();
         }
 
@@ -2900,6 +2905,7 @@ public class DatabaseAccess {
                 configuration.put("invoice_merchant_id", cursor.getString(cursor.getColumnIndex("invoice_merchant_id")));
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-in-get-configuration-databaseAccess");
             e.printStackTrace();
         }
         if (cursor != null) {
@@ -2927,7 +2933,7 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public Boolean addReport(String ecr,String merchantId,String type,String body) {
+    public Boolean addReport(String ecr,String merchantId,String type,String body,String message) {
 
         ContentValues values = new ContentValues();
 
@@ -2936,6 +2942,7 @@ public class DatabaseAccess {
         values.put("type", type);
         values.put("dateTime_", new Date().toString());
         values.put("toast", new Date().toString());
+        values.put("message", message);
         values.put("body", body);
 
         long check = database.insertOrThrow("crash_report", null, values);
@@ -2978,6 +2985,8 @@ public class DatabaseAccess {
                 Utils.addLog("datadata_seq", String.valueOf(nextValue));
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-in-get-sequence-function-select-all-sequence_text-databaseAccess");
+
             e.printStackTrace();
         }
         if (cursor != null) {
@@ -2990,6 +2999,7 @@ public class DatabaseAccess {
             sequenceMap.put("next_value", String.valueOf(nextValue));
             sequenceMap.put("sequence_id", String.valueOf(sequenceId));
         } catch (Exception e) {
+            addToDatabase(e,"error-in-get-sequence-function-update-sequence-databaseAccess");
             e.printStackTrace();
 
         }

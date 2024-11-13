@@ -1,5 +1,7 @@
 package com.app.smartpos.checkout;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,12 +87,14 @@ public class NewCheckout extends BaseActivity {
                             Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
+                        addToDatabase(e,"error-in-read-response-from-printer-newCheckOutScreen");
                         if (statusCode.equals(Constant.REJECTED_STATUS_CODE))
                             Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
                         else
                             e.printStackTrace();
                     }
                 } catch (JSONException e) {
+                    addToDatabase(e,"error-in-generate-response-from-printer-newCheckOutScreen");
                     e.printStackTrace();
                 }
             }
@@ -154,6 +158,7 @@ public class NewCheckout extends BaseActivity {
                     Intent intent = device.pay(totalAmount);
                     launcher.launch(intent);
                 } catch (Exception e) {
+                    addToDatabase(e,getString(R.string.card_payment_is_offline_please_choose_cash)+"-newCheckOutScreen");
                     Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -316,6 +321,7 @@ public class NewCheckout extends BaseActivity {
 
 
                 } catch (JSONException e) {
+                    addToDatabase(e,"error-in-insert-order-newCheckOutScreen");
                     e.printStackTrace();
                 }
 
@@ -385,6 +391,7 @@ public class NewCheckout extends BaseActivity {
             try {
                 proceedOrder("", "CASH", "", totalTax, "0", "", "", cashGiven, change);
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceed-order-activityResult-newCheckOutScreen");
                 e.printStackTrace();
             }
         }

@@ -1,6 +1,8 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -73,6 +75,7 @@ public class DownloadWorker extends Worker {
                 return Result.failure();
             }
         } catch (Exception e) {
+            addToDatabase(e,"downloadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }
@@ -90,6 +93,7 @@ public class DownloadWorker extends Worker {
 
             return true;
         } catch (IOException e) {
+            addToDatabase(e,"downloadFile-downloadWorker");
             e.printStackTrace();
             return false;
         }

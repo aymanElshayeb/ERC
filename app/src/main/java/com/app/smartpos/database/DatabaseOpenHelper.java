@@ -1,5 +1,7 @@
 package com.app.smartpos.database;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +23,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 59;
+    private static final int DATABASE_VERSION = 60;
     private final Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -59,6 +61,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, mContext.getString(R.string.backup_completed_successfully), Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
+            addToDatabase(e,mContext.getString(R.string.unable_to_backup_database_retry)+ "-databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_backup_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -93,6 +96,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, R.string.database_Import_completed, Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
+            addToDatabase(e,mContext.getString(R.string.unable_to_import_database_retry)+ "-databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_import_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -230,6 +234,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-export-shift-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }
@@ -280,6 +285,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-in-export-invoice-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }

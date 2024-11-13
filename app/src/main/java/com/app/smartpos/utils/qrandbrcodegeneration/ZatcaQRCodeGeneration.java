@@ -1,6 +1,8 @@
 package com.app.smartpos.utils.qrandbrcodegeneration;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
@@ -36,6 +38,9 @@ public class ZatcaQRCodeGeneration {
             outputStream.write(var4);
 
         } catch (Exception ex) {
+            ex.printStackTrace();
+            addToDatabase(ex,"convertTagsAndLengthToHexValues-function-error-zatcaQRCodeGeneration");
+
         }
 
         return outputStream.toByteArray();
@@ -74,6 +79,7 @@ public class ZatcaQRCodeGeneration {
             Device device = DeviceFactory.getDevice();
             base64QRCode = device.zatcaQrCodeGeneration(outputStream1.toByteArray());
         } catch (Exception ex) {
+            addToDatabase(ex,"getBase64-function-error-ZatcaQRCodeGeneration");
             ex.printStackTrace();
         }
         return base64QRCode;

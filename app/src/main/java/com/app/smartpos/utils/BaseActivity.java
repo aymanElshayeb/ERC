@@ -1,6 +1,7 @@
 package com.app.smartpos.utils;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.LocaleManager.changeLang;
 
 import android.content.Context;
@@ -51,6 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 setTitle(info.labelRes);
             }
         } catch (PackageManager.NameNotFoundException e) {
+            addToDatabase(e,"resetTitles-baseActivity");
             e.printStackTrace();
         }
     }
