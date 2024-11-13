@@ -48,14 +48,14 @@ public class DataBaseBackupActivity extends WorkerActivity {
         cardLocalImport = findViewById(R.id.upload_backup);
         downloadProductsImages = findViewById(R.id.download_products_images);
 
-
         localBackup = new LocalBackup(this);
 
         cardLocalBackUp.setOnClickListener(v -> {
             if (isConnected()) {
                 workerType = 1;
                 loadingLl.setVisibility(View.VISIBLE);
-                enqueueDownloadAndReadWorkers();
+                //enqueueUploadWorkers();
+                enqueueRefundAuthWorkers();
             }else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }

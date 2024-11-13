@@ -450,6 +450,7 @@
 
     //sync
     <string name="download_synchronization">Download Synchronization</string>
+    <string name="sync_data">Sync Data</string>
     <string name="upload_synchronization">Upload Synchronization</string>
     <string name="download_product_images">Download Products Images</string>
     <string name="data_synced_successfully">Data Synced Successfully</string>

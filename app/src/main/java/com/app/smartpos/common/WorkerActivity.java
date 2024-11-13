@@ -154,6 +154,107 @@ public class WorkerActivity extends BaseActivity {
                 });
     }
 
+    public void enqueueRefundAuthWorkers() {
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+        String ecr = conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", ecr).
+                putString("password", deviceId).
+                build();
+        Data lastSync = new Data.Builder().
+                putString("url", LAST_SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                build();
+        Data exportData = new Data.Builder()
+                .putString("fileName", UPLOAD_FILE_NAME)
+                .build();
+        Data uploadInputData = new Data.Builder().
+                putString("url", SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                build();
+
+        Data downloadInputData = new Data.Builder()
+                .putString("url", SYNC_URL)
+                .putString("tenantId", conf.get("merchant_id"))
+                .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
+                .putString("ecrCode", conf.get("ecr_code"))
+                .build();
+
+        Data decompressInputData = new Data.Builder()
+                .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
+                .build();
+
+        Data readInputData = new Data.Builder()
+                .putString("fileName", DOWNLOAD_FILE_NAME)
+                .build();
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+
+        OneTimeWorkRequest lastSyncRequest = new OneTimeWorkRequest.Builder(LastSyncWorker.class).
+                setInputData(lastSync).
+                build();
+        OneTimeWorkRequest exportRequest = new OneTimeWorkRequest.Builder(ExportFileWorker.class).
+                setInputData(exportData).
+                build();
+        OneTimeWorkRequest compressRequest = new OneTimeWorkRequest.Builder(CompressWorker.class).build();
+        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
+                setInputData(uploadInputData).
+                build();
+        OneTimeWorkRequest downloadRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .setInputData(downloadInputData)
+                .build();
+
+        OneTimeWorkRequest decompressRequest = new OneTimeWorkRequest.Builder(DecompressWorker.class)
+                .setInputData(decompressInputData)
+                .build();
+
+        OneTimeWorkRequest readRequest = new OneTimeWorkRequest.Builder(ReadFileWorker.class)
+                .setInputData(readInputData)
+                .build();
+
+
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(lastSyncRequest)
+                .then(exportRequest)
+                .then(compressRequest)
+                .then(uploadRequest)
+                .then(downloadRequest)
+                .then(decompressRequest)
+                .then(readRequest);
+
+        continuation.enqueue();
+        observeWorker(loginRequest);
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(loginRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                        if (workInfo.getOutputData().getKeyValueMap().containsKey("Authorization")) {
+                            Utils.addLog("WORK INFO", workInfo.getOutputData().getString("Authorization"));
+//                        authorization= workInfo.getOutputData().getString("Authorization");
+                            SharedPrefUtils.setAuthorization(workInfo.getOutputData().getString("Authorization"));
+                            Utils.addLog("WORK AUTH", SharedPrefUtils.getAuthorization());
+                        }
+                    }
+                });
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(readRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                        Utils.addLog("log_auth", SharedPrefUtils.getAuthorization());
+                        handleWorkCompletion(workInfo);
+                    }
+                });
+    }
     public void enqueueUploadWorkers() {
         //username Admin
         //password 01111Mm&

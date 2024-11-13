@@ -72,12 +72,12 @@ public class OrderBitmap extends BaseActivity {
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
         try {
-            if (!configuration.get("merchant_logo").isEmpty()) {
-                byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-                Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                logo = resizeBitmap(logo);
-                bitmaps.add(new PrinterModel(0, logo));
-            }
+//            if (!configuration.get("merchant_logo").isEmpty()) {
+//                byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
+//                Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                logo = resizeBitmap(logo);
+//                bitmaps.add(new PrinterModel(0, logo));
+//            }
             printShopName(shop.get("shop_name"));
             printInvoiceMerchantId(invoiceMerchantId);
             if(!merchantTaxNumber.isEmpty()) {

@@ -2932,11 +2932,11 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
 
         values.put("ecr", ecr);
-        values.put("merchant_id", merchantId);
+        values.put("merchnt_id", merchantId);
         values.put("type", type);
         values.put("body", body);
 
-        long check = database.insert("crash_report", null, values);
+        long check = database.insertOrThrow("crash_report", null, values);
         database.close();
 
         //if data insert success, its return 1, if failed return -1

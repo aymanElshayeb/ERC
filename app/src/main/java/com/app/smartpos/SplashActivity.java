@@ -78,7 +78,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
     }
 
