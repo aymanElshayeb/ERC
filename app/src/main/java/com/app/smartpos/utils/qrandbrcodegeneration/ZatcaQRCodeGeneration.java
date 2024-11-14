@@ -86,7 +86,7 @@ public class ZatcaQRCodeGeneration {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
             zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
             zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
-            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id"));
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id").replace("cr",""));
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();

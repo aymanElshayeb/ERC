@@ -60,6 +60,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             @Override
             public void onSuccess() {
                 Utils.addLog("datadata", "success");
+                new Handler(Looper.getMainLooper()).post(() ->Toast.makeText(MultiLanguageApp.getApp(), MultiLanguageApp.getApp().getString(R.string.print_successful), Toast.LENGTH_SHORT).show());
                 error[0] =false;
             }
 

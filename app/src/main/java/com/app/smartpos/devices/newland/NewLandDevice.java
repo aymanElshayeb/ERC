@@ -54,7 +54,7 @@ public class NewLandDevice implements Device {
 
     @Override
     public String zatcaQrCodeGeneration(byte[] byteArray) {
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
     }
 
     @Override
