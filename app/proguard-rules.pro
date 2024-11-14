@@ -22,6 +22,7 @@
 -dontwarn org.apache.poi.**
 -keep class com.app.smartpos.devices.urovo.* {*;}
 -keep class com.urovo.sdk.* {*;}
+-keep class android.device.* {*;}
 -dontwarn java.beans.BeanInfo
 -dontwarn java.beans.IntrospectionException
 -dontwarn java.beans.Introspector
