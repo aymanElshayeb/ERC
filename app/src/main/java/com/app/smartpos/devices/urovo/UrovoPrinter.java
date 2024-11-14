@@ -9,6 +9,8 @@ import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.MultiLanguageApp;
+import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
+import com.urovo.sdk.print.PrinterProviderImpl;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -22,10 +24,14 @@ public class UrovoPrinter extends BaseActivity {
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
     PrinterProviderImpl mPrintManager = null;
+    SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
+    ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
+    List<Bitmap> bitmaps;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
 
 
     public UrovoPrinter() {
-        mPrintManager = CustomPrinterProviderImpl.getInstance(UrovoPrinter.this);
+        mPrintManager = PrinterProviderImpl.getInstance(UrovoPrinter.this);
     }
 
     public boolean printReceipt(Bitmap bitmap) {
