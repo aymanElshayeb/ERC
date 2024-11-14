@@ -173,6 +173,25 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
+    public void exportCrashReportsToNewDatabase(String newDbFilePath) {
+        // Delete the existing file if it exists
+        File dbFile = new File(newDbFilePath);
+        Utils.addLog("datadata_base", newDbFilePath);
+        if (dbFile.exists()) {
+            dbFile.delete();
+        }
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
+        try {
+            newDb.beginTransaction();
+            exportCrashReport(existingDb, newDb);
+            newDb.setTransactionSuccessful();
+        } finally {
+            newDb.endTransaction();
+            newDb.close();
+        }
+    }
+
     public void exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
@@ -193,6 +212,25 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
+    private void exportCrashReport(SQLiteDatabase existingDb, SQLiteDatabase newDb) {
+        try {
+            copyTableSchema(existingDb, newDb, "crash_report");
+            // Copy rows from the existing database table to the new one
+            String crashReportQuery = "SELECT * FROM crash_report";
+            try (Cursor shiftCursor = existingDb.rawQuery(crashReportQuery, null)) {
+                while (shiftCursor.moveToNext()) {
+                    ContentValues shiftValues = new ContentValues();
+                    for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
+                        shiftValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
+                    }
+                    newDb.insert("crash_report", null, shiftValues);
+                }
+            }
+        } catch (Exception e) {
+            addToDatabase(e,"error-export-crash_report-function-databaseOpenHelper");
+            e.printStackTrace();
+        }
+    }
     private void exportShift(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "shift");

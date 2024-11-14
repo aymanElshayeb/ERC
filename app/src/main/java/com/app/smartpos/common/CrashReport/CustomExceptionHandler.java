@@ -39,8 +39,9 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         HashMap<String,String> configuration = databaseAccess.getConfiguration();
         StackTraceElement[] elements = e.getStackTrace();
         String body="";
-        for (StackTraceElement element : elements) {
-            body += element.toString() + "\n";
+        int maxLength = elements.length>8 ? 8 : elements.length;
+        for (int i=0;i<maxLength;i++) {
+            body += elements[i].toString() + "\n";
         }
         Utils.addLog("datadata_crash", body);
         databaseAccess.open();

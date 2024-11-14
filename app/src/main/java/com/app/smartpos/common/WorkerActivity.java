@@ -1,5 +1,6 @@
 package com.app.smartpos.common;
 
+import static com.app.smartpos.Constant.CRASH_REPORT_SYNC_URL;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME;
 import static com.app.smartpos.Constant.DOWNLOAD_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.LAST_SYNC_URL;
@@ -11,8 +12,12 @@ import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
+import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -25,6 +30,7 @@ import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.Synchronization.workers.CompressWorker;
 import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
+import com.app.smartpos.settings.Synchronization.workers.ExportCrashReportFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker;
@@ -35,6 +41,7 @@ import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WorkerActivity extends BaseActivity {
@@ -42,6 +49,13 @@ public class WorkerActivity extends BaseActivity {
     public long imagesSize;
     public Boolean needToUpdate;
     String lastUpdated;
+
+    DatabaseAccess databaseAccess;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        databaseAccess = DatabaseAccess.getInstance(this);
+    }
 
     public void enqueueCreateAndUploadWorkers() {
         //username Admin
@@ -317,6 +331,57 @@ public class WorkerActivity extends BaseActivity {
 
     }
 
+    public void enqueueUploadCrashReportWorkers() {
+        //username Admin
+        //password 01111Mm&
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+
+        String ecr = conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", ecr).
+                putString("password", deviceId).
+                build();
+
+        Data exportData = new Data.Builder()
+                .putString("fileName", UPLOAD_FILE_NAME)
+                .build();
+        Data uploadInputData = new Data.Builder().
+                putString("url", CRASH_REPORT_SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                build();
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+        OneTimeWorkRequest exportRequest = new OneTimeWorkRequest.Builder(ExportCrashReportFileWorker.class).
+                setInputData(exportData).
+                build();
+        OneTimeWorkRequest compressRequest = new OneTimeWorkRequest.Builder(CompressWorker.class).build();
+        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
+                setInputData(uploadInputData).
+                build();
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(exportRequest)
+                .then(compressRequest)
+                .then(uploadRequest);
+
+        continuation.enqueue();
+        observeWorker(loginRequest);
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        // Work is finished, close pending screen or perform any action
+                    }
+                });
+
+    }
+
     public void enqueueDownloadProductsImagesSizeWorkers() {
         //username Admin
         //password 01111Mm&
@@ -505,5 +570,16 @@ public class WorkerActivity extends BaseActivity {
 
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
+        if (reports.size() > 0) {
+            enqueueUploadCrashReportWorkers();
+        }
+
     }
 }

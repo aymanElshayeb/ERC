@@ -2952,6 +2952,28 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
+    public ArrayList<HashMap<String, String>> getReports() {
+        ArrayList<HashMap<String, String>> reports = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM crah_report", null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<>();
+
+                map.put("ecr", cursor.getString(cursor.getColumnIndex("ecr")));
+                map.put("device_id", cursor.getString(cursor.getColumnIndex("device_id")));
+                map.put("type", cursor.getString(cursor.getColumnIndex("type")));
+                map.put("dateTime_", cursor.getString(cursor.getColumnIndex("dateTime_")));
+                map.put("message", cursor.getString(cursor.getColumnIndex("message")));
+                map.put("body", cursor.getString(cursor.getColumnIndex("body")));
+
+                reports.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return reports;
+    }
+    @SuppressLint("Range")
     public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number, String invoiceMerchantId) {
 
         ContentValues values = new ContentValues();

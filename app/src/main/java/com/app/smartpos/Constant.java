@@ -13,6 +13,7 @@ public class Constant {
 
     public static final String SYNC_URL = BASE_URL + "/sync";
     public static final String LAST_SYNC_URL = BASE_URL + "/sync/last";
+    public static final String CRASH_REPORT_SYNC_URL = BASE_URL + "/track/error";
     public static final String REGISTER_DEVICE_URL = BASE_URL + "/organization/unit/device/register";
     public static final String CHECK_COMPANY_URL = BASE_URL + "/user/companies";
     public static final String REFUND_URL = BASE_URL + "/invoice/refund/";
