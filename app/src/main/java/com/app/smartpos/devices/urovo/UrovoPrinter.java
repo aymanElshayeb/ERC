@@ -26,7 +26,7 @@ public class UrovoPrinter extends BaseActivity {
 
 
     public UrovoPrinter() {
-        mPrintManager = PrinterProviderImpl.getInstance(UrovoPrinter.this);
+        mPrintManager = CustomPrinterProviderImpl.getInstance(UrovoPrinter.this);
     }
 
     public boolean printReceipt(Bitmap bitmap) {

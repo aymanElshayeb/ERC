@@ -1,8 +1,4 @@
 package com.app.smartpos.devices.urovo;
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 import android.content.Context;
 import android.device.PrinterManager;
@@ -22,7 +18,7 @@ import com.urovo.sdk.print.TypefaceHelper;
 import com.urovo.sdk.utils.FilesUtil;
 import java.io.File;
 
-public class PrinterProviderImpl {
+public class CustomPrinterProviderImpl {
     public static final String TAG = com.app.smartpos.devices.urovo.PrinterProviderImpl.class.getSimpleName();
     private boolean initPage = false;
     private Context mContext;
@@ -42,17 +38,17 @@ public class PrinterProviderImpl {
     private String mFontNameLast = "";
     private Typeface mTypefaceLast = null;
     private Paint mPaint = null;
-    public static CustomPrinterProviderImpl mPrinterProvider;
+    public static com.urovo.sdk.print.PrinterProviderImpl mPrinterProvider;
 
-    public static CustomPrinterProviderImpl getInstance(Context context) {
+    public static com.urovo.sdk.print.PrinterProviderImpl getInstance(Context context) {
         if (mPrinterProvider == null) {
-            mPrinterProvider = new CustomPrinterProviderImpl(context);
+            mPrinterProvider = new com.urovo.sdk.print.PrinterProviderImpl(context);
         }
 
         return mPrinterProvider;
     }
 
-    public PrinterProviderImpl(Context context) {
+    public CustomPrinterProviderImpl(Context context) {
         this.mContext = context;
     }
 
