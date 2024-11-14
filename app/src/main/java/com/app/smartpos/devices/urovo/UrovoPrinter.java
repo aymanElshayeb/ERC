@@ -9,7 +9,6 @@ import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.MultiLanguageApp;
-import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +21,7 @@ public class UrovoPrinter extends BaseActivity {
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
-    com.urovo.sdk.print.PrinterProviderImpl mPrintManager = null;
+    PrinterProviderImpl mPrintManager = null;
 
 
     public UrovoPrinter() {

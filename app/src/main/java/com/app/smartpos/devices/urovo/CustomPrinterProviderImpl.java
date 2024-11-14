@@ -38,11 +38,11 @@ public class CustomPrinterProviderImpl {
     private String mFontNameLast = "";
     private Typeface mTypefaceLast = null;
     private Paint mPaint = null;
-    public static com.urovo.sdk.print.PrinterProviderImpl mPrinterProvider;
+    public static PrinterProviderImpl mPrinterProvider;
 
-    public static com.urovo.sdk.print.PrinterProviderImpl getInstance(Context context) {
+    public static PrinterProviderImpl getInstance(Context context) {
         if (mPrinterProvider == null) {
-            mPrinterProvider = new com.urovo.sdk.print.PrinterProviderImpl(context);
+            mPrinterProvider = new PrinterProviderImpl(context);
         }
 
         return mPrinterProvider;
