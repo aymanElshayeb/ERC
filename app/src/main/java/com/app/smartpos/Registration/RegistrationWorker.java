@@ -1,5 +1,6 @@
 package com.app.smartpos.Registration;
 
+import static com.app.smartpos.Constant.REFUND_URL;
 import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
@@ -26,6 +27,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RegistrationWorker extends Worker {
+
+    int code=-5;
     public RegistrationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -71,21 +74,27 @@ public class RegistrationWorker extends Worker {
                 .headers(headers)
                 .build();
         try (Response response = client.newCall(request).execute()) {
+            code= response.code();
             if (response.isSuccessful()) {
                 JSONObject responseBody = new JSONObject(response.body().string());
                 int code = responseBody.getInt("code");
 
 
                 if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000004")) {
+                    Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.non_admin_register)).build();
                     return Result.failure(outputData);
                 }
                 if (code != 200) {
+                    Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                     return Result.failure(outputData);
                 }
 
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
+
+                Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),returnedObj.toString());
+
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
 
@@ -114,10 +123,13 @@ public class RegistrationWorker extends Worker {
                 databaseAccess.open();
                 return Result.success(outputData);
             } else {
+                Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                 return Result.failure(outputData);
             }
         } catch (Exception e) {
+            Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+" "+e.getMessage());
+
             addToDatabase(e,"registrationApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

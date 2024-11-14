@@ -24,6 +24,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadWorker extends Worker {
 
+    int statusCode=-5;
+    HttpURLConnection connection;
     public DownloadWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -44,7 +46,7 @@ public class DownloadWorker extends Worker {
         SSLUtils.trustAllCertificates();
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
@@ -53,28 +55,33 @@ public class DownloadWorker extends Worker {
             connection.setRequestProperty("tenantId", tenantId);
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey", api_key);
+            connection.setRequestProperty("ecrCode", ecrCode);
 
             Utils.addLog("datadata_download",tenantId);
             Utils.addLog("datadata_download",api_key);
             Utils.addLog("datadata_download",ecrCode);
 
-            connection.setRequestProperty("ecrCode", ecrCode);
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                statusCode=connection.getResponseCode();
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
                 downloadFile(connection.getInputStream(), outputFile);
-
+                Utils.addRequestTracking(urlString,"DownloadWorker","",connection.getRequestProperties().toString(),statusCode+"");
                 connection.disconnect();
                 return Result.success();
             } else {
+                statusCode=connection.getResponseCode();
                 Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
+                Utils.addRequestTracking(urlString,"DownloadWorker","",connection.getRequestProperties().toString(),statusCode+"");
+
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
             }
         } catch (Exception e) {
+            Utils.addRequestTracking(urlString,"DownloadWorker","",(connection!=null && connection.getRequestProperties()!=null) ? connection.getRequestProperties().toString():"",statusCode+" "+e.getMessage()+"");
             addToDatabase(e,"downloadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

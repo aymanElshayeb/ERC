@@ -2954,7 +2954,7 @@ public class DatabaseAccess {
     @SuppressLint("Range")
     public ArrayList<HashMap<String, String>> getReports() {
         ArrayList<HashMap<String, String>> reports = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM crah_report", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM crash_report", null);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<>();
@@ -2972,6 +2972,65 @@ public class DatabaseAccess {
         cursor.close();
         database.close();
         return reports;
+    }
+
+    @SuppressLint("Range")
+    public void deleteReportRows() {
+        SQLiteStatement result = database.compileStatement("DELETE FROM crash_report");
+        result.execute();
+        database.close();
+    }
+    @SuppressLint("Range")
+    public Boolean addRequestTracking(String ecr,String device_id,String api_name,String url,String headers,String body,String response) {
+
+        ContentValues values = new ContentValues();
+
+        values.put("ecr", ecr);
+        values.put("device_id", device_id);
+        values.put("request_date_time", new Date().toString());
+        values.put("api_name", api_name);
+        values.put("request_url", url);
+        values.put("request_headers", headers);
+        values.put("request_body", body);
+        values.put("response", response);
+
+        long check = database.insertOrThrow("request_tracking", null, values);
+        database.close();
+
+        //if data insert success, its return 1, if failed return -1
+        return check != -1;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<HashMap<String, String>> getRequestTracking() {
+        ArrayList<HashMap<String, String>> reports = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM request_tracking", null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<>();
+
+                map.put("ecr", cursor.getString(cursor.getColumnIndex("ecr")));
+                map.put("device_id", cursor.getString(cursor.getColumnIndex("device_id")));
+                map.put("request_date_time", cursor.getString(cursor.getColumnIndex("request_date_time")));
+                map.put("api_name", cursor.getString(cursor.getColumnIndex("api_name")));
+                map.put("request_url", cursor.getString(cursor.getColumnIndex("request_url")));
+                map.put("request_headers", cursor.getString(cursor.getColumnIndex("request_headers")));
+                map.put("request_body", cursor.getString(cursor.getColumnIndex("request_body")));
+                map.put("response", cursor.getString(cursor.getColumnIndex("response")));
+
+                reports.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        database.close();
+        return reports;
+    }
+
+    @SuppressLint("Range")
+    public void deleteRequestTrackingRows() {
+        SQLiteStatement result = database.compileStatement("DELETE FROM request_tracking");
+        result.execute();
+        database.close();
     }
     @SuppressLint("Range")
     public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number, String invoiceMerchantId) {

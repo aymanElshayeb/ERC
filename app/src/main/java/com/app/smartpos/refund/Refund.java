@@ -14,12 +14,16 @@ import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-public class Refund extends BaseActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Refund extends WorkerActivity {
 
     public static EditText searchEt;
     DatabaseAccess databaseAccess;
@@ -89,5 +93,11 @@ public class Refund extends BaseActivity {
         Utils.addLog("INSIDE CALL API", SharedPrefUtils.getAuthorization());
 
         model.start(this,searchEt.getText().toString().trim(), databaseAccess);
+
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
+        if (!reports.isEmpty()) {
+            enqueueUploadRequestTrackingWorkers();
+        }
     }
 }

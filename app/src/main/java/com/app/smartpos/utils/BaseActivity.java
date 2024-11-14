@@ -23,10 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
-import com.app.smartpos.database.DatabaseAccess;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -66,7 +63,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         resetTitles();
         connectivityManager = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
-        databaseAccess = DatabaseAccess.getInstance(this);
     }
 
     protected void resetTitles() {

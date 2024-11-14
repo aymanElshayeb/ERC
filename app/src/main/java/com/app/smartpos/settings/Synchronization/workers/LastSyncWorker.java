@@ -10,6 +10,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class LastSyncWorker extends Worker {
+    int code=-5;
     public LastSyncWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -48,8 +50,8 @@ public class LastSyncWorker extends Worker {
                 .headers(headers)
                 .build();
         try (Response response = client.newCall(request).execute()) {
+            code = response.code();
             if (response.isSuccessful()) {
-
                 //Gson gson=new Gson();
                 //ServiceResult<LastSyncResponseDto> result=gson.fromJson(responseBody, new TypeToken<ServiceResult<LastSyncResponseDto>>(){}.getType());
                 JSONObject responseBody = new JSONObject(response.body().string());
@@ -61,11 +63,17 @@ public class LastSyncWorker extends Worker {
                         putString("shiftBusinessId", shiftBusinessId).
                         putString("Authorization", authorization).
                         build();
+
+                Utils.addRequestTracking(urL,"LastSyncWorker",headers.toString(),"",responseBody.toString());
+
+
                 return Result.success(data); // Return success if the upload is successful
             } else {
+                Utils.addRequestTracking(urL,"LastSyncWorker",headers.toString(),"",response.code()+"");
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (Exception e) {
+            Utils.addRequestTracking(urL,"LastSyncWorker",headers.toString(),"",code+" "+e.getMessage()+"");
             addToDatabase(e,"lastSyncApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception

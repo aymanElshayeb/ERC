@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class RefundOrOrderList extends BaseActivity {
+public class RefundOrOrderList extends WorkerActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
@@ -145,5 +146,11 @@ public class RefundOrOrderList extends BaseActivity {
 
     public void callApi() {
         model.start(this,invoiceSeq, databaseAccess);
+
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
+        if (!reports.isEmpty()) {
+            enqueueUploadRequestTrackingWorkers();
+        }
     }
 }

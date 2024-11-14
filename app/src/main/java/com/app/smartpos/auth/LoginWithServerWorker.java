@@ -11,6 +11,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import okhttp3.Response;
 
 public class LoginWithServerWorker extends Worker {
 
+    int code=-5;
     public LoginWithServerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -64,15 +66,19 @@ public class LoginWithServerWorker extends Worker {
                 .headers(headers)
                 .build();
         try (Response response = client.newCall(request).execute()) {
+            code= response.code();
             if (response.isSuccessful()) {
+                Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),response.body().string());
                 String authorization = response.header("Authorization");
                 Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
                 return Result.success(outputData);
             } else {
+                Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),code+"");
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
+            Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),code+" "+e.getMessage());
             addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

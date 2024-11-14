@@ -9,6 +9,7 @@ import static com.app.smartpos.Constant.PRODUCT_IMAGES;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_FILE_NAME;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
+import static com.app.smartpos.Constant.REQUEST_TRACKING_SYNC_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
@@ -32,6 +33,7 @@ import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
 import com.app.smartpos.settings.Synchronization.workers.ExportCrashReportFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.ExportRequestTrackingFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker;
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesWorker;
@@ -266,6 +268,13 @@ public class WorkerActivity extends BaseActivity {
                         // Work is finished, close pending screen or perform any action
                         Utils.addLog("log_auth", SharedPrefUtils.getAuthorization());
                         handleWorkCompletion(workInfo);
+                        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
+                            databaseAccess.open();
+                            ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
+                            if (!reports.isEmpty()) {
+                                enqueueUploadRequestTrackingWorkers();
+                            }
+                        }
                     }
                 });
     }
@@ -376,7 +385,64 @@ public class WorkerActivity extends BaseActivity {
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
                 .observe(this, workInfo -> {
                     if (workInfo != null && workInfo.getState().isFinished()) {
-                        // Work is finished, close pending screen or perform any action
+                        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
+                            databaseAccess.open();
+                            databaseAccess.deleteReportRows();
+                        }
+                    }
+                });
+
+    }
+
+    public void enqueueUploadRequestTrackingWorkers() {
+        //username Admin
+        //password 01111Mm&
+        databaseAccess.open();
+        HashMap<String, String> conf = databaseAccess.getConfiguration();
+
+        String ecr = conf.get("ecr_code");
+        String deviceId = Utils.getDeviceId(this);
+        Data loginInputData = new Data.Builder().
+                putString("url", LOGIN_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("email", ecr).
+                putString("password", deviceId).
+                build();
+
+        Data exportData = new Data.Builder()
+                .putString("fileName", UPLOAD_FILE_NAME)
+                .build();
+        Data uploadInputData = new Data.Builder().
+                putString("url", REQUEST_TRACKING_SYNC_URL).
+                putString("tenantId", conf.get("merchant_id")).
+                putString("ecrCode", conf.get("ecr_code")).
+                build();
+
+        OneTimeWorkRequest loginRequest = new OneTimeWorkRequest.Builder(LoginWithServerWorker.class).
+                setInputData(loginInputData).
+                build();
+        OneTimeWorkRequest exportRequest = new OneTimeWorkRequest.Builder(ExportRequestTrackingFileWorker.class).
+                setInputData(exportData).
+                build();
+        OneTimeWorkRequest compressRequest = new OneTimeWorkRequest.Builder(CompressWorker.class).build();
+        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
+                setInputData(uploadInputData).
+                build();
+        WorkContinuation continuation = WorkManager.getInstance(this)
+                .beginWith(loginRequest)
+                .then(exportRequest)
+                .then(compressRequest)
+                .then(uploadRequest);
+
+        continuation.enqueue();
+        observeWorker(loginRequest);
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
+                .observe(this, workInfo -> {
+                    if (workInfo != null && workInfo.getState().isFinished()) {
+                        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
+                            databaseAccess.open();
+                            databaseAccess.deleteRequestTrackingRows();
+                        }
                     }
                 });
 
@@ -577,7 +643,7 @@ public class WorkerActivity extends BaseActivity {
         super.onResume();
         databaseAccess.open();
         ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-        if (reports.size() > 0) {
+        if (!reports.isEmpty()) {
             enqueueUploadCrashReportWorkers();
         }
 

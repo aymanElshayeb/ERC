@@ -23,6 +23,7 @@ import okhttp3.Response;
 
 public class ProductImagesSizeWorker extends Worker {
 
+    int code=-5;
     public ProductImagesSizeWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -57,6 +58,7 @@ public class ProductImagesSizeWorker extends Worker {
                 .build();
         Utils.addLog("datadata_worker", request.toString());
         try (Response response = client.newCall(request).execute()) {
+            code= response.code();
             if (response.isSuccessful()) {
                 Utils.addLog("datadata_worker", "success");
 
@@ -74,13 +76,18 @@ public class ProductImagesSizeWorker extends Worker {
                         putString("newUpdateTimestamp", newUpdateTimestamp).
                         putBoolean("needToUpdate",needToUpdate).
                         build();
+
+                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),responseBody.toString());
+
+
                 return Result.success(data); // Return success if the response is successful
             } else {
-
+                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),code+"");
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (Exception e) {
-            addToDatabase(e,"productImageSizeApi-cannot-call-request");;
+            Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),code+" "+e.getMessage()+"");
+            addToDatabase(e,"productImageSizeApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
         }

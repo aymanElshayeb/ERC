@@ -31,6 +31,7 @@ import okhttp3.Response;
 
 public class RefundWorker extends Worker {
 
+    int code=-5;
     public RefundWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -52,6 +53,7 @@ public class RefundWorker extends Worker {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             Utils.addLog("datadata", response.toString());
+            code = response.code();
             if (response.isSuccessful()) {
                 Data.Builder outputData = new Data.Builder();
                 try {
@@ -59,12 +61,15 @@ public class RefundWorker extends Worker {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     int code = responseBody.getInt("code");
                     if (code == 200) {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",response.body().string());
                         GsonUtils gsonUtils = new GsonUtils();
                         outputData.put("refundModel", gsonUtils.serializeToJson(new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString())));
                     } else if (code == 404) {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",code+"");
                         outputData.put("refundModel",null);
                     }
                 } catch (JSONException e) {
+                    Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",code+" "+e.getMessage());
                     addToDatabase(e,"error-in-read-json-do-work-refundWorker");
                     e.printStackTrace();
                 }

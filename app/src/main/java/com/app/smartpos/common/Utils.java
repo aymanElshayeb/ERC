@@ -9,10 +9,13 @@ import android.util.Log;
 import android.util.Patterns;
 
 import com.app.smartpos.BuildConfig;
+import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.MultiLanguageApp;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -82,5 +85,14 @@ public class Utils {
         if (Objects.equals(BuildConfig.BUILD_TYPE, "debug")) {
             Log.i(key, value);
         }
+    }
+
+    public static void addRequestTracking(String url, String apiName, String header, String body, String response){
+        DatabaseAccess databaseAccess=DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+        databaseAccess.open();
+        HashMap<String,String> configuration = databaseAccess.getConfiguration();
+        databaseAccess.open();
+        databaseAccess.addRequestTracking(configuration.get("ecr_code"),getDeviceId(MultiLanguageApp.getApp()),
+                apiName,url,header,body,response);
     }
 }

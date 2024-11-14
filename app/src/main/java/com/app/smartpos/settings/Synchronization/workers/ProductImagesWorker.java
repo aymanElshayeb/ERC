@@ -24,6 +24,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class ProductImagesWorker extends Worker {
 
+    int code=-5;
+    HttpURLConnection connection;
     public ProductImagesWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -44,7 +46,7 @@ public class ProductImagesWorker extends Worker {
         SSLUtils.trustAllCertificates();
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
@@ -55,6 +57,7 @@ public class ProductImagesWorker extends Worker {
             connection.setRequestProperty("ecrCode", ecrCode);
             Utils.addLog("datadata_download", "request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                code = connection.getResponseCode();
                 Utils.addLog("datadata_download", "loading");
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
@@ -62,16 +65,22 @@ public class ProductImagesWorker extends Worker {
                 }
                 Utils.addLog("datadata_download", "delete");
                 downloadFile(connection.getInputStream(), outputFile);
+                Utils.addRequestTracking(urlString,"ProductImagesWorker","",connection.getRequestProperties().toString(),code+"");
 
                 connection.disconnect();
                 return Result.success();
             } else {
+                code = connection.getResponseCode();
                 Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
+                Utils.addRequestTracking(urlString,"ProductImagesWorker","",connection.getRequestProperties().toString(),code+"");
+
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
             }
         } catch (Exception e) {
+            Utils.addRequestTracking(urlString,"ProductImagesWorker","",(connection!=null && connection.getRequestProperties()!=null) ? connection.getRequestProperties().toString():"",code+" "+e.getMessage()+"");
+            addToDatabase(e,"productImagesWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }

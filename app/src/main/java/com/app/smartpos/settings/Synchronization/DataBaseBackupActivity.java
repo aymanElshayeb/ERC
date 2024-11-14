@@ -21,9 +21,13 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.WorkerActivity;
+import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.backup.LocalBackup;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DataBaseBackupActivity extends WorkerActivity {
 
@@ -32,12 +36,13 @@ public class DataBaseBackupActivity extends WorkerActivity {
     int workerType;
     CardView cardLocalBackUp, cardLocalImport, downloadProductsImages, cardBackupToDrive;
     private LocalBackup localBackup;
+    DatabaseAccess databaseAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
-
+        databaseAccess = DatabaseAccess.getInstance(this);
         loadingLl = findViewById(R.id.loading_ll);
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
