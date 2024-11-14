@@ -88,7 +88,8 @@ public class CheckoutOrderDetails extends BaseActivity {
 
         printReceipt.setOnClickListener(view -> {
             try {
-                device.printReceipt(printerData.getBitmap());
+                Bitmap bitmap=Bitmap.createBitmap(printerData.getBitmap());
+                device.printReceipt(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
                 FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
