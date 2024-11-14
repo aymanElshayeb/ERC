@@ -1,6 +1,7 @@
 package com.app.smartpos.common;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -66,9 +67,9 @@ public class Utils {
         return result;
     }
 
-    public static String getDeviceId(Activity activity) {
+    public static String getDeviceId(Context context) {
         String id = Build.SERIAL;
-        String oldId=Settings.Secure.getString(activity.getContentResolver(),
+        String oldId=Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         return id.equals("unknown") ? oldId : id;
     }

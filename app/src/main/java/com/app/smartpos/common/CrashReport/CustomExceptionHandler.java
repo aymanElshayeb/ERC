@@ -17,6 +17,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private Thread.UncaughtExceptionHandler defaultUEH;
 
+    private static Context context;
     static private DatabaseAccess databaseAccess;
     /*
      * if any of the parameters is null, the respective functionality
@@ -24,6 +25,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
      */
     public CustomExceptionHandler(Context context) {
         databaseAccess = DatabaseAccess.getInstance(context);
+        this.context=context;
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
     }
 
@@ -42,7 +44,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         }
         Utils.addLog("datadata_crash", body);
         databaseAccess.open();
-        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),configuration.get("merchant_id"),toast,body,e.getMessage()+"" );
+        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),Utils.getDeviceId(context),toast,body,e.getMessage()+"" );
         Utils.addLog("datadata_crash", ""+flag);
     }
 }

@@ -222,8 +222,6 @@ public class EndShiftStep1 extends BaseActivity {
                     confirmWithErrorTv.setVisibility(View.VISIBLE);
                 }
             }
-//            String android_id = Settings.Secure.getString(this.getContentResolver(),
-//                    Settings.Secure.ANDROID_ID);
             databaseAccess.open();
             HashMap<String, String> configuration = databaseAccess.getConfiguration();
             String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");

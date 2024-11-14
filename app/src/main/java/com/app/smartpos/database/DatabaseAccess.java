@@ -2933,12 +2933,12 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
-    public Boolean addReport(String ecr,String merchantId,String type,String body,String message) {
+    public Boolean addReport(String ecr,String device_id,String type,String body,String message) {
 
         ContentValues values = new ContentValues();
 
         values.put("ecr", ecr);
-        values.put("merchant_id", merchantId);
+        values.put("device_id", device_id);
         values.put("type", type);
         values.put("dateTime_", new Date().toString());
         values.put("message", message);
