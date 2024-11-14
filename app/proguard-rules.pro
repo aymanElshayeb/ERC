@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
--keepattributes MethodParameters
+-keep class com.app.smartpos.devices.urovo.* {*;}
 -dontwarn java.beans.BeanInfo
 -dontwarn java.beans.IntrospectionException
 -dontwarn java.beans.Introspector
