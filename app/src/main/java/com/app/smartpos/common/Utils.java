@@ -1,6 +1,7 @@
 package com.app.smartpos.common;
 
 import android.app.Activity;
+import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,8 +67,10 @@ public class Utils {
     }
 
     public static String getDeviceId(Activity activity) {
-        return Settings.Secure.getString(activity.getContentResolver(),
+        String id = Build.SERIAL;
+        String oldId=Settings.Secure.getString(activity.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+        return id.equals("unknown") ? oldId : id;
     }
 
     public static boolean isValidEmail(CharSequence target) {
