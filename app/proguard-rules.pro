@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
 -keep class com.app.smartpos.devices.urovo.* {*;}
+-keep class com.urovo.sdk.* {*;}
 -dontwarn java.beans.BeanInfo
 -dontwarn java.beans.IntrospectionException
 -dontwarn java.beans.Introspector
