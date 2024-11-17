@@ -38,14 +38,14 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         databaseAccess.open();
         HashMap<String,String> configuration = databaseAccess.getConfiguration();
         StackTraceElement[] elements = e.getStackTrace();
-        String body="";
-        int maxLength = elements.length>8 ? 8 : elements.length;
+        StringBuilder body= new StringBuilder();
+        int maxLength = Math.min(elements.length, 8);
         for (int i=0;i<maxLength;i++) {
-            body += elements[i].toString() + "\n";
+            body.append(elements[i].toString()).append("\n");
         }
-        Utils.addLog("datadata_crash", body);
+        Utils.addLog("datadata_crash", body.toString());
         databaseAccess.open();
-        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),Utils.getDeviceId(context),toast,body,e.getMessage()+"" );
+        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),Utils.getDeviceId(context),toast, body.toString(),e.getMessage());
         Utils.addLog("datadata_crash", ""+flag);
     }
 }

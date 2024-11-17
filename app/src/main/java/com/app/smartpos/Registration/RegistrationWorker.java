@@ -19,6 +19,8 @@ import com.app.smartpos.utils.SharedPrefUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -73,6 +75,20 @@ public class RegistrationWorker extends Worker {
                 .post(body)
                 .headers(headers)
                 .build();
+        JSONObject headersJson = new JSONObject();
+        try {
+            headersJson.put("apikey",Collections.singletonList("......"));
+            headersJson.put("tenantId", tenantId);
+        } catch (JSONException e) {
+            addToDatabase(e,"productImageSize");
+        }
+        try {
+            data.put("password",".......");
+            json.put("data",data);
+        } catch (JSONException e) {
+            addToDatabase(e,"registration-api-body");
+            throw new RuntimeException(e);
+        }
         try (Response response = client.newCall(request).execute()) {
             code= response.code();
             if (response.isSuccessful()) {
@@ -81,19 +97,17 @@ public class RegistrationWorker extends Worker {
 
 
                 if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000004")) {
-                    Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
+                    Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),code+"\n"+"E0000004 : Can't register with non admin user");
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.non_admin_register)).build();
                     return Result.failure(outputData);
                 }
                 if (code != 200) {
-                    Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
+                    Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),code+"\n"+"Failed to register device");
                     Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                     return Result.failure(outputData);
                 }
 
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
-
-                Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),returnedObj.toString());
 
                 DatabaseAccess databaseAccess = DatabaseAccess.getInstance(getApplicationContext());
                 databaseAccess.open();
@@ -119,16 +133,18 @@ public class RegistrationWorker extends Worker {
                             build();
                 }
                 String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
+                returnedObj.put("token",".......");
+                Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),returnedObj.toString());
                 databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber,invoiceMerchantId);
                 databaseAccess.open();
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"");
+                Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),code+"\n"+"Failed to register device");
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_register)).build();
                 return Result.failure(outputData);
             }
         } catch (Exception e) {
-            Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+" "+e.getMessage());
+            Utils.addRequestTracking(urlString,"RegisterWorker",headers.toString(),json.toString(),code+"\n"+e.getMessage());
 
             addToDatabase(e,"registrationApi-cannot-call-request");
             e.printStackTrace();

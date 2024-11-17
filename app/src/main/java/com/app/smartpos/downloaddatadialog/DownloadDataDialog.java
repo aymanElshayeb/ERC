@@ -126,6 +126,7 @@ public class DownloadDataDialog extends DialogFragment {
                 } else {
                     downloadBtn.setVisibility(View.GONE);
                     progressBar.setVisibility(View.VISIBLE);
+                    //Todo check if connected to internet
                     if (OPERATION_UPLOAD.equals(operationType)) {
                         enqueueCreateAndUploadWorkers(requireActivity());
                     } else if (OPERATION_DOWNLOAD.equals(operationType)) {

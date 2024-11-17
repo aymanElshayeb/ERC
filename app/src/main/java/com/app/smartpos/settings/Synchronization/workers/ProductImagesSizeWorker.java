@@ -13,7 +13,10 @@ import androidx.work.WorkerParameters;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Collections;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -56,15 +59,26 @@ public class ProductImagesSizeWorker extends Worker {
                 .post(formBody)
                 .headers(headers)
                 .build();
+        JSONObject headersJson = new JSONObject();
+        try {
+            headersJson.put("Authorization", Collections.singletonList("......"));
+            headersJson.put("apikey",Collections.singletonList("......"));
+            headersJson.put("tenantId", tenantId);
+        } catch (JSONException e) {
+            addToDatabase(e,"productImageSize");
+        }
+
         Utils.addLog("datadata_worker", request.toString());
         try (Response response = client.newCall(request).execute()) {
             code= response.code();
+            JSONObject responseBody = new JSONObject();
             if (response.isSuccessful()) {
                 Utils.addLog("datadata_worker", "success");
 
 
                 //ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
-                JSONObject responseBody = new JSONObject(response.body().string());
+                assert response.body() != null;
+                responseBody = new JSONObject(response.body().string());
                 Utils.addLog("datadata_worker", responseBody.toString());
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
                 long imagesSize = returnedObj.getLong("imagesSize");
@@ -77,16 +91,16 @@ public class ProductImagesSizeWorker extends Worker {
                         putBoolean("needToUpdate",needToUpdate).
                         build();
 
-                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),responseBody.toString());
+                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headersJson.toString(),"",responseBody.toString());
 
 
                 return Result.success(data); // Return success if the response is successful
             } else {
-                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),code+"");
+                Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headersJson.toString(),"",code+"\n"+ responseBody);
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (Exception e) {
-            Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headers.toString(),formBody.toString(),code+" "+e.getMessage()+"");
+            Utils.addRequestTracking(urL,"ProductImagesSizeWorker",headersJson.toString(),"",code+"\n"+e.getMessage());
             addToDatabase(e,"productImageSizeApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception

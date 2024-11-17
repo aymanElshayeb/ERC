@@ -13,12 +13,16 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -44,6 +48,7 @@ public class DownloadWorker extends Worker {
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
+        String requestHeaders = "";
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
@@ -56,7 +61,12 @@ public class DownloadWorker extends Worker {
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey", api_key);
             connection.setRequestProperty("ecrCode", ecrCode);
-
+            JSONObject headersJson = new JSONObject();
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("Authorization", "......");
+            headersJson.put("apikey",".....");
+            headersJson.put("ecrCode", ecrCode);
+            requestHeaders = headersJson.toString();
             Utils.addLog("datadata_download",tenantId);
             Utils.addLog("datadata_download",api_key);
             Utils.addLog("datadata_download",ecrCode);
@@ -68,20 +78,20 @@ public class DownloadWorker extends Worker {
                     outputFile.delete();
                 }
                 downloadFile(connection.getInputStream(), outputFile);
-                Utils.addRequestTracking(urlString,"DownloadWorker","",connection.getRequestProperties().toString(),statusCode+"");
+                Utils.addRequestTracking(urlString,"DownloadWorker",requestHeaders,"",statusCode+"");
                 connection.disconnect();
                 return Result.success();
             } else {
                 statusCode=connection.getResponseCode();
                 Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
-                Utils.addRequestTracking(urlString,"DownloadWorker","",connection.getRequestProperties().toString(),statusCode+"");
+                Utils.addRequestTracking(urlString,"DownloadWorker","",requestHeaders,statusCode+"\n"+connection.getResponseMessage());
 
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
             }
         } catch (Exception e) {
-            Utils.addRequestTracking(urlString,"DownloadWorker","",(connection!=null && connection.getRequestProperties()!=null) ? connection.getRequestProperties().toString():"",statusCode+" "+e.getMessage()+"");
+            Utils.addRequestTracking(urlString,"DownloadWorker",requestHeaders,"",statusCode+"\n"+e.getMessage());
             addToDatabase(e,"downloadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

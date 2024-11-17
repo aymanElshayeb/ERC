@@ -2985,7 +2985,7 @@ public class DatabaseAccess {
 
         ContentValues values = new ContentValues();
 
-        values.put("ecr", ecr);
+        values.put("ecr_code", ecr);
         values.put("device_id", device_id);
         values.put("request_date_time", new Date().toString());
         values.put("api_name", api_name);
@@ -3009,7 +3009,7 @@ public class DatabaseAccess {
             do {
                 HashMap<String, String> map = new HashMap<>();
 
-                map.put("ecr", cursor.getString(cursor.getColumnIndex("ecr")));
+                map.put("ecr_code", cursor.getString(cursor.getColumnIndex("ecr_code")));
                 map.put("device_id", cursor.getString(cursor.getColumnIndex("device_id")));
                 map.put("request_date_time", cursor.getString(cursor.getColumnIndex("request_date_time")));
                 map.put("api_name", cursor.getString(cursor.getColumnIndex("api_name")));

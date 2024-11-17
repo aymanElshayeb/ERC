@@ -78,15 +78,16 @@ public class UploadWorker extends Worker {
         try (Response response = client.newCall(request).execute()) {
             code=response.code();
             if (response.isSuccessful()) {
-                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),response.body().string());
+                assert response.body() != null;
+                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code + "\n" + response.body().string());
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code+"");
+                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code+ "\n" + response.body().string());
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (IOException e) {
-            Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code+" "+e.getMessage()+"");
+            Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
 
             addToDatabase(e,"uploadWorkerApi-cannot-call-request");
             e.printStackTrace();

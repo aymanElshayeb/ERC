@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.text.Charsets;
 
@@ -85,14 +86,14 @@ public class ZatcaQRCodeGeneration {
         return base64QRCode;
     }
 
-    public Bitmap getQrCodeBitmap(HashMap<String, String> orderList, DatabaseAccess databaseAccess, List<HashMap<String, String>> orderDetailsList, HashMap<String, String> configuration, boolean print) {
+    public Bitmap getQrCodeBitmap(HashMap<String, String> orderList, DatabaseAccess databaseAccess, HashMap<String, String> configuration, boolean print, String tax) {
         Bitmap qrCodeBitmap;
-        StringBuilder qrCode = new StringBuilder(orderList.get("qr_code"));
+        StringBuilder qrCode = new StringBuilder(Objects.requireNonNull(orderList.get("qr_code")));
         if (qrCode.toString().isEmpty()) {
             ZatcaQRCodeDto zatcaQRCodeDto = new ZatcaQRCodeDto();
-            zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(orderList.get("order_timestamp")))));
-            zatcaQRCodeDto.setTaxAmount(orderDetailsList.get(0).get("tax_amount"));
-            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id").replace("cr",""));
+            zatcaQRCodeDto.setInvoiceDate(sdf1.format(new Timestamp(Long.parseLong(Objects.requireNonNull(orderList.get("order_timestamp"))))).replace("T"," ").replace("Z",""));
+            zatcaQRCodeDto.setTaxAmount(tax);
+            zatcaQRCodeDto.setSellerName(configuration.isEmpty() ? "" : Objects.requireNonNull(configuration.get("invoice_merchant_id")).replace("cr",""));
             zatcaQRCodeDto.setTaxNumber(configuration.isEmpty() ? "" : configuration.get("merchant_tax_number"));
             zatcaQRCodeDto.setTotalAmountWithTax(orderList.get("in_tax_total"));
             ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();

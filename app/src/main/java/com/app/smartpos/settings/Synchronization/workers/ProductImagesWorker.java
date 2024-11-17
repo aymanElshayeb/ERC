@@ -13,12 +13,16 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -44,6 +48,7 @@ public class ProductImagesWorker extends Worker {
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
+        String requestHeaders = "";
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
@@ -55,6 +60,12 @@ public class ProductImagesWorker extends Worker {
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey", SharedPrefUtils.getApiKey());
             connection.setRequestProperty("ecrCode", ecrCode);
+            JSONObject headersJson = new JSONObject();
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("Authorization", "......");
+            headersJson.put("apikey",".....");
+            headersJson.put("ecrCode", ecrCode);
+            requestHeaders = headersJson.toString();
             Utils.addLog("datadata_download", "request");
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 code = connection.getResponseCode();
@@ -65,21 +76,21 @@ public class ProductImagesWorker extends Worker {
                 }
                 Utils.addLog("datadata_download", "delete");
                 downloadFile(connection.getInputStream(), outputFile);
-                Utils.addRequestTracking(urlString,"ProductImagesWorker","",connection.getRequestProperties().toString(),code+"");
+                Utils.addRequestTracking(urlString,"ProductImagesWorker","",requestHeaders,code+"");
 
                 connection.disconnect();
                 return Result.success();
             } else {
                 code = connection.getResponseCode();
-                Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
-                Utils.addRequestTracking(urlString,"ProductImagesWorker","",connection.getRequestProperties().toString(),code+"");
+                Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + "\n" + connection.getResponseMessage());
+                Utils.addRequestTracking(urlString,"ProductImagesWorker","",requestHeaders,code+"\n"+connection.getResponseMessage());
 
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
             }
         } catch (Exception e) {
-            Utils.addRequestTracking(urlString,"ProductImagesWorker","",(connection!=null && connection.getRequestProperties()!=null) ? connection.getRequestProperties().toString():"",code+" "+e.getMessage()+"");
+            Utils.addRequestTracking(urlString,"ProductImagesWorker","",requestHeaders,code+"\n"+e.getMessage());
             addToDatabase(e,"productImagesWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

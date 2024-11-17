@@ -5,11 +5,9 @@ import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDa
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
@@ -98,7 +96,7 @@ public class OrderBitmap extends BaseActivity {
             printTotalIncludingTax(priceAfterTax);
             printPaidAndChangeAmount(orderList.get("paid_amount"), priceAfterTax, orderList.get("change_amount"), orderList.get("order_payment_method"));
             if(!merchantTaxNumber.isEmpty()){
-                printZatcaQrCode(databaseAccess);
+                printZatcaQrCode(databaseAccess,tax);
                 printLine();
             }
             printLine();
@@ -340,9 +338,10 @@ public class OrderBitmap extends BaseActivity {
         return bmp;
     }
 
-    private void printZatcaQrCode(DatabaseAccess databaseAccess) {
+    private void printZatcaQrCode(DatabaseAccess databaseAccess, double tax) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration, true)));
+        String taxRounded = tax != 0 ? Utils.trimLongDouble(tax) : "0.00";
+        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, configuration, true,taxRounded)));
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {

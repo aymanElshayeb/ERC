@@ -57,7 +57,7 @@ public class SplashActivity extends BaseActivity {
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted());
-        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
+//        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
         access=true;
         if (!access) {
             finishAffinity();

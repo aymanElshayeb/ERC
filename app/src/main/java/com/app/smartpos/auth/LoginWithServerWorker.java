@@ -14,8 +14,12 @@ import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -58,27 +62,38 @@ public class LoginWithServerWorker extends Worker {
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
                 add("apikey", SharedPrefUtils.getApiKey()).
-
                 build();
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(formBody)
                 .headers(headers)
                 .build();
+        JSONObject formBodyJson = new JSONObject();
+        JSONObject headersJson = new JSONObject();
+        try {
+            formBodyJson.put("email",email);
+            formBodyJson.put("password","......");
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("apikey","......");
+        } catch (JSONException e) {
+            addToDatabase(e,"loginApi");
+            throw new RuntimeException(e);
+        }
         try (Response response = client.newCall(request).execute()) {
             code= response.code();
             if (response.isSuccessful()) {
-                Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),response.body().string());
+                assert response.body() != null;
+                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),response.body().string());
                 String authorization = response.header("Authorization");
                 Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),code+"");
+                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+"Failed to login");
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
-            Utils.addRequestTracking(urlString,"LoginWorker",headers.toString(),formBody.toString(),code+" "+e.getMessage());
+            Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+e.getMessage());
             addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();

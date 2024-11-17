@@ -21,6 +21,7 @@ import com.app.smartpos.utils.SharedPrefUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.Objects;
 
 import okhttp3.FormBody;
@@ -51,6 +52,14 @@ public class RefundWorker extends Worker {
                 .get()
                 .headers(headers)
                 .build();
+        JSONObject headersJson = new JSONObject();
+        try {
+            headersJson.put("Authorization", Collections.singletonList("......"));
+            headersJson.put("apikey",Collections.singletonList("......"));
+            headersJson.put("tenantId", Objects.requireNonNull(getInputData().getString("tenantId")));
+        } catch (JSONException e) {
+            addToDatabase(e,"refund");
+        }
         try (Response response = client.newCall(request).execute()) {
             Utils.addLog("datadata", response.toString());
             code = response.code();
@@ -61,15 +70,18 @@ public class RefundWorker extends Worker {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     int code = responseBody.getInt("code");
                     if (code == 200) {
-                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",response.body().string());
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code + "\n" + responseBody);
                         GsonUtils gsonUtils = new GsonUtils();
                         outputData.put("refundModel", gsonUtils.serializeToJson(new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString())));
                     } else if (code == 404) {
-                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",code+"");
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+"\n"+responseBody);
                         outputData.put("refundModel",null);
                     }
+                    else {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+"\n"+responseBody);
+                    }
                 } catch (JSONException e) {
-                    Utils.addRequestTracking(REFUND_URL,"RefundWorker",headers.toString(),"",code+" "+e.getMessage());
+                    Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+ "\n" +e.getMessage());
                     addToDatabase(e,"error-in-read-json-do-work-refundWorker");
                     e.printStackTrace();
                 }
