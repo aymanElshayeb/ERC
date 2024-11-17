@@ -612,7 +612,9 @@ public class WorkerActivity extends BaseActivity {
     }
 
     public void handleWorkCompletion(WorkInfo workInfo) {
-
+        if(workInfo.getState() == WorkInfo.State.FAILED){
+            sendReport();
+        }
     }
 
     private void observeWorker(OneTimeWorkRequest workRequest) {
@@ -636,22 +638,23 @@ public class WorkerActivity extends BaseActivity {
         super.onResume();
         databaseAccess.open();
         HashMap<String, String> configuration = databaseAccess.getConfiguration();
-        if(!configuration.isEmpty()) {
-            databaseAccess.open();
-            ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-            if (!reports.isEmpty() && isConnected()) {
-                enqueueUploadCrashReportWorkers();
-            }
-            databaseAccess.open();
-            ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
-            if (!requestTrackingReports.isEmpty() && isConnected()) {
-                enqueueUploadRequestTrackingWorkers();
-            }
+        if(!configuration.isEmpty() && isConnected()) {
 
+            sendReport();
+            enqueueUploadWorkers(false);
+        }
+    }
 
-            if (isConnected()) {
-                enqueueUploadWorkers(false);
-            }
+    public void sendReport() {
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
+        if (!reports.isEmpty()) {
+            enqueueUploadCrashReportWorkers();
+        }
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
+        if (!requestTrackingReports.isEmpty()) {
+            enqueueUploadRequestTrackingWorkers();
         }
     }
 }

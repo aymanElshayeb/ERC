@@ -36,6 +36,7 @@ public class LoginFragment extends Fragment {
     private View root;
     private Context context;
     private boolean isPasswordShown = false;
+    private Button loginBtn;
 
     @Nullable
     @Override
@@ -46,8 +47,9 @@ public class LoginFragment extends Fragment {
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             ImageView eyeIm = root.findViewById(R.id.eye_im);
-            Button loginBtn = root.findViewById(R.id.login_btn);
+            loginBtn = root.findViewById(R.id.login_btn);
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
+
 
 
             languageCl.setOnClickListener(view -> {
@@ -84,9 +86,11 @@ public class LoginFragment extends Fragment {
                 databaseAccess.open();
                 HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString().trim());
                 if (map != null) {
+                    ((AuthActivity)getActivity()).showHideLoading(true);
                     if (((AuthActivity) requireActivity()).isConnected()) {
                         ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
                     } else {
+                        loginBtn.setEnabled(false);
                         Hasher hasher = new Hasher();
                         boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
                         //Utils.addLog("datadata",map.toString());
@@ -101,6 +105,8 @@ public class LoginFragment extends Fragment {
                             startActivity(intent);
                             requireActivity().finish();
                         } else {
+                            loginBtn.setEnabled(true);
+                            ((AuthActivity)getActivity()).showHideLoading(false);
                             Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -112,4 +118,6 @@ public class LoginFragment extends Fragment {
 
         return root;
     }
+
+
 }
