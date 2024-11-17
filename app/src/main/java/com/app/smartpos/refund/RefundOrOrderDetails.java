@@ -271,15 +271,17 @@ public class RefundOrOrderDetails extends WorkerActivity {
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
         loadingLl.setVisibility(View.GONE);
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-            // Work succeeded, handle success
-            showMessage(getString(R.string.data_synced_successfully));
-            redirectToSuccess();
-            SharedPrefUtils.resetAuthorization();
-        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-            // Work failed, handle failure
-            showMessage(getString(R.string.error_in_syncing_data));
-        }
+//        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+//            // Work succeeded, handle success
+//            showMessage(getString(R.string.data_synced_successfully));
+//            redirectToSuccess();
+//            SharedPrefUtils.resetAuthorization();
+//        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+//            // Work failed, handle failure
+//            showMessage(getString(R.string.error_in_syncing_data));
+//        }
+        redirectToSuccess();
+        SharedPrefUtils.resetAuthorization();
     }
 
     public void redirectToSuccess() {

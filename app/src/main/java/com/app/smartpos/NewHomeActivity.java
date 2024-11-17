@@ -19,6 +19,7 @@ import com.app.smartpos.refund.RefundOrOrderList;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftStep1;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class NewHomeActivity extends BaseActivity {
     private HashMap<String, String> configuration;
     private TextView shopNameTv;
     private TextView locationTv;
+    private String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class NewHomeActivity extends BaseActivity {
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_new_home);
+
+        lang = LocaleManager.getLanguage(this);
 
         LinearLayout circleNameLl = findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL = findViewById(R.id.items_ll);
@@ -136,6 +140,8 @@ public class NewHomeActivity extends BaseActivity {
         String shopName = String.valueOf(shop.get("shop_name"));
         locationTv.setText(shopLocation);
         shopNameTv.setText(shopName);
+
+        shopNameTv.setTextAlignment(lang.equals("ar") ? View.TEXT_ALIGNMENT_TEXT_END :View.TEXT_ALIGNMENT_TEXT_START);
     }
 
     @Override
