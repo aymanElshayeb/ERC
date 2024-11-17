@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartPaymentMethodAdapter;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.devices.DeviceFactory.Device;
 import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
@@ -41,7 +42,7 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class NewCheckout extends BaseActivity {
+public class NewCheckout extends WorkerActivity {
 
     TextView totalAmountWithoutVatTv;
     TextView totalAmountTv;
@@ -354,6 +355,9 @@ public class NewCheckout extends BaseActivity {
 
         Toasty.success(this, R.string.order_done_successful, Toast.LENGTH_SHORT).show();
 
+        if(isConnected()){
+
+        }
         Intent intent = new Intent(this, SuccessfulPayment.class).putExtra("amount", totalAmount + " " + currency).putExtra("id", orderId).putExtra("printType", getString(R.string.simplified_tax_invoice));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -95,7 +95,7 @@ public class EndShiftStep2 extends WorkerActivity {
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
-            enqueueUploadWorkers();
+            enqueueUploadWorkers(false);
         });
         printZReport.setOnClickListener(view -> {
             onPrintZReport();

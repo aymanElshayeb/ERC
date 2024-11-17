@@ -146,11 +146,5 @@ public class RefundOrOrderList extends WorkerActivity {
 
     public void callApi() {
         model.start(this,invoiceSeq, databaseAccess);
-
-        databaseAccess.open();
-        ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
-        if (!reports.isEmpty()) {
-            enqueueUploadRequestTrackingWorkers();
-        }
     }
 }

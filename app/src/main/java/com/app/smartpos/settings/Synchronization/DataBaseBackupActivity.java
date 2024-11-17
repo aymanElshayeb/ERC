@@ -26,9 +26,6 @@ import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.backup.LocalBackup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class DataBaseBackupActivity extends WorkerActivity {
 
     LinearLayout loadingLl;
@@ -60,7 +57,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
                 workerType = 1;
                 loadingLl.setVisibility(View.VISIBLE);
                 //enqueueUploadWorkers();
-                enqueueRefundAuthWorkers();
+                syncDownloadAndUploadWorker();
             }else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
@@ -71,7 +68,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
             if (isConnected()) {
                 loadingLl.setVisibility(View.VISIBLE);
                 workerType = 2;
-                enqueueUploadWorkers();
+                enqueueUploadWorkers(true);
             } else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }

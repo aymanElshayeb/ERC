@@ -93,11 +93,5 @@ public class Refund extends WorkerActivity {
         Utils.addLog("INSIDE CALL API", SharedPrefUtils.getAuthorization());
 
         model.start(this,searchEt.getText().toString().trim(), databaseAccess);
-
-        databaseAccess.open();
-        ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
-        if (!reports.isEmpty()) {
-            enqueueUploadRequestTrackingWorkers();
-        }
     }
 }

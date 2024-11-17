@@ -203,7 +203,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
-            exportCrashReport(existingDb, newDb);
+            exportRequestTracking(existingDb, newDb);
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
@@ -236,11 +236,11 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             copyTableSchema(existingDb, newDb, "request_tracking");
             // Copy rows from the existing database table to the new one
             String requestTrackingQuery = "SELECT * FROM request_tracking";
-            try (Cursor shiftCursor = existingDb.rawQuery(requestTrackingQuery, null)) {
-                while (shiftCursor.moveToNext()) {
+            try (Cursor requestTrackingCursor = existingDb.rawQuery(requestTrackingQuery, null)) {
+                while (requestTrackingCursor.moveToNext()) {
                     ContentValues shiftValues = new ContentValues();
-                    for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
-                        shiftValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
+                    for (int i = 0; i < requestTrackingCursor.getColumnCount(); i++) {
+                        shiftValues.put(requestTrackingCursor.getColumnName(i), requestTrackingCursor.getString(i));
                     }
                     newDb.insert("request_tracking", null, shiftValues);
                 }
@@ -255,11 +255,11 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             copyTableSchema(existingDb, newDb, "crash_report");
             // Copy rows from the existing database table to the new one
             String crashReportQuery = "SELECT * FROM crash_report";
-            try (Cursor shiftCursor = existingDb.rawQuery(crashReportQuery, null)) {
-                while (shiftCursor.moveToNext()) {
+            try (Cursor requestCursor = existingDb.rawQuery(crashReportQuery, null)) {
+                while (requestCursor.moveToNext()) {
                     ContentValues shiftValues = new ContentValues();
-                    for (int i = 0; i < shiftCursor.getColumnCount(); i++) {
-                        shiftValues.put(shiftCursor.getColumnName(i), shiftCursor.getString(i));
+                    for (int i = 0; i < requestCursor.getColumnCount(); i++) {
+                        shiftValues.put(requestCursor.getColumnName(i), requestCursor.getString(i));
                     }
                     newDb.insert("crash_report", null, shiftValues);
                 }

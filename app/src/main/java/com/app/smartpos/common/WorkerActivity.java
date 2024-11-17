@@ -14,8 +14,6 @@ import static com.app.smartpos.Constant.SYNC_URL;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -170,7 +168,7 @@ public class WorkerActivity extends BaseActivity {
                 });
     }
 
-    public void enqueueRefundAuthWorkers() {
+    public void syncDownloadAndUploadWorker() {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         databaseAccess.open();
         HashMap<String, String> conf = databaseAccess.getConfiguration();
@@ -268,17 +266,11 @@ public class WorkerActivity extends BaseActivity {
                         // Work is finished, close pending screen or perform any action
                         Utils.addLog("log_auth", SharedPrefUtils.getAuthorization());
                         handleWorkCompletion(workInfo);
-                        if(workInfo.getState() == WorkInfo.State.SUCCEEDED){
-                            databaseAccess.open();
-                            ArrayList<HashMap<String, String>> reports = databaseAccess.getRequestTracking();
-                            if (!reports.isEmpty()) {
-                                enqueueUploadRequestTrackingWorkers();
-                            }
-                        }
+
                     }
                 });
     }
-    public void enqueueUploadWorkers() {
+    public void enqueueUploadWorkers(boolean hasObserver) {
         //username Admin
         //password 01111Mm&
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
@@ -332,7 +324,7 @@ public class WorkerActivity extends BaseActivity {
         observeWorker(loginRequest);
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadRequest.getId())
                 .observe(this, workInfo -> {
-                    if (workInfo != null && workInfo.getState().isFinished()) {
+                    if (workInfo != null && workInfo.getState().isFinished() && hasObserver) {
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);
                     }
@@ -643,8 +635,18 @@ public class WorkerActivity extends BaseActivity {
         super.onResume();
         databaseAccess.open();
         ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-        if (!reports.isEmpty()) {
+        if (!reports.isEmpty() && isConnected()) {
             enqueueUploadCrashReportWorkers();
+        }
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
+        if (!requestTrackingReports.isEmpty() && isConnected()) {
+            enqueueUploadRequestTrackingWorkers();
+        }
+
+
+        if (isConnected()) {
+            enqueueUploadWorkers(false);
         }
 
     }
