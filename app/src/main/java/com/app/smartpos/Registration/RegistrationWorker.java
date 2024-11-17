@@ -81,13 +81,14 @@ public class RegistrationWorker extends Worker {
             headersJson.put("tenantId", tenantId);
         } catch (JSONException e) {
             addToDatabase(e,"productImageSize");
+            e.printStackTrace();
         }
         try {
             data.put("password",".......");
             json.put("data",data);
         } catch (JSONException e) {
             addToDatabase(e,"registration-api-body");
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         try (Response response = client.newCall(request).execute()) {
             code= response.code();

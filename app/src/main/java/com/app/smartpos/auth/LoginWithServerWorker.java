@@ -77,7 +77,7 @@ public class LoginWithServerWorker extends Worker {
             headersJson.put("apikey","......");
         } catch (JSONException e) {
             addToDatabase(e,"loginApi");
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         try (Response response = client.newCall(request).execute()) {
             code= response.code();
