@@ -635,20 +635,23 @@ public class WorkerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         databaseAccess.open();
-        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-        if (!reports.isEmpty() && isConnected()) {
-            enqueueUploadCrashReportWorkers();
-        }
-        databaseAccess.open();
-        ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
-        if (!requestTrackingReports.isEmpty() && isConnected()) {
-            enqueueUploadRequestTrackingWorkers();
-        }
+        HashMap<String, String> configuration = databaseAccess.getConfiguration();
+        if(!configuration.isEmpty()) {
+            databaseAccess.open();
+            ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
+            if (!reports.isEmpty() && isConnected()) {
+                enqueueUploadCrashReportWorkers();
+            }
+            databaseAccess.open();
+            ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
+            if (!requestTrackingReports.isEmpty() && isConnected()) {
+                enqueueUploadRequestTrackingWorkers();
+            }
 
 
-        if (isConnected()) {
-            enqueueUploadWorkers(false);
+            if (isConnected()) {
+                enqueueUploadWorkers(false);
+            }
         }
-
     }
 }

@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 public class AuthActivity extends WorkerActivity {
 
+    int workerType=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,23 +56,35 @@ public class AuthActivity extends WorkerActivity {
     @Override
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-            String email = workInfo.getOutputData().getString("email");
+        if(workerType==1) {
+            if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                String email = workInfo.getOutputData().getString("email");
 
-            DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-            databaseAccess.open();
-            HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
-            SharedPrefUtils.setName(this, map.get("name_ar"));
-            SharedPrefUtils.setEmail(this, map.get("email"));
-            SharedPrefUtils.setMobileNumber(this, map.get("mobile"));
-            SharedPrefUtils.setUserId(this, map.get("id"));
-            SharedPrefUtils.setUserName(this, map.get("username"));
-            SharedPrefUtils.setIsLoggedIn(this, true);
-            Intent intent = new Intent(this, NewHomeActivity.class);
-            startActivity(intent);
-            this.finish();
-        } else {
-            Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+                databaseAccess.open();
+                HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
+                SharedPrefUtils.setName(this, map.get("name_ar"));
+                SharedPrefUtils.setEmail(this, map.get("email"));
+                SharedPrefUtils.setMobileNumber(this, map.get("mobile"));
+                SharedPrefUtils.setUserId(this, map.get("id"));
+                SharedPrefUtils.setUserName(this, map.get("username"));
+                if(isConnected()) {
+                    workerType = 2;
+                    enqueueDownloadAndReadWorkers();
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+            }
+        }else if(workerType==2){
+            if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                SharedPrefUtils.setIsLoggedIn(this, true);
+                Intent intent = new Intent(this, NewHomeActivity.class);
+                startActivity(intent);
+                this.finish();
+            }else{
+
+            }
+
         }
     }
 

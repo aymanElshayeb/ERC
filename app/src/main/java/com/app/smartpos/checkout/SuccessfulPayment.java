@@ -22,6 +22,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.devices.DeviceFactory.Device;
 import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
@@ -31,7 +32,7 @@ import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
-public class SuccessfulPayment extends BaseActivity {
+public class SuccessfulPayment extends WorkerActivity {
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;
     TextView amountTv;

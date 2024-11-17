@@ -257,8 +257,10 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
 //                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
 //                dialog.show(getSupportFragmentManager(), "dialog");
-                loadingLl.setVisibility(View.VISIBLE);
-                enqueueCreateAndUploadWorkers();
+//                loadingLl.setVisibility(View.VISIBLE);
+//                enqueueCreateAndUploadWorkers();
+                redirectToSuccess();
+                SharedPrefUtils.resetAuthorization();
             } catch (JSONException e) {
                 addToDatabase(e,"error-in-proceedOrder-refundOrOrderDetailsScreen");
                 e.printStackTrace();
@@ -280,8 +282,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 //            // Work failed, handle failure
 //            showMessage(getString(R.string.error_in_syncing_data));
 //        }
-        redirectToSuccess();
-        SharedPrefUtils.resetAuthorization();
+
     }
 
     public void redirectToSuccess() {
