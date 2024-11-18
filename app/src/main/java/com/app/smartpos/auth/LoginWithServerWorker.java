@@ -85,7 +85,7 @@ public class LoginWithServerWorker extends Worker {
                 assert response.body() != null;
                 JSONObject responseBody = new JSONObject(response.body().string());
                 code = responseBody.getInt("code");
-                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),response.body().string());
+                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),responseBody.toString());
                 String authorization = response.header("Authorization");
                 Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
                 return Result.success(outputData);

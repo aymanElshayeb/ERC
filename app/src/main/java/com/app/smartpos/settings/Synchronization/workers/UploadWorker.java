@@ -92,16 +92,15 @@ public class UploadWorker extends Worker {
         // Step 3: Execute the request and handle the response
         try (Response response = client.newCall(request).execute()) {
             code=response.code();
-            assert response.body() != null;
-            JSONObject responseBody = new JSONObject(response.body().string());
             if (response.isSuccessful()) {
+                JSONObject responseBody = new JSONObject(response.body().string());
                 code = responseBody.getInt("code");
                 Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "\n" + responseBody);
                 if(code!=200)
                     return Result.failure();
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + responseBody);
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + response.body().string());
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
