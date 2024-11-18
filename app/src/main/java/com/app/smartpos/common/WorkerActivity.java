@@ -633,7 +633,8 @@ public class WorkerActivity extends BaseActivity {
     }
 
     public void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        if(!message.isEmpty())
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -648,16 +649,16 @@ public class WorkerActivity extends BaseActivity {
     }
 
     public void sendReport() {
-        databaseAccess.open();
-        ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
-        if (!requestTrackingReports.isEmpty()) {
-            enqueueUploadRequestTrackingWorkers();
-        }
-
-        databaseAccess.open();
-        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-        if (!reports.isEmpty()) {
-            enqueueUploadCrashReportWorkers();
+        HashMap<String, String> configuration = databaseAccess.getConfiguration();
+        if(!configuration.isEmpty() && isConnected()) {
+            ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
+            if (!requestTrackingReports.isEmpty()) {
+                enqueueUploadRequestTrackingWorkers();
+            }
+            ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
+            if (!reports.isEmpty()) {
+                enqueueUploadCrashReportWorkers();
+            }
         }
     }
 }

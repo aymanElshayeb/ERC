@@ -92,7 +92,7 @@ public class SuccessfulPayment extends WorkerActivity {
                 });
 
             } catch (Exception e) {
-                addToDatabase(e,getString(R.string.no_printer_found)+"-successfulPaymentScreen");
+                addToDatabase(e,getString(R.string.no_printer_found)+"_successfulPaymentScreen");
                 e.printStackTrace();
                 FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();

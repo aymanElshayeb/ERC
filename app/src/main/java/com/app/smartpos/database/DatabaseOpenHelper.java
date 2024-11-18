@@ -61,7 +61,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, mContext.getString(R.string.backup_completed_successfully), Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            addToDatabase(e,mContext.getString(R.string.unable_to_backup_database_retry)+ "-databaseOpenHelper");
+            addToDatabase(e,mContext.getString(R.string.unable_to_backup_database_retry)+ "_databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_backup_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -96,7 +96,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, R.string.database_Import_completed, Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            addToDatabase(e,mContext.getString(R.string.unable_to_import_database_retry)+ "-databaseOpenHelper");
+            addToDatabase(e,mContext.getString(R.string.unable_to_import_database_retry)+ "_databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_import_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -264,7 +264,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
-            addToDatabase(e,"error-export-request_tracking-function-databaseOpenHelper");
+            addToDatabase(e,"error-export-requestTracking-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }
@@ -283,7 +283,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
-            addToDatabase(e,"error-export-crash_report-function-databaseOpenHelper");
+            addToDatabase(e,"error-export-crashReport-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }

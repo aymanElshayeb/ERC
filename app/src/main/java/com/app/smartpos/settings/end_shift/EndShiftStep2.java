@@ -144,7 +144,7 @@ public class EndShiftStep2 extends WorkerActivity {
             Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
         } catch (Exception e) {
-            addToDatabase(e,getString(R.string.no_printer_found)+"-endShiftStep2");
+            addToDatabase(e,getString(R.string.no_printer_found)+"_endShiftStep2");
             e.printStackTrace();
             FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();

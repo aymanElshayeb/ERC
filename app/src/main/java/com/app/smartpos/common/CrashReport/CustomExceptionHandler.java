@@ -49,7 +49,8 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         }
         else{
             body.append("");
-            errorMessage = "";
+            errorMessage = toast.split("_")[0];
+            toast = toast.split("_")[1];
         }
         Utils.addLog("datadata_crash", body.toString());
         databaseAccess.open();

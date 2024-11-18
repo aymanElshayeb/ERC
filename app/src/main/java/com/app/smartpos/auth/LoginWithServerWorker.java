@@ -91,8 +91,10 @@ public class LoginWithServerWorker extends Worker {
                 return Result.success(outputData);
             } else {
                 Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+"Failed to login");
-                Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
-                return Result.failure(outputData);
+                if(email.contains("@"))
+                    return Result.failure(new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build());
+                else
+                    return Result.failure(new Data.Builder().putString("errorMessage","").build());
             }
         } catch (Exception e) {
             Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+e.getMessage());

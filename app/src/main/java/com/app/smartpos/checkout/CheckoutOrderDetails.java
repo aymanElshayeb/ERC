@@ -109,7 +109,7 @@ public class CheckoutOrderDetails extends BaseActivity {
                 });
 
             } catch (Exception e) {
-                addToDatabase(e,getString(R.string.no_printer_found)+"-checkoutOrderDetails");
+                addToDatabase(e,getString(R.string.no_printer_found)+"_checkoutOrderDetails");
                 e.printStackTrace();
                 FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();

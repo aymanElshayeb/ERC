@@ -158,7 +158,7 @@ public class NewCheckout extends BaseActivity {
                     Intent intent = device.pay(totalAmount);
                     launcher.launch(intent);
                 } catch (Exception e) {
-                    addToDatabase(e,getString(R.string.card_payment_is_offline_please_choose_cash)+"-newCheckOutScreen");
+                    addToDatabase(e,getString(R.string.card_payment_is_offline_please_choose_cash)+"_newCheckOutScreen");
                     Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
                 }
             } else {

@@ -88,7 +88,7 @@ public class ReportsUploadWorker extends Worker {
                 code = responseBody.getInt("code");
                 if(code!=200){
                     if(uri.contains("request"))
-                        addToDatabase(null,"Can't track requests\n" + responseBody);
+                        addToDatabase(null,responseBody + "_reportsUploadWorker-request");
                     return Result.failure();
                 }
                 return Result.success(outputData);
