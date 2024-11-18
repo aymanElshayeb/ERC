@@ -3,6 +3,7 @@ package com.app.smartpos.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
@@ -88,7 +89,9 @@ public class LoginFragment extends Fragment {
                 if (map != null) {
                     ((AuthActivity)getActivity()).showHideLoading(true);
                     if (((AuthActivity) requireActivity()).isConnected()) {
-                        ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
+                        AsyncTask.execute(() -> {
+                            ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
+                        });
                     } else {
                         loginBtn.setEnabled(false);
                         Hasher hasher = new Hasher();
