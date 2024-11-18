@@ -94,8 +94,6 @@ public class ReportsUploadWorker extends Worker {
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (IOException e) {
-            Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
-
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
         } catch (JSONException e) {
