@@ -10,6 +10,7 @@ import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -52,6 +53,7 @@ import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.LastSyncWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
+import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -72,6 +74,8 @@ public class DownloadDataDialog extends DialogFragment {
     public static final String OPERATION_DOWNLOAD = "download";
     public static final String OPERATION_REFUND = "refund";
 
+    Context context;
+    BaseActivity baseActivity;
     public static DownloadDataDialog newInstance(String operationType) {
         DownloadDataDialog dialog = new DownloadDataDialog();
         Bundle args = new Bundle();
@@ -86,6 +90,8 @@ public class DownloadDataDialog extends DialogFragment {
         if (root == null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             root = inflater.inflate(R.layout.dialog_download_data, container, false);
+            context=requireContext();
+            baseActivity = (BaseActivity)getActivity();
             //setCancelable(false);
             String operationType;
             emailEt = root.findViewById(R.id.email_et);
@@ -119,7 +125,9 @@ public class DownloadDataDialog extends DialogFragment {
             });
 
             downloadBtn.setOnClickListener(view -> {
-                if (emailEt.getText().toString().isEmpty()) {
+                if(!baseActivity.isConnected()){
+                    Toast.makeText(getActivity(), context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                } else if (emailEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 } else if (passwordEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();

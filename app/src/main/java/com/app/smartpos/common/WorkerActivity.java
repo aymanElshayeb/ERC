@@ -38,6 +38,7 @@ import com.app.smartpos.settings.Synchronization.workers.ProductImagesSizeWorker
 import com.app.smartpos.settings.Synchronization.workers.ProductImagesWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadFileWorker;
 import com.app.smartpos.settings.Synchronization.workers.ReadProductImagesFileWorker;
+import com.app.smartpos.settings.Synchronization.workers.ReportsUploadWorker;
 import com.app.smartpos.settings.Synchronization.workers.UploadWorker;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -364,7 +365,7 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(exportData).
                 build();
         OneTimeWorkRequest compressRequest = new OneTimeWorkRequest.Builder(CompressWorker.class).build();
-        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
+        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(ReportsUploadWorker.class).
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation = WorkManager.getInstance(this)
@@ -418,7 +419,7 @@ public class WorkerActivity extends BaseActivity {
                 setInputData(exportData).
                 build();
         OneTimeWorkRequest compressRequest = new OneTimeWorkRequest.Builder(CompressWorker.class).build();
-        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(UploadWorker.class).
+        OneTimeWorkRequest uploadRequest = new OneTimeWorkRequest.Builder(ReportsUploadWorker.class).
                 setInputData(uploadInputData).
                 build();
         WorkContinuation continuation = WorkManager.getInstance(this)
