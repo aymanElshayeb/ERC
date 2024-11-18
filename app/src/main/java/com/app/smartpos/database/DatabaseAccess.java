@@ -92,7 +92,7 @@ public class DatabaseAccess {
         values.put("customer_active", customer_active);
 
         long check = database.insert("customers", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -109,7 +109,7 @@ public class DatabaseAccess {
 
 
         long check = database.insert("product_category", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -126,7 +126,7 @@ public class DatabaseAccess {
         values.put("payment_method_active", payment_method_active);
 
         long check = database.insert("payment_method", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -143,7 +143,7 @@ public class DatabaseAccess {
 
 
         long check = database.insert("product_weight", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -160,7 +160,7 @@ public class DatabaseAccess {
 
 
         long check = database.insert("order_type", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -172,7 +172,7 @@ public class DatabaseAccess {
         if (cursor.moveToFirst()) {
             result = cursor.getString(cursor.getColumnIndex(key));
         }
-        database.close();
+        //database.close();
         return result;
     }
 
@@ -222,7 +222,7 @@ public class DatabaseAccess {
 
         //if data insert success, its return 1, if failed return -1
         if (check == -1) {
-            database.close();
+            //database.close();
             return -1;
         } else {
             return getShiftWithTimestamp(endShiftModel.getEndDateTime());
@@ -241,7 +241,7 @@ public class DatabaseAccess {
         //Utils.addLog("datadata_shift_diff", values.toString());
 
         long check = database.insert("credit_calculations", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return true;
@@ -258,7 +258,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("product_category", values, "category_id=? ", new String[]{category_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -276,7 +276,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("payment_method", values, "payment_method_id=? ", new String[]{payment_method_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -293,7 +293,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("order_type", values, "order_type_id=? ", new String[]{typeId});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -310,7 +310,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("product_weight", values, "weight_id=? ", new String[]{weightId});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -330,7 +330,7 @@ public class DatabaseAccess {
         values.put("customer_active", customer_active);
 
         long check = database.update("customers", values, " customer_id=? ", new String[]{customer_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -353,7 +353,7 @@ public class DatabaseAccess {
         values.put("tax", tax);
 
         long check = database.update("shop", values, "shop_id=? ", new String[]{shop_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -382,7 +382,7 @@ public class DatabaseAccess {
 
 
         long check = database.insert("products", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -412,7 +412,7 @@ public class DatabaseAccess {
             check = database.insert("product_image", null, values);
         }
 
-        database.close();
+        //database.close();
 
         return check != -1;
         //if data insert success, its return 1, if failed return -1
@@ -441,7 +441,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
 
-        database.close();
+        //database.close();
 
         return image;
         //if data insert success, its return 1, if failed return -1
@@ -470,7 +470,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("products", values, "product_id=?", new String[]{product_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -491,7 +491,7 @@ public class DatabaseAccess {
 
 
         long check = database.insert("expense", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -512,7 +512,7 @@ public class DatabaseAccess {
 
 
         long check = database.update("expense", values, "expense_id=?", new String[]{expense_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -532,7 +532,7 @@ public class DatabaseAccess {
         values.put("suppliers_address", suppliers_address);
 
         long check = database.insert("suppliers", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -552,7 +552,7 @@ public class DatabaseAccess {
         values.put("suppliers_address", suppliers_address);
 
         long check = database.update("suppliers", values, "suppliers_id=?", new String[]{suppliers_id});
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -579,7 +579,7 @@ public class DatabaseAccess {
 //
 //
 //        cursor.close();
-//        database.close();
+//        //database.close();
 //        return image;
 //    }
 
@@ -602,7 +602,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return id;
     }
 
@@ -627,7 +627,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return hashMap;
     }
 
@@ -652,7 +652,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return list;
     }
 
@@ -677,7 +677,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return hashMap;
     }
 
@@ -702,7 +702,7 @@ public class DatabaseAccess {
             e.printStackTrace();
         } finally {
             cursor.close();
-            database.close();
+            //database.close();
         }
         return weight_unit_name;
     }
@@ -728,7 +728,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return supplier_name;
     }
 
@@ -754,7 +754,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return product_category;
     }
 
@@ -782,7 +782,7 @@ public class DatabaseAccess {
             long check = database.insert("product_cart", null, values);
 
 
-            database.close();
+            //database.close();
 
 
             //if data insert success, its return 1, if failed return -1
@@ -804,7 +804,7 @@ public class DatabaseAccess {
         result.execute();
 
 
-        database.close();
+        //database.close();
 
 
     }
@@ -815,7 +815,7 @@ public class DatabaseAccess {
 
         result.execute();
 
-        database.close();
+        //database.close();
 
 
     }
@@ -846,7 +846,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -870,7 +870,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return map;
     }
 
@@ -1026,7 +1026,7 @@ public class DatabaseAccess {
             e.printStackTrace();
         }
 
-        database.close();
+        //database.close();
     }
 
     public void updateOrderPrintFlag(boolean value, String order_id) {
@@ -1036,7 +1036,7 @@ public class DatabaseAccess {
         values.put("printed", value);
 
         long check = database.update("order_list", values, "invoice_id=?", new String[]{order_id});
-        database.close();
+        //database.close();
 
     }
 
@@ -1056,7 +1056,7 @@ public class DatabaseAccess {
                 product_id = cursor.getString(cursor.getColumnIndex("product_id"));
             } while (cursor.moveToNext());
         }
-        database.close();
+        //database.close();
         cursor.close();
         return product_id;
     }
@@ -1098,7 +1098,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return orderList;
     }
 
@@ -1144,7 +1144,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return orderList;
     }
 
@@ -1179,7 +1179,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return orderListMap;
     }
 
@@ -1221,7 +1221,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return orderList;
     }
 
@@ -1258,7 +1258,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return orderList;
     }
 
@@ -1293,7 +1293,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return orderDetailsList;
     }
 
@@ -1315,7 +1315,7 @@ public class DatabaseAccess {
         values.put(column, value);
 
         long check = database.update("order_list", values, "invoice_id=?", new String[]{invoice_id});
-        database.close();
+        //database.close();
 
     }
 
@@ -1348,7 +1348,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return orderDetailsList;
     }
 
@@ -1406,7 +1406,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return orderDetailsList;
     }
 
@@ -1456,7 +1456,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return orderDetailsList;
     }
 
@@ -1491,7 +1491,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
 
 
         return total_price;
@@ -1527,7 +1527,7 @@ public class DatabaseAccess {
             total_cost = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
 
         return total_cost;
     }
@@ -1539,7 +1539,7 @@ public class DatabaseAccess {
 
         long check = database.delete("product_cart", "cart_id=?", new String[]{id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -1577,7 +1577,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -1590,7 +1590,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return itemCount;
     }
 
@@ -1603,7 +1603,7 @@ public class DatabaseAccess {
         values.put("product_qty", qty);
 
         long check = database.update("product_cart", values, "cart_id=?", new String[]{id});
-        database.close();
+        //database.close();
 
     }
 
@@ -1623,7 +1623,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
         return product_name;
     }
 
@@ -1643,7 +1643,7 @@ public class DatabaseAccess {
 
             } while (cursor.moveToNext());
         }
-        database.close();
+        //database.close();
         cursor.close();
         return product_Tax;
     }
@@ -1671,7 +1671,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return currency;
     }
 
@@ -1691,7 +1691,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
 
-        database.close();
+        //database.close();
         cursor.close();
         return tax;
     }
@@ -1720,7 +1720,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -1743,7 +1743,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -1792,7 +1792,7 @@ public class DatabaseAccess {
             total_discount = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_discount;
     }
 
@@ -1841,7 +1841,7 @@ public class DatabaseAccess {
             total_discount = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_discount;
     }
 
@@ -1891,7 +1891,7 @@ public class DatabaseAccess {
             total_tax = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_tax;
     }
 
@@ -1940,7 +1940,7 @@ public class DatabaseAccess {
             total_tax = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_tax;
     }
 
@@ -1991,7 +1991,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -2042,7 +2042,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -2071,7 +2071,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -2098,7 +2098,7 @@ public class DatabaseAccess {
             total_price = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_price;
     }
 
@@ -2149,7 +2149,7 @@ public class DatabaseAccess {
             total_cost = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_cost;
     }
 
@@ -2200,7 +2200,7 @@ public class DatabaseAccess {
             total_cost = 0;
         }
         cursor.close();
-        database.close();
+        //database.close();
         return total_cost;
     }
 
@@ -2225,7 +2225,7 @@ public class DatabaseAccess {
 
 
         cursor.close();
-        database.close();
+        //database.close();
         return id;
     }
 
@@ -2252,7 +2252,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return customer;
     }
 
@@ -2275,7 +2275,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return order_type;
     }
 
@@ -2298,7 +2298,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return payment_method;
     }
 
@@ -2320,7 +2320,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return payment_method;
     }
 
@@ -2335,7 +2335,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
     }
 
 
@@ -2362,7 +2362,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return customer;
     }
 
@@ -2389,7 +2389,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return customer;
     }
 
@@ -2410,7 +2410,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return shop_info;
     }
 
@@ -2450,7 +2450,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2488,7 +2488,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return map;
     }
 
@@ -2497,7 +2497,7 @@ public class DatabaseAccess {
         boolean exist = cursor.moveToFirst();
         Utils.addLog("datadata_exist", String.valueOf(exist));
         cursor.close();
-        database.close();
+        //database.close();
         return exist;
     }
 
@@ -2532,7 +2532,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2565,7 +2565,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2592,7 +2592,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2615,7 +2615,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return product_category;
     }
@@ -2640,7 +2640,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return product_category;
     }
@@ -2666,7 +2666,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return payment_method;
     }
@@ -2690,7 +2690,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return payment_method;
     }
@@ -2714,7 +2714,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return unit;
     }
@@ -2738,7 +2738,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return product_suppliers;
     }
@@ -2762,7 +2762,7 @@ public class DatabaseAccess {
         }
 
         cursor.close();
-        database.close();
+        //database.close();
 
         return product_weight_unit;
     }
@@ -2787,7 +2787,7 @@ public class DatabaseAccess {
                 product.add(map);
             } while (cursor.moveToNext());
         }
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2824,7 +2824,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return product;
     }
 
@@ -2851,7 +2851,7 @@ public class DatabaseAccess {
 
             long check = database.insert("cart", null, values);
 
-            database.close();
+            //database.close();
 
 
             //if data insert success, its return 1, if failed return -1
@@ -2886,7 +2886,7 @@ public class DatabaseAccess {
                 supplier.add(map);
             } while (cursor.moveToNext());
         }
-        database.close();
+        //database.close();
         return supplier;
     }
 
@@ -2911,7 +2911,7 @@ public class DatabaseAccess {
         if (cursor != null) {
             cursor.close();
         }
-        database.close();
+        //database.close();
         return configuration;
     }
 
@@ -2926,7 +2926,7 @@ public class DatabaseAccess {
         values.put("merchant_tax_number", registrationResponseDto.getMerchant().getVATNumber());
 
         long check = database.insert("configuration", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -2945,7 +2945,7 @@ public class DatabaseAccess {
         values.put("body", body);
 
         long check = database.insertOrThrow("crash_report", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -2970,7 +2970,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return reports;
     }
 
@@ -2978,7 +2978,7 @@ public class DatabaseAccess {
     public void deleteReportRows() {
         SQLiteStatement result = database.compileStatement("DELETE FROM crash_report");
         result.execute();
-        database.close();
+        //database.close();
     }
     @SuppressLint("Range")
     public Boolean addRequestTracking(String ecr,String device_id,String api_name,String url,String headers,String body,String response) {
@@ -2994,8 +2994,9 @@ public class DatabaseAccess {
         values.put("request_body", body);
         values.put("response", response);
 
-        long check = database.insertOrThrow("request_tracking", null, values);
-        database.close();
+        long check = database.insert("request_tracking", null, values);
+        Utils.addLog("datadata_requestTrack",check + "     " + ecr + "    "+url);
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -3022,7 +3023,7 @@ public class DatabaseAccess {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        database.close();
+        //database.close();
         return reports;
     }
 
@@ -3030,7 +3031,7 @@ public class DatabaseAccess {
     public void deleteRequestTrackingRows() {
         SQLiteStatement result = database.compileStatement("DELETE FROM request_tracking");
         result.execute();
-        database.close();
+        //database.close();
     }
     @SuppressLint("Range")
     public Boolean addConfiguration(String ecr_code, String merchant_id, String merchant_logo, String merchant_tax_number, String invoiceMerchantId) {
@@ -3044,7 +3045,7 @@ public class DatabaseAccess {
         values.put("merchant_tax_number", merchant_tax_number);
 
         long check = database.insert("configuration", null, values);
-        database.close();
+        //database.close();
 
         //if data insert success, its return 1, if failed return -1
         return check != -1;
@@ -3072,7 +3073,7 @@ public class DatabaseAccess {
         if (cursor != null) {
             cursor.close();
         }
-        database.close();
+        //database.close();
         try {
             sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US, "%010d", nextValue);
             sequenceMap.put("sequence", sequence);
@@ -3090,7 +3091,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
         values.put("current_value", nextValue);
         long check = database.update("sequence_text", values, "id=? ", new String[]{String.valueOf(sequenceId)});
-        database.close();
+        //database.close();
         return check != -1;
     }
 
@@ -3101,7 +3102,7 @@ public class DatabaseAccess {
 
         long check = database.delete("customers", "customer_id=?", new String[]{customer_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3114,7 +3115,7 @@ public class DatabaseAccess {
 
         long check = database.delete("product_category", "category_id=?", new String[]{category_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3127,7 +3128,7 @@ public class DatabaseAccess {
 
         long check = database.delete("payment_method", "payment_method_id=?", new String[]{payment_method_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3139,7 +3140,7 @@ public class DatabaseAccess {
 
 
         long check = database.delete("order_type", "order_type_id=?", new String[]{typeId});
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3150,7 +3151,7 @@ public class DatabaseAccess {
     public boolean deleteUnit(String unitId) {
 
         long check = database.delete("product_weight", "weight_id=?", new String[]{unitId});
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3168,7 +3169,7 @@ public class DatabaseAccess {
         database.update(Constant.orderDetails, contentValues, "invoice_id=?", new String[]{invoiceId});
 
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3182,7 +3183,7 @@ public class DatabaseAccess {
         long check = database.delete("products", "product_id=?", new String[]{product_id});
         long check2 = database.delete("product_cart", "product_id=?", new String[]{product_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3195,7 +3196,7 @@ public class DatabaseAccess {
 
         long check = database.delete("expense", "expense_id=?", new String[]{expense_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3208,7 +3209,7 @@ public class DatabaseAccess {
 
         long check = database.delete("suppliers", "suppliers_id=?", new String[]{customer_id});
 
-        database.close();
+        //database.close();
 
         return check == 1;
 
@@ -3218,7 +3219,7 @@ public class DatabaseAccess {
         ContentValues values = new ContentValues();
         values.put("qr_code", qrCodeBase64);
         database.update("order_list", values, "invoice_id=? ", new String[]{orderId});
-        database.close();
+        //database.close();
     }
 
     public void addDemoConfiguration() {
@@ -3228,7 +3229,7 @@ public class DatabaseAccess {
         values.put("merchant_logo", "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");
         values.put("merchant_tax_number", "300000434710003");
         database.insert("configuration", null, values);
-        database.close();
+        //database.close();
     }
 
     public void addShop(RegistrationResponseDto registrationResponseDto, DatabaseAccess databaseAccess) {
@@ -3262,6 +3263,6 @@ public class DatabaseAccess {
     public void deleteShopInfo() {
         SQLiteStatement result = database.compileStatement("DELETE FROM shop");
         result.execute();
-        database.close();
+        //database.close();
     }
 }

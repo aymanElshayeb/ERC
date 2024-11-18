@@ -135,9 +135,9 @@ public class RegistrationWorker extends Worker {
                 }
                 String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
                 returnedObj.put("token",".......");
-                Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),returnedObj.toString());
-                databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber,invoiceMerchantId);
                 databaseAccess.open();
+                databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber,invoiceMerchantId);
+                Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),returnedObj.toString());
                 return Result.success(outputData);
             } else {
                 Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),code+"\n"+"Failed to register device");

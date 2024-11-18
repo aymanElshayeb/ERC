@@ -13,8 +13,12 @@ import androidx.work.WorkerParameters;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -73,21 +77,31 @@ public class UploadWorker extends Worker {
                 .post(requestBody)
                 .headers(headers)
                 .build();
+        JSONObject headersJson = new JSONObject();
+        try {
+            headersJson.put("Authorization", Collections.singletonList("......"));
+            headersJson.put("apikey",Collections.singletonList("......"));
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("ecrCode", ecrCode);
+        } catch (JSONException e) {
+            addToDatabase(e,"productImageSize");
+        }
+
         Data outputData = new Data.Builder().putString("Authorization", authorization).build();
         // Step 3: Execute the request and handle the response
         try (Response response = client.newCall(request).execute()) {
             code=response.code();
             if (response.isSuccessful()) {
                 assert response.body() != null;
-                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code + "\n" + response.body().string());
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "\n" + response.body().string());
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(),code+ "\n" + response.body().string());
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + response.body().string());
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
         } catch (IOException e) {
-            Utils.addRequestTracking(uri,"UploadWorker",headers.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
+            Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
 
             addToDatabase(e,"uploadWorkerApi-cannot-call-request");
             e.printStackTrace();
