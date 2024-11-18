@@ -119,21 +119,25 @@ public class RegistrationWorker extends Worker {
                 String merchantId = returnedObj.getJSONObject("merchant").getString("merchantId");
                 String invoiceMerchantId = returnedObj.getJSONObject("merchant").getString("invoiceMerchantId");
                 String logo = returnedObj.getJSONObject("merchant").has("logo") ? returnedObj.getJSONObject("merchant").getString("logo") : "";
-                if (!returnedObj.getJSONObject("merchant").has("VATNumber")) {
+                String vatNumber = returnedObj.getJSONObject("merchant").getString("VATNumber");
+
+                if (vatNumber.isEmpty()) {
                     outputData= new Data.Builder().
                             putString("Authorization", authorization).
                             putString("ecrCode", returnedObj.getString("ecrCode")).
                             putBoolean("vatNumberExist",false).
                             build();
+                    Utils.addLog("datadata_reg",code+" false");
                 }else{
                     outputData= new Data.Builder().
                             putString("Authorization", authorization).
                             putString("ecrCode", returnedObj.getString("ecrCode")).
                             putBoolean("vatNumberExist",true).
                             build();
+                    Utils.addLog("datadata_reg",code+" true");
                 }
-                String vatNumber = returnedObj.getJSONObject("merchant").has("VATNumber") ? returnedObj.getJSONObject("merchant").getString("VATNumber") : "";
                 returnedObj.put("token",".......");
+
                 databaseAccess.open();
                 databaseAccess.addConfiguration(ecr, merchantId, logo, vatNumber,invoiceMerchantId);
                 Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),returnedObj.toString());
