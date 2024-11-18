@@ -94,8 +94,7 @@ public class RegistrationWorker extends Worker {
             code= response.code();
             if (response.isSuccessful()) {
                 JSONObject responseBody = new JSONObject(response.body().string());
-                int code = responseBody.getInt("code");
-
+                code = responseBody.getInt("code");
 
                 if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000004")) {
                     Utils.addRequestTracking(urlString,"RegisterWorker",headersJson.toString(),json.toString(),code+"\n"+"E0000004 : Can't register with non admin user");

@@ -79,6 +79,7 @@ public class ProductImagesSizeWorker extends Worker {
                 //ProductImagesResponseDto productImagesResponseDto=result.getData().getReturnedObj().get(0);
                 assert response.body() != null;
                 responseBody = new JSONObject(response.body().string());
+                code = responseBody.getInt("code");
                 Utils.addLog("datadata_worker", responseBody.toString());
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
                 long imagesSize = returnedObj.getLong("imagesSize");

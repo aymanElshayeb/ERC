@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class CheckCompaniesViewModel extends ViewModel {
@@ -36,7 +37,16 @@ public class CheckCompaniesViewModel extends ViewModel {
     }
 
     public void start(String email) {
-        AndroidNetworking.get(CHECK_COMPANY_URL + "?email=" + email)
+        String url=CHECK_COMPANY_URL + "?email=" + email;
+        JSONObject headersJson = new JSONObject();
+        try {
+            headersJson.put("apikey", Collections.singletonList("......"));
+            headersJson.put("tenantId", Collections.singletonList("......"));
+        } catch (JSONException e) {
+            addToDatabase(e,"CheckCompanyViewModel");
+            e.printStackTrace();
+        }
+        AndroidNetworking.get(url)
                 .addHeaders("apikey", SharedPrefUtils.getApiKey())
                 .addHeaders("Authorization", SharedPrefUtils.getAuthorization())
                 .setTag("GET INVOICE DETAILS")
@@ -45,19 +55,23 @@ public class CheckCompaniesViewModel extends ViewModel {
                     @Override
                     public void onResponse(JSONObject response) {
                         Utils.addLog("datadata", response.toString());
+                        int code=-5;
                         try {
-                            LinkedList<CompanyModel> list = new LinkedList<>();
-                            if (response.getInt("code") == 200) {
+                            code=response.getInt("code");
 
+                            LinkedList<CompanyModel> list = new LinkedList<>();
+                            if (code == 200) {
                                 JSONArray array = response.getJSONObject("data").getJSONArray("returnedObj");
                                 for (int i = 0; i < array.length(); i++) {
                                     list.addLast(new CompanyModel(array.getJSONObject(i).toString()));
                                 }
-                            } else if (response.getInt("code") == 404) {
-
+                                Utils.addRequestTracking(url,"CheckCompanyViewModel",headersJson.toString(),new JSONObject().toString(),code + "\n" + response);
+                            } else {
+                                Utils.addRequestTracking(url,"UploadWorker",headersJson.toString(),new JSONObject().toString(),code+ "\n" + response);
                             }
                             liveData.postValue(list);
                         } catch (JSONException e) {
+                            Utils.addRequestTracking(url,"UploadWorker",headersJson.toString(),new JSONObject().toString(), code+ "\n" +e.getMessage());
                             addToDatabase(e,"checkCompanyViewModel-read-response");
                             e.printStackTrace();
                         }

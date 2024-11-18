@@ -83,6 +83,8 @@ public class LoginWithServerWorker extends Worker {
             code= response.code();
             if (response.isSuccessful()) {
                 assert response.body() != null;
+                JSONObject responseBody = new JSONObject(response.body().string());
+                code = responseBody.getInt("code");
                 Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),response.body().string());
                 String authorization = response.header("Authorization");
                 Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
@@ -92,7 +94,7 @@ public class LoginWithServerWorker extends Worker {
                 Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
                 return Result.failure(outputData);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+e.getMessage());
             addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();

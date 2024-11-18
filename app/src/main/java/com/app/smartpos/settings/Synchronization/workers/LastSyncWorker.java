@@ -67,6 +67,7 @@ public class LastSyncWorker extends Worker {
             if (response.isSuccessful()) {
                 assert response.body() != null;
                 responseBody = new JSONObject(response.body().string());
+                code = responseBody.getInt("code");
                 JSONObject returnedObj = responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0);
                 String invoiceBusinessId = returnedObj.getString("invoiceBusinessId");
                 String shiftBusinessId = returnedObj.getString("shiftBusinessId");
