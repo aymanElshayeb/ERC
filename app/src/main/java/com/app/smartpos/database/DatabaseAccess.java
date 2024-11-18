@@ -3052,6 +3052,33 @@ public class DatabaseAccess {
     }
 
     @SuppressLint("Range")
+    public String getCurrentSequence(int sequenceId, String ecrCode) {
+        HashMap<String, String> sequenceMap = new HashMap<>();
+        String sequence = "";
+        Cursor cursor = null;
+        int nextValue = -1;
+        String prefix = "";
+        try {
+            cursor = database.rawQuery("SELECT * FROM sequence_text WHERE id=" + sequenceId, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                nextValue = Integer.parseInt(cursor.getString(cursor.getColumnIndex("current_value")));
+                prefix = cursor.getString(cursor.getColumnIndex("type_perfix"));
+                Utils.addLog("datadata_seq", String.valueOf(nextValue));
+            }
+        } catch (Exception e) {
+            addToDatabase(e,"error-in-get-sequence-function-select-all-sequence_text-databaseAccess");
+
+            e.printStackTrace();
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        //database.close();
+        sequence = ecrCode + "-001-" + prefix + String.format(java.util.Locale.US, "%010d", nextValue);
+
+        return sequence;
+    }
+    @SuppressLint("Range")
     public HashMap<String, String> getSequence(int sequenceId, String ecrCode) {
         HashMap<String, String> sequenceMap = new HashMap<>();
         String sequence = "";

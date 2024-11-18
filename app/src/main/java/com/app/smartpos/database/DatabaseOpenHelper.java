@@ -211,7 +211,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    public void exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
+    public boolean exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
         Utils.addLog("datadata_base", newDbFilePath);
@@ -220,15 +220,33 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
         SQLiteDatabase existingDb = getWritableDatabase();
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
+
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+        String ecr_code=databaseAccess.getConfiguration().get("ecr_code");
+        String invoiceSequence=databaseAccess.getCurrentSequence(1,ecr_code);
+        String shiftSequence=databaseAccess.getCurrentSequence(2,ecr_code);
+
+        boolean needInvoiceSync=!invoiceSequence.endsWith(lastSync[0]);
+        boolean needShiftSync=!shiftSequence.endsWith(lastSync[1]);
+
+        Utils.addLog("WorkerWrapper_invoice",invoiceSequence+" "+lastSync[0]);
+        Utils.addLog("WorkerWrapper_shift",shiftSequence+" "+lastSync[1]);
+        Utils.addLog("WorkerWrapper_result",needInvoiceSync+" "+needShiftSync);
         try {
             newDb.beginTransaction();
-            exportInvoice(existingDb, newDb, lastSync[0]);
-            exportShift(existingDb, newDb, lastSync[1]);
+            if(needInvoiceSync) {
+                exportInvoice(existingDb, newDb, lastSync[0]);
+            }
+            if(needShiftSync) {
+                exportShift(existingDb, newDb, lastSync[1]);
+            }
+
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
             newDb.close();
         }
+        return needInvoiceSync || needShiftSync;
     }
 
     private void exportRequestTracking(SQLiteDatabase existingDb, SQLiteDatabase newDb) {
