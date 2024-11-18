@@ -5,6 +5,7 @@ import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDa
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -72,12 +73,12 @@ public class OrderBitmap extends BaseActivity {
         databaseAccess.open();
         orderList = databaseAccess.getOrderListByOrderId(invoiceId);
         try {
-//            if (!configuration.get("merchant_logo").isEmpty()) {
-//                byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-//                Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//                logo = resizeBitmap(logo);
-//                bitmaps.add(new PrinterModel(0, logo));
-//            }
+            if (!configuration.get("merchant_logo").isEmpty()) {
+                byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
+                Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                logo = resizeBitmap(logo);
+                bitmaps.add(new PrinterModel(0, logo));
+            }
             printShopName(shop.get("shop_name"));
             printInvoiceMerchantId(invoiceMerchantId);
             if(!merchantTaxNumber.isEmpty()) {
