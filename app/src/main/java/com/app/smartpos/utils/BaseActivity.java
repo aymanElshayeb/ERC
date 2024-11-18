@@ -63,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         resetTitles();
         connectivityManager = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
+        checkConnectivity();
     }
 
     protected void resetTitles() {
