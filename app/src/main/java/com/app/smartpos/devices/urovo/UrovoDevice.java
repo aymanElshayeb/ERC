@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.PrinterHandler;
 
 import java.util.Base64;
 
@@ -38,9 +39,9 @@ public class UrovoDevice implements Device {
     }
 
     @Override
-    public boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         UrovoPrinter urovoPrinter = new UrovoPrinter();
-        return urovoPrinter.printReceipt(bitmap);
+        urovoPrinter.printReceipt(bitmap,printerHandler);
     }
 
     @Override

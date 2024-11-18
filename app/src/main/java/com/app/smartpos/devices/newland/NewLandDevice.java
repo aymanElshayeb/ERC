@@ -8,6 +8,7 @@ import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.PrinterHandler;
 
 public class NewLandDevice implements Device {
     @Override
@@ -41,9 +42,9 @@ public class NewLandDevice implements Device {
     }
 
     @Override
-    public boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
-        return newLandPrinter.printReceipt(bitmap);
+        newLandPrinter.printReceipt(bitmap,printerHandler);
     }
 
     @Override

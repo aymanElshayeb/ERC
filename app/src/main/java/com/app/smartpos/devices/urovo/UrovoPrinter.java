@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
@@ -36,7 +37,7 @@ public class UrovoPrinter extends BaseActivity {
         mPrintManager = PrinterProviderImpl.getInstance(UrovoPrinter.this);
     }
 
-    public boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler handler) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(UrovoPrinter.this);
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
@@ -45,13 +46,13 @@ public class UrovoPrinter extends BaseActivity {
             mPrintManager.initPrint();
             mPrintManager.addBitmap(bitmap, 0);
             int status = mPrintManager.startPrint();
-            success = handlePrintStatus(status);
+            handler.printStatus(handlePrintStatus(status));
         } catch (Exception e) {
             addToDatabase(e,"error-in-printInvoice-urovoPrinter");
             e.printStackTrace();
         }
         mPrintManager.close();
-        return success;
+
     }
 
     private boolean handlePrintStatus(int status) {

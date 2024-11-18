@@ -3,6 +3,8 @@ package com.app.smartpos.devices.DeviceFactory;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
+import com.app.smartpos.devices.PrinterHandler;
+
 public interface Device {
     Intent pay(double total);
 
@@ -12,7 +14,7 @@ public interface Device {
 
     String amountString();
 
-    boolean printReceipt(Bitmap bitmap);
+    void printReceipt(Bitmap bitmap, PrinterHandler printerHandler);
 
     boolean printZReport(Bitmap bitmap);
 

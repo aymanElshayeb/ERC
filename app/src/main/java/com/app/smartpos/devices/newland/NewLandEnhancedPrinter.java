@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.devices.urovo.UrovoPrinterStatus;
 import com.app.smartpos.orders.PrinterModel;
 import com.app.smartpos.utils.BaseActivity;
@@ -52,7 +53,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     }
 
 
-    public Boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         Map<String, Bitmap> bitmapResult = new HashMap<>();
         String bitmapName1 = "logo";
         bitmapResult.put(bitmapName1, bitmap);
@@ -62,8 +63,9 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             @Override
             public void onSuccess() {
                 Utils.addLog("datadata", "success");
-                success =true;
+
                 new Handler(Looper.getMainLooper()).post(() ->Toast.makeText(MultiLanguageApp.getApp(), MultiLanguageApp.getApp().getString(R.string.print_successful), Toast.LENGTH_SHORT).show());
+                printerHandler.printStatus(true);
             }
 
             @Override
@@ -72,10 +74,9 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                 assert printerStatus != null;
                 handlePrintStatus(printerStatus.getKey());
                 Utils.addLog("datadata_error", "error " + errorCode + " " + s);
-                success =false;
+                printerHandler.printStatus(false);
             }
         });
-        return success;
     }
 
     private void handlePrintStatus(String status) {

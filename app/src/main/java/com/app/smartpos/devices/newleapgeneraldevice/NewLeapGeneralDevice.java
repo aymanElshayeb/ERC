@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.devices.newland.NewLandEnhancedPrinter;
 import com.app.smartpos.devices.urovo.UrovoPrinter;
 
@@ -39,9 +40,9 @@ public class NewLeapGeneralDevice implements Device {
     }
 
     @Override
-    public boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         NewLandEnhancedPrinter newLandEnhancedPrinter = new NewLandEnhancedPrinter();
-        return newLandEnhancedPrinter.printReceipt(bitmap);
+        newLandEnhancedPrinter.printReceipt(bitmap,printerHandler);
     }
 
     @Override

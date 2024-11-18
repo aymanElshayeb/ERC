@@ -27,6 +27,7 @@ import com.app.smartpos.devices.DeviceFactory.Device;
 import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.printing.PrinterData;
@@ -76,15 +77,20 @@ public class SuccessfulPayment extends WorkerActivity {
             Device device = DeviceFactory.getDevice();
             try {
                 Bitmap newBitmap = Bitmap.createBitmap(printerData.getBitmap());
-                boolean success=device.printReceipt(newBitmap);
-                if(success){
-                    databaseAccess.open();
-                    databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
-                    Intent intent = new Intent(this, NewHomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
+                device.printReceipt(newBitmap, new PrinterHandler() {
+                    @Override
+                    public void printStatus(boolean success) {
+                        if(success){
+                            databaseAccess.open();
+                            databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                            Intent intent = new Intent(SuccessfulPayment.this, NewHomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 addToDatabase(e,getString(R.string.no_printer_found)+"-successfulPaymentScreen");
                 e.printStackTrace();
