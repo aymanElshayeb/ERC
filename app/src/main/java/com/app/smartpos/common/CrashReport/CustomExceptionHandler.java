@@ -37,15 +37,23 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
     static public void addToDatabase(Throwable e,String toast){
         databaseAccess.open();
         HashMap<String,String> configuration = databaseAccess.getConfiguration();
-        StackTraceElement[] elements = e.getStackTrace();
         StringBuilder body= new StringBuilder();
-        int maxLength = Math.min(elements.length, 8);
-        for (int i=0;i<maxLength;i++) {
-            body.append(elements[i].toString()).append("\n");
+        String errorMessage = "";
+        if(e != null) {
+            StackTraceElement[] elements = e.getStackTrace();
+            int maxLength = Math.min(elements.length, 8);
+            for (int i=0;i<maxLength;i++) {
+                body.append(elements[i].toString()).append("\n");
+            }
+            errorMessage = e.getMessage();
+        }
+        else{
+            body.append("");
+            errorMessage = "";
         }
         Utils.addLog("datadata_crash", body.toString());
         databaseAccess.open();
-        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),Utils.getDeviceId(context),toast, body.toString(),e.getMessage());
+        boolean flag=databaseAccess.addReport(configuration.get("ecr_code"),Utils.getDeviceId(context),toast, body.toString(),errorMessage);
         Utils.addLog("datadata_crash", ""+flag);
     }
 }

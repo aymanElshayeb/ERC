@@ -29,13 +29,14 @@ public class AuthActivity extends WorkerActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-        loadingCl = findViewById(R.id.loading_cl);
 //        getWindow().setFlags(
 //                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 //        );
 
         setContentView(R.layout.activity_auth);
+        loadingCl = findViewById(R.id.loading_cl);
+
 
         if (!SharedPrefUtils.isRegistered(this)) {
             Intent intent = new Intent(AuthActivity.this, Registration.class);

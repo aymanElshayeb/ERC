@@ -28,6 +28,8 @@ public class Constant {
     public static final String DOWNLOAD_FILE_NAME = "download.db";
     public static final String PRODUCT_IMAGES_FILE_NAME = "ecrcode_upload.db";
     public static final String UPLOAD_FILE_NAME = "upload.db";
+    public static final String UPLOAD_REQUEST_TRACKING_FILE_NAME = "upload_request_tracking.db";
+    public static final String UPLOAD_ERROR_TRACKING_FILE_NAME = "upload_error_tracking.db";
     public static final String UPLOAD_FILE_NAME_GZIP = "upload.db.gz";
 
 

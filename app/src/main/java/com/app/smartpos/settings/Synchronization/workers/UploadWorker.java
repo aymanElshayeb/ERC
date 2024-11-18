@@ -93,14 +93,12 @@ public class UploadWorker extends Worker {
         try (Response response = client.newCall(request).execute()) {
             code=response.code();
             if (response.isSuccessful()) {
-                JSONObject responseBody = new JSONObject(response.body().string());
-                code = responseBody.getInt("code");
-                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "\n" + responseBody);
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "");
                 if(code!=200)
                     return Result.failure();
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + response.body().string());
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "");
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
@@ -110,11 +108,6 @@ public class UploadWorker extends Worker {
             addToDatabase(e,"uploadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
-        } catch (JSONException e) {
-            Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
-            addToDatabase(e,"uploadWorkerApi-cannot-call-request");
-            e.printStackTrace();
-            return Result.failure();
         }
     }
 }

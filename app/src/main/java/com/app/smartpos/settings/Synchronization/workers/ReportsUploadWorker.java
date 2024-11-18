@@ -86,19 +86,21 @@ public class ReportsUploadWorker extends Worker {
             if (response.isSuccessful()) {
                 JSONObject responseBody = new JSONObject(response.body().string());
                 code = responseBody.getInt("code");
-                if(code!=200)
+                if(code!=200){
+                    if(uri.contains("request"))
+                        addToDatabase(null,"Can't track requests\n" + responseBody);
                     return Result.failure();
+                }
                 return Result.success(outputData);
             } else {
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Utils.addRequestTracking(uri,"ReportsUploadWorker",headersJson.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
+            addToDatabase(e,"reportsUploadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Result.failure();
         }
     }
 }

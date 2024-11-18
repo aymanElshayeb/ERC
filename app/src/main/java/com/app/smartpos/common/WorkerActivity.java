@@ -11,7 +11,9 @@ import static com.app.smartpos.Constant.PRODUCT_IMAGES_FILE_NAME_GZIP;
 import static com.app.smartpos.Constant.PRODUCT_IMAGES_SIZE;
 import static com.app.smartpos.Constant.REQUEST_TRACKING_SYNC_URL;
 import static com.app.smartpos.Constant.SYNC_URL;
+import static com.app.smartpos.Constant.UPLOAD_ERROR_TRACKING_FILE_NAME;
 import static com.app.smartpos.Constant.UPLOAD_FILE_NAME;
+import static com.app.smartpos.Constant.UPLOAD_REQUEST_TRACKING_FILE_NAME;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -350,7 +352,7 @@ public class WorkerActivity extends BaseActivity {
                 build();
 
         Data exportData = new Data.Builder()
-                .putString("fileName", UPLOAD_FILE_NAME)
+                .putString("fileName", UPLOAD_ERROR_TRACKING_FILE_NAME)
                 .build();
         Data uploadInputData = new Data.Builder().
                 putString("url", CRASH_REPORT_SYNC_URL).
@@ -404,7 +406,7 @@ public class WorkerActivity extends BaseActivity {
                 build();
 
         Data exportData = new Data.Builder()
-                .putString("fileName", UPLOAD_FILE_NAME)
+                .putString("fileName", UPLOAD_REQUEST_TRACKING_FILE_NAME)
                 .build();
         Data uploadInputData = new Data.Builder().
                 putString("url", REQUEST_TRACKING_SYNC_URL).
@@ -647,14 +649,15 @@ public class WorkerActivity extends BaseActivity {
 
     public void sendReport() {
         databaseAccess.open();
-        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
-        if (!reports.isEmpty()) {
-            enqueueUploadCrashReportWorkers();
-        }
-        databaseAccess.open();
         ArrayList<HashMap<String, String>> requestTrackingReports = databaseAccess.getRequestTracking();
         if (!requestTrackingReports.isEmpty()) {
             enqueueUploadRequestTrackingWorkers();
+        }
+
+        databaseAccess.open();
+        ArrayList<HashMap<String, String>> reports = databaseAccess.getReports();
+        if (!reports.isEmpty()) {
+            enqueueUploadCrashReportWorkers();
         }
     }
 }
