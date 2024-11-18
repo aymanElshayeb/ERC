@@ -639,9 +639,8 @@ public class WorkerActivity extends BaseActivity {
         databaseAccess.open();
         HashMap<String, String> configuration = databaseAccess.getConfiguration();
         if(!configuration.isEmpty() && isConnected()) {
-
-            sendReport();
             enqueueUploadWorkers(false);
+            sendReport();
         }
     }
 

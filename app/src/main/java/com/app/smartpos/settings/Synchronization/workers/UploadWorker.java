@@ -27,6 +27,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class UploadWorker extends Worker {
 
@@ -91,12 +92,16 @@ public class UploadWorker extends Worker {
         // Step 3: Execute the request and handle the response
         try (Response response = client.newCall(request).execute()) {
             code=response.code();
+            assert response.body() != null;
+            JSONObject responseBody = new JSONObject(response.body().string());
             if (response.isSuccessful()) {
-                assert response.body() != null;
-                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "\n" + response.body().string());
+                code = responseBody.getInt("code");
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code + "\n" + responseBody);
+                if(code!=200)
+                    return Result.failure();
                 return Result.success(outputData);
             } else {
-                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + response.body().string());
+                Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(),code+ "\n" + responseBody);
 
                 return Result.failure(); // Retry the work if the server returns an error
             }
@@ -106,6 +111,11 @@ public class UploadWorker extends Worker {
             addToDatabase(e,"uploadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure(); // Return failure if there is an exception
+        } catch (JSONException e) {
+            Utils.addRequestTracking(uri,"UploadWorker",headersJson.toString(),requestBody.toString(), code+ "\n" +e.getMessage());
+            addToDatabase(e,"uploadWorkerApi-cannot-call-request");
+            e.printStackTrace();
+            return Result.failure();
         }
     }
 }
