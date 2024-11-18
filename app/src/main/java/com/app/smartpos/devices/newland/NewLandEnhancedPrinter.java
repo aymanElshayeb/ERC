@@ -43,6 +43,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     String line = "--------------------------------------------";
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
     MultiLanguageApp activity;
+    Boolean success = false;
 
     public NewLandEnhancedPrinter() {
         ModuleManage.getInstance().init();
@@ -57,13 +58,12 @@ public class NewLandEnhancedPrinter extends BaseActivity {
         bitmapResult.put(bitmapName1, bitmap);
         String printDara = "*image c " + bitmap.getWidth() + "*" + (bitmap.getHeight() + 20) + " path:" + bitmapName1 + "\n" +
                 "!hz s\n!asc s\n";
-        final boolean[] error = {false};
         mPrintManager.print(printDara, bitmapResult, new PrintListener() {
             @Override
             public void onSuccess() {
                 Utils.addLog("datadata", "success");
+                success =true;
                 new Handler(Looper.getMainLooper()).post(() ->Toast.makeText(MultiLanguageApp.getApp(), MultiLanguageApp.getApp().getString(R.string.print_successful), Toast.LENGTH_SHORT).show());
-                error[0] =false;
             }
 
             @Override
@@ -72,10 +72,10 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                 assert printerStatus != null;
                 handlePrintStatus(printerStatus.getKey());
                 Utils.addLog("datadata_error", "error " + errorCode + " " + s);
-                error[0] =true;
+                success =false;
             }
         });
-        return error[0];
+        return success;
     }
 
     private void handlePrintStatus(String status) {
