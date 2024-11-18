@@ -5,8 +5,10 @@ import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDa
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
@@ -35,6 +38,7 @@ public class CheckoutOrderDetails extends BaseActivity {
     private ImageView receiptIm;
     private TextView printReceipt;
     private ScrollView scrollView;
+    private ConstraintLayout loadingCl;
 
     PrinterData printerData;
 
@@ -51,6 +55,7 @@ public class CheckoutOrderDetails extends BaseActivity {
         device = DeviceFactory.getDevice();
 
         scrollView = findViewById(R.id.scrollView);
+        loadingCl = findViewById(R.id.loading_cl);
         receiptIm = findViewById(R.id.receipt_im);
         printReceipt = findViewById(R.id.print_receipt_tv);
         TextView noReceipt = findViewById(R.id.no_receipt_tv);
@@ -60,17 +65,22 @@ public class CheckoutOrderDetails extends BaseActivity {
             @Override
             public void onGlobalLayout() {
                 scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                printerData = PrintingHelper.createBitmap(databaseAccess, CheckoutOrderDetails.this, getIntent().getStringExtra("id"), getIntent().getStringExtra("printType"));
-                Utils.addLog("datadata", printerData.toString());
-                Bitmap bitmap = printerData.getBitmap();
-                if (bitmap.getHeight() < scrollView.getHeight()) {
-                    double scale = (double) scrollView.getHeight() / bitmap.getHeight();
-                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * scale), scrollView.getHeight(), false);
-                } else {
-                    //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
-                }
-                receiptIm.setImageBitmap(bitmap);
+                AsyncTask.execute(() -> {
+                    runOnUiThread(() -> {
+                        printerData = PrintingHelper.createBitmap(databaseAccess, CheckoutOrderDetails.this, getIntent().getStringExtra("id"), getIntent().getStringExtra("printType"));
+                        Utils.addLog("datadata", printerData.toString());
+                        final Bitmap[] bitmap = {printerData.getBitmap()};
+                        if (bitmap[0].getHeight() < scrollView.getHeight()) {
+                            double scale = (double) scrollView.getHeight() / bitmap[0].getHeight();
+                            bitmap[0] = Bitmap.createScaledBitmap(bitmap[0], (int) (bitmap[0].getWidth() * scale), scrollView.getHeight(), false);
+                        } else {
+                            //bitmap=Bitmap.createScaledBitmap(bitmap,(int)(scrollView.getWidth()*0.7),bitmap.getHeight(),false);
+                        }
+                        loadingCl.setVisibility(View.GONE);
+                        receiptIm.setImageBitmap(bitmap[0]);
+                    });
 
+                });
 
             }
         });

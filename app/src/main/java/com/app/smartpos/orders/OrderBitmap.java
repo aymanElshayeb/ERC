@@ -469,7 +469,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void footer() {
         Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
-        Bitmap bmp = Bitmap.createBitmap(50, 50, conf); // this creates a MUTABLE bitmap
+        Bitmap bmp = Bitmap.createBitmap(50, 80, conf); // this creates a MUTABLE bitmap
         Canvas canvas = new Canvas(bmp);
         canvas.drawColor(Color.WHITE);
         bitmaps.add(new PrinterModel(0, bmp));
