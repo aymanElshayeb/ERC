@@ -69,7 +69,7 @@
                                     android:layout_marginTop="25dp"
                                     android:layout_weight="1"
                                     android:fontFamily="@font/sailec_regular"
-                                    android:text="@string/sync_data"
+                                    android:text="@string/download_data"
                                     android:textColor="#bcbcbc"
                                     android:textSize="18sp" />
 

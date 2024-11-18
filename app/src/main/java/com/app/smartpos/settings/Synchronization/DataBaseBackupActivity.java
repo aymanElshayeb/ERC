@@ -57,7 +57,7 @@ public class DataBaseBackupActivity extends WorkerActivity {
                 workerType = 1;
                 loadingLl.setVisibility(View.VISIBLE);
                 //enqueueUploadWorkers();
-                syncDownloadAndUploadWorker();
+                enqueueDownloadAndReadWorkers();
             }else {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
