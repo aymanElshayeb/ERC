@@ -89,29 +89,39 @@ public class LoginFragment extends Fragment {
                 if (map != null) {
                     ((AuthActivity)getActivity()).showHideLoading(true);
                     if (((AuthActivity) requireActivity()).isConnected()) {
-                        AsyncTask.execute(() -> {
-                            ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
-                        });
+                        ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
+
                     } else {
                         loginBtn.setEnabled(false);
-                        Hasher hasher = new Hasher();
-                        boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
-                        //Utils.addLog("datadata",map.toString());
-                        if (isMatch) {
-                            SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
-                            SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
-                            SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
-                            SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
-                            SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
-                            SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
-                            Intent intent = new Intent(context, NewHomeActivity.class);
-                            startActivity(intent);
-                            requireActivity().finish();
-                        } else {
-                            loginBtn.setEnabled(true);
-                            ((AuthActivity)getActivity()).showHideLoading(false);
-                            Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
-                        }
+                        AsyncTask.execute(() -> {
+                            Hasher hasher = new Hasher();
+                            boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
+                            //Utils.addLog("datadata",map.toString());
+                            if (isMatch) {
+
+                                requireActivity().runOnUiThread(() -> {
+                                    SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
+                                    SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
+                                    SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
+                                    SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
+                                    SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
+                                    SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
+                                    loginBtn.setEnabled(true);
+                                    ((AuthActivity)getActivity()).showHideLoading(false);
+                                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                                });
+                                Intent intent = new Intent(context, NewHomeActivity.class);
+                                startActivity(intent);
+                                requireActivity().finish();
+                            } else {
+                                requireActivity().runOnUiThread(() -> {
+                                    loginBtn.setEnabled(true);
+                                    ((AuthActivity)getActivity()).showHideLoading(false);
+                                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                                });
+
+                            }
+                        });
                     }
                 } else {
                     Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
