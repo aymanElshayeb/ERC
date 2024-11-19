@@ -211,7 +211,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    public boolean exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
+    public boolean exportTablesToNewDatabase(String newDbFilePath, String[] lastSync,boolean fromRefund) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
         Utils.addLog("datadata_base", newDbFilePath);
@@ -246,7 +246,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             newDb.endTransaction();
             newDb.close();
         }
-        return needInvoiceSync || needShiftSync;
+        return needInvoiceSync || needShiftSync || fromRefund;
     }
 
     private void exportRequestTracking(SQLiteDatabase existingDb, SQLiteDatabase newDb) {

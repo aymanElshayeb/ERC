@@ -331,6 +331,7 @@ public class DownloadDataDialog extends DialogFragment {
                 build();
         Data exportData = new Data.Builder()
                 .putString("fileName", UPLOAD_FILE_NAME)
+                .putBoolean("fromRefund", true)
                 .build();
         Data uploadInputData = new Data.Builder().
                 putString("url", SYNC_URL).

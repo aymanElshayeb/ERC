@@ -28,12 +28,13 @@ public class ExportFileWorker extends Worker {
         String fileName = getInputData().getString("fileName");
         String invoiceLastSync = getInputData().getString("invoiceBusinessId");
         String shiftLastSync = getInputData().getString("shiftBusinessId");
+        boolean fromRefund = getInputData().getBoolean("fromRefund",false);
         String[] lastSync = new String[]{invoiceLastSync, shiftLastSync};
         boolean needSync;
         try {
             DatabaseOpenHelper db = new DatabaseOpenHelper(getApplicationContext());
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-            needSync = db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath() + "/" + fileName, lastSync);
+            needSync = db.exportTablesToNewDatabase(getApplicationContext().getCacheDir().getAbsolutePath() + "/" + fileName, lastSync,fromRefund);
         } catch (Exception e) {
             addToDatabase(e,"doWork-exportFileWorker");
             e.printStackTrace();
