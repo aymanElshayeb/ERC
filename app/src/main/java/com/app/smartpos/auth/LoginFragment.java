@@ -108,7 +108,6 @@ public class LoginFragment extends Fragment {
                                     SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
                                     loginBtn.setEnabled(true);
                                     ((AuthActivity)getActivity()).showHideLoading(false);
-                                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
                                 });
                                 Intent intent = new Intent(context, NewHomeActivity.class);
                                 startActivity(intent);
