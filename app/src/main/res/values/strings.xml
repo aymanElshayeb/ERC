@@ -513,6 +513,7 @@
     <string name="value_added_tax">VAT</string>
     <string name="total_before_tax">Total (exc. VAT)</string>
     <string name="receipt_no">Receipt No</string>
+    <string name="original_receipt_no">Original Receipt No</string>
     <string name="simplified_tax_invoice">Simplified Tax Invoice</string>
     <string name="commercial_registration_number_">CRN</string>
     <string name="tax_number_">VAT Reg. No</string>

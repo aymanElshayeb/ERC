@@ -86,6 +86,8 @@ public class OrderBitmap extends BaseActivity {
             }
             bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
             printReceiptNo(invoiceId);
+            if(orderList.get("original_order_id") != null && !orderList.get("original_order_id").isEmpty())
+                printOriginalReceiptNo(orderList.get("original_order_id"));
             printType(printType);
             printInvoiceBarcode(invoiceId);
 
@@ -108,6 +110,11 @@ public class OrderBitmap extends BaseActivity {
         }
         return createGeneralBitmap();
 
+    }
+
+    private void printOriginalReceiptNo(String originalInvoice) {
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(MultiLanguageApp.getApp().getString(R.string.original_receipt_no))));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(originalInvoice)));
     }
 
     private Bitmap resizeBitmap(Bitmap bitmap){

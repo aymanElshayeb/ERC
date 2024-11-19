@@ -70,15 +70,18 @@ public class RefundWorker extends Worker {
                     JSONObject responseBody = new JSONObject(response.body().string());
                     int code = responseBody.getInt("code");
                     if (code == 200) {
-                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code + "\n" + responseBody);
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
                         GsonUtils gsonUtils = new GsonUtils();
                         outputData.put("refundModel", gsonUtils.serializeToJson(new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString())));
                     } else if (code == 404) {
-                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+"\n"+responseBody);
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
                         outputData.put("refundModel",null);
-                    }
-                    else {
-                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+"\n"+responseBody);
+                    } else if (code == 400 && responseBody.getJSONObject("fault").getString("statusCode").equalsIgnoreCase("E0000007")) {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
+                        outputData.put("refundModel",null);
+                    } else {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
+                        outputData.put("refundModel",null);
                     }
                 } catch (JSONException e) {
                     Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",code+ "\n" +e.getMessage());

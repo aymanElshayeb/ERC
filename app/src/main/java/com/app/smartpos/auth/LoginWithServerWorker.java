@@ -100,7 +100,10 @@ public class LoginWithServerWorker extends Worker {
             Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+e.getMessage());
             addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();
-            return Result.failure();
+            if(email.contains("@"))
+                return Result.failure();
+            else
+                return Result.failure(new Data.Builder().putString("errorMessage","").build());
         }
     }
 

@@ -504,6 +504,7 @@
     <string name="value_added_tax">ضريبة القيمة المضافة</string>
     <string name="total_before_tax">الإجمالي قبل الضريبة</string>
     <string name="receipt_no">رقم الفاتورة</string>
+    <string name="original_receipt_no">رقم الفاتورة الأصلية</string>
     <string name="simplified_tax_invoice">فاتورة ضريبية مبسطة</string>
     <string name="commercial_registration_number_">رقم السجل التجاري</string>
     <string name="tax_number_">الرقم الضريبى</string>
