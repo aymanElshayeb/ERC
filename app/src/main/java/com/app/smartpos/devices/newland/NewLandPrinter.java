@@ -1,4 +1,4 @@
-package com.app.smartpos.orders;
+package com.app.smartpos.devices.newland;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -40,79 +40,6 @@ public class NewLandPrinter extends BaseActivity {
     public NewLandPrinter() {
         ModuleManage.getInstance().init();
         mPrinterModule = ModuleManage.getInstance().getPrinterModule();
-    }
-
-
-    public boolean printReceipt(Context context, String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, String tax, String discount, String currency) {
-        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(NewLandPrinter.this);
-        databaseAccess.open();
-        this.currency = currency;
-
-        configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
-        databaseAccess.open();
-        orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
-        databaseAccess.open();
-        orderList = databaseAccess.getOrderListByOrderId(invoiceId);
-        f = new DecimalFormat();
-        try {
-            printDara = new StringBuffer();
-            //String fontsPath = mPrinterModule.setFont(this, "simsun.ttc");
-
-
-            Map<String, Bitmap> bitmaps = new HashMap<>();
-            byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            String bitmapName1 = "logo";
-
-
-            Bitmap bitmapMerchant = printMerchantId(merchantId);
-            Utils.addLog("datadata_size", bitmapMerchant.getWidth() + " " + bitmapMerchant.getHeight());
-
-            Bitmap bitmap = loadBitmapFromView(decodedByte, bitmapMerchant);
-            bitmaps.put(bitmapName1, bitmap);
-
-            printDara.append("*image c 293*400 path:" + bitmapName1 + "\n");
-            //Set Font Size,small
-            printDara.append("!hz s\n!asc s\n");
-
-
-            printMerchantTaxNumber(merchantTaxNumber);
-            printDara.append("!NLFONT 15 15 3\n*text c Order Date: " + orderDate + " " + orderTime + "\n");
-            printReceiptNo(invoiceId);
-            //mPrintManager.addBitmap(PrintingHelper.createBitmapFromText("فاتورة ضريبية مبسطة"), 100);
-            printInvoiceBarcode(invoiceId);
-            //Todo products ( id, name, price including tax, qty, total including tax
-            printProducts(orderDetailsList);
-            printTotalExcludingTax(priceBeforeTax);
-            printDiscount(discount);
-            printTax(tax);
-            printTotalIncludingTax(priceAfterTax);
-            //Todo total paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("إجمالى المدفوع").toString(), "");
-            //Todo needs to be paid
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الصافى").toString(), "");
-            //Todo remaining
-//        mPrintManager.addTextLeft_Center_Right(PrintingHelper.getTextBundle(), f.format(), handleArabicText("الباقى").toString(), "");
-            printZatcaQrCode(databaseAccess);
-            mPrinterModule.print(printDara.toString(), bitmaps, new PrintListener() {
-                @Override
-                public void onSuccess() {
-                    Utils.addLog("datadata", "done");
-                }
-
-                @Override
-                public void onError(ErrorCode errorCode, String s) {
-                    Utils.addLog("datadata_error", "error " + errorCode + " " + s);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-
     }
 
     public Bitmap loadBitmapFromView(Bitmap logo, Bitmap bitmap) {

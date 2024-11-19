@@ -125,5 +125,4 @@
         android:textSize="17sp"
         android:fontFamily="@font/inter_black"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,11 @@
 package com.app.smartpos.refund.Model;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import com.app.smartpos.Constant;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.utils.MultiLanguageApp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,15 +20,17 @@ public class RefundModel implements Serializable {
     String operation_sub_type;
     String order_payment_method;
     String operation_type;
+    boolean printed;
     ArrayList<HashMap<String, String>> orderDetailsItems = new ArrayList<>();
 
-    public RefundModel(String jsonString, DatabaseAccess databaseAccess) {
+    public RefundModel(String jsonString) {
         try {
             JSONObject json = new JSONObject(jsonString);
 
             order_id = json.getString("invoiceSeq");
             operation_type = json.getString("operationType");
             operation_sub_type = json.getString("operationSubType");
+//            printed = json.getBoolean("printed");
             order_payment_method = json.getJSONObject("paymentMethod").getString("name");
 
             JSONArray invoiceLines = json.getJSONArray("invoiceLines");
@@ -44,6 +49,7 @@ public class RefundModel implements Serializable {
                     map.put("product_name_en", description);
                     map.put("product_name_ar", description);
                 } else {
+                    DatabaseAccess databaseAccess = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
                     databaseAccess.open();
                     HashMap<String, String> map1 = databaseAccess.getProductsInfoFromUUID(uuid).get(0);
                     map.put("product_image", map1.get("product_image"));
@@ -69,6 +75,7 @@ public class RefundModel implements Serializable {
                 orderDetailsItems.add(map);
             }
         } catch (JSONException e) {
+            addToDatabase(e,"error-in-read-json-refundModel");
             e.printStackTrace();
         }
     }
@@ -87,6 +94,10 @@ public class RefundModel implements Serializable {
 
     public String getOperation_type() {
         return operation_type;
+    }
+
+    public boolean isPrinted() {
+        return printed;
     }
 
     public ArrayList<HashMap<String, String>> getOrderDetailsItems() {

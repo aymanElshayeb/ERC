@@ -2,6 +2,7 @@ package com.app.smartpos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -18,6 +19,7 @@ import com.app.smartpos.refund.RefundOrOrderList;
 import com.app.smartpos.settings.Synchronization.DataBaseBackupActivity;
 import com.app.smartpos.settings.end_shift.EndShiftStep1;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
 import java.util.HashMap;
@@ -32,6 +34,9 @@ public class NewHomeActivity extends BaseActivity {
     String currency;
     private DatabaseAccess databaseAccess;
     private HashMap<String, String> configuration;
+    private TextView shopNameTv;
+    private TextView locationTv;
+    private String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,8 @@ public class NewHomeActivity extends BaseActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_new_home);
 
+        lang = LocaleManager.getLanguage(this);
+
         LinearLayout circleNameLl = findViewById(R.id.circle_name_ll);
         LinearLayout itemsLL = findViewById(R.id.items_ll);
         LinearLayout allOrdersLL = findViewById(R.id.all_orders_ll);
@@ -50,7 +57,8 @@ public class NewHomeActivity extends BaseActivity {
         LinearLayout endOfShiftLl = findViewById(R.id.end_of_shift_ll);
         TextView syncTv = findViewById(R.id.sync_tv);
         TextView nameTv = findViewById(R.id.name_tv);
-        TextView locationTv = findViewById(R.id.location_tv);
+        shopNameTv = findViewById(R.id.shop_name_tv);
+        locationTv = findViewById(R.id.location_tv);
         TextView ha_name_tv = findViewById(R.id.fl_home_name_tv);
         if (!SharedPrefUtils.getName(this).isEmpty()) {
             ha_name_tv.setText(SharedPrefUtils.getName(this).substring(0, 1));
@@ -60,11 +68,6 @@ public class NewHomeActivity extends BaseActivity {
             nameTv.setText(R.string.guest);
         }
         databaseAccess = DatabaseAccess.getInstance(this);
-
-        databaseAccess.open();
-        HashMap<String, String> shop = databaseAccess.getShopInformation();
-        String shopLocation = String.valueOf(shop.get("shop_address"));
-        locationTv.setText(shopLocation);
 
         currentShiftNumberTv = findViewById(R.id.current_shift_number_tv);
         currentShiftSarTv = findViewById(R.id.current_shift_sar_tv);
@@ -130,6 +133,15 @@ public class NewHomeActivity extends BaseActivity {
         String startCashString = databaseAccess.getLastShift("leave_cash");
         double startCash = startCashString.equals("") ? 0 : Double.parseDouble(startCashString);
         startCashTv.setText(Utils.trimLongDouble(startCash));
+
+        databaseAccess.open();
+        HashMap<String, String> shop = databaseAccess.getShopInformation();
+        String shopLocation = String.valueOf(shop.get("shop_address"));
+        String shopName = String.valueOf(shop.get("shop_name"));
+        locationTv.setText(shopLocation);
+        shopNameTv.setText(shopName);
+
+        shopNameTv.setTextAlignment(lang.equals("ar") ? View.TEXT_ALIGNMENT_TEXT_END :View.TEXT_ALIGNMENT_TEXT_START);
     }
 
     @Override

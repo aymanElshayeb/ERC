@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class EndShiftStep1 extends BaseActivity {
 
@@ -221,8 +222,6 @@ public class EndShiftStep1 extends BaseActivity {
                     confirmWithErrorTv.setVisibility(View.VISIBLE);
                 }
             }
-//            String android_id = Settings.Secure.getString(this.getContentResolver(),
-//                    Settings.Secure.ANDROID_ID);
             databaseAccess.open();
             HashMap<String, String> configuration = databaseAccess.getConfiguration();
             String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");
@@ -240,7 +239,7 @@ public class EndShiftStep1 extends BaseActivity {
 //                    realCash=shiftDifferencesForLeaveCash.real;
 //                }
 
-            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, new Date().getTime(), startCash, Double.parseDouble(leaveCashEt.getText().toString()), noteEt.getText().toString().trim(), totalRefundsAmount, totalCardsAmount);
+            endShiftModel = new EndShiftModel(map, sequenceMap.get("sequence"), SharedPrefUtils.getName(this), total_transactions, 0, totalRefunds, total_amount, total_tax, configuration.get("ecr_code"), startDate, getDateTimeNow(), startCash, Double.parseDouble(leaveCashEt.getText().toString()), noteEt.getText().toString().trim(), totalRefundsAmount, totalCardsAmount);
             endShiftModel.setTotalRefunds(totalRefunds);
             if (hasError) {
                 confirmWithErrorTv.setVisibility(View.VISIBLE);
@@ -294,6 +293,10 @@ public class EndShiftStep1 extends BaseActivity {
 
         });
 
+    }
+
+    private long getDateTimeNow() {
+        return System.currentTimeMillis();
     }
 
     public void addToShift() {

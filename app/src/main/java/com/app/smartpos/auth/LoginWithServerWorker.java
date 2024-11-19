@@ -1,6 +1,8 @@
 package com.app.smartpos.auth;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -9,10 +11,15 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.app.smartpos.R;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SharedPrefUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -28,6 +35,7 @@ import okhttp3.Response;
 
 public class LoginWithServerWorker extends Worker {
 
+    int code=-5;
     public LoginWithServerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -54,25 +62,48 @@ public class LoginWithServerWorker extends Worker {
         Headers headers = new Headers.Builder().
                 add("tenantId", tenantId).
                 add("apikey", SharedPrefUtils.getApiKey()).
-
                 build();
         Request request = new Request.Builder()
                 .url(urlString)
                 .post(formBody)
                 .headers(headers)
                 .build();
+        JSONObject formBodyJson = new JSONObject();
+        JSONObject headersJson = new JSONObject();
+        try {
+            formBodyJson.put("email",email);
+            formBodyJson.put("password","......");
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("apikey","......");
+        } catch (JSONException e) {
+            addToDatabase(e,"loginApi");
+            e.printStackTrace();
+        }
         try (Response response = client.newCall(request).execute()) {
+            code= response.code();
             if (response.isSuccessful()) {
+                assert response.body() != null;
+                JSONObject responseBody = new JSONObject(response.body().string());
+                code = responseBody.getInt("code");
+                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),responseBody.toString());
                 String authorization = response.header("Authorization");
                 Data outputData = new Data.Builder().putString("Authorization", authorization).putString("email", email).build();
                 return Result.success(outputData);
             } else {
-                Data outputData = new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build();
-                return Result.failure(outputData);
+                Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+"Failed to login");
+                if(email.contains("@"))
+                    return Result.failure(new Data.Builder().putString("errorMessage", getApplicationContext().getString(R.string.failed_to_login)).build());
+                else
+                    return Result.failure(new Data.Builder().putString("errorMessage","").build());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Utils.addRequestTracking(urlString,"LoginWorker",headersJson.toString(),formBodyJson.toString(),code+"\n"+e.getMessage());
+            addToDatabase(e,"loginApi-cannot-call-request");
             e.printStackTrace();
-            return Result.failure();
+            if(email.contains("@"))
+                return Result.failure();
+            else
+                return Result.failure(new Data.Builder().putString("errorMessage","").build());
         }
     }
 

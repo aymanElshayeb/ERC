@@ -1,5 +1,6 @@
 package com.app.smartpos.Registration;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.content.Context;
@@ -91,6 +92,7 @@ public class CheckCompanyWorker extends Worker {
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
+            addToDatabase(e,"checkCompanyApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }

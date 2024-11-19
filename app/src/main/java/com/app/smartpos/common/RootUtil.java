@@ -1,5 +1,9 @@
 package com.app.smartpos.common;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
+import com.app.smartpos.R;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -30,6 +34,8 @@ public class RootUtil {
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
             return in.readLine() != null;
         } catch (Throwable t) {
+            addToDatabase(t,"error-in-check-for-root-rootUtil");
+
             return false;
         } finally {
             if (process != null) process.destroy();

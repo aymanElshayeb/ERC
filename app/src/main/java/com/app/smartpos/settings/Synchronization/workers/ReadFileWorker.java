@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ public class ReadFileWorker extends Worker {
             String downloadsUri = getApplicationContext().getCacheDir().getAbsolutePath();
             synchronizeDataBase(db, downloadsUri + "/" + fileName);
         } catch (Exception e) {
+            addToDatabase(e,"doWork-readFileWorker");
             e.printStackTrace();
             return Result.failure();
         }

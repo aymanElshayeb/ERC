@@ -1,5 +1,7 @@
 package com.app.smartpos.refund;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,6 +61,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     private String refundSequence;
     boolean checkConnectionOnce = true;
     private RecyclerView recycler;
+    boolean printedBefore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             operation_sub_type = getIntent().getStringExtra("operation_sub_type");
             order_payment_method = getIntent().getStringExtra("order_payment_method");
             operation_type = getIntent().getStringExtra("operation_type");
+            printedBefore = getIntent().getBooleanExtra("printed",false);
             orderDetailsList = databaseAccess.getOrderDetailsList(orderId);
             Utils.addLog("datadata_test", operation_sub_type + " " + operation_type);
             for (int i = 0; i < orderDetailsList.size(); i++) {
@@ -110,7 +114,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             order_payment_method = refundModel.getOrder_payment_method();
             operation_type = refundModel.getOperation_type();
             orderDetailsList = refundModel.getOrderDetailsItems();
-
+            printedBefore = false;
         }
 
 
@@ -138,8 +142,22 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         refund_tv.setOnClickListener(view -> {
             if (!isRefund) {
+                String type="";
+                if(operation_type.equals("refund")){
+                    if(printedBefore){
+                       type = getString(R.string.receipt_refund_copy);
+                    }else{
+                        type= getString(R.string.refund);
+                    }
+                }else{
+                    if(printedBefore){
+                        type = getString(R.string.receipt_copy);
+                    }else{
+                        type= getString(R.string.simplified_tax_invoice);
+                    }
+                }
                 startActivity(new Intent(this, CheckoutOrderDetails.class).putExtra("id", orderId).putExtra("printType",
-                        operation_type.equals("refund") ? getString(R.string.receipt_refund_copy) : getString(R.string.receipt_copy)))
+                        type))
                 ;
             } else {
                 refundPressed();
@@ -239,9 +257,12 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
 //                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
 //                dialog.show(getSupportFragmentManager(), "dialog");
-                loadingLl.setVisibility(View.VISIBLE);
-                enqueueCreateAndUploadWorkers();
+//                loadingLl.setVisibility(View.VISIBLE);
+//                enqueueCreateAndUploadWorkers();
+                redirectToSuccess();
+                SharedPrefUtils.resetAuthorization();
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceedOrder-refundOrOrderDetailsScreen");
                 e.printStackTrace();
             }
 
@@ -252,15 +273,16 @@ public class RefundOrOrderDetails extends WorkerActivity {
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
         loadingLl.setVisibility(View.GONE);
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-            // Work succeeded, handle success
-            showMessage(getString(R.string.data_synced_successfully));
-            redirectToSuccess();
-            SharedPrefUtils.resetAuthorization();
-        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-            // Work failed, handle failure
-            showMessage(getString(R.string.error_in_syncing_data));
-        }
+//        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+//            // Work succeeded, handle success
+//            showMessage(getString(R.string.data_synced_successfully));
+//            redirectToSuccess();
+//            SharedPrefUtils.resetAuthorization();
+//        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+//            // Work failed, handle failure
+//            showMessage(getString(R.string.error_in_syncing_data));
+//        }
+
     }
 
     public void redirectToSuccess() {
@@ -308,6 +330,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 obj.put("card_type_code", card_type_code);
                 obj.put("approval_code", approval_code);
                 obj.put("operation_sub_type", operation_sub_type);
+                obj.put("printed", false);
                 databaseAccess.open();
                 HashMap<String, String> configuration = databaseAccess.getConfiguration();
                 String ecr_code = configuration.isEmpty() ? "" : configuration.get("ecr_code");
@@ -391,6 +414,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
 
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceedOrder-lines-refundOrderDetailsScreen");
                 e.printStackTrace();
             }
 

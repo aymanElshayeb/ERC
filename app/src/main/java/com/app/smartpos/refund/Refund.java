@@ -8,22 +8,26 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.pos.ScannerActivity;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
 
-public class Refund extends BaseActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
 
+public class Refund extends WorkerActivity {
+
+    public static EditText searchEt;
     DatabaseAccess databaseAccess;
     RefundDetailsViewModel model;
-    public static EditText searchEt;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,12 @@ public class Refund extends BaseActivity {
         scannerIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Refund.this, ScannerActivity.class);
+                Intent intent = new Intent(Refund.this, ScannerActivity.class).putExtra("screenType", "refund");
                 startActivity(intent);
             }
         });
         allRefundsBtn.setOnClickListener(view -> startActivity(new Intent(this, RefundOrOrderList.class).putExtra("isRefund", true)));
         view_receipt_btn.setOnClickListener(view -> {
-            databaseAccess.open();
             if (!searchEt.getText().toString().trim().isEmpty()) {
 //                List<HashMap<String, String>> list = databaseAccess.searchOrderList(search_et.getText().toString());
 //                if (list.size() > 0) {
@@ -62,9 +65,12 @@ public class Refund extends BaseActivity {
 //
 //                    startActivity(i);
 //                }
-                ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
-                confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
-
+                if(!isConnected()){
+                    Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                }else {
+                    ConfirmSyncDialog confirmdialog = new ConfirmSyncDialog();
+                    confirmdialog.show(getSupportFragmentManager(), "confirmDialog");
+                }
                 //callApi();
             }
         });
@@ -86,6 +92,6 @@ public class Refund extends BaseActivity {
     public void callApi() {
         Utils.addLog("INSIDE CALL API", SharedPrefUtils.getAuthorization());
 
-        model.start(searchEt.getText().toString().trim(), databaseAccess);
+        model.start(this,searchEt.getText().toString().trim(), databaseAccess);
     }
 }

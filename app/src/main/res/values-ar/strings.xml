@@ -47,7 +47,8 @@
     <string name="sar">ر.س</string>
     <string name="items">الأصناف</string>
     <string name="quick_bills">الفواتير السريعة</string>
-    <string name="refund">استرجاع</string>
+    <string name="refund">مسترجع</string>
+    <string name="refund_btn">إسترجاع</string>
     <string name="end_of_shift">نهاية الوردية</string>
     <string name="confirmation_refund">يرجى تأكيد استرجاع الصنف / الأصناف بقيمة</string>
     <string name="confirmation_refund_desc">هل أنت متأكد من أنك تريد استرجاع هذا الطلب؟</string>
@@ -126,7 +127,7 @@
     <string name="shop_information">معلومات المتجر</string>
     <string name="data_backup">مزامنة البيانات</string>
     <string name="end_shift">إنهاء التحول</string>
-    <string name="shop_name">المتجر الاسم</string>
+    <string name="shop_name">اسم المتجر</string>
     <string name="shop_contact_number">رقم اتصال المتجر</string>
     <string name="shop_email">بريد المتجر الإلكتروني</string>
     <string name="shop_address">عنوان المتجر</string>
@@ -443,6 +444,7 @@
 
     //sync
     <string name="download_synchronization">مزامنة التنزيل</string>
+    <string name="sync_data">مزامنة البيانات</string>
     <string name="upload_synchronization">مزامنة التحميل</string>
     <string name="download_product_images">تحميل صور المنتجات</string>
     <string name="data_synced_successfully">تمت مزامنة البيانات بنجاح</string>
@@ -454,8 +456,9 @@
     <string name="unknown_error_occurred">حدث خطأ غير معروف</string>
 
     //error
+    <string name="no_internet_connection">لا يوجد إتصال بالشبكة</string>
     <string name="failed_to_register">فشل في تسجيل الجهاز</string>
-    <string name="no_vat_number_found">يجب عليك إضافة الرقم الضريبي إلى ملف تعريف شركتك لإتمام عملية الشراء</string>
+    <string name="no_vat_number_found">لم تقم بتسجيل الرقم الضريبي. الفواتير المصدرة لن تكون مطابقة لهيئة الزكاة و الضرائب</string>
     <string name="non_admin_register">لا يمكن التسجيل باستخدام مستخدم غير إدارى</string>
     <string name="failed_to_login">فشل في تسجيل الدخول</string>
     <string name="no_printer_found">لم يتم العثور على طابعة</string>
@@ -465,6 +468,14 @@
     <string name="please_select_payment_method">يرجى تحديد طريقة الدفع</string>
     <string name="price_total_cannot_exceed">إجمالى سعر المنتج لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
     <string name="total_price_cannot_exceed">إجمالى السعر لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
+
+    //print status
+    <string name="print_successful">تم الطباعة بنجاح</string>
+    <string name="printer_out_of_paper">الطابعة خالية من الورق</string>
+    <string name="printer_over_heat">درجة حرارة الطابعة مرتفعة</string>
+    <string name="device_under_voltage">البطارية ضعيفة يرجى شحن الجهاز</string>
+    <string name="printer_busy">الطابعة مشغولة</string>
+    <string name="printer_error">حدث خطأ فى الطابعة</string>
 
     //reports
     <string name="z_report">تقرير إنهاء الوردية</string>
@@ -493,6 +504,7 @@
     <string name="value_added_tax">ضريبة القيمة المضافة</string>
     <string name="total_before_tax">الإجمالي قبل الضريبة</string>
     <string name="receipt_no">رقم الفاتورة</string>
+    <string name="original_receipt_no">رقم الفاتورة الأصلية</string>
     <string name="simplified_tax_invoice">فاتورة ضريبية مبسطة</string>
     <string name="commercial_registration_number_">رقم السجل التجاري</string>
     <string name="tax_number_">الرقم الضريبى</string>

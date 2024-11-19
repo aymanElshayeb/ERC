@@ -26,7 +26,7 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
 
     private ZXingScannerView scannerView;
     int currentApiVersion = Build.VERSION.SDK_INT;
-
+    String screenType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,8 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         if (currentApiVersion >= Build.VERSION_CODES.M) {
             requestCameraPermission();
         }
+
+        screenType = getIntent().getStringExtra("screenType");
 
         scannerView = new ZXingScannerView(ScannerActivity.this);
         setContentView(scannerView);
@@ -68,7 +70,11 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         final String myResult = result.getText();
 
         //set result in main activity or previous activity
-        Refund.searchEt.setText(myResult);
+        if(screenType.equals("refund")) {
+            Refund.searchEt.setText(myResult);
+        }else if(screenType.equals("items")){
+            com.app.smartpos.Items.Items.searchEt.setText(myResult);
+        }
 //        Log.d("QRCodeScanner", result.getText());
 //        Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
         onBackPressed();

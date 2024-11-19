@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.app.smartpos.R;
+import com.app.smartpos.Registration.Registration;
 import com.app.smartpos.downloaddatadialog.DownloadDataDialog;
 
 
@@ -21,7 +22,7 @@ public class NoVatNumberDialog extends DialogFragment {
     View root;
 
     Button registerBtn;
-
+    Registration registration;
 
     @Nullable
     @Override
@@ -32,12 +33,17 @@ public class NoVatNumberDialog extends DialogFragment {
             setCancelable(false);
             registerBtn = root.findViewById(R.id.confirm_btn);
             registerBtn.setOnClickListener(view -> {
+                registration.finish();
                 dismiss();
             });
 
         }
 
         return root;
+    }
+
+    public void setRegistration(Registration registration) {
+        this.registration = registration;
     }
 
     @Override

@@ -1,9 +1,10 @@
 package com.app.smartpos.checkout;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.CartPaymentMethodAdapter;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
@@ -86,12 +87,14 @@ public class NewCheckout extends BaseActivity {
                             Toast.makeText(this, R.string.transaction_declined, Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
+                        addToDatabase(e,"error-in-read-response-from-printer-newCheckOutScreen");
                         if (statusCode.equals(Constant.REJECTED_STATUS_CODE))
                             Toast.makeText(this, response.getString("ErrorMsg"), Toast.LENGTH_LONG).show();
                         else
                             e.printStackTrace();
                     }
                 } catch (JSONException e) {
+                    addToDatabase(e,"error-in-generate-response-from-printer-newCheckOutScreen");
                     e.printStackTrace();
                 }
             }
@@ -148,18 +151,14 @@ public class NewCheckout extends BaseActivity {
         addItemsTv.setOnClickListener(view -> finish());
         backIm.setOnClickListener(view -> finish());
         checkoutTv.setOnClickListener(view -> {
-            databaseAccess.open();
-            if(databaseAccess.getConfiguration().get("merchant_tax_number").isEmpty()){
-                NoVatNumberDialog dialog=new NoVatNumberDialog();
-                dialog.show(getSupportFragmentManager(),"dialog");
-            }
-            else if (paymentType.equals("CASH")) {
+            if (paymentType.equals("CASH")) {
                 startActivityForResult(new Intent(this, CashPricing.class).putExtra("total_amount", totalAmount), 12);
             } else if (paymentType.equals("CARD")) {
                 try {
                     Intent intent = device.pay(totalAmount);
                     launcher.launch(intent);
                 } catch (Exception e) {
+                    addToDatabase(e,getString(R.string.card_payment_is_offline_please_choose_cash)+"_newCheckOutScreen");
                     Toast.makeText(this, R.string.card_payment_is_offline_please_choose_cash, Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -245,6 +244,7 @@ public class NewCheckout extends BaseActivity {
                     obj.put("card_type_code", card_type_code);
                     obj.put("approval_code", approval_code);
                     obj.put("operation_sub_type", fromQuickBill ? "freeText" : "product");
+                    obj.put("printed", false);
 
                     databaseAccess.open();
                     HashMap<String, String> configuration = databaseAccess.getConfiguration();
@@ -321,6 +321,7 @@ public class NewCheckout extends BaseActivity {
 
 
                 } catch (JSONException e) {
+                    addToDatabase(e,"error-in-insert-order-newCheckOutScreen");
                     e.printStackTrace();
                 }
 
@@ -390,6 +391,7 @@ public class NewCheckout extends BaseActivity {
             try {
                 proceedOrder("", "CASH", "", totalTax, "0", "", "", cashGiven, change);
             } catch (JSONException e) {
+                addToDatabase(e,"error-in-proceed-order-activityResult-newCheckOutScreen");
                 e.printStackTrace();
             }
         }
