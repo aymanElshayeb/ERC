@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Qaema Cashier</string>
+    <string name="app_name" translatable="false">qaema cashier</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>
@@ -323,7 +323,7 @@
     <string name="add_order_type">إضافة نوع الطلب</string>
     <string name="add_unit">إضافة وحدة</string>
 
-    <string name="welcome_to_qaema">مرحبًا بك في Qaema Cashier</string>
+    <string name="welcome_to_qaema">مرحبًا بك في qaema cashier</string>
     <string name="Please_enter_your_login_info">يرجى إدخال معلومات تسجيل الدخول الخاصة بك</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="company_id">الرقم التعريفى للشركة</string>
