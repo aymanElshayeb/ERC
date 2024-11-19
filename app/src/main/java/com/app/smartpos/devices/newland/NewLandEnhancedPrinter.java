@@ -1,10 +1,19 @@
-package com.app.smartpos.orders;
+package com.app.smartpos.devices.newland;
+
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import com.app.smartpos.Constant;
+import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.devices.PrinterHandler;
+import com.app.smartpos.devices.urovo.UrovoPrinterStatus;
+import com.app.smartpos.orders.PrinterModel;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.qrandbrcodegeneration.ZatcaQRCodeGenerationService;
@@ -35,6 +44,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     String line = "--------------------------------------------";
     //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
     MultiLanguageApp activity;
+    Boolean success = false;
 
     public NewLandEnhancedPrinter() {
         ModuleManage.getInstance().init();
@@ -43,7 +53,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
     }
 
 
-    public Boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         Map<String, Bitmap> bitmapResult = new HashMap<>();
         String bitmapName1 = "logo";
         bitmapResult.put(bitmapName1, bitmap);
@@ -53,14 +63,35 @@ public class NewLandEnhancedPrinter extends BaseActivity {
             @Override
             public void onSuccess() {
                 Utils.addLog("datadata", "success");
+
+                new Handler(Looper.getMainLooper()).post(() ->Toast.makeText(MultiLanguageApp.getApp(), MultiLanguageApp.getApp().getString(R.string.print_successful), Toast.LENGTH_SHORT).show());
+                printerHandler.printStatus(true);
             }
 
             @Override
             public void onError(ErrorCode errorCode, String s) {
+                NewLandPrinterStatus printerStatus = NewLandPrinterStatus.getStatus(s);
+                assert printerStatus != null;
+                handlePrintStatus(printerStatus.getKey());
                 Utils.addLog("datadata_error", "error " + errorCode + " " + s);
+                printerHandler.printStatus(false);
             }
         });
-        return true;
+    }
+
+    private void handlePrintStatus(String status) {
+        if (status.equalsIgnoreCase(NewLandPrinterStatus.OUT_OF_PAPER.getKey()))
+            status = MultiLanguageApp.getApp().getString(R.string.printer_out_of_paper);
+        else if (status.equalsIgnoreCase(NewLandPrinterStatus.OVER_HEAT.getKey()))
+            status = MultiLanguageApp.getApp().getString(R.string.printer_over_heat);
+        else if (status.equalsIgnoreCase(NewLandPrinterStatus.BUSY.getKey()))
+            status = MultiLanguageApp.getApp().getString(R.string.printer_busy);
+        else if (status.equalsIgnoreCase(NewLandPrinterStatus.UNDER_VOLTAGE.getKey()))
+            status = MultiLanguageApp.getApp().getString(R.string.device_under_voltage);
+        else
+            status = MultiLanguageApp.getApp().getString(R.string.printer_error);
+        String finalStatus = status;
+        new Handler(Looper.getMainLooper()).post(() ->Toast.makeText(MultiLanguageApp.getApp(), finalStatus, Toast.LENGTH_SHORT).show());
     }
 
     @SuppressLint("NewApi")
@@ -85,6 +116,7 @@ public class NewLandEnhancedPrinter extends BaseActivity {
                 }
             });
         } catch (Exception e) {
+            addToDatabase(e,"error-in-printZReport-newLandEnhancedPrinter");
             e.printStackTrace();
         }
 

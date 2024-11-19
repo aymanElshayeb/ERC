@@ -23,6 +23,8 @@ public class Consts {
     public final static String CARD_ACTION = "android.intent.action.intersoft.PAYMENT";
     public final static String CARD_ACTION_UROVO_PURCHASE = "com.urovo.neoleap.launcher.PURCHASE";
 
+    public final static String CARD_ACTION_GENERAL_NEWLEAP_PURCHASE = "com.neoleap.action.PURCHASE";
+
     /**
      * union pay scan ，action
      */

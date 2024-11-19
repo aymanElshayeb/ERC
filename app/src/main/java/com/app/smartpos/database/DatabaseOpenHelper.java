@@ -1,5 +1,7 @@
 package com.app.smartpos.database;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +23,7 @@ import es.dmoral.toasty.Toasty;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
     public static final String DATABASE_NAME = "smart_pos.db";
-    private static final int DATABASE_VERSION = 55;
+    private static final int DATABASE_VERSION = 70;
     private final Context mContext;
 
     public DatabaseOpenHelper(Context context) {
@@ -59,6 +61,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, mContext.getString(R.string.backup_completed_successfully), Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
+            addToDatabase(e,mContext.getString(R.string.unable_to_backup_database_retry)+ "_databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_backup_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -93,6 +96,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
             Toasty.success(mContext, R.string.database_Import_completed, Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
+            addToDatabase(e,mContext.getString(R.string.unable_to_import_database_retry)+ "_databaseOpenHelper");
             Toasty.error(mContext, R.string.unable_to_import_database_retry, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
@@ -169,7 +173,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
-    public void exportTablesToNewDatabase(String newDbFilePath, String[] lastSync) {
+    public void exportCrashReportsToNewDatabase(String newDbFilePath) {
         // Delete the existing file if it exists
         File dbFile = new File(newDbFilePath);
         Utils.addLog("datadata_base", newDbFilePath);
@@ -180,8 +184,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
         try {
             newDb.beginTransaction();
-            exportInvoice(existingDb, newDb, lastSync[0]);
-            exportShift(existingDb, newDb, lastSync[1]);
+            exportCrashReport(existingDb, newDb);
             newDb.setTransactionSuccessful();
         } finally {
             newDb.endTransaction();
@@ -189,6 +192,101 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
         }
     }
 
+    public void exportRequestTrackingToNewDatabase(String newDbFilePath) {
+        // Delete the existing file if it exists
+        File dbFile = new File(newDbFilePath);
+        Utils.addLog("datadata_base", newDbFilePath);
+        if (dbFile.exists()) {
+            dbFile.delete();
+        }
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
+        try {
+            newDb.beginTransaction();
+            exportRequestTracking(existingDb, newDb);
+            newDb.setTransactionSuccessful();
+        } finally {
+            newDb.endTransaction();
+            newDb.close();
+        }
+    }
+
+    public boolean exportTablesToNewDatabase(String newDbFilePath, String[] lastSync,boolean fromRefund) {
+        // Delete the existing file if it exists
+        File dbFile = new File(newDbFilePath);
+        Utils.addLog("datadata_base", newDbFilePath);
+        if (dbFile.exists()) {
+            dbFile.delete();
+        }
+        SQLiteDatabase existingDb = getWritableDatabase();
+        SQLiteDatabase newDb = SQLiteDatabase.openOrCreateDatabase(newDbFilePath, null);
+
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(MultiLanguageApp.getApp());
+        String ecr_code=databaseAccess.getConfiguration().get("ecr_code");
+        String invoiceSequence=databaseAccess.getCurrentSequence(1,ecr_code);
+        String shiftSequence=databaseAccess.getCurrentSequence(2,ecr_code);
+
+        boolean needInvoiceSync=!invoiceSequence.endsWith(lastSync[0]);
+        boolean needShiftSync=!shiftSequence.endsWith(lastSync[1]);
+
+        Utils.addLog("WorkerWrapper_invoice",invoiceSequence+" "+lastSync[0]);
+        Utils.addLog("WorkerWrapper_shift",shiftSequence+" "+lastSync[1]);
+        Utils.addLog("WorkerWrapper_result",needInvoiceSync+" "+needShiftSync);
+        try {
+            newDb.beginTransaction();
+            if(needInvoiceSync) {
+                exportInvoice(existingDb, newDb, lastSync[0]);
+            }
+            if(needShiftSync) {
+                exportShift(existingDb, newDb, lastSync[1]);
+            }
+
+            newDb.setTransactionSuccessful();
+        } finally {
+            newDb.endTransaction();
+            newDb.close();
+        }
+        return needInvoiceSync || needShiftSync || fromRefund;
+    }
+
+    private void exportRequestTracking(SQLiteDatabase existingDb, SQLiteDatabase newDb) {
+        try {
+            copyTableSchema(existingDb, newDb, "request_tracking");
+            // Copy rows from the existing database table to the new one
+            String requestTrackingQuery = "SELECT * FROM request_tracking";
+            try (Cursor requestTrackingCursor = existingDb.rawQuery(requestTrackingQuery, null)) {
+                while (requestTrackingCursor.moveToNext()) {
+                    ContentValues shiftValues = new ContentValues();
+                    for (int i = 0; i < requestTrackingCursor.getColumnCount(); i++) {
+                        shiftValues.put(requestTrackingCursor.getColumnName(i), requestTrackingCursor.getString(i));
+                    }
+                    newDb.insert("request_tracking", null, shiftValues);
+                }
+            }
+        } catch (Exception e) {
+            addToDatabase(e,"error-export-requestTracking-function-databaseOpenHelper");
+            e.printStackTrace();
+        }
+    }
+    private void exportCrashReport(SQLiteDatabase existingDb, SQLiteDatabase newDb) {
+        try {
+            copyTableSchema(existingDb, newDb, "crash_report");
+            // Copy rows from the existing database table to the new one
+            String crashReportQuery = "SELECT * FROM crash_report";
+            try (Cursor requestCursor = existingDb.rawQuery(crashReportQuery, null)) {
+                while (requestCursor.moveToNext()) {
+                    ContentValues shiftValues = new ContentValues();
+                    for (int i = 0; i < requestCursor.getColumnCount(); i++) {
+                        shiftValues.put(requestCursor.getColumnName(i), requestCursor.getString(i));
+                    }
+                    newDb.insert("crash_report", null, shiftValues);
+                }
+            }
+        } catch (Exception e) {
+            addToDatabase(e,"error-export-crashReport-function-databaseOpenHelper");
+            e.printStackTrace();
+        }
+    }
     private void exportShift(SQLiteDatabase existingDb, SQLiteDatabase newDb, String lastSync) {
         try {
             copyTableSchema(existingDb, newDb, "shift");
@@ -230,6 +328,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-export-shift-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }
@@ -280,6 +379,7 @@ public class DatabaseOpenHelper extends SQLiteAssetHelper {
                 }
             }
         } catch (Exception e) {
+            addToDatabase(e,"error-in-export-invoice-function-databaseOpenHelper");
             e.printStackTrace();
         }
     }

@@ -1,5 +1,7 @@
 package com.app.smartpos.Registration;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
@@ -102,6 +104,7 @@ public class ApiKeyWorker extends Worker {
                         outputData.putString("apikey", apikey).putString("database_password", password_response);
                     }
                 }catch (Exception e) {
+                    addToDatabase(e,"apiKey-worker-success-reading-response");
                     e.printStackTrace();
                 }
                 return Result.success(outputData.build());
@@ -111,6 +114,7 @@ public class ApiKeyWorker extends Worker {
                 return Result.failure(outputData);
             }
         } catch (IOException e) {
+            addToDatabase(e,"apiKeyApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }
@@ -154,6 +158,7 @@ public class ApiKeyWorker extends Worker {
 
             return builder.build();
         } catch (Exception e) {
+            addToDatabase(e,"getUnsafeOkHttpClient-function-error-apikeyWorker");
             throw new RuntimeException(e);
         }
     }

@@ -1,8 +1,12 @@
 package com.app.smartpos.checkout;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,11 +19,13 @@ import androidx.appcompat.app.ActionBar;
 
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
@@ -87,8 +93,25 @@ public class CheckoutOrderDetails extends BaseActivity {
 
         printReceipt.setOnClickListener(view -> {
             try {
-                device.printReceipt(printerData.getBitmap());
+                Bitmap newBitmap = Bitmap.createBitmap(printerData.getBitmap());
+                device.printReceipt(newBitmap, new PrinterHandler() {
+                    @Override
+                    public void printStatus(boolean status) {
+                        if(status){
+                            databaseAccess.open();
+                            databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                            Intent intent = new Intent(CheckoutOrderDetails.this, NewHomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
+                addToDatabase(e,getString(R.string.no_printer_found)+"_checkoutOrderDetails");
+                e.printStackTrace();
+                FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });

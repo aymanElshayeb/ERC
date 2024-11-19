@@ -21,6 +21,7 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.common.WorkerActivity;
+import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.database.DatabaseOpenHelper;
 import com.app.smartpos.settings.Synchronization.workers.ExportFileWorker;
 import com.app.smartpos.settings.backup.LocalBackup;
@@ -29,15 +30,16 @@ public class DataBaseBackupActivity extends WorkerActivity {
 
     LinearLayout loadingLl;
     ProgressDialog loading;
-    private LocalBackup localBackup;
     int workerType;
     CardView cardLocalBackUp, cardLocalImport, downloadProductsImages, cardBackupToDrive;
+    private LocalBackup localBackup;
+    DatabaseAccess databaseAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_backup);
-
+        databaseAccess = DatabaseAccess.getInstance(this);
         loadingLl = findViewById(R.id.loading_ll);
         getSupportActionBar().setHomeButtonEnabled(true); //for back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//for back button
@@ -48,27 +50,39 @@ public class DataBaseBackupActivity extends WorkerActivity {
         cardLocalImport = findViewById(R.id.upload_backup);
         downloadProductsImages = findViewById(R.id.download_products_images);
 
-
         localBackup = new LocalBackup(this);
 
         cardLocalBackUp.setOnClickListener(v -> {
-            workerType = 1;
-            loadingLl.setVisibility(View.VISIBLE);
-            enqueueDownloadAndReadWorkers();
+            if (isConnected()) {
+                workerType = 1;
+                loadingLl.setVisibility(View.VISIBLE);
+                //enqueueUploadWorkers();
+                enqueueDownloadAndReadWorkers();
+            }else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
 
         });
 
         cardLocalImport.setOnClickListener(v -> {
-            loadingLl.setVisibility(View.VISIBLE);
-            workerType = 2;
-            enqueueUploadWorkers();
+            if (isConnected()) {
+                loadingLl.setVisibility(View.VISIBLE);
+                workerType = 2;
+                enqueueUploadWorkers(true);
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
         });
 
 
         downloadProductsImages.setOnClickListener(v -> {
-            loadingLl.setVisibility(View.VISIBLE);
-            workerType = 3;
-            enqueueDownloadProductsImagesSizeWorkers();
+            if (isConnected()) {
+                loadingLl.setVisibility(View.VISIBLE);
+                workerType = 3;
+                enqueueDownloadProductsImagesSizeWorkers();
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
         });
 
     }
@@ -87,10 +101,9 @@ public class DataBaseBackupActivity extends WorkerActivity {
             if (workerType == 3) {
                 if (imagesSize == 0 && needToUpdate) {
                     loadingLl.setVisibility(View.VISIBLE);
-                    workerType=4;
+                    workerType = 4;
                     enqueueDownloadProductsImagesWorkers();
-                }
-                else if (imagesSize == 0) {
+                } else if (imagesSize == 0) {
                     Toast.makeText(this, getString(R.string.no_product_images), Toast.LENGTH_SHORT).show();
                 } else {
                     showMessage(getString(R.string.data_synced_successfully));

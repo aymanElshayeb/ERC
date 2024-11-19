@@ -1,7 +1,6 @@
 package com.app.smartpos.utils;
 
 import android.app.Application;
-
 public class MultiLanguageApp extends Application {
 
     public static MultiLanguageApp app;

@@ -3,6 +3,7 @@ package com.app.smartpos.auth;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
@@ -36,6 +37,7 @@ public class LoginFragment extends Fragment {
     private View root;
     private Context context;
     private boolean isPasswordShown = false;
+    private Button loginBtn;
 
     @Nullable
     @Override
@@ -46,8 +48,9 @@ public class LoginFragment extends Fragment {
             EditText emailEt = root.findViewById(R.id.email_et);
             EditText passwordEt = root.findViewById(R.id.password_et);
             ImageView eyeIm = root.findViewById(R.id.eye_im);
-            Button loginBtn = root.findViewById(R.id.login_btn);
+            loginBtn = root.findViewById(R.id.login_btn);
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
+
 
 
             languageCl.setOnClickListener(view -> {
@@ -84,25 +87,41 @@ public class LoginFragment extends Fragment {
                 databaseAccess.open();
                 HashMap<String, String> map = databaseAccess.getUserWithEmail(emailEt.getText().toString().trim());
                 if (map != null) {
+                    ((AuthActivity)getActivity()).showHideLoading(true);
                     if (((AuthActivity) requireActivity()).isConnected()) {
                         ((AuthActivity) requireActivity()).loginWorkers(emailEt.getText().toString().trim(), passwordEt.getText().toString());
+
                     } else {
-                        Hasher hasher = new Hasher();
-                        boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
-                        //Utils.addLog("datadata",map.toString());
-                        if (isMatch) {
-                            SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
-                            SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
-                            SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
-                            SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
-                            SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
-                            SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
-                            Intent intent = new Intent(context, NewHomeActivity.class);
-                            startActivity(intent);
-                            requireActivity().finish();
-                        } else {
-                            Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
-                        }
+                        loginBtn.setEnabled(false);
+                        AsyncTask.execute(() -> {
+                            Hasher hasher = new Hasher();
+                            boolean isMatch = hasher.hashPassword(passwordEt.getText().toString(), map.get("password"));
+                            //Utils.addLog("datadata",map.toString());
+                            if (isMatch) {
+
+                                requireActivity().runOnUiThread(() -> {
+                                    SharedPrefUtils.setName(requireActivity(), map.get("name_ar"));
+                                    SharedPrefUtils.setEmail(requireActivity(), map.get("email"));
+                                    SharedPrefUtils.setMobileNumber(requireActivity(), map.get("mobile"));
+                                    SharedPrefUtils.setUserId(requireActivity(), map.get("id"));
+                                    SharedPrefUtils.setUserName(requireActivity(), map.get("username"));
+                                    SharedPrefUtils.setIsLoggedIn(requireActivity(), true);
+                                    loginBtn.setEnabled(true);
+                                    ((AuthActivity)getActivity()).showHideLoading(false);
+                                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                                });
+                                Intent intent = new Intent(context, NewHomeActivity.class);
+                                startActivity(intent);
+                                requireActivity().finish();
+                            } else {
+                                requireActivity().runOnUiThread(() -> {
+                                    loginBtn.setEnabled(true);
+                                    ((AuthActivity)getActivity()).showHideLoading(false);
+                                    Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+                                });
+
+                            }
+                        });
                     }
                 } else {
                     Toast.makeText(context, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
@@ -112,4 +131,6 @@ public class LoginFragment extends Fragment {
 
         return root;
     }
+
+
 }

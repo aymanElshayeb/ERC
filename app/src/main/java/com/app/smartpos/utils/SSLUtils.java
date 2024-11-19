@@ -1,5 +1,7 @@
 package com.app.smartpos.utils;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -50,6 +52,7 @@ public class SSLUtils {
 
             return builder.build();
         } catch (Exception e) {
+            addToDatabase(e,"getUnsafeOkHttpClient-function-error-SSLUtils");
             throw new RuntimeException(e);
         }
     }
@@ -82,6 +85,7 @@ public class SSLUtils {
                 }
             });
         } catch (Exception e) {
+            addToDatabase(e,"trustAllCertificates-function-error-SSLUtils");
             e.printStackTrace();
         }
     }

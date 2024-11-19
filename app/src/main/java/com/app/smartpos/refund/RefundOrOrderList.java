@@ -3,9 +3,11 @@ package com.app.smartpos.refund;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.smartpos.R;
 import com.app.smartpos.adapter.RefundsOrOrdersAdapter;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 
@@ -21,8 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class RefundOrOrderList extends BaseActivity {
+public class RefundOrOrderList extends WorkerActivity {
 
     DatabaseAccess databaseAccess;
     String currency;
@@ -32,10 +36,10 @@ public class RefundOrOrderList extends BaseActivity {
     List<HashMap<String, String>> orderList = new ArrayList<>();
     int offset = 0;
     boolean hasMore = true;
-    private RecyclerView recycler;
     RefundDetailsViewModel model;
     String invoiceSeq = "";
-
+    private RecyclerView recycler;
+    private int lastSelectedItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,7 @@ public class RefundOrOrderList extends BaseActivity {
                 finish();
                 Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", true);
                 i.putExtra("refundModel", refundModel);
+                i.putExtra("printed", Objects.requireNonNull(orderList.get(lastSelectedItem).get("printed")).equalsIgnoreCase("1"));
                 startActivity(i);
             }
         });
@@ -115,23 +120,31 @@ public class RefundOrOrderList extends BaseActivity {
     }
 
     public void openDetails(int adapterPosition) {
+        lastSelectedItem=adapterPosition;
         invoiceSeq = orderList.get(adapterPosition).get("invoice_id");
         Intent i = new Intent(this, RefundOrOrderDetails.class).putExtra("isRefund", isRefund);
         i.putExtra("order_id", orderList.get(adapterPosition).get("invoice_id"));
         i.putExtra("order_payment_method", orderList.get(adapterPosition).get("order_payment_method"));
         i.putExtra("operation_type", orderList.get(adapterPosition).get("operation_type"));
         i.putExtra("operation_sub_type", orderList.get(adapterPosition).get("operation_sub_type"));
+        i.putExtra("printed", Objects.requireNonNull(orderList.get(adapterPosition).get("printed")).equalsIgnoreCase("1"));
         if (isRefund()) {
 //            DownloadDataDialog dialog=DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_REFUND);
 //            dialog.show(getSupportFragmentManager(),"dialog");
-            ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
-            confirmation.show(getSupportFragmentManager(), "confirmDialog");
+
+            if(!isConnected()){
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            }else {
+                ConfirmSyncDialog confirmation = new ConfirmSyncDialog();
+                confirmation.show(getSupportFragmentManager(), "confirmDialog");
+            }
+
         } else {
             startActivity(i);
         }
     }
 
     public void callApi() {
-        model.start(invoiceSeq, databaseAccess);
+        model.start(this,invoiceSeq, databaseAccess);
     }
 }

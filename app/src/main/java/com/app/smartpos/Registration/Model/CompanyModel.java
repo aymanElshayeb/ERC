@@ -1,5 +1,7 @@
 package com.app.smartpos.Registration.Model;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +19,7 @@ public class CompanyModel implements Serializable {
             companyCode = json.getString("companyCode");
             companyName = json.getString("companyName");
         } catch (JSONException e) {
+            addToDatabase(e,"read-company-model-from-json");
             e.printStackTrace();
         }
     }

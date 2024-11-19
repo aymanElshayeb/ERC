@@ -1,5 +1,6 @@
 package com.app.smartpos.settings.end_shift;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.common.Utils.trimLongDouble;
 
 import android.content.Intent;
@@ -19,12 +20,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.common.WorkerActivity;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.orders.OrderBitmap;
+import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
 
@@ -89,11 +91,11 @@ public class EndShiftStep2 extends WorkerActivity {
 
 
 //        addView(getResources().getString(R.string.user_id), SharedPrefUtils.getUserId(this));
-        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getName(this));
+        addView(getResources().getString(R.string.user_mail), SharedPrefUtils.getUserName(this));
         addView(getResources().getString(R.string.shift_sequence), endShiftModel.getSequence());
         endMyShiftTv.setOnClickListener(view -> {
             startActivity(new Intent(this, ShiftEndedSuccessfully.class));
-            enqueueUploadWorkers();
+            enqueueUploadWorkers(false);
         });
         printZReport.setOnClickListener(view -> {
             onPrintZReport();
@@ -142,6 +144,9 @@ public class EndShiftStep2 extends WorkerActivity {
             Bitmap bitmap = new OrderBitmap(this).shiftZReport(endShiftModel);
             device.printZReport(bitmap);
         } catch (Exception e) {
+            addToDatabase(e,getString(R.string.no_printer_found)+"_endShiftStep2");
+            e.printStackTrace();
+            FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
             Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
         }
     }

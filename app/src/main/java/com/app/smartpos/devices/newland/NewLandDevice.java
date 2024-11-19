@@ -1,4 +1,4 @@
-package com.app.smartpos.common.DeviceFactory;
+package com.app.smartpos.devices.newland;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,7 +7,8 @@ import android.util.Base64;
 import com.app.smartpos.common.Consts;
 import com.app.smartpos.common.ThirdTag;
 import com.app.smartpos.common.Utils;
-import com.app.smartpos.orders.NewLandEnhancedPrinter;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.PrinterHandler;
 
 public class NewLandDevice implements Device {
     @Override
@@ -41,9 +42,9 @@ public class NewLandDevice implements Device {
     }
 
     @Override
-    public boolean printReceipt(Bitmap bitmap) {
+    public void printReceipt(Bitmap bitmap, PrinterHandler printerHandler) {
         NewLandEnhancedPrinter newLandPrinter = new NewLandEnhancedPrinter();
-        return newLandPrinter.printReceipt(bitmap);
+        newLandPrinter.printReceipt(bitmap,printerHandler);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class NewLandDevice implements Device {
 
     @Override
     public String zatcaQrCodeGeneration(byte[] byteArray) {
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
     }
 
     @Override

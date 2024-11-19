@@ -1,9 +1,13 @@
 package com.app.smartpos.checkout;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,16 +20,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
+import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.common.WorkerActivity;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
+import com.app.smartpos.devices.PrinterHandler;
 import com.app.smartpos.utils.BaseActivity;
+import com.app.smartpos.utils.FilesUtils;
 import com.app.smartpos.utils.printing.PrinterData;
 import com.app.smartpos.utils.printing.PrintingHelper;
 
-public class SuccessfulPayment extends BaseActivity {
+public class SuccessfulPayment extends WorkerActivity {
     ImageView biggerCircleIm;
     ImageView smallerCircleIm;
     TextView amountTv;
@@ -54,7 +62,6 @@ public class SuccessfulPayment extends BaseActivity {
         }
         startTimer();
         if (getIntent().getExtras().containsKey("order_id")) {
-            Utils.addLog("datadata_type", getIntent().getStringExtra("printType"));
             printerData = PrintingHelper.createBitmap(DatabaseAccess.getInstance(this), this, getIntent().getStringExtra("order_id"), getIntent().getStringExtra("printType"));
             printLl.setVisibility(View.VISIBLE);
         }
@@ -65,12 +72,29 @@ public class SuccessfulPayment extends BaseActivity {
         noReceipt.setOnClickListener(view -> {
             finish();
         });
-
+        DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
         printReceipt.setOnClickListener(view -> {
             Device device = DeviceFactory.getDevice();
             try {
-                device.printReceipt(printerData.getBitmap());
+                Bitmap newBitmap = Bitmap.createBitmap(printerData.getBitmap());
+                device.printReceipt(newBitmap, new PrinterHandler() {
+                    @Override
+                    public void printStatus(boolean success) {
+                        if(success){
+                            databaseAccess.open();
+                            databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                            Intent intent = new Intent(SuccessfulPayment.this, NewHomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
+                addToDatabase(e,getString(R.string.no_printer_found)+"_successfulPaymentScreen");
+                e.printStackTrace();
+                FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);
                 Toast.makeText(this, R.string.no_printer_found, Toast.LENGTH_SHORT).show();
             }
         });

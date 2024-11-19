@@ -1,5 +1,7 @@
 package com.app.smartpos.orders;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -10,8 +12,8 @@ import android.graphics.Paint;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
-import com.app.smartpos.common.DeviceFactory.Device;
-import com.app.smartpos.common.DeviceFactory.DeviceFactory;
+import com.app.smartpos.devices.DeviceFactory.Device;
+import com.app.smartpos.devices.DeviceFactory.DeviceFactory;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.end_shift.EndShiftModel;
@@ -42,7 +44,7 @@ public class OrderBitmap extends BaseActivity {
     List<HashMap<String, String>> orderDetailsList;
     HashMap<String, String> orderList;
     HashMap<String, String> configuration;
-    String merchantTaxNumber, merchantId, productCode;
+    String merchantTaxNumber, invoiceMerchantId, productCode;
     SimpleDateFormat sdf1 = new SimpleDateFormat(Constant.REPORT_DATETIME_FORMAT);
     ZatcaQRCodeGenerationService zatcaQRCodeGenerationService = new ZatcaQRCodeGenerationService();
     List<PrinterModel> bitmaps = new LinkedList<>();
@@ -61,9 +63,11 @@ public class OrderBitmap extends BaseActivity {
         Device device = DeviceFactory.getDevice();
         line = device.getPrintLine();
         databaseAccess.open();
+        HashMap<String,String>shop = databaseAccess.getShopInformation();
+        databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
         merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
-        merchantId = configuration.isEmpty() ? "" : configuration.get("merchant_id");
+        invoiceMerchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
         databaseAccess.open();
@@ -72,14 +76,21 @@ public class OrderBitmap extends BaseActivity {
             if (!configuration.get("merchant_logo").isEmpty()) {
                 byte[] decodedString = PrintingHelper.base64ToByteArray(configuration.isEmpty() ? "" : configuration.get("merchant_logo"));
                 Bitmap logo = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                logo = resizeBitmap(logo);
                 bitmaps.add(new PrinterModel(0, logo));
             }
-            printMerchantId(merchantId);
-            printMerchantTaxNumber(merchantTaxNumber);
+            printShopName(shop.get("shop_name"));
+            printInvoiceMerchantId(invoiceMerchantId);
+            if(!merchantTaxNumber.isEmpty()) {
+                printMerchantTaxNumber(merchantTaxNumber);
+            }
             bitmaps.add(new PrinterModel(PrintingHelper.createBitmapFromText(orderDate), PrintingHelper.createBitmapFromText(orderTime)));
             printReceiptNo(invoiceId);
+            if(orderList.get("original_order_id") != null && !orderList.get("original_order_id").isEmpty())
+                printOriginalReceiptNo(orderList.get("original_order_id"));
             printType(printType);
             printInvoiceBarcode(invoiceId);
+
             printProducts(orderDetailsList);
             printTotalExcludingTax(priceBeforeTax);
             //Todo uncomment discount when it is added in the system
@@ -87,14 +98,40 @@ public class OrderBitmap extends BaseActivity {
             printTax(tax);
             printTotalIncludingTax(priceAfterTax);
             printPaidAndChangeAmount(orderList.get("paid_amount"), priceAfterTax, orderList.get("change_amount"), orderList.get("order_payment_method"));
-            printZatcaQrCode(databaseAccess);
+            if(!merchantTaxNumber.isEmpty()){
+                printZatcaQrCode(databaseAccess,tax);
+                printLine();
+            }
             printLine();
-
+            footer();
         } catch (Exception e) {
+            addToDatabase(e,"error-in-generateBitmap-OrderBitmap");
             e.printStackTrace();
         }
-        return creatGeneralBitmap();
+        return createGeneralBitmap();
 
+    }
+
+    private void printOriginalReceiptNo(String originalInvoice) {
+        bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(MultiLanguageApp.getApp().getString(R.string.original_receipt_no))));
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(originalInvoice)));
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap){
+        if(bitmap.getWidth()<=200 && bitmap.getHeight()<=200){
+            return bitmap;
+        }
+        int width;
+        int height;
+        if(bitmap.getWidth() > bitmap.getHeight()){
+            width=200;
+            height = (int)(200.0 * (((double) bitmap.getHeight()) / ((double) bitmap.getWidth())));
+        }else{
+            height=200;
+            width = (int)(200.0 * (((double) bitmap.getWidth()) / ((double) bitmap.getHeight())));
+        }
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        return bitmap;
     }
 
     @SuppressLint("NewApi")
@@ -117,7 +154,8 @@ public class OrderBitmap extends BaseActivity {
         printPaymentDetails(Objects.requireNonNull(endShiftModel.getShiftDifferences().get("CASH")).getReal() - endShiftModel.getStartCash(), endShiftModel.getTotalCardsAmount());
         printCardTypesBreakdown(endShiftModel.getShiftDifferences());
         printLine();
-        return creatGeneralBitmap();
+        footer();
+        return createGeneralBitmap();
     }
 
     private void printTransactionsAmount(double totalAmount, double totalRefundsAmount) {
@@ -179,7 +217,7 @@ public class OrderBitmap extends BaseActivity {
         printLine();
         double totalCard = 0.00;
         for (Map.Entry<String, ShiftDifferences> shiftsCardTypeCalculations : shiftsCardTypesCalculations.entrySet()) {
-            if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase(activity.getString(R.string.cash))) {
+            if (!shiftsCardTypeCalculations.getKey().equalsIgnoreCase("cash")) {
                 ArrayList<Bitmap> combinedBitmaps1 = new ArrayList<>();
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(shiftsCardTypeCalculations.getKey()));
                 combinedBitmaps1.add(PrintingHelper.createBitmapFromText(zeroChecker(Utils.trimLongDouble(shiftsCardTypeCalculations.getValue().getReal()))));
@@ -247,7 +285,7 @@ public class OrderBitmap extends BaseActivity {
         return totalCard;
     }
 
-    public Bitmap creatGeneralBitmap() {
+    public Bitmap createGeneralBitmap() {
         totalHeight = 0;
         int size = bitmaps.size();
         for (int i = 0; i < size; i++) {
@@ -308,9 +346,10 @@ public class OrderBitmap extends BaseActivity {
         return bmp;
     }
 
-    private void printZatcaQrCode(DatabaseAccess databaseAccess) {
+    private void printZatcaQrCode(DatabaseAccess databaseAccess, double tax) {
         ZatcaQRCodeGeneration zatcaQRCodeGeneration = new ZatcaQRCodeGeneration();
-        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, orderDetailsList, configuration, true)));
+        String taxRounded = tax != 0 ? Utils.trimLongDouble(tax) : "0.00";
+        bitmaps.add(new PrinterModel(0, zatcaQRCodeGeneration.getQrCodeBitmap(orderList, databaseAccess, configuration, true,taxRounded)));
     }
 
     private void printTotalIncludingTax(double priceAfterTax) {
@@ -389,7 +428,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printInvoiceBarcode(String invoiceId) throws WriterException {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.CODE_128, 375, 100)));
+        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.QR_CODE, 250, 250)));
     }
 
     private void printReceiptNo(String invoiceId) {
@@ -409,10 +448,18 @@ public class OrderBitmap extends BaseActivity {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.tax_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantTaxNumber));
-        bitmaps.add(new PrinterModel(newBitmaps.get(0), newBitmaps.get(1)));
+        bitmaps.add(new PrinterModel(-1,newBitmaps.get(0)));
+        bitmaps.add(new PrinterModel(1,newBitmaps.get(1)));
     }
 
-    private void printMerchantId(String merchantId) {
+    private void printShopName(String shopName) {
+        if(shopName.length()>20){
+            shopName=shopName.substring(0,20);
+        }
+        bitmaps.add(new PrinterModel(0, PrintingHelper.createBitmapFromText(shopName)));
+    }
+
+    private void printInvoiceMerchantId(String merchantId) {
         List<Bitmap> newBitmaps = new ArrayList<>();
         newBitmaps.add(PrintingHelper.createBitmapFromText(activity.getString(R.string.commercial_registration_number_)));
         newBitmaps.add(PrintingHelper.createBitmapFromText(merchantId.replace("cr", "")));
@@ -425,6 +472,14 @@ public class OrderBitmap extends BaseActivity {
 
     private void printLine() {
         bitmaps.add(new PrinterModel(-1, PrintingHelper.createBitmapFromText(line)));
+    }
+
+    private void footer() {
+        Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
+        Bitmap bmp = Bitmap.createBitmap(50, 80, conf); // this creates a MUTABLE bitmap
+        Canvas canvas = new Canvas(bmp);
+        canvas.drawColor(Color.WHITE);
+        bitmaps.add(new PrinterModel(0, bmp));
     }
 
     private String getDateTime(Long dateTimeMillisecond) {

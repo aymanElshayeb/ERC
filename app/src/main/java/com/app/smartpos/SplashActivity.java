@@ -1,5 +1,7 @@
 package com.app.smartpos;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 
 import com.androidnetworking.AndroidNetworking;
 import com.app.smartpos.auth.AuthActivity;
+import com.app.smartpos.common.CrashReport.CustomExceptionHandler;
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
@@ -54,7 +57,7 @@ public class SplashActivity extends BaseActivity {
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
 
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted());
-        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
+//        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
         access=true;
         if (!access) {
             finishAffinity();
@@ -74,6 +77,10 @@ public class SplashActivity extends BaseActivity {
                     finish();
                 }
             }, splashTimeOut);
+        }
+
+        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
     }
 
@@ -115,6 +122,7 @@ public class SplashActivity extends BaseActivity {
             OkHttpClient okHttpClient = builder.build();
             return okHttpClient;
         } catch (Exception e) {
+            addToDatabase(e,"getUnsafeOkHttpClient-function-error-splashScreen");
             throw new RuntimeException(e);
         }
     }

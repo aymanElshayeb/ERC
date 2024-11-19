@@ -1,6 +1,7 @@
 package com.app.smartpos.utils;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 import static com.app.smartpos.utils.LocaleManager.changeLang;
 
 import android.content.Context;
@@ -20,8 +21,8 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.app.smartpos.BuildConfig;
 import com.app.smartpos.common.RootUtil;
+import com.app.smartpos.common.Utils;
 
 import java.util.Locale;
 
@@ -30,6 +31,29 @@ public abstract class BaseActivity extends AppCompatActivity {
     boolean isConnected = false;
     ConnectivityManager connectivityManager;
     NetworkInfo activeNetworkInfo;
+    private final ConnectivityManager.NetworkCallback connectivityCallback
+            = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(Network network) {
+            isConnected = true;
+            Utils.addLog("datadata_error", "true");
+            connectionChanged(isConnected);
+        }
+
+        @Override
+        public void onLost(Network network) {
+            isConnected = false;
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            Utils.addLog("datadata_error", "false");
+            isConnected = activeNetworkInfo != null && activeNetworkInfo.isAvailable();
+            Utils.addLog("datadata_error", isConnected + "");
+            connectionChanged(isConnected);
+
+            //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
+        }
+
+    };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,8 +63,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         resetTitles();
         connectivityManager = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
+        checkConnectivity();
     }
-
 
     protected void resetTitles() {
         try {
@@ -49,10 +73,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 setTitle(info.labelRes);
             }
         } catch (PackageManager.NameNotFoundException e) {
+            addToDatabase(e, "resetTitles-baseActivity");
             e.printStackTrace();
         }
     }
-
 
     //for Android Android N
     @Override
@@ -71,25 +95,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
-
-    private final ConnectivityManager.NetworkCallback connectivityCallback
-            = new ConnectivityManager.NetworkCallback() {
-        @Override
-        public void onAvailable(Network network) {
-            isConnected = true;
-            connectionChanged(isConnected);
-        }
-
-        @Override
-        public void onLost(Network network) {
-            isConnected = false;
-            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-            connectionChanged(isConnected);
-            //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
-        }
-
-    };
 
     public void connectionChanged(boolean state) {
     }

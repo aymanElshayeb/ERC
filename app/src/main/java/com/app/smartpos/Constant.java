@@ -13,8 +13,11 @@ public class Constant {
 
     public static final String SYNC_URL = BASE_URL + "/sync";
     public static final String LAST_SYNC_URL = BASE_URL + "/sync/last";
+    public static final String CRASH_REPORT_SYNC_URL = BASE_URL + "/track/error";
+    public static final String REQUEST_TRACKING_SYNC_URL = BASE_URL + "/track/request";
     public static final String REGISTER_DEVICE_URL = BASE_URL + "/organization/unit/device/register";
     public static final String CHECK_COMPANY_URL = BASE_URL + "/user/companies";
+    public static final String REFUND_URL = BASE_URL + "/invoice/refund/";
 
     public static final String PRODUCT_IMAGES_SIZE = BASE_URL + "/sync/products/images/size";
     public static final String PRODUCT_IMAGES = BASE_URL + "/sync/products/images";
@@ -25,6 +28,8 @@ public class Constant {
     public static final String DOWNLOAD_FILE_NAME = "download.db";
     public static final String PRODUCT_IMAGES_FILE_NAME = "ecrcode_upload.db";
     public static final String UPLOAD_FILE_NAME = "upload.db";
+    public static final String UPLOAD_REQUEST_TRACKING_FILE_NAME = "upload_request_tracking.db";
+    public static final String UPLOAD_ERROR_TRACKING_FILE_NAME = "upload_error_tracking.db";
     public static final String UPLOAD_FILE_NAME_GZIP = "upload.db.gz";
 
 

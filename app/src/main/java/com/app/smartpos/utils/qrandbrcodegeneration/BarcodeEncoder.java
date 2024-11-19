@@ -1,5 +1,7 @@
 package com.app.smartpos.utils.qrandbrcodegeneration;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,6 +23,7 @@ public class BarcodeEncoder {
         try {
             encodedQR = toBitmap(encode(contents, format, width, height));
         } catch (Exception e) {
+            addToDatabase(e,"encodeQrOrBc-function-error-barcodeEncoder");
             e.printStackTrace();
         }
         return encodedQR;
@@ -70,8 +73,10 @@ public class BarcodeEncoder {
         try {
             bitMatrix = new MultiFormatWriter().encode(contents, format, width, height);
         } catch (WriterException e) {
+            addToDatabase(e,"encode-function-writerException-error-barcodeEncoder");
             throw e;
         } catch (Exception e) {
+            addToDatabase(e,"encode-function-exception-error-barcodeEncoder");
             throw new WriterException(e);
         }
         return bitMatrix;

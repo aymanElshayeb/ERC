@@ -95,7 +95,7 @@ public class Items extends BaseActivity {
         scannerIm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Items.this, ScannerActivity.class);
+                Intent intent = new Intent(Items.this, ScannerActivity.class).putExtra("screenType","items");
                 startActivity(intent);
             }
         });

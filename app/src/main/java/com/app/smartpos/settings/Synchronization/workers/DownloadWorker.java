@@ -1,6 +1,8 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -11,17 +13,23 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.utils.SSLUtils;
 import com.app.smartpos.utils.SharedPrefUtils;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadWorker extends Worker {
 
+    int statusCode=-5;
+    HttpURLConnection connection;
     public DownloadWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -40,9 +48,10 @@ public class DownloadWorker extends Worker {
             return Result.failure();
         }
         SSLUtils.trustAllCertificates();
+        String requestHeaders = "";
         try {
             URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setHostnameVerifier((hostname, session) -> true);
             }
@@ -51,28 +60,39 @@ public class DownloadWorker extends Worker {
             connection.setRequestProperty("tenantId", tenantId);
             connection.setRequestProperty("Authorization", authorization);
             connection.setRequestProperty("apikey", api_key);
-
+            connection.setRequestProperty("ecrCode", ecrCode);
+            JSONObject headersJson = new JSONObject();
+            headersJson.put("tenantId", tenantId);
+            headersJson.put("Authorization", "......");
+            headersJson.put("apikey",".....");
+            headersJson.put("ecrCode", ecrCode);
+            requestHeaders = headersJson.toString();
             Utils.addLog("datadata_download",tenantId);
             Utils.addLog("datadata_download",api_key);
             Utils.addLog("datadata_download",ecrCode);
 
-            connection.setRequestProperty("ecrCode", ecrCode);
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                statusCode=connection.getResponseCode();
                 File outputFile = new File(getApplicationContext().getCacheDir().getAbsolutePath(), fileName);
                 if (outputFile.exists()) {
                     outputFile.delete();
                 }
                 downloadFile(connection.getInputStream(), outputFile);
-
+                Utils.addRequestTracking(urlString,"DownloadWorker",requestHeaders,"",statusCode+"");
                 connection.disconnect();
                 return Result.success();
             } else {
+                statusCode=connection.getResponseCode();
                 Utils.addLog("datadata_download", "disconnected " + connection.getResponseCode() + " " + connection.getResponseMessage());
+                Utils.addRequestTracking(urlString,"DownloadWorker","",requestHeaders,statusCode+"\n"+connection.getResponseMessage());
+
                 // Handle error response
                 connection.disconnect();
                 return Result.failure();
             }
         } catch (Exception e) {
+            Utils.addRequestTracking(urlString,"DownloadWorker",requestHeaders,"",statusCode+"\n"+e.getMessage());
+            addToDatabase(e,"downloadWorkerApi-cannot-call-request");
             e.printStackTrace();
             return Result.failure();
         }
@@ -90,6 +110,7 @@ public class DownloadWorker extends Worker {
 
             return true;
         } catch (IOException e) {
+            addToDatabase(e,"downloadFile-downloadWorker");
             e.printStackTrace();
             return false;
         }

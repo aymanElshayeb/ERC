@@ -1,5 +1,7 @@
 package com.app.smartpos.settings.Synchronization.workers;
 
+import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -51,6 +53,7 @@ public class CompressWorker extends Worker {
                 gos.write(buffer, 0, length);
             }
         } catch (IOException e) {
+            addToDatabase(e,"compressGZip-compressWorker");
             e.printStackTrace();
             return false;
         }

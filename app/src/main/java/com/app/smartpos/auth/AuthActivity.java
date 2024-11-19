@@ -3,9 +3,11 @@ package com.app.smartpos.auth;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.work.WorkInfo;
 
 import com.app.smartpos.NewHomeActivity;
@@ -19,6 +21,9 @@ import java.util.HashMap;
 
 public class AuthActivity extends WorkerActivity {
 
+    int workerType = 1;
+    private ConstraintLayout loadingCl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,8 @@ public class AuthActivity extends WorkerActivity {
 //        );
 
         setContentView(R.layout.activity_auth);
+        loadingCl = findViewById(R.id.loading_cl);
+
 
         if (!SharedPrefUtils.isRegistered(this)) {
             Intent intent = new Intent(AuthActivity.this, Registration.class);
@@ -52,26 +59,38 @@ public class AuthActivity extends WorkerActivity {
 
     }
 
+    public void showHideLoading(boolean flag) {
+        loadingCl.setVisibility(flag ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
-        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-            String email = workInfo.getOutputData().getString("email");
+        if (workerType == 1) {
+            if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                String email = workInfo.getOutputData().getString("email");
 
-            DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
-            databaseAccess.open();
-            HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
-            SharedPrefUtils.setName(this, map.get("name_ar"));
-            SharedPrefUtils.setEmail(this, map.get("email"));
-            SharedPrefUtils.setMobileNumber(this, map.get("mobile"));
-            SharedPrefUtils.setUserId(this, map.get("id"));
-            SharedPrefUtils.setUserName(this, map.get("username"));
+                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(this);
+                databaseAccess.open();
+                HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
+                SharedPrefUtils.setName(this, map.get("name_ar"));
+                SharedPrefUtils.setEmail(this, map.get("email"));
+                SharedPrefUtils.setMobileNumber(this, map.get("mobile"));
+                SharedPrefUtils.setUserId(this, map.get("id"));
+                SharedPrefUtils.setUserName(this, map.get("username"));
+                if (isConnected()) {
+                    workerType = 2;
+                    enqueueDownloadAndReadWorkers();
+                }
+            } else {
+
+                Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
+            }
+        } else if (workerType == 2) {
             SharedPrefUtils.setIsLoggedIn(this, true);
             Intent intent = new Intent(this, NewHomeActivity.class);
             startActivity(intent);
             this.finish();
-        } else {
-            Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
         }
     }
 

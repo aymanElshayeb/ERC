@@ -8,7 +8,6 @@ import static com.app.smartpos.Constant.SYNC_URL;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +31,7 @@ import androidx.work.WorkManager;
 
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
+import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
@@ -58,10 +58,12 @@ public class Registration extends BaseActivity {
     CheckCompaniesViewModel companiesViewModel;
     LinkedList<CompanyModel> companyList = new LinkedList<>();
     String tenantId = "";
+    boolean registerPassed = true;
+    boolean vatNumberExist;
     private String deviceId;
     private boolean isPasswordShown = false;
     private OneTimeWorkRequest readRequest;
-    boolean registerPassed=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActionBar actionBar = getSupportActionBar();
@@ -100,16 +102,18 @@ public class Registration extends BaseActivity {
         });
 
         actionBtn.setOnClickListener(view -> {
-            if (email.getText().toString().isEmpty()) {
+            if (!isConnected()) {
+                Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            } else if (email.getText().toString().isEmpty()) {
                 Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
-            }else if (tenantIdEt.getText().toString().isEmpty()) {
+            } else if (tenantIdEt.getText().toString().isEmpty()) {
                 Toast.makeText(this, getResources().getString(R.string.company_empty), Toast.LENGTH_SHORT).show();
-            }else if (password.getText().toString().isEmpty()) {
+            } else if (password.getText().toString().isEmpty()) {
                 Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
             } else {
                 actionBtn.setVisibility(View.GONE);
                 loadingPb.setVisibility(View.VISIBLE);
-                registerPassed=true;
+                registerPassed = true;
                 enqueueDownloadAndReadWorkers();
             }
         });
@@ -185,17 +189,18 @@ public class Registration extends BaseActivity {
     private void enqueueDownloadAndReadWorkers() {
         //username Admin
         //password 01111Mm&
-        Utils.addLog("datadata",KEY_URL);
-        Utils.addLog("datadata",REGISTER_DEVICE_URL);
+        String tenantId = "cr" + tenantIdEt.getText().toString().trim();
+        Utils.addLog("datadata", KEY_URL);
+        Utils.addLog("datadata", REGISTER_DEVICE_URL);
         Data apiKey = new Data.Builder().
                 putString("url", KEY_URL).
-                putString("tenantId", tenantIdEt.getText().toString()).
+                putString("tenantId", tenantId).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 build();
         Data register = new Data.Builder().
                 putString("url", REGISTER_DEVICE_URL).
-                putString("tenantId", tenantIdEt.getText().toString()).
+                putString("tenantId", tenantId).
                 putString("email", email.getText().toString().trim()).
                 putString("password", password.getText().toString()).
                 putString("deviceId", deviceId).
@@ -203,7 +208,7 @@ public class Registration extends BaseActivity {
 
         Data downloadInputData = new Data.Builder()
                 .putString("url", SYNC_URL)
-                .putString("tenantId", tenantIdEt.getText().toString())
+                .putString("tenantId", tenantId)
                 .putString("fileName", DOWNLOAD_FILE_NAME_GZIP)
                 .build();
 
@@ -258,7 +263,13 @@ public class Registration extends BaseActivity {
             SharedPrefUtils.setStartDateTime(this);
             byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
             SharedPrefUtils.setAuthData(this, bytes);
-            finish();
+            if (vatNumberExist) {
+                finish();
+            } else {
+                NoVatNumberDialog dialog = new NoVatNumberDialog();
+                dialog.setRegistration(this);
+                dialog.show(getSupportFragmentManager(), "dialog");
+            }
 //            closePendingScreen();
         } else if (workInfo.getState() == WorkInfo.State.FAILED) {
             // Work failed, handle failure
@@ -281,8 +292,9 @@ public class Registration extends BaseActivity {
                         if (workInfo.getState() == WorkInfo.State.FAILED) {
                             String errorMessage = workInfo.getOutputData().getString("errorMessage");
                             showMessage((errorMessage != null ? errorMessage : getString(R.string.failed_to_register)));
-                            registerPassed=false;
+                            registerPassed = false;
                         }
+                        vatNumberExist = workInfo.getOutputData().getBoolean("vatNumberExist", true);
                     }
                 });
     }

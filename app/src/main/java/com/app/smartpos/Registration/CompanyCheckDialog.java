@@ -1,5 +1,6 @@
 package com.app.smartpos.Registration;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import com.app.smartpos.NewHomeActivity;
 import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
+import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.SharedPrefUtils;
@@ -47,7 +49,7 @@ public class CompanyCheckDialog extends DialogFragment {
     CheckCompaniesViewModel companiesViewModel;
     String tenantId;
     LinkedList<CompanyModel> companyList = new LinkedList<>();
-
+    Context context;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,9 +57,9 @@ public class CompanyCheckDialog extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             root = inflater.inflate(R.layout.company_check_registration, container, false);
             setCancelable(false);
+            context=getContext();
             companiesViewModel = new CheckCompaniesViewModel();
-            deviceId = Settings.Secure.getString(getContext().getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+            deviceId = Utils.getDeviceId(context);
 
             usernameEt = root.findViewById(R.id.username_et);
             registerBtn = root.findViewById(R.id.register_btn);
@@ -71,7 +73,7 @@ public class CompanyCheckDialog extends DialogFragment {
             ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
             registerBtn.setOnClickListener(view -> {
                 if (usernameEt.getText().toString().isEmpty()) {
-                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), context.getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
                 } else {
                     registerBtn.setVisibility(View.GONE);
                     demoBtn.setEnabled(false);
@@ -88,7 +90,7 @@ public class CompanyCheckDialog extends DialogFragment {
                 LocaleManager.resetApp(getActivity());
             });
             demoBtn.setOnClickListener(view -> {
-                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(requireContext());
+                DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
                 databaseAccess.open();
                 databaseAccess.addDemoConfiguration();
                 SharedPrefUtils.setStartDateTime(requireActivity());
@@ -106,7 +108,7 @@ public class CompanyCheckDialog extends DialogFragment {
                 }
 
                 if (companyModels.isEmpty()) {
-                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.no_data_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), context.getResources().getString(R.string.no_data_found), Toast.LENGTH_SHORT).show();
                 } else {
                     company_spinner.setVisibility(View.VISIBLE);
 
