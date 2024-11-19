@@ -83,7 +83,7 @@ public class AuthActivity extends WorkerActivity {
                     enqueueDownloadAndReadWorkers();
                 }
             } else {
-
+                showHideLoading(false);
                 Toast.makeText(this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
             }
         } else if (workerType == 2) {
