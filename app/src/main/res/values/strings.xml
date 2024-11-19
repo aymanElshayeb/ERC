@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Qaema</string>
+    <string name="app_name" translatable="false">Qaema Cashier</string>
 
     <string name="text_french" translatable="false">French</string>
     <string name="text_english" translatable="false">English</string>
@@ -329,7 +329,7 @@
     <string name="add_unit">Add Unit</string>
 
 
-    <string name="welcome_to_qaema">Welcome to qaema ECR</string>
+    <string name="welcome_to_qaema">Welcome to Qaema Cashier</string>
     <string name="Please_enter_your_login_info">Please enter your login info</string>
     <string name="Please_enter_your_registration_info">Please enter your registration info</string>
     <string name="email">Email</string>
