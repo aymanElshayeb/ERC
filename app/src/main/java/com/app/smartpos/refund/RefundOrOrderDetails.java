@@ -114,7 +114,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
             order_payment_method = refundModel.getOrder_payment_method();
             operation_type = refundModel.getOperation_type();
             orderDetailsList = refundModel.getOrderDetailsItems();
-            printedBefore = false;
+            printedBefore = getIntent().getBooleanExtra("printed",false);
         }
 
 
