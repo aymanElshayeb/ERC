@@ -112,9 +112,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         checkConnectivity();
         boolean access = ((Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
-//        if (!access) {
-//            finishAffinity();
-//        }
+        if (!access) {
+            finishAffinity();
+        }
     }
 
     @Override
