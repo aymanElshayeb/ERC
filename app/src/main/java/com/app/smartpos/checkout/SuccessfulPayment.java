@@ -82,7 +82,7 @@ public class SuccessfulPayment extends WorkerActivity {
                     public void printStatus(boolean success) {
                         if(success){
                             databaseAccess.open();
-                            databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("id"));
+                            databaseAccess.updateOrderPrintFlag(true,getIntent().getStringExtra("order_id"));
                             Intent intent = new Intent(SuccessfulPayment.this, NewHomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
