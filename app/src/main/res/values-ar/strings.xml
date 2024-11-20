@@ -468,6 +468,8 @@
     <string name="please_select_payment_method">يرجى تحديد طريقة الدفع</string>
     <string name="price_total_cannot_exceed">إجمالى سعر المنتج لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
     <string name="total_price_cannot_exceed">إجمالى السعر لا يجب ان يتخطى ٩٩٩٩٩٩٩٩٩.٩٩</string>
+    <string name="not_authorized_user">هذا المستخدم غير مسموح له هذا الفعل</string>
+
 
     //print status
     <string name="print_successful">تم الطباعة بنجاح</string>
