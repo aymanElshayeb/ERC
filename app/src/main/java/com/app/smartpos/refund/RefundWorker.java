@@ -6,12 +6,14 @@ import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.app.smartpos.R;
 import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.refund.Model.RefundModel;
@@ -73,6 +75,9 @@ public class RefundWorker extends Worker {
                         Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
                         GsonUtils gsonUtils = new GsonUtils();
                         outputData.put("refundModel", gsonUtils.serializeToJson(new RefundModel(responseBody.getJSONObject("data").getJSONArray("returnedObj").getJSONObject(0).toString())));
+                    } else if (code == 401) {
+                        Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
+                        return Result.failure();
                     } else if (code == 404) {
                         Utils.addRequestTracking(REFUND_URL,"RefundWorker",headersJson.toString(),"",responseBody.toString());
                         outputData.put("refundModel",null);
