@@ -477,6 +477,7 @@
     <string name="please_select_payment_method">Please select Payment Method</string>
     <string name="price_total_cannot_exceed">Price total cannot exceed 999999999.99</string>
     <string name="total_price_cannot_exceed">Total price cannot exceed 999999999.99</string>
+    <string name="not_authorized_user">This user is not authorized for this action</string>
 
     //print status
     <string name="print_successful">Print done successfully</string>

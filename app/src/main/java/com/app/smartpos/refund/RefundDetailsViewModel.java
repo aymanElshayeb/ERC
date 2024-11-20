@@ -9,6 +9,7 @@ import static com.app.smartpos.utils.SSLUtils.getUnsafeOkHttpClient;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -84,6 +85,8 @@ public class RefundDetailsViewModel extends ViewModel {
                         // Work is finished, close pending screen or perform any action
                         handleWorkCompletion(workInfo);
                     }
+                    if(workInfo.getState() == WorkInfo.State.FAILED){
+                        Toast.makeText(MultiLanguageApp.getApp(), MultiLanguageApp.getApp().getString(R.string.not_authorized_user), Toast.LENGTH_SHORT).show();                    }
                 });
 
 //        AndroidNetworking.get(REFUND_URL + sequenceId)
