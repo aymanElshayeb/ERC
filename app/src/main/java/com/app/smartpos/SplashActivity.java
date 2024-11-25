@@ -55,9 +55,12 @@ public class SplashActivity extends BaseActivity {
 
         disableSSLCertificateChecking();
         AndroidNetworking.initialize(this, getUnsafeOkHttpClient());
-
+        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
+        }
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted());
 //        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
+        //access=true;
         if (!access) {
             finishAffinity();
         } else {
@@ -78,9 +81,7 @@ public class SplashActivity extends BaseActivity {
             }, splashTimeOut);
         }
 
-        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
-        }
+
     }
 
     private OkHttpClient getUnsafeOkHttpClient() {
