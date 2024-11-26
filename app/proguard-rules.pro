@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn org.apache.poi.**
 -keep class android.device.* {*;}
+-keepnames class com.app.smartpos.*
 -dontwarn java.beans.BeanInfo
 -dontwarn java.beans.IntrospectionException
 -dontwarn java.beans.Introspector

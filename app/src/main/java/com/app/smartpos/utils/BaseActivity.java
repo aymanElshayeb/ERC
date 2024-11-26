@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
 
+import java.util.LinkedList;
 import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -31,24 +32,25 @@ public abstract class BaseActivity extends AppCompatActivity {
     boolean isConnected = false;
     ConnectivityManager connectivityManager;
     NetworkInfo activeNetworkInfo;
+    LinkedList<Network>networks = new LinkedList<>();
     private final ConnectivityManager.NetworkCallback connectivityCallback
             = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(Network network) {
             isConnected = true;
-            Utils.addLog("datadata_error", "true");
-            connectionChanged(isConnected);
+            Utils.addLog("datadata_network", network.toString());
+            networks.add(network);
+            connectionChanged(true);
         }
 
         @Override
         public void onLost(Network network) {
-            isConnected = false;
-            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            Utils.addLog("datadata_error", "false");
-            isConnected = activeNetworkInfo != null && activeNetworkInfo.isAvailable();
-            Utils.addLog("datadata_error", isConnected + "");
-            connectionChanged(isConnected);
 
+            activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            Utils.addLog("datadata_network", network.toString());
+            networks.remove(network);
+            isConnected = !networks.isEmpty();
+            connectionChanged(isConnected);
             //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
         }
 
@@ -113,7 +115,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         checkConnectivity();
         boolean access = ((Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
         if (!access) {
-            finishAffinity();
+            //finishAffinity();
         }
     }
 
