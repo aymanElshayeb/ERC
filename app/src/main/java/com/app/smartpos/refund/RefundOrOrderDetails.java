@@ -265,6 +265,8 @@ public class RefundOrOrderDetails extends WorkerActivity {
                 enqueueCreateAndUploadWorkers();
 //                redirectToSuccess();
 //                SharedPrefUtils.resetAuthorization();
+                }else{
+                    Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 addToDatabase(e,"error-in-proceedOrder-refundOrOrderDetailsScreen");
