@@ -128,7 +128,7 @@ public class DownloadDataDialog extends DialogFragment {
                 if(!baseActivity.isConnected()){
                     Toast.makeText(getActivity(), context.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                 } else if (emailEt.getText().toString().isEmpty()) {
-                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT).show();
                 } else if (passwordEt.getText().toString().isEmpty()) {
                     Toast.makeText(requireActivity(), requireContext().getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
                 } else {

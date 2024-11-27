@@ -105,7 +105,7 @@ public class Registration extends BaseActivity {
             if (!isConnected()) {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             } else if (email.getText().toString().isEmpty()) {
-                Toast.makeText(this, getResources().getString(R.string.user_name_empty), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT).show();
             } else if (tenantIdEt.getText().toString().isEmpty()) {
                 Toast.makeText(this, getResources().getString(R.string.company_empty), Toast.LENGTH_SHORT).show();
             } else if (password.getText().toString().isEmpty()) {

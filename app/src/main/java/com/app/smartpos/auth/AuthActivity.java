@@ -108,22 +108,28 @@ public class AuthActivity extends WorkerActivity {
     }
 
     public void login(String email, String password,Button loginBtn) {
-        this.loginBtn=loginBtn;
-        setEmailAndPassword(email,password);
-        databaseAccess.open();
-        HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
-        if (map != null) {
-            showHideLoading(true);
-            if (isConnected()) {
-                loginWorkers(email, password);
+        if(email.trim().isEmpty()){
+            Toast.makeText(this, getString(R.string.email_empty), Toast.LENGTH_SHORT).show();
+        }else if(password.trim().isEmpty()){
+            Toast.makeText(this, getString(R.string.password_empty), Toast.LENGTH_SHORT).show();
+        }else {
+            this.loginBtn = loginBtn;
+            setEmailAndPassword(email, password);
+            databaseAccess.open();
+            HashMap<String, String> map = databaseAccess.getUserWithEmail(email);
+            if (map != null) {
+                showHideLoading(true);
+                if (isConnected()) {
+                    loginWorkers(email, password);
 
+                } else {
+                    loginBtn.setEnabled(false);
+                    offlineLogin();
+
+                }
             } else {
-                loginBtn.setEnabled(false);
-                offlineLogin();
-
+                Toast.makeText(AuthActivity.this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(AuthActivity.this, getString(R.string.wrong_email_password), Toast.LENGTH_SHORT).show();
         }
     }
 
