@@ -62,7 +62,7 @@ public class RefundOrOrderDetails extends WorkerActivity {
     boolean checkConnectionOnce = true;
     private RecyclerView recycler;
     boolean printedBefore;
-
+    String orderPreviousState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -249,18 +249,23 @@ public class RefundOrOrderDetails extends WorkerActivity {
 
         if (canRefund) {
             databaseAccess.open();
-            if (!databaseAccess.getOrderListByOrderId(orderId).isEmpty()) {
-                databaseAccess.open();
+            HashMap<String,String>map=databaseAccess.getOrderListByOrderId(orderId);
+            if (!map.isEmpty()) {
+                if(orderPreviousState==null){
+                    orderPreviousState = map.get("order_status");
+                }
                 databaseAccess.updateOrderListItem("order_status", Constant.REFUNDED, orderId);
             }
             try {
-                refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
+                if(isConnected()) {
+                    refundSequence = proceedOrder("", "CASH", "", total_tax, "0", "", "", total_amount, 0);
 //                DownloadDataDialog dialog = DownloadDataDialog.newInstance(DownloadDataDialog.OPERATION_UPLOAD);
 //                dialog.show(getSupportFragmentManager(), "dialog");
-//                loadingLl.setVisibility(View.VISIBLE);
-//                enqueueCreateAndUploadWorkers();
-                redirectToSuccess();
-                SharedPrefUtils.resetAuthorization();
+                loadingLl.setVisibility(View.VISIBLE);
+                enqueueCreateAndUploadWorkers();
+//                redirectToSuccess();
+//                SharedPrefUtils.resetAuthorization();
+                }
             } catch (JSONException e) {
                 addToDatabase(e,"error-in-proceedOrder-refundOrOrderDetailsScreen");
                 e.printStackTrace();
@@ -273,15 +278,16 @@ public class RefundOrOrderDetails extends WorkerActivity {
     public void handleWorkCompletion(WorkInfo workInfo) {
         super.handleWorkCompletion(workInfo);
         loadingLl.setVisibility(View.GONE);
-//        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-//            // Work succeeded, handle success
-//            showMessage(getString(R.string.data_synced_successfully));
-//            redirectToSuccess();
-//            SharedPrefUtils.resetAuthorization();
-//        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
-//            // Work failed, handle failure
-//            showMessage(getString(R.string.error_in_syncing_data));
-//        }
+        if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+            // Work succeeded, handle success
+            showMessage(getString(R.string.data_synced_successfully));
+            redirectToSuccess();
+            SharedPrefUtils.resetAuthorization();
+        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+            // Work failed, handle failure
+            showMessage(getString(R.string.error_in_syncing_refund));
+            databaseAccess.deleteOrderListItemAndDetails(orderPreviousState,refundSequence);
+        }
 
     }
 

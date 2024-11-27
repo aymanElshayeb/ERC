@@ -60,13 +60,13 @@ public class OrderBitmap extends BaseActivity {
 
     public Bitmap orderBitmap(String invoiceId, String orderDate, String orderTime, double priceBeforeTax, double priceAfterTax, double tax, String discount, String currency, String printType) {
         DatabaseAccess databaseAccess = DatabaseAccess.getInstance(OrderBitmap.this);
+        merchantTaxNumber = databaseAccess.getOrderListByOrderId(invoiceId).get("tax_number");
         Device device = DeviceFactory.getDevice();
         line = device.getPrintLine();
         databaseAccess.open();
         HashMap<String,String>shop = databaseAccess.getShopInformation();
         databaseAccess.open();
         configuration = databaseAccess.getConfiguration();
-        merchantTaxNumber = configuration.isEmpty() ? "" : configuration.get("merchant_tax_number");
         invoiceMerchantId = configuration.isEmpty() ? "" : configuration.get("invoice_merchant_id");
         databaseAccess.open();
         orderDetailsList = databaseAccess.getOrderDetailsList(invoiceId);
@@ -428,7 +428,7 @@ public class OrderBitmap extends BaseActivity {
 
     private void printInvoiceBarcode(String invoiceId) throws WriterException {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.QR_CODE, 250, 250)));
+        bitmaps.add(new PrinterModel(0, barcodeEncoder.encodeQrOrBc(invoiceId, BarcodeFormat.QR_CODE, 150, 150)));
     }
 
     private void printReceiptNo(String invoiceId) {
