@@ -38,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onAvailable(Network network) {
             isConnected = true;
-            Utils.addLog("datadata_network", network.toString());
+            Utils.addLog("datadata_network", "onAvailable "+network.toString());
             networks.add(network);
             connectionChanged(true);
         }
@@ -47,10 +47,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         public void onLost(Network network) {
 
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            Utils.addLog("datadata_network", network.toString());
-            networks.remove(network);
+            LinkedList<Network>tempNetworks = new LinkedList<>();
+            tempNetworks.addAll(networks);
+            for(int i=0;i<tempNetworks.size();i++){
+
+                if(tempNetworks.get(i).equals(network)) {
+                    Utils.addLog("datadata_network_remove", networks.remove(network) + "");
+                }
+            }
+            tempNetworks.clear();
+            Utils.addLog("datadata_network", "onlost "+network.toString());
+
             isConnected = !networks.isEmpty();
             connectionChanged(isConnected);
+            Utils.addLog("datadata_network", isConnected+" "+networks.size());
             //Utils.addLog("datadata", isConnected ? "INTERNET CONNECTED" : "INTERNET LOST");
         }
 
@@ -115,7 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         checkConnectivity();
         boolean access = ((Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
         if (!access) {
-            //finishAffinity();
+            finishAffinity();
         }
     }
 

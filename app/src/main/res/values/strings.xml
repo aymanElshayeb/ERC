@@ -456,6 +456,7 @@
     <string name="download_product_images">Download Products Images</string>
     <string name="data_synced_successfully">Data Synced Successfully</string>
     <string name="error_in_syncing_data">Error in Syncing data</string>
+    <string name="error_in_syncing_refund">Refund can not be performed right now. Please try again later</string>
     <string name="confirmation_for_download_product_images">Confirmation for download?</string>
     <string name="confirmation_for_download_product_images_text">The file size that you need to download is</string>
     <string name="no_product_images">No sync required</string>

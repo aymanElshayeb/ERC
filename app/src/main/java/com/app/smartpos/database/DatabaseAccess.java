@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import com.app.smartpos.Constant;
 import com.app.smartpos.R;
@@ -895,7 +896,7 @@ public class DatabaseAccess {
 
     //insert order in order list
     public void insertOrder(String order_id, JSONObject obj, Context context, boolean deleteCart, DatabaseAccess databaseAccess) {
-
+        long rowId=-1;
         ContentValues values = new ContentValues();
         ContentValues values2 = new ContentValues();
         ContentValues values3 = new ContentValues();
@@ -917,7 +918,7 @@ public class DatabaseAccess {
             double ex_tax_total = obj.getDouble("ex_tax_total");
             double paid_amount = obj.getDouble("paid_amount");
             double change_amount = obj.getDouble("change_amount");
-//            String tax_number = obj.getString("tax_number");
+            String tax_number = obj.getString("tax_number");
             String original_order_id = obj.has("original_order_id") ? obj.getString("original_order_id") : "";
             String operation_type = obj.getString("operation_type");
             String operation_sub_type = obj.getString("operation_sub_type");
@@ -942,7 +943,7 @@ public class DatabaseAccess {
             values.put("ex_tax_total", ex_tax_total);
             values.put("paid_amount", paid_amount);
             values.put("change_amount", change_amount);
-//            values.put("tax_number", tax_number);
+            values.put("tax_number", tax_number);
             values.put("operation_type", operation_type);
             values.put("original_order_id", original_order_id);
             values.put("order_status", order_status);
@@ -951,7 +952,7 @@ public class DatabaseAccess {
             values.put("qr_code", "");
 
 
-            database.insert("order_list", null, values);
+            rowId = database.insert("order_list", null, values);
 
             if (deleteCart)
                 database.delete("product_cart", null, null);
@@ -1025,10 +1026,15 @@ public class DatabaseAccess {
             addToDatabase(e,"error-in-add-lines-databaseAccess");
             e.printStackTrace();
         }
-
         //database.close();
     }
 
+    public void deleteOrderListItemAndDetails(String previousState,String id){
+        long checkUpdate = updateOrderListItem("order_status", previousState, id);
+        long checkList = database.delete("order_list", "invoice_id=?", new String[]{id});
+        long checkDetails = database.delete("order_details", "invoice_id=?", new String[]{id});
+        Utils.addLog("datadata_delete_check",id+" "+checkUpdate+" "+checkList+" "+checkDetails);
+    }
     public void updateOrderPrintFlag(boolean value, String order_id) {
 
         ContentValues values = new ContentValues();
@@ -1308,7 +1314,7 @@ public class DatabaseAccess {
 
     }
 
-    public void updateOrderListItem(String column, String value, String invoice_id) {
+    public long updateOrderListItem(String column, String value, String invoice_id) {
 
         ContentValues values = new ContentValues();
 
@@ -1316,7 +1322,7 @@ public class DatabaseAccess {
 
         long check = database.update("order_list", values, "invoice_id=?", new String[]{invoice_id});
         //database.close();
-
+        return check;
     }
 
 

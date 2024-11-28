@@ -449,6 +449,7 @@
     <string name="download_product_images">تحميل صور المنتجات</string>
     <string name="data_synced_successfully">تمت مزامنة البيانات بنجاح</string>
     <string name="error_in_syncing_data">خطأ في مزامنة البيانات</string>
+    <string name="error_in_syncing_refund">لا يمكن إتمام عملية الإسترجاعز يرجى المحاولة لاحقاً</string>
     <string name="confirmation_for_download_product_images">هل تريد تأكيد التنزيل؟</string>
     <string name="confirmation_for_download_product_images_text">حجم الملف الذي تحتاج إلى تنزيله هو</string>
     <string name="no_product_images">لا يتطلب المزامنة</string>

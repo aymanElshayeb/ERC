@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity {
         }
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted());
 //        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
-        access=true;
+
         if (!access) {
             finishAffinity();
         } else {

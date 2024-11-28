@@ -61,8 +61,8 @@ public class Profile extends BaseActivity {
             Intent intent = new Intent(this, AuthActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             SharedPrefUtils.setIsLoggedIn(this, false);
+            finishAffinity();
             startActivity(intent);
-            finish();
         });
 
     }
