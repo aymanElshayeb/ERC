@@ -33,6 +33,7 @@ import com.app.smartpos.R;
 import com.app.smartpos.Registration.Model.CompanyModel;
 import com.app.smartpos.checkout.NoVatNumberDialog;
 import com.app.smartpos.common.Utils;
+import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.settings.ChangeLanguageDialog;
 import com.app.smartpos.settings.Synchronization.workers.DecompressWorker;
 import com.app.smartpos.settings.Synchronization.workers.DownloadWorker;
@@ -263,7 +264,8 @@ public class Registration extends BaseActivity {
             SharedPrefUtils.setStartDateTime(this);
             byte[] bytes = Hasher.encryptMsg(email.getText().toString().trim() + "-" + password.getText().toString().trim());
             SharedPrefUtils.setAuthData(this, bytes);
-            if (vatNumberExist) {
+            String vatNumber = DatabaseAccess.getInstance(this).getConfiguration().get("merchant_tax_number");
+            if (!vatNumber.isEmpty()) {
                 finish();
             } else {
                 NoVatNumberDialog dialog = new NoVatNumberDialog();
