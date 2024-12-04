@@ -31,7 +31,7 @@ public class NewLeapGeneralDevice implements Device {
 
     @Override
     public String jsonActivityResult() {
-        return "result";
+        return "JSON Object";
     }
 
     @Override
