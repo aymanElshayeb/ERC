@@ -37,7 +37,7 @@ import okhttp3.OkHttpClient;
 public class SplashActivity extends BaseActivity {
 
 
-    public static int splashTimeOut = 2000;
+    public static int splashTimeOut = 2200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

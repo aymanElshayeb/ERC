@@ -307,6 +307,7 @@ public class Registration extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        finishAffinity();
     }
 
 
