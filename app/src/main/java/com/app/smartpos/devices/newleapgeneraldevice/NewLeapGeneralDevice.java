@@ -21,6 +21,8 @@ public class NewLeapGeneralDevice implements Device {
         intent.putExtra(ThirdTag.TRANS_TYPE, "2");
         intent.putExtra(ThirdTag.AMOUNT, String.valueOf(Double.valueOf(total)));
         intent.putExtra(ThirdTag.IS_APP_2_APP, true);
+        intent.putExtra("jwt_signing","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJOZW90ZWsifQ.NGPUSnns-pGUug5uRyK8f5tipWaVVa93G_f7NSJ4GWY");
+
         return intent;
     }
 
