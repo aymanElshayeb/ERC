@@ -62,7 +62,7 @@ public class SplashActivity extends BaseActivity {
 //        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
         access = true;
         if (!access) {
-            finishAffinity();
+           // finishAffinity();
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
