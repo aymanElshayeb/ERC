@@ -49,15 +49,17 @@ public class LoginFragment extends Fragment {
             EditText passwordEt = root.findViewById(R.id.password_et);
             ImageView eyeIm = root.findViewById(R.id.eye_im);
             loginBtn = root.findViewById(R.id.login_btn);
-            ConstraintLayout languageCl = root.findViewById(R.id.language_cl);
+            ImageView languageIm = root.findViewById(R.id.language_im);
+            ImageView closeIm = root.findViewById(R.id.close_im);
 
-
-
-            languageCl.setOnClickListener(view -> {
+            languageIm.setOnClickListener(view -> {
                 ChangeLanguageDialog dialog = new ChangeLanguageDialog();
                 dialog.show(getParentFragmentManager(), "change language dialog");
             });
 
+            closeIm.setOnClickListener(view -> {
+                requireActivity().finish();
+            });
             eyeIm.setOnClickListener(view -> {
                 isPasswordShown = !isPasswordShown;
                 if (isPasswordShown) {

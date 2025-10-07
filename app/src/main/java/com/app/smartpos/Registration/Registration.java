@@ -74,7 +74,7 @@ public class Registration extends BaseActivity {
         setContentView(R.layout.activity_registartion);
 
         deviceId = Utils.getDeviceId(this);
-        ConstraintLayout languageCl = findViewById(R.id.language_cl);
+        ImageView languageIm = findViewById(R.id.language_im);
         companiesViewModel = new CheckCompaniesViewModel();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -87,6 +87,12 @@ public class Registration extends BaseActivity {
         actionBtn = findViewById(R.id.action_btn);
         loadingPb = findViewById(R.id.loading_pb);
         String lang = LocaleManager.getLanguage(this);
+
+        ImageView closeIm = findViewById(R.id.close_im);
+
+        closeIm.setOnClickListener(view -> {
+            finish();
+        });
 
         email.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
         password.setGravity((lang.equals("ar") ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
@@ -119,7 +125,7 @@ public class Registration extends BaseActivity {
             }
         });
 
-        languageCl.setOnClickListener(view -> {
+        languageIm.setOnClickListener(view -> {
             ChangeLanguageDialog dialog = new ChangeLanguageDialog();
             dialog.show(getSupportFragmentManager(), "change language dialog");
         });

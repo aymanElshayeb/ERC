@@ -269,6 +269,7 @@
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginBottom="100dp"
                 android:background="@drawable/rounded_button_6"
                 android:backgroundTint="#FBE7E7"
                 android:gravity="center">

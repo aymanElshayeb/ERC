@@ -7,7 +7,7 @@
     android:background="@color/grey_f9">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/language_cl"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:paddingHorizontal="20dp"
@@ -15,9 +15,19 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_globe" />
+            android:id="@+id/language_im"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_globe"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <ImageView
+            android:id="@+id/close_im"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:backgroundTint="@color/light_purple"
+            android:src="@drawable/ic_close_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ImageView
         android:id="@+id/logo_im"
