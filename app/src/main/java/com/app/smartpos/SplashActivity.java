@@ -17,6 +17,7 @@ import com.app.smartpos.common.Utils;
 import com.app.smartpos.database.DatabaseAccess;
 import com.app.smartpos.utils.BaseActivity;
 import com.app.smartpos.utils.SharedPrefUtils;
+import com.scottyab.rootbeer.RootBeer;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -58,9 +59,10 @@ public class SplashActivity extends BaseActivity {
         if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this));
         }
-        boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted());
+        RootBeer rootBeer = new RootBeer(this);
+        boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted() && !rootBeer.isRooted() && !rootBeer.isRootedWithBusyBoxCheck());
 //        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
-        access = true;
+        // access = true;
         if (!access) {
             finishAffinity();
         } else {

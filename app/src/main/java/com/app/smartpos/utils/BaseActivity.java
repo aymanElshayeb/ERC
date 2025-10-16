@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.smartpos.common.RootUtil;
 import com.app.smartpos.common.Utils;
+import com.scottyab.rootbeer.RootBeer;
 
 import java.util.LinkedList;
 import java.util.Locale;
@@ -123,9 +124,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkConnectivity();
-        boolean access = ((Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted()));
-        if (!access) {
-            //finishAffinity();
+        RootBeer rootBeer = new RootBeer(this);
+        boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted() && !rootBeer.isRooted() && !rootBeer.isRootedWithBusyBoxCheck());
+       if (!access) {
+            finishAffinity();
         }
     }
 
