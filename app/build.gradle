@@ -104,5 +104,8 @@ dependencies {
     implementation 'com.google.guava:guava:30.1-android'
 
     implementation 'com.scottyab:rootbeer-lib:0.1.1'
+    implementation "org.purejava:tweetnacl-java:1.1.2"
+
+    implementation 'com.aheaditec.talsec.security:TalsecSecurity-Community:16.0.1'
 
 }

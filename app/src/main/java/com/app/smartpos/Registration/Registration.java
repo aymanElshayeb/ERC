@@ -8,6 +8,7 @@ import static com.app.smartpos.Constant.SYNC_URL;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -43,9 +43,13 @@ import com.app.smartpos.utils.Hasher;
 import com.app.smartpos.utils.LocaleManager;
 import com.app.smartpos.utils.MultiLanguageApp;
 import com.app.smartpos.utils.SharedPrefUtils;
+import com.app.smartpos.utils.TweetNaclFast.TweekNaclFastUtils;
+import com.app.smartpos.utils.TweetNaclFast.TweetNaclFast;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 
 public class Registration extends BaseActivity {
     EditText email;
@@ -109,6 +113,7 @@ public class Registration extends BaseActivity {
         });
 
         actionBtn.setOnClickListener(view -> {
+            //encrypt(password.getText().toString());
             if (!isConnected()) {
                 Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             } else if (email.getText().toString().isEmpty()) {
@@ -192,6 +197,14 @@ public class Registration extends BaseActivity {
         });
     }
 
+    private void encrypt(String message){
+
+        String encryptedStr = TweekNaclFastUtils.encrypt(message);
+        //String decryptedStr = TweekNaclFastUtils.decrypt(encryptedStr.getBytes(StandardCharsets.UTF_8));
+        Toast.makeText(this, encryptedStr, Toast.LENGTH_SHORT).show();
+        Utils.addLog("datadata_encrypted",encryptedStr);
+        //Log.i("datadata_decrypted",decryptedStr);
+    }
 
     private void enqueueDownloadAndReadWorkers() {
         //username Admin

@@ -3,9 +3,11 @@ package com.app.smartpos;
 import static com.app.smartpos.common.CrashReport.CustomExceptionHandler.addToDatabase;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -62,7 +64,7 @@ public class SplashActivity extends BaseActivity {
         RootBeer rootBeer = new RootBeer(this);
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted() && !rootBeer.isRooted() && !rootBeer.isRootedWithBusyBoxCheck());
 //        Utils.addLog("datadata_adb", access + " " + RootUtil.isDeviceRooted());
-        // access = true;
+       //  access = true;
         if (!access) {
             finishAffinity();
         } else {
@@ -83,6 +85,9 @@ public class SplashActivity extends BaseActivity {
             }, splashTimeOut);
         }
 
+//        String manufacturer = Build.MANUFACTURER;
+//        String model = Build.MODEL;
+        //Toast.makeText(this, manufacturer+" "+model, Toast.LENGTH_SHORT).show();
 
     }
 

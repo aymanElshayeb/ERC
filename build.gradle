@@ -5,6 +5,7 @@ buildscript {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.5.2'
@@ -19,7 +20,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        
+        maven { url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp" }
     }
 }
 
