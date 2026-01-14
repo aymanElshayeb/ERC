@@ -108,7 +108,7 @@ public class CheckoutOrderDetails extends BaseActivity {
                     }
                 });
 
-            } catch (Exception e) {
+            } catch (UnsatisfiedLinkError e) {
                 addToDatabase(e,getString(R.string.no_printer_found)+"_checkoutOrderDetails");
                 e.printStackTrace();
                 FilesUtils.generateNoteOnSD("no-printer",e.getStackTrace(),databaseAccess);

@@ -127,7 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         RootBeer rootBeer = new RootBeer(this);
         boolean access = (Settings.Global.getInt(getContentResolver(), Settings.Global.ADB_ENABLED, 0) == 0 && !RootUtil.isDeviceRooted() && !rootBeer.isRooted() && !rootBeer.isRootedWithBusyBoxCheck());
        if (!access) {
-            finishAffinity();
+           // finishAffinity();
         }
     }
 

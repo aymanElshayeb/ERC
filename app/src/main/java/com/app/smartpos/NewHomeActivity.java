@@ -2,6 +2,7 @@ package com.app.smartpos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -126,6 +127,7 @@ public class NewHomeActivity extends BaseActivity {
         for (int i = 0; i < orderList.size(); i++) {
             databaseAccess.open();
             total_amount += databaseAccess.totalOrderPrice(orderList.get(i).get("invoice_id"));
+            Log.i("datadata_total_amount",total_amount+"");
         }
         currentShiftNumberTv.setText(Utils.trimLongDouble(total_amount));
 
